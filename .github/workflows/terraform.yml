@@ -1,0 +1,116 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: The environment that the job references
+        required: true
+        type: string
+
+      working_directory:
+        description: The working directory of where to run the Terraform CLI commands
+        required: true
+        type: string
+
+      arm_tenant_id:
+        description: Azure Resource Manager tenant ID
+        required: true
+        type: string
+
+      arm_subscription_id:
+        description: Azure Resource Manager subscription ID
+        required: true
+        type: string
+
+      arm_client_id:
+        description: Azure Resource Manager service principal client ID
+        required: true
+        type: string
+
+      tf_cli_args_fmt:
+        description: Additional Terraform CLI arguments for Fmt command
+        required: false
+        type: string
+        default: ""
+
+      tf_cli_args_init:
+        description: Additional Terraform CLI arguments for Init command
+        required: false
+        type: string
+        default: ""
+
+      tf_cli_args_validate:
+        description: Additional Terraform CLI arguments for Validate command
+        required: false
+        type: string
+        default: ""
+
+      tf_cli_args_plan:
+        description: Additional Terraform CLI arguments for Plan command
+        required: false
+        type: string
+        default: ""
+
+      tf_cli_args_apply:
+        description: Additional Terraform CLI arguments for Apply command
+        required: false
+        type: string
+        default: ""
+
+      terraform_version:
+        description: The version of Terraform CLI to install
+        required: false
+        type: string
+        default: latest
+
+    secrets:
+      arm_client_secret:
+        description: Azure Resource Manager service principal client secret
+        required: true
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }} # Terraform root module
+
+    env:
+      ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
+      ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
+      ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
+      TF_CLI_ARGS_fmt: ${{ inputs.tf_cli_args_fmt}}
+      TF_CLI_ARGS_init: ${{ inputs.tf_cli_args_init }}
+      TF_CLI_ARGS_validate: ${{ inputs.tf_cli_args_validate }}
+      TF_CLI_ARGS_plan: ${{ inputs.tf_cli_args_plan }}
+      TF_CLI_ARGS_apply: ${{ inputs.tf_cli_args_apply }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      # Apply infrastructure on merge into branch 'main'
+      - name: Terraform Apply
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
