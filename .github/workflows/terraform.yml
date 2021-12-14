@@ -67,27 +67,26 @@ on:
         description: Azure Resource Manager service principal client secret
         required: true
 
+env:
+  ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
+  ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
+  ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
+  ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
+  TF_CLI_ARGS_fmt: ${{ inputs.tf_cli_args_fmt}}
+  TF_CLI_ARGS_init: ${{ inputs.tf_cli_args_init }}
+  TF_CLI_ARGS_validate: ${{ inputs.tf_cli_args_validate }}
+  TF_CLI_ARGS_plan: ${{ inputs.tf_cli_args_plan }}
+  TF_CLI_ARGS_apply: ${{ inputs.tf_cli_args_apply }}
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ${{ inputs.working_directory }} # Terraform root module
+
 jobs:
-  terraform:
+  terraform-plan:
     name: Terraform
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ inputs.working_directory }} # Terraform root module
-
-    env:
-      ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
-      ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
-      ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
-      ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
-      TF_CLI_ARGS_fmt: ${{ inputs.tf_cli_args_fmt}}
-      TF_CLI_ARGS_init: ${{ inputs.tf_cli_args_init }}
-      TF_CLI_ARGS_validate: ${{ inputs.tf_cli_args_validate }}
-      TF_CLI_ARGS_plan: ${{ inputs.tf_cli_args_plan }}
-      TF_CLI_ARGS_apply: ${{ inputs.tf_cli_args_apply }}
 
     steps:
       - name: Checkout
@@ -110,7 +109,25 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
-      # Apply infrastructure on merge into branch 'main'
+  # Apply infrastructure on merge into branch 'main'
+  terraform-apply:
+    name: Terraform
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Terraform Init
+        run: terraform init
+
       - name: Terraform Apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
