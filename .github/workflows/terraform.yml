@@ -78,15 +78,16 @@ env:
   TF_CLI_ARGS_plan: ${{ inputs.tf_cli_args_plan }}
   TF_CLI_ARGS_apply: ${{ inputs.tf_cli_args_apply }}
 
-defaults:
-  run:
-    shell: bash
-    working-directory: ${{ inputs.working_directory }} # Terraform root module
-
 jobs:
   terraform-plan:
-    name: Terraform
+    name: Terraform Plan
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
 
     steps:
       - name: Checkout
@@ -109,13 +110,16 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
-  # Apply infrastructure on merge into branch 'main'
   terraform-apply:
-    name: Terraform
-    needs: terraform-plan
+    name: Terraform Apply
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
 
     steps:
       - name: Checkout
