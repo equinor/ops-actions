@@ -80,8 +80,9 @@ env:
 
 jobs:
   terraform-plan:
-    name: Terraform
+    name: Terraform Plan
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
 
     defaults:
       run:
@@ -110,8 +111,7 @@ jobs:
         run: terraform plan
 
   terraform-apply:
-    name: Terraform
-    needs: terraform-plan
+    name: Terraform Apply
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
