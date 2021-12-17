@@ -93,10 +93,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # Inject token into GitHub URL references to download modules from private repos
-      - name: Git Config
-        run: git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com".insteadOf https://github.com
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
