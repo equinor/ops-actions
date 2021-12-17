@@ -95,7 +95,7 @@ jobs:
 
       # Inject token into GitHub URL references to download modules from private repos
       - name: Git Config
-        run: git config --global url."https://foo:${{ github.token }}@github.com".insteadOf"https://github.com"
+        run: git config --global url."https://foo:${{ github.token }}@github.com".insteadOf "https://github.com"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
