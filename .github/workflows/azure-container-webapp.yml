@@ -71,7 +71,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Deploy Docker image to Azure Web App container
+      - name: Deploy Docker image to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
