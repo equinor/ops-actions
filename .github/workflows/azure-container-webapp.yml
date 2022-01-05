@@ -1,0 +1,80 @@
+on:
+  workflow_call:
+    inputs:
+      registry_login_server:
+        description: Login server of container registry to push Docker image to
+        required: true
+        type: string
+
+      registry_repository:
+        description: Container registry repository to push Docker image to
+        required: true
+        type: string
+
+      environment:
+        description: The environment that the job references
+        required: true
+        type: string
+
+      azure_webapp_name:
+        description: Name of Azure Web App to deploy Docker image to
+        required: true
+        type: string
+
+    secrets:
+      registry_username:
+        description: Username used to login to container registry
+        required: true
+
+      registry_password:
+        description: Password used to login to container registry
+        required: true
+
+      azure_webapp_publish_profile:
+        description: Publish Profile used to authenticate to Azure Web App
+        required: true
+
+env:
+  IMAGE_TAG_COMMIT_SHA: ${{ inputs.registry_login_server }}/${{ inputs.registry_repository }}:${{ github.sha }}
+  IMAGE_TAG_LATEST: ${{ inputs.registry_login_server }}/${{ inputs.registry_repository }}:latest
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build . -t ${{ env.IMAGE_TAG_COMMIT_SHA }} -t ${{ env.IMAGE_TAG_LATEST }}
+
+      - name: Login to container registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.registry_login_server }}
+          username: ${{ secrets.registry_username }}
+          password: ${{ secrets.registry_password }}
+
+      - name: Push Docker image to container registry
+        run: |
+          docker push ${{ env.IMAGE_TAG_COMMIT_SHA }}
+          docker push ${{ env.IMAGE_TAG_LATEST }}
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Deploy Docker image to Azure Web App container
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ inputs.azure_webapp_name }}
+          publish-profile: ${{ secrets.azure_webapp_publish_profile }}
+          images: ${{ env.IMAGE_TAG_COMMIT_SHA }}
