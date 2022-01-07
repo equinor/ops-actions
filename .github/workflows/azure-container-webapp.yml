@@ -12,7 +12,7 @@ on:
         type: string
 
       registry_repository:
-        description: Container registry repository to push Docker image to
+        description: Repository in container registry to push Docker image to
         required: true
         type: string
 
@@ -35,8 +35,8 @@ on:
         required: true
 
 env:
-  IMAGE_TAG_COMMIT_SHA: ${{ inputs.registry_login_server }}/${{ inputs.registry_repository }}:${{ github.sha }}
-  IMAGE_TAG_LATEST: ${{ inputs.registry_login_server }}/${{ inputs.registry_repository }}:latest
+  TAG_COMMIT_SHA: ${{ inputs.registry_login_server }}/${{ inputs.registry_repository }}:${{ github.sha }}
+  TAG_LATEST: ${{ inputs.registry_login_server }}/${{ inputs.registry_repository }}:latest
 
 jobs:
   build:
@@ -48,7 +48,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker image
-        run: docker build . -t ${{ env.IMAGE_TAG_COMMIT_SHA }} -t ${{ env.IMAGE_TAG_LATEST }}
+        run: docker build . -t ${{ env.TAG_COMMIT_SHA }} -t ${{ env.TAG_LATEST }}
 
       - name: Login to container registry
         uses: azure/docker-login@v1
@@ -59,8 +59,8 @@ jobs:
 
       - name: Push Docker image to container registry
         run: |
-          docker push ${{ env.IMAGE_TAG_COMMIT_SHA }}
-          docker push ${{ env.IMAGE_TAG_LATEST }}
+          docker push ${{ env.TAG_COMMIT_SHA }}
+          docker push ${{ env.TAG_LATEST }}
 
   deploy:
     name: Deploy
@@ -77,4 +77,4 @@ jobs:
         with:
           app-name: ${{ inputs.webapp_name }}
           publish-profile: ${{ secrets.webapp_publish_profile }}
-          images: ${{ env.IMAGE_TAG_COMMIT_SHA }}
+          images: ${{ env.TAG_COMMIT_SHA }}
