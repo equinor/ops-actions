@@ -7,7 +7,7 @@ on:
         type: string
 
       registry_login_server:
-        description: Login server of container registry to push Docker image to
+        description: Login server of container registry
         required: true
         type: string
 
