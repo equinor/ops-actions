@@ -26,41 +26,41 @@ on:
         required: true
         type: string
 
-      tf_cli_args_fmt:
-        description: Additional Terraform CLI arguments for Fmt command
-        required: false
-        type: string
-        default: ""
-
-      tf_cli_args_init:
-        description: Additional Terraform CLI arguments for Init command
-        required: false
-        type: string
-        default: ""
-
-      tf_cli_args_validate:
-        description: Additional Terraform CLI arguments for Validate command
-        required: false
-        type: string
-        default: ""
-
-      tf_cli_args_plan:
-        description: Additional Terraform CLI arguments for Plan command
-        required: false
-        type: string
-        default: ""
-
-      tf_cli_args_apply:
-        description: Additional Terraform CLI arguments for Apply command
-        required: false
-        type: string
-        default: ""
-
       terraform_version:
         description: The version of Terraform CLI to install
         required: false
         type: string
         default: latest
+
+      terraform_fmt_args:
+        description: Additional Terraform CLI arguments for Fmt command
+        required: false
+        type: string
+        default: ""
+
+      terraform_init_args:
+        description: Additional Terraform CLI arguments for Init command
+        required: false
+        type: string
+        default: ""
+
+      terraform_validate_args:
+        description: Additional Terraform CLI arguments for Validate command
+        required: false
+        type: string
+        default: ""
+
+      terraform_plan_args:
+        description: Additional Terraform CLI arguments for Plan command
+        required: false
+        type: string
+        default: ""
+
+      terraform_apply_args:
+        description: Additional Terraform CLI arguments for Apply command
+        required: false
+        type: string
+        default: ""
 
     secrets:
       arm_client_secret:
@@ -83,11 +83,11 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
       ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
       ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
-      TF_CLI_ARGS_fmt: ${{ inputs.tf_cli_args_fmt}}
-      TF_CLI_ARGS_init: ${{ inputs.tf_cli_args_init }}
-      TF_CLI_ARGS_validate: ${{ inputs.tf_cli_args_validate }}
-      TF_CLI_ARGS_plan: ${{ inputs.tf_cli_args_plan }}
-      TF_CLI_ARGS_apply: ${{ inputs.tf_cli_args_apply }}
+      TF_CLI_ARGS_fmt: ${{ inputs.terraform_fmt_args}}
+      TF_CLI_ARGS_init: ${{ inputs.terraform_init_args }}
+      TF_CLI_ARGS_validate: ${{ inputs.terraform_validate_args }}
+      TF_CLI_ARGS_plan: ${{ inputs.terraform_plan_args }}
+      TF_CLI_ARGS_apply: ${{ inputs.terraform_apply_args }}
 
     steps:
       - name: Checkout
