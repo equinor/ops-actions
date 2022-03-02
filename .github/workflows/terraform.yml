@@ -26,6 +26,12 @@ on:
         required: true
         type: string
 
+      arm_skip_provider_registration:
+        description: Skip Azure resource provider registration
+        required: false
+        type: boolean
+        default: true
+
       terraform_version:
         description: The version of Terraform CLI to install
         required: false
@@ -83,6 +89,7 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
       ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
       ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
+      ARM_SKIP_PROVIDER_REGISTRATION: ${{ input.arm_skip_provider_registration }}
       TF_CLI_ARGS_fmt: ${{ inputs.terraform_fmt_args}}
       TF_CLI_ARGS_init: ${{ inputs.terraform_init_args }}
       TF_CLI_ARGS_validate: ${{ inputs.terraform_validate_args }}
