@@ -1,0 +1,50 @@
+on:
+  workflow_call:
+    inputs:
+
+      acr_login_server:
+        description: Login server of Azure container registry
+        required: true
+        type: string
+
+      acr_repository:
+        description: Repository in container registry to push Docker image to
+        required: true
+        type: string
+
+    secrets:
+      acr_admin_username:
+        description: Username used to login to Azure container registry
+        required: true
+
+      acr_admin_password:
+        description: Password used to login to Azure container registry
+        required: true
+
+env:
+  TAG_COMMIT_SHA: ${{ inputs.acr_login_server }}/${{ inputs.acr_repository }}:${{ github.sha }}
+  TAG_LATEST: ${{ inputs.acr_login_server }}/${{ inputs.acr_repository }}:latest
+
+jobs:
+  build-and-push:
+    name: Build and push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build . -t ${{ env.TAG_COMMIT_SHA }} -t ${{ env.TAG_LATEST }}
+
+      - name: Login to container registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.acr_login_server }}
+          username: ${{ secrets.acr_admin_username }}
+          password: ${{ secrets.acr_admin_password }}
+
+      - name: Push Docker image to container registry
+        run: |
+          docker push ${{ env.TAG_COMMIT_SHA }}
+          docker push ${{ env.TAG_LATEST }}
