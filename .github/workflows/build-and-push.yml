@@ -1,6 +1,11 @@
 on:
   workflow_call:
     inputs:
+      working_directory:
+        description: Directory to run Docker commands in
+        required: true
+        type: string
+
       acr_login_server:
         description: Login server of Azure container registry
         required: true
@@ -28,6 +33,10 @@ jobs:
   build-and-push:
     name: Build and push
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
 
     steps:
       - name: Checkout source code
