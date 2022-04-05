@@ -1,23 +1,22 @@
 on:
   workflow_call:
     inputs:
-
       acr_login_server:
         description: Login server of Azure container registry
         required: true
         type: string
 
       acr_repository:
-        description: Repository in container registry to push Docker image to
+        description: Repository in Azure container registry to push Docker image to
         required: true
         type: string
 
     secrets:
-      acr_admin_username:
+      acr_username:
         description: Username used to login to Azure container registry
         required: true
 
-      acr_admin_password:
+      acr_password:
         description: Password used to login to Azure container registry
         required: true
 
@@ -41,8 +40,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: ${{ inputs.acr_login_server }}
-          username: ${{ secrets.acr_admin_username }}
-          password: ${{ secrets.acr_admin_password }}
+          username: ${{ secrets.acr_username }}
+          password: ${{ secrets.acr_password }}
 
       - name: Push Docker image to container registry
         run: |
