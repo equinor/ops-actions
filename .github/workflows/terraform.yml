@@ -32,36 +32,6 @@ on:
         type: string
         default: latest
 
-      terraform_fmt_args:
-        description: Additional Terraform CLI arguments for Fmt command
-        required: false
-        type: string
-        default: ""
-
-      terraform_init_args:
-        description: Additional Terraform CLI arguments for Init command
-        required: false
-        type: string
-        default: ""
-
-      terraform_validate_args:
-        description: Additional Terraform CLI arguments for Validate command
-        required: false
-        type: string
-        default: ""
-
-      terraform_plan_args:
-        description: Additional Terraform CLI arguments for Plan command
-        required: false
-        type: string
-        default: ""
-
-      terraform_apply_args:
-        description: Additional Terraform CLI arguments for Apply command
-        required: false
-        type: string
-        default: ""
-
     secrets:
       arm_client_secret:
         description: Azure Resource Manager service principal client secret
@@ -83,11 +53,6 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
       ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
       ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
-      TF_CLI_ARGS_fmt: ${{ inputs.terraform_fmt_args}}
-      TF_CLI_ARGS_init: ${{ inputs.terraform_init_args }}
-      TF_CLI_ARGS_validate: ${{ inputs.terraform_validate_args }}
-      TF_CLI_ARGS_plan: ${{ inputs.terraform_plan_args }}
-      TF_CLI_ARGS_apply: ${{ inputs.terraform_apply_args }}
 
     steps:
       - name: Checkout
