@@ -3,12 +3,6 @@
 on:
   workflow_call:
     inputs:
-      runs_on:
-        description: The type of machine to run the job on.
-        type: string
-        default: ubuntu-latest
-        required: false
-
       environment:
         description: The environment that the job references.
         type: string
@@ -32,13 +26,17 @@ on:
 jobs:
   deploy:
     name: Deploy
-    runs-on: ${{ inputs.runs_on }}
+    runs-on: ubuntu-20.04
     environment:
       name: ${{ inputs.environment }}
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
-      - name: Deploy Docker image to Azure Web App
+      - name: Deploy Docker image to Azure App Service
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
