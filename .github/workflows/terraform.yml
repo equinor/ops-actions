@@ -11,8 +11,8 @@ on:
         required: true
         type: string
 
-      arm_tenant_id:
-        description: Azure Resource Manager tenant ID
+      arm_client_id:
+        description: Azure Resource Manager service principal client ID
         required: true
         type: string
 
@@ -21,8 +21,8 @@ on:
         required: true
         type: string
 
-      arm_client_id:
-        description: Azure Resource Manager service principal client ID
+      arm_tenant_id:
+        description: Azure Resource Manager tenant ID
         required: true
         type: string
 
@@ -79,10 +79,10 @@ jobs:
         working-directory: ${{ inputs.working_directory }} # Terraform root module
 
     env:
-      ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
-      ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
       ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
       ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
+      ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
       TF_CLI_ARGS_fmt: ${{ inputs.terraform_fmt_args}}
       TF_CLI_ARGS_init: ${{ inputs.terraform_init_args }}
       TF_CLI_ARGS_validate: ${{ inputs.terraform_validate_args }}
