@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-20.04
     environment:
       name: ${{ inputs.environment }}
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      url: ${{ steps.deploy-web-app.outputs.webapp-url }}
 
     defaults:
       run:
@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Deploy Docker image to Azure App Service
-        id: deploy-to-webapp
+        id: deploy-web-app
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ inputs.app_service_name }}
