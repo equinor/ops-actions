@@ -49,7 +49,7 @@ env:
 
 jobs:
   docker:
-    name: Docker
+    name: Docker Build and Push
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -76,7 +76,7 @@ jobs:
           docker push $DOCKER_IMAGE_LATEST
 
   web-app:
-    name: Web App
+    name: Web App Deploy
     needs: docker
     runs-on: ubuntu-20.04
     environment:
