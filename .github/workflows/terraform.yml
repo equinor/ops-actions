@@ -19,13 +19,13 @@ on:
         required: true
         type: string
 
-      arm_subscription_id:
-        description: The ID of the Azure Subscription to provision the Azure resources for.
+      arm_tenant_id:
+        description: The tenant ID of the Azure Service Principal used for authenticating to Azure.
         required: true
         type: string
 
-      arm_tenant_id:
-        description: The tenant ID of the Azure Service Principal used for authenticating to Azure.
+      arm_subscription_id:
+        description: The ID of the Azure Subscription to provision the Azure resources for.
         required: true
         type: string
 
@@ -53,8 +53,8 @@ jobs:
     env:
       ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
       ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
-      ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
       ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
+      ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
 
     steps:
       - name: Checkout
