@@ -1,8 +1,14 @@
 on:
   workflow_call:
     inputs:
+      runs-on:
+        description: The type of machine to run the jobs on
+        required: false
+        type: string
+        default: ubuntu-latest
+
       environment:
-        description: The environment that the job references
+        description: The environment that the deploy job references
         required: true
         type: string
 
@@ -41,7 +47,7 @@ env:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
 
     steps:
       - name: Checkout source code
@@ -65,7 +71,7 @@ jobs:
   deploy:
     name: Deploy
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     environment:
       name: ${{ inputs.environment }}
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}

@@ -1,6 +1,12 @@
 on:
   workflow_call:
     inputs:
+      runs-on:
+        description: The type of machine to run the job on
+        required: false
+        type: string
+        default: ubuntu-latest
+
       working_directory:
         description: Directory to run Docker commands in
         required: true
@@ -32,7 +38,7 @@ env:
 jobs:
   build-and-push:
     name: Build and push
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
 
     defaults:
       run:

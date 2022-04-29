@@ -1,6 +1,12 @@
 on:
   workflow_call:
     inputs:
+      runs-on:
+        description: The type of machine to run the job on
+        required: false
+        type: string
+        default: ubuntu-latest
+
       environment:
         description: The environment that the job references
         required: true
@@ -40,7 +46,7 @@ on:
 jobs:
   terraform:
     name: Terraform
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     environment: ${{ inputs.environment }}
 
     defaults:
