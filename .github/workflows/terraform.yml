@@ -1,4 +1,4 @@
-# Provision Azure resources using the Azure Provider for Terraform.
+# Install Terraform, configure Azure credentials, create a Terraform plan, and apply the plan on push to branch 'main'.
 
 on:
   workflow_call:
@@ -77,7 +77,6 @@ jobs:
       - name: Terraform Plan
         run: terraform plan
 
-      # Apply infrastructure on merge into branch 'main'
       - name: Terraform Apply
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve

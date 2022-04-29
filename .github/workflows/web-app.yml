@@ -43,11 +43,6 @@ on:
         description: The publish profile used to deploy to the Azure App Service.
         required: true
 
-defaults:
-  run:
-    shell: bash
-    working-directory: ${{ inputs.working_directory }}
-
 env:
   DOCKER_IMAGE: ${{ inputs.container_registry_login_server }}/${{ inputs.container_registry_repository }}:${{ github.sha }}
   DOCKER_IMAGE_LATEST: ${{ inputs.container_registry_login_server }}/${{ inputs.container_registry_repository }}:latest
@@ -56,6 +51,10 @@ jobs:
   docker:
     name: Docker
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
 
     steps:
       - name: Checkout
