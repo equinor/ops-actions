@@ -1,0 +1,61 @@
+# Build a Docker image and push it to an Azure Container Registry.
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: The type of machine to run the job on
+        type: string
+        default: ubuntu-latest
+        required: false
+
+      container_registry_login_server:
+        description: Login server of container registry
+        type: string
+        required: true
+
+      container_registry_repository:
+        description: Repository in container registry to push Docker image to
+        type: string
+        required: true
+
+      container_registry_admin_username:
+        description: Username used to login to container registry
+        type: string
+        required: true
+
+    secrets:
+      container_registry_admin_password:
+        description: Password used to login to container registry
+        required: true
+
+env:
+  TAG: ${{ inputs.container_registry_login_server }}/${{ inputs.container_registry_repository }}:${{ github.sha }}
+  TAG_LATEST: ${{ inputs.container_registry_login_server }}/${{ inputs.container_registry_repository }}:latest
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ inputs.runs-on }}
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build . -t $TAG -t $TAG_LATEST
+
+      - name: Login to container registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.container_registry_login_server }}
+          username: ${{ inputs.container_registry_admin_username }}
+          password: ${{ secrets.container_registry_admin_password }}
+
+      - name: Push Docker image to container registry
+        run: |
+          docker push $TAG
+          docker push $TAG_LATEST
+
+      - name: Output Docker image
+        run: echo "::set-output name=docker_image::$TAG"
