@@ -1,10 +1,31 @@
-# Deploy a Docker image to an Azure App Service.
+# Build a Docker image, push it to a container registry, and deploy it to an Azure App Service.
 
 on:
   workflow_call:
     inputs:
+      working_directory:
+        description: The working directory of where to run the Docker CLI commands.
+        type: string
+        default: '.'
+        required: false
+
+      container_registry_login_server:
+        description: The login server of the container registry to push the Docker image to.
+        type: string
+        required: true
+
+      container_registry_repository:
+        description: The repository in the container registry to push the Docker image to.
+        type: string
+        required: true
+
+      container_registry_admin_username:
+        description: The admin username used to login to the container registry.
+        type: string
+        required: true
+
       environment:
-        description: The environment that the job references.
+        description: The environment that the deploy job references.
         type: string
         required: true
 
@@ -13,33 +34,61 @@ on:
         type: string
         required: true
 
-      docker_image:
-        description: The Docker image to deploy to the Azure App Service.
-        type: string
+    secrets:
+      container_registry_admin_password:
+        description: The admin password used to login to the container registry.
         required: true
 
-    secrets:
       app_service_publish_profile:
         description: The publish profile used to deploy to the Azure App Service.
         required: true
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ${{ inputs.working_directory }}
+
+env:
+  DOCKER_IMAGE: ${{ inputs.container_registry_login_server }}/${{ inputs.container_registry_repository }}:${{ github.sha }}
+  DOCKER_IMAGE_LATEST: ${{ inputs.container_registry_login_server }}/${{ inputs.container_registry_repository }}:latest
+
 jobs:
+  build-and-push:
+    name: Build and push
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build . -t $DOCKER_IMAGE -t $DOCKER_IMAGE_LATEST
+
+      - name: Login to container registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.container_registry_login_server }}
+          username: ${{ inputs.container_registry_admin_username }}
+          password: ${{ secrets.container_registry_admin_password }}
+
+      - name: Push Docker image to container registry
+        run: |
+          docker push $DOCKER_IMAGE
+          docker push $DOCKER_IMAGE_LATEST
+
   deploy:
     name: Deploy
+    needs: build-and-push
     runs-on: ubuntu-20.04
     environment:
       name: ${{ inputs.environment }}
-      url: ${{ steps.deploy-webapp.outputs.webapp-url }}
-
-    defaults:
-      run:
-        shell: bash
+      url: ${{ steps.webapps-deploy.outputs.webapp-url }}
 
     steps:
       - name: Deploy Docker image to Azure App Service
-        id: deploy-webapp
+        id: webapps-deploy
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ inputs.app_service_name }}
           publish-profile: ${{ secrets.app_service_publish_profile }}
-          images: ${{ inputs.docker_image }}
+          images: ${{ env.DOCKER_IMAGE }}
