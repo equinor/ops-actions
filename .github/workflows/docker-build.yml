@@ -3,6 +3,12 @@
 on:
   workflow_call:
     inputs:
+      working_directory:
+        description: The working directory of where to run the Docker CLI commands.
+        type: string
+        default: '.'
+        required: false
+
       container_registry_login_server:
         description: The login server of the container registry to push the Docker image to.
         type: string
@@ -30,6 +36,7 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: ${{ inputs.working_directory }}
 
     env:
       DOCKER_IMAGE: ${{ inputs.container_registry_login_server }}/${{ inputs.container_registry_repository }}:${{ github.sha }}
