@@ -1,0 +1,47 @@
+# Deploy a Docker image to an Azure App Service.
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        description: The type of machine to run the job on.
+        type: string
+        default: ubuntu-latest
+        required: false
+
+      environment:
+        description: The environment that the job references.
+        type: string
+        required: true
+
+      app_service_name:
+        description: The name of the Azure App Service to deploy the Docker image to.
+        type: string
+        required: true
+
+      docker_image:
+        description: The Docker image to deploy to the Azure App Service.
+        type: string
+        required: true
+
+    secrets:
+      app_service_publish_profile:
+        description: The publish profile used to deploy to the Azure App Service.
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ${{ inputs.runs_on }}
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Deploy Docker image to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ inputs.app_service_name }}
+          publish-profile: ${{ secrets.app_service_publish_profile }}
+          images: ${{ inputs.docker_image }}
