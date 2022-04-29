@@ -1,58 +1,54 @@
+# Provision Azure resources using the Azure Provider for Terraform.
+
 on:
   workflow_call:
     inputs:
-      runs-on:
-        description: The type of machine to run the job on
-        required: false
-        type: string
-        default: ubuntu-latest
-
       environment:
-        description: The environment that the job references
+        description: The environment that the job references.
         required: true
         type: string
 
       working_directory:
-        description: The working directory of where to run the Terraform CLI commands
-        required: true
+        description: The working directory of where to run the Terraform CLI commands.
         type: string
+        default: '.'
+        required: false
 
       arm_client_id:
-        description: Azure Resource Manager service principal client ID
+        description: The client ID of the Azure Service Principal used for authenticating to Azure.
         required: true
         type: string
 
       arm_subscription_id:
-        description: Azure Resource Manager subscription ID
+        description: The ID of the Azure Subscription to provision the Azure resources for.
         required: true
         type: string
 
       arm_tenant_id:
-        description: Azure Resource Manager tenant ID
+        description: The tenant ID of the Azure Service Principal used for authenticating to Azure.
         required: true
         type: string
 
       terraform_version:
-        description: The version of Terraform CLI to install
+        description: The version of the Terraform CLI to install.
         required: false
         type: string
         default: latest
 
     secrets:
       arm_client_secret:
-        description: Azure Resource Manager service principal client secret
+        description: The client secret of the Azure Service Principal used for authenticating to Azure.
         required: true
 
 jobs:
   terraform:
     name: Terraform
-    runs-on: ${{ inputs.runs-on }}
+    runs-on: ubuntu-20.04
     environment: ${{ inputs.environment }}
-
     defaults:
       run:
         shell: bash
-        working-directory: ${{ inputs.working_directory }} # Terraform root module
+        working-directory: ${{ inputs.working_directory }}
 
     env:
       ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
