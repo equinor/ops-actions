@@ -53,39 +53,39 @@ env:
   DOCKER_IMAGE_LATEST: ${{ inputs.container_registry_login_server }}/${{ inputs.container_registry_repository }}:latest
 
 jobs:
-  build-and-push:
-    name: Build and push
+  docker:
+    name: Docker
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout source code
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build Docker image
+      - name: Docker Build
         run: docker build . -t $DOCKER_IMAGE -t $DOCKER_IMAGE_LATEST
 
-      - name: Login to container registry
+      - name: Docker Login
         uses: azure/docker-login@v1
         with:
           login-server: ${{ inputs.container_registry_login_server }}
           username: ${{ inputs.container_registry_admin_username }}
           password: ${{ secrets.container_registry_admin_password }}
 
-      - name: Push Docker image to container registry
+      - name: Docker Push
         run: |
           docker push $DOCKER_IMAGE
           docker push $DOCKER_IMAGE_LATEST
 
-  deploy:
-    name: Deploy
-    needs: build-and-push
+  web-app:
+    name: Web App
+    needs: docker
     runs-on: ubuntu-20.04
     environment:
       name: ${{ inputs.environment }}
       url: ${{ steps.webapps-deploy.outputs.webapp-url }}
 
     steps:
-      - name: Deploy Docker image to Azure App Service
+      - name: Web App Deploy
         id: webapps-deploy
         uses: azure/webapps-deploy@v2
         with:
