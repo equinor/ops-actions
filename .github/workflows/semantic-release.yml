@@ -10,6 +10,9 @@ on:
     branches:
       - main
   workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
   release:
