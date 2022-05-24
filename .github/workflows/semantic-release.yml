@@ -28,4 +28,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --branches main --plugins @semantic-release/commit-analyzer --preset conventionalcommits
+        run: npx semantic-release --branches main --plugins '@semantic-release/commit-analyzer @semantic-release/release-notes-generator' --preset conventionalcommits
