@@ -2,7 +2,7 @@
 #
 # References:
 # - semantic-release: https://semantic-release.gitbook.io/semantic-release/
-# - Conventional Commits specification: https://www.conventionalcommits.org
+# - Conventional Commits specification: https://www.conventionalcommits.org/en/v1.0.0/
 
 name: Release
 
