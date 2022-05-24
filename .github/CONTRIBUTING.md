@@ -1,8 +1,8 @@
 # Contributing guidelines
 
-1. Create a new branch.
+1. Create a fork of this repository.
 1. Commit your changes.
-1. Create a pull request.
+1. Create a pull request in this repository.
 
 ## Semantic commits
 
