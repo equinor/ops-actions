@@ -43,7 +43,7 @@ on:
 jobs:
   terraform:
     name: Terraform
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     defaults:
       run:
