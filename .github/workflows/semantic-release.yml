@@ -1,7 +1,8 @@
-# Automatically create GitHub releases with semantic-release using the Conventional Commits specification.
+# Create a GitHub release on branch 'main' using semantic-release with the Conventional Commits specification preset.
 #
-# semantic-release configuration: https://semantic-release.gitbook.io/semantic-release/usage/configuration
-# Conventional Commits specification: https://www.conventionalcommits.org
+# References:
+# - semantic-release: https://semantic-release.gitbook.io/semantic-release/
+# - Conventional Commits specification: https://www.conventionalcommits.org
 
 name: Release
 
