@@ -1,5 +1,7 @@
-# Automatically create GitHub releases with semantic-release using the conventionalcommits preset for conventional-changelog.
+# Automatically create GitHub releases with semantic-release using the Conventional Commits specification.
+#
 # semantic-release configuration: https://semantic-release.gitbook.io/semantic-release/usage/configuration
+# Conventional Commits specification: https://www.conventionalcommits.org
 
 name: Release
 
@@ -27,4 +29,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --branches main --plugins @semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/github --preset conventionalcommits
+        run: npx semantic-release --branches main --plugins '@semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/github' --preset conventionalcommits
