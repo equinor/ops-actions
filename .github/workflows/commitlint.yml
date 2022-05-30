@@ -1,0 +1,35 @@
+# Use commitlint to ensure commit messages follow the Conventional Commits specification.
+#
+# References:
+# - commitlint: https://commitlint.js.org
+# - Conventional Commits: https://www.conventionalcommits.org
+
+name: commitlint
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+  workflow_call:
+
+jobs:
+  lint-pr:
+    name: Lint PR
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Install commitlint
+        run: npm install -g @commitlint/cli @commitlint/config-conventional
+      - name: Configure commitlint
+        run: |
+          echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
+      - name: Lint PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: echo "${PR_TITLE}" | commitlint
