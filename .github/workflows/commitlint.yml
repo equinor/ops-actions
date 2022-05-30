@@ -1,10 +1,10 @@
-# Use commitlint to ensure the title of a GitHub pull request follows the Conventional Commits specification.
+# Use commitlint to ensure commit messages follow the Conventional Commits specification.
 #
 # References:
 # - commitlint: https://commitlint.js.org
 # - Conventional Commits: https://www.conventionalcommits.org
 
-name: Lint PR
+name: commitlint
 
 on:
   pull_request:
