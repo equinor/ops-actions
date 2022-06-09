@@ -71,6 +71,12 @@ jobs:
       ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
       ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
 
+    # Set permissions granted to GITHUB_TOKEN.
+    # Required when using OpenID Connect for authenticating to Azure.
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
