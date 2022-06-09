@@ -1,4 +1,12 @@
 # Install Terraform, configure Azure credentials, create a Terraform plan, and apply the plan on push to branch 'main'.
+#
+# Create a branch protection rule for branch 'main':
+# - Require a pull request before merging
+#    - Require approvals
+#    - Dismiss stale pull request approvals when new commits are pushed
+# - Require status checks to pass before merging
+#    - Require branches to be up to date before merging
+# - Include administrators
 
 on:
   workflow_call:
