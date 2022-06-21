@@ -11,7 +11,7 @@ on:
       working_directory:
         description: The working directory of where to run the Terraform CLI commands.
         type: string
-        default: '.'
+        default: "."
         required: false
 
       arm_client_id:
@@ -69,14 +69,14 @@ jobs:
         run: terraform fmt -check
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -no-color
 
       - name: Terraform Validate
-        run: terraform validate
+        run: terraform validate -no-color
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -no-color
 
       - name: Terraform Apply
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -no-color
