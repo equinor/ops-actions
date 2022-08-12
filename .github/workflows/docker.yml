@@ -35,7 +35,7 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     env:
-      TAG_RUN_NUMBER: ${{ inputs.acr_login_server }}/${{ inputs.acr_repository }}:${{ github.run_number }}
+      TAG_UNIQUE: ${{ inputs.acr_login_server }}/${{ inputs.acr_repository }}:${{ github.run_number }}
       TAG_LATEST: ${{ inputs.acr_login_server }}/${{ inputs.acr_repository }}:latest
 
     steps:
@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Docker Build
-        run: docker build . -t ${{ env.TAG_RUN_NUMBER }} -t ${{ env.TAG_LATEST }}
+        run: docker build . -t ${{ env.TAG_UNIQUE }} -t ${{ env.TAG_LATEST }}
 
       - name: Docker Login
         uses: azure/docker-login@v1
@@ -54,5 +54,5 @@ jobs:
 
       - name: Docker Push
         run: |
-          docker push ${{ env.TAG_RUN_NUMBER }}
+          docker push ${{ env.TAG_UNIQUE }}
           docker push ${{ env.TAG_LATEST }}
