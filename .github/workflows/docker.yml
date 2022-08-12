@@ -9,7 +9,7 @@ on:
         type: string
 
       acr_repository:
-        description: The Azure Container Registry repository in to push the Docker image to.
+        description: The Azure Container Registry repository to push the Docker image to.
         required: true
         type: string
 
