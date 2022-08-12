@@ -35,8 +35,8 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     env:
-      TAG_UNIQUE: ${{ inputs.acr_login_server }}/${{ inputs.acr_repository }}:${{ github.run_number }}
-      TAG_LATEST: ${{ inputs.acr_login_server }}/${{ inputs.acr_repository }}:latest
+      TAG_UNIQUE: ${{ secrets.acr_login_server }}/${{ inputs.acr_repository }}:${{ github.run_number }}
+      TAG_LATEST: ${{ secrets.acr_login_server }}/${{ inputs.acr_repository }}:latest
 
     steps:
       - name: Checkout
@@ -48,7 +48,7 @@ jobs:
       - name: Docker Login
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ inputs.acr_login_server }}
+          login-server: ${{ secrets.acr_login_server }}
           username: ${{ secrets.acr_admin_username }}
           password: ${{ secrets.acr_admin_password }}
 
