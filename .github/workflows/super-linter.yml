@@ -1,5 +1,7 @@
 # Run the GitHub Super-Linter to validate the codebase.
 
+name: Lint
+
 on:
   pull_request:
     branches:
