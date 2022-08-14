@@ -12,6 +12,7 @@ on:
       - opened
       - edited
       - synchronize
+
   workflow_call:
 
 jobs:
@@ -24,12 +25,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
+
       - name: Install commitlint
         run: npm install -g @commitlint/cli @commitlint/config-conventional
+
       - name: Configure commitlint
         run: |
           echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
+
       - name: Lint PR title
+        run: echo "${PR_TITLE}" | commitlint
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
-        run: echo "${PR_TITLE}" | commitlint
