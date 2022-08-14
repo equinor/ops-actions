@@ -21,6 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
+      - name: Checkout actions repo
+        uses: actions/checkout@v3
+        with:
+          repository: equinor/ops-actions
+          path: ops-actions
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -29,11 +35,7 @@ jobs:
       - name: Install commitlint
         run: npm install -g @commitlint/cli @commitlint/config-conventional
 
-      - name: Configure commitlint
-        run: |
-          echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
-
       - name: Lint PR title
-        run: echo "${PR_TITLE}" | commitlint
+        run: echo "${PR_TITLE}" | commitlint --config ops-actions/commitlint.config.js
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
