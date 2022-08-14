@@ -4,7 +4,7 @@
 # - commitlint: https://commitlint.js.org
 # - Conventional Commits: https://www.conventionalcommits.org
 
-name: commitlint
+name: Lint PR
 
 on:
   pull_request:
@@ -16,8 +16,7 @@ on:
   workflow_call:
 
 jobs:
-  lint-pr:
-    name: Lint PR
+  commitlint:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
