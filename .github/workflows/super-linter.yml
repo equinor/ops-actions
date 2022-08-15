@@ -1,0 +1,27 @@
+# Run GitHub Super-Linter to validate the codebase.
+
+name: Lint Codebase
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  workflow_call:
+
+jobs:
+  super-linter:
+    name: Super-Linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Lint Codebase
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
