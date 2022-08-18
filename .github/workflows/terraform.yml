@@ -78,5 +78,5 @@ jobs:
         run: terraform plan -no-color
 
       - name: Terraform Apply
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
         run: terraform apply -auto-approve -no-color
