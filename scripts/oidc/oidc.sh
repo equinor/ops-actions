@@ -17,7 +17,7 @@ echo 'Logging into GitHub...'
 gh auth login
 
 echo 'Reading config...'
-config=$(envsubst < $CONFIG_FILE)
+config=$(envsubst < "$CONFIG_FILE")
 
 echo 'Checking if application already exists...'
 app_id=$(az ad app list --filter "displayName eq '$APP_NAME'" --query [].appId --output tsv)
