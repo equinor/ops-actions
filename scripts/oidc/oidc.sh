@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Configure OpenID Connect (OIDC) authentication from GitHub Actions to Azure.
-
 set -eu
 
 APP_NAME="$1"
