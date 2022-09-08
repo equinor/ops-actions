@@ -18,8 +18,6 @@ It will:
 1. Create an Azure role assignment for the service principal
 1. Create GitHub environment secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 
-The federated credential and role assignment are configured in `oidc.json`.
-
 ## Prerequisites
 
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credential, service principal and Azure role assignment
