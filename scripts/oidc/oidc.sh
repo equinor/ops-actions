@@ -56,7 +56,8 @@ fi
 echo "OBJECT_ID: $sp_id"
 
 echo 'Creating role assignments...'
-for ra in $(echo "$config" | jq -c '.roleAssignments[]'); do
+ras=$(echo "$config" | jq -c '.roleAssignments[]')
+echo "$ras" | while read ra; do
   role=$(echo "$ra" | jq -r '.role')
   scope=$(echo "$ra" | jq -r '.scope')
   echo "Assigning role '$role' at scope '$scope'..."
