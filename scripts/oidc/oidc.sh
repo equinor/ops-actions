@@ -32,6 +32,20 @@ else
 fi
 echo "CLIENT_ID: $app_id"
 
+echo 'Checking if federated identity credential already exists...'
+fic=$(echo "$config" | jq '.federatedCredential')
+fic_name=$(echo "$fic" | jq -r '.name')
+fic_id=$(az ad app federated-credential list --id "$app_id" --query "[?name == '$fic_name'].id" --output tsv)
+if [[ -z "$fic_id" ]]
+then
+  echo 'Creating federated identity credential...'
+  az ad app federated-credential create --id "$app_id" --parameters "$fic" --output none
+else
+  echo 'Updating existing federated identity credential.'
+  az ad app federated-credential update --id "$app_id" --federated-credential-id "$fic_id" --parameters "$fic" \
+    --output none
+fi
+
 echo 'Checking if service principal already exists...'
 sp_id=$(az ad sp list --filter "appId eq '$app_id'" --query [].id --output tsv)
 if [[ -z "$sp_id" ]]
@@ -48,20 +62,6 @@ role=$(echo "$config" | jq -r '.roleAssignment.role')
 scope=$(echo "$config" | jq -r '.roleAssignment.scope')
 az role assignment create --role "$role" --subscription "$SUBSCRIPTION_ID" --assignee-object-id "$sp_id" \
   --assignee-principal-type ServicePrincipal --scope "$scope" --output none
-
-echo 'Checking if federated identity credential already exists...'
-fic=$(echo "$config" | jq '.federatedCredential')
-fic_name=$(echo "$fic" | jq -r '.name')
-fic_id=$(az ad app federated-credential list --id "$app_id" --query "[?name == '$fic_name'].id" --output tsv)
-if [[ -z "$fic_id" ]]
-then
-  echo 'Creating federated identity credential...'
-  az ad app federated-credential create --id "$app_id" --parameters "$fic" --output none
-else
-  echo 'Updating existing federated identity credential.'
-  az ad app federated-credential update --id "$app_id" --federated-credential-id "$fic_id" --parameters "$fic" \
-    --output none
-fi
 
 echo 'Creating GitHub environment...'
 gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT"
