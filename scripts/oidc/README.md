@@ -5,10 +5,10 @@ This directory contains a script `oidc.sh` that will configure OpenID Connect (O
 The script accepts the following arguments:
 
 1. The name of the Azure AD application to create
-1. The ID of the Azure subscription to set up OIDC for
-1. The name of the GitHub repository to set up OIDC for
-1. The name of the GitHub environment to set up OIDC for
-1. The path of the JSON file containing the federated credential and role assignment configuration
+1. The ID of the Azure subscription to configure OIDC for
+1. The GitHub repository to configure OIDC for
+1. The GitHub environment to configure OIDC for
+1. The path of the JSON file containing the OIDC configuration
 
 It will:
 
