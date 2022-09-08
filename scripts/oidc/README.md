@@ -36,7 +36,7 @@ The federated credential and role assignment are configured in `oidc.json`.
 1. Run the script `oidc.sh`:
 
     ```bash
-    ./oidc.sh {APP_NAME} {SUBSCRIPTION_ID} {REPO} {ENVIRONMENT} ./oidc.json
+    ./oidc.sh {APP_NAME} {SUBSCRIPTION_ID} {REPO} {ENVIRONMENT} {CONFIG_FILE}
     ```
 
     For example:
