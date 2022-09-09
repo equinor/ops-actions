@@ -30,15 +30,15 @@ on:
         default: latest
 
     secrets:
-      arm_client_id:
+      AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
         required: true
 
-      arm_subscription_id:
+      AZURE_SUBSCRIPTION_ID:
         description: The ID of the Azure subscription to create the resources in.
         required: true
 
-      arm_tenant_id:
+      AZURE_TENANT_ID:
         description: The ID of the Azure tenant to create the resources in.
         required: true
 
@@ -54,9 +54,9 @@ jobs:
 
     env:
       ARM_USE_OIDC: true
-      ARM_CLIENT_ID: ${{ secrets.arm_client_id }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.arm_subscription_id }}
-      ARM_TENANT_ID: ${{ secrets.arm_tenant_id }}
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
     steps:
       - name: Checkout
