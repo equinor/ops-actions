@@ -1,5 +1,14 @@
 # Install Terraform, configure OpenID Connect (OIDC) authentication, create a Terraform plan, and apply the plan on push to branch 'main'.
 
+
+# Set permissions granted to GITHUB_TOKEN in caller workflow:
+
+# permissions:
+#   id-token: write
+#   contents: read
+
+# Required when using OpenID Connect for authenticating to Azure.
+
 on:
   workflow_call:
     inputs:
@@ -43,22 +52,9 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
 
-    # Set permissions granted to GITHUB_TOKEN.
-    # Required when using OpenID Connect for authenticating to Azure.
-    permissions:
-      id-token: write
-      contents: read
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.arm_client_id }}
-          subscription-id: ${{ secrets.arm_subscription_id }}
-          tenant-id: ${{ secrets.arm_tenant_id }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
