@@ -59,7 +59,7 @@ az storage container create \
   --output none
 
 sp_id="$(az ad sp show \
-  --id ${SP_CLIENT_ID} \
+  --id "${SP_CLIENT_ID}" \
   --query id \
   --output tsv)"
 
