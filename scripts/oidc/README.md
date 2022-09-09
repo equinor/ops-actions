@@ -15,21 +15,21 @@ It will:
 1. Create an Azure AD application
 1. Create a federated credential for the Azure AD application
 1. Create a service principal for the Azure AD application
-1. Create an Azure role assignment for the service principal
+1. Create an Azure role assignments for the service principal
 1. Create GitHub environment secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 
 ## Prerequisites
 
-- [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credential, service principal and Azure role assignment
+- [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credential, service principal and Azure role assignments
 - [Install GitHub CLI](https://cli.github.com) - to create GitHub environment secrets
 - [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credential and service principal
-- Activate Azure role `Owner` at the subscription scope - to create Azure role assignment
+- Activate Azure role `Owner` at the subscription scope - to create Azure role assignments
 - Login to Azure `az login`
 
 ## Usage
 
-1. Configure federated credential and role assignment in `oidc.json`.
+1. Configure federated credential and role assignments in `oidc.json`.
 
 1. Run the script `oidc.sh`:
 

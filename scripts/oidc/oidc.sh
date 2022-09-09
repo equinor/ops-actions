@@ -55,11 +55,15 @@ else
 fi
 echo "OBJECT_ID: $sp_id"
 
-echo 'Creating role assignment...'
-role=$(echo "$config" | jq -r '.roleAssignment.role')
-scope=$(echo "$config" | jq -r '.roleAssignment.scope')
-az role assignment create --role "$role" --subscription "$SUBSCRIPTION_ID" --assignee-object-id "$sp_id" \
-  --assignee-principal-type ServicePrincipal --scope "$scope" --output none
+echo 'Creating role assignments...'
+ras=$(echo "$config" | jq -c '.roleAssignments[]')
+echo "$ras" | while read -r ra; do
+  role=$(echo "$ra" | jq -r '.role')
+  scope=$(echo "$ra" | jq -r '.scope')
+  echo "Assigning role '$role' at scope '$scope'..."
+  az role assignment create --role "$role" --subscription "$SUBSCRIPTION_ID" --assignee-object-id "$sp_id" \
+    --assignee-principal-type ServicePrincipal --scope "$scope" --output none
+done
 
 echo 'Creating GitHub environment...'
 gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT"

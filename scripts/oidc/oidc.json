@@ -8,8 +8,10 @@
       "api://AzureADTokenExchange"
     ]
   },
-  "roleAssignment": {
-    "scope": "/subscriptions/${SUBSCRIPTION_ID}",
-    "role": "Owner"
-  }
+  "roleAssignments": [
+    {
+      "scope": "/subscriptions/${SUBSCRIPTION_ID}",
+      "role": "Contributor"
+    }
+  ]
 }
