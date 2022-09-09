@@ -1,12 +1,4 @@
-# Install Terraform, configure Azure credentials, create a Terraform plan, and apply the plan on push to branch 'main'.
-#
-# Create a branch protection rule for branch 'main':
-# - Require a pull request before merging
-#    - Require approvals
-#    - Dismiss stale pull request approvals when new commits are pushed
-# - Require status checks to pass before merging
-#    - Require branches to be up to date before merging
-# - Include administrators
+# Install Terraform, configure OpenID Connect (OIDC) authentication, create a Terraform plan, and apply the plan on push to branch 'main'.
 
 on:
   workflow_call:
@@ -17,42 +9,29 @@ on:
         required: true
 
       working_directory:
-        description: The working directory of where to run the Terraform CLI commands.
+        description: The working directory to run the Terraform commands in.
         type: string
         required: false
         default: '.'
 
-      arm_use_oidc:
-        description: Should OpenID Connect be used for authentication to Azure?
-        type: boolean
-        required: false
-        default: true
-
-      arm_client_id:
-        description: The client ID of the Azure Service Principal used for authenticating to Azure.
-        type: string
-        required: true
-
-      arm_tenant_id:
-        description: The tenant ID of the Azure Service Principal used for authenticating to Azure.
-        type: string
-        required: true
-
-      arm_subscription_id:
-        description: The ID of the Azure Subscription to provision the Azure resources for.
-        type: string
-        required: true
-
       terraform_version:
-        description: The version of the Terraform CLI to install.
+        description: The version of Terraform to install.
         type: string
         required: false
         default: latest
 
     secrets:
-      arm_client_secret:
-        description: The client secret of the Azure Service Principal used for authenticating to Azure.
-        required: false
+      arm_client_id:
+        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        required: true
+
+      arm_subscription_id:
+        description: The ID of the Azure subscription to create the resources in.
+        required: true
+
+      arm_tenant_id:
+        description: The ID of the Azure tenant to create the resources in.
+        required: true
 
 jobs:
   terraform:
@@ -65,11 +44,10 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     env:
-      ARM_USE_OIDC: ${{ inputs.arm_use_oidc }}
-      ARM_CLIENT_ID: ${{ inputs.arm_client_id }}
-      ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
-      ARM_TENANT_ID: ${{ inputs.arm_tenant_id }}
-      ARM_SUBSCRIPTION_ID: ${{ inputs.arm_subscription_id }}
+      ARM_USE_OIDC: true
+      ARM_CLIENT_ID: ${{ secrets.arm_client_id }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.arm_subscription_id }}
+      ARM_TENANT_ID: ${{ secrets.arm_tenant_id }}
 
     # Set permissions granted to GITHUB_TOKEN.
     # Required when using OpenID Connect for authenticating to Azure.
