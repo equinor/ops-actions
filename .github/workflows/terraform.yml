@@ -76,6 +76,9 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
+      - name: Azure CLI login
+        uses: azure/login@v1
+
       - name: Terraform Validate
         run: terraform validate
 
