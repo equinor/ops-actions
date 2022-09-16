@@ -62,9 +62,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Azure CLI login
-        uses: azure/login@v1
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -75,6 +72,9 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+
+      - name: Azure CLI login
+        uses: azure/login@v1
 
       - name: Terraform Validate
         run: terraform validate
