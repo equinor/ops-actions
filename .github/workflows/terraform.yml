@@ -52,7 +52,7 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     # Configure OIDC authentication to Azure using environment variables.
-    # Required by the AzureRM provider.
+    # Required by the AzureRM backend and provider.
     env:
       ARM_USE_OIDC: true
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
