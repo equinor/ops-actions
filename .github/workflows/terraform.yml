@@ -6,7 +6,7 @@
 #   id-token: write
 #   contents: read
 
-# Required when using OpenID Connect for authenticating to Azure.
+# Required when configuring OIDC authentication to Azure.
 
 on:
   workflow_call:
@@ -62,15 +62,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      # Configure OIDC authentication to Azure using the Azure Login action.
-      # Required by the AzAPI provider.
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
