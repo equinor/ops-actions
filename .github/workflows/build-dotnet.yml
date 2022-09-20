@@ -26,6 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROJECT: ${{ inputs.project }}
+      OUTPUT: build
 
     steps:
       - name: Checkout
@@ -40,13 +41,13 @@ jobs:
         run: dotnet restore "$PROJECT"
 
       - name: Build
-        run: dotnet build "$PROJECT" --configuration Release --no-restore
+        run: dotnet build "$PROJECT" --configuration Release --no-restore --output "$OUTPUT"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ inputs.project }}
+          path: ${{ env.OUTPUT }}
 
     outputs:
       artifact_name: ${{ inputs.artifact_name }}
