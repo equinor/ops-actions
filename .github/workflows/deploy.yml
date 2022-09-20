@@ -1,0 +1,60 @@
+# TODO: Write workflow description.
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: The name of the environment to deploy to.
+        type: string
+        required: true
+
+      artifact_name:
+        description: The name of the artifact containing the package to deploy.
+        type: string
+        required: false
+        default: package
+
+      azure_webapp_name:
+        description: The name of the Azure Web App to deploy the package to.
+        type: string
+        required: true
+
+    secrets:
+      AZURE_CLIENT_ID:
+        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: The ID of the Azure subscription to deploy the package to.
+        required: true
+
+      AZURE_TENANT_ID:
+        description: The ID of the Azure tenant to create the package to.
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ steps.deploy.outputs.webapp-url }}
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Deploy to Azure Web App
+        id: deploy
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ inputs.azure_webapp_name }}
