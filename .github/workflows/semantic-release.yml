@@ -15,20 +15,20 @@ on:
   # TODO: look into standardizing list format (e.g., space-separated only)
   workflow_call:
     inputs:
-      dependencies:
-        description: "A space-separated list of dependencies to install."
-        type: string
-        required: false
-        default: conventional-changelog-conventionalcommits
-
       branches:
-        description: "A comma-separated list of branches to release on."
+        description: A comma-separated list of branches to release on.
         type: string
         required: false
         default: main
 
+      preset:
+        description: Which preset to use for semantic-release.
+        type: string
+        required: false
+        default: conventionalcommits
+
       plugins:
-        description: "A comma-separated list of plugins to use."
+        description: A comma-separated list of plugins to use.
         type: string
         required: false
         default: >
@@ -36,11 +36,11 @@ on:
           @semantic-release/release-notes-generator,
           @semantic-release/github
 
-      preset:
-        description: "Which preset to use for semantic release."
+      extra_plugins:
+        description: A space-separated list of additional plugins to install.
         type: string
         required: false
-        default: conventionalcommits
+        default: conventional-changelog-conventionalcommits
 
 jobs:
   release:
@@ -57,10 +57,10 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Install dependencies
-        run: npm install "$DEPENDENCIES"
+      - name: Install additional plugins
+        run: npm install "$PLUGINS" -D
         env:
-          DEPENDENCIES: ${{ inputs.dependencies }}
+          PLUGINS: ${{ inputs.extra_plugins }}
 
       - name: Release
         run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
