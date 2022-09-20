@@ -28,7 +28,7 @@ on:
         default: conventionalcommits
 
       plugins:
-        description: A comma-separated list of plugins to use.
+        description: A comma-separated list of default plugins to use.
         type: string
         required: false
         default: >
