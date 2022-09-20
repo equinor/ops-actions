@@ -1,0 +1,51 @@
+# TODO: Write workflow description.
+
+on:
+  workflow_call:
+    inputs:
+      dotnet_version:
+        description: The version of .NET to install.
+        type: string
+        required: true
+
+      project:
+        description: The path of the project(s) to build.
+        type: string
+        required: false
+        default: "."
+
+      artifact_name:
+        description: The name of the build artifact to upload.
+        type: string
+        required: false
+        default: package
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      PROJECT: ${{ inputs.project }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ inputs.dotnet_version }}
+
+      - name: Install dependencies
+        run: dotnet restore "$PROJECT"
+
+      - name: Build
+        run: dotnet build "$PROJECT" --configuration Release --no-restore
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+
+    outputs:
+      artifact_name: ${{ inputs.artifact_name }}
