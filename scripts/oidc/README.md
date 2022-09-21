@@ -7,7 +7,7 @@ It will:
 1. Create an Azure AD application
 1. Create a federated credential for the Azure AD application
 1. Create a service principal for the Azure AD application
-1. Create an Azure role assignments for the service principal
+1. Create Azure role assignments for the service principal
 1. Create GitHub environment secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 
 The script accepts the following arguments:
