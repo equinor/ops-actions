@@ -4,7 +4,7 @@
 # Requires Azure role 'Owner' at the subscription scope.
 # Arguments:
 #   Azure region to create the storage account in, a name.
-#   Azure AD service principal that should manage the remote Terraform state, a client ID.
+#   Azure AD object that should manage the remote Terraform state, an ID.
 # Outputs:
 #   Terraform backend configuration.
 
@@ -14,7 +14,7 @@ readonly RESOURCE_GROUP_NAME='tfstate'
 readonly LOCATION="$1"
 readonly STORAGE_ACCOUNT_NAME="tfstate${RANDOM}"
 readonly CONTAINER_NAME='tfstate'
-readonly SP_CLIENT_ID="$2"
+readonly OBJECT_ID="$2"
 
 az group create \
   --name "${RESOURCE_GROUP_NAME}" \
@@ -58,13 +58,8 @@ az storage container create \
   --auth-mode login \
   --output none
 
-sp_id="$(az ad sp show \
-  --id "${SP_CLIENT_ID}" \
-  --query id \
-  --output tsv)"
-
 az role assignment create \
-  --assignee "${sp_id}" \
+  --assignee "${OBJECT_ID}" \
   --role 'Storage Blob Data Owner' \
   --scope "${storage_account_id}" \
   --output none
