@@ -12,7 +12,7 @@ It accepts the following arguments:
 ## Prerequisites
 
 - [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
-- [Activate Azure role](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-activate-your-roles) `Owner` at the subscription scope.
+- Azure role `Owner` at the subscription scope.
 
 ## Usage
 
