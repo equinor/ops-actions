@@ -78,6 +78,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
+        if: github.event_name == 'pull_request'
         run: terraform plan
 
       - name: Terraform Apply
