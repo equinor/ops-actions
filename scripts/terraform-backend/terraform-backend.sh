@@ -1,20 +1,12 @@
 #!/bin/bash
-#
-# Creates an Azure storage account for storing remote Terraform state.
-# Requires Azure role 'Owner' at the subscription scope.
-# Arguments:
-#   Azure region to create the storage account in, a name.
-#   Azure AD object that should manage the remote Terraform state, an ID.
-# Outputs:
-#   Terraform backend configuration.
 
 set -eu
 
-readonly RESOURCE_GROUP_NAME='tfstate'
-readonly LOCATION="$1"
-readonly STORAGE_ACCOUNT_NAME="tfstate${RANDOM}"
+readonly STORAGE_ACCOUNT_NAME="$1"
+readonly RESOURCE_GROUP_NAME="$2"
+readonly LOCATION="$3"
 readonly CONTAINER_NAME='tfstate'
-readonly OBJECT_ID="$2"
+readonly OBJECT_ID="$4"
 
 az group create \
   --name "${RESOURCE_GROUP_NAME}" \
