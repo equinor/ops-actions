@@ -29,7 +29,7 @@ The script accepts the following arguments:
 
 ## What the Function does
 
-1. Get the Tenant Id from current Azure Subscription Context
+1. Get the Tenant ID from current Azure Subscription Context
 2. Load the Configuration file with Resource Groups and RBAC Roles
 3. Check if App Registration exists
    1. If if does not exist, it will be created
