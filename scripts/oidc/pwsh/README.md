@@ -43,9 +43,10 @@ The script accepts the following arguments:
    2. If it exist, it will store the ObjectId as a variable to be used with RBAC later
 7. Check if current Subscription Context matches Subscription provided as input
    1. Function will exit if it does not match
-8. Check if Resource Groups in Config file has match for RBAC Role defined
-   1. If it does not exist, it will be added
-   2. If it exist, it will skip
+8. Check if RBAC Assignment is defined
+   1. Check if Resource Groups in Config file has match for RBAC Role defined
+      1. If it does not exist, it will be added
+      2. If it exist, it will skip
 9. Create GitHub Environment where Secrets will be stored
 10. Create GitHub Secrets
 
@@ -64,7 +65,8 @@ The script accepts the following arguments:
 1. Populate your variables and run the Function:
 
     ```powershell
-    $AppRegistrationName = "SERVICE_PRINCIPAL_NAME"
+    $AddRbacRole         = $True
+    $AppRegistrationName = "APP_REGISTRATION_NAME"
     $OidcPath            = ".\src\config\oidc"
     $ConfigFile          = "$OidcPath\oidc-config.json"
     $Environment         = "non-prod"
@@ -73,6 +75,7 @@ The script accepts the following arguments:
     $SubscriptionId      = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
     New-GitHubConnectionOIDC `
+        -AddRbacRole $AddRbacRole `
         -AppRegistrationName $AppRegistrationName `
         -ConfigFile $ConfigFile `
         -Environment $Environment `
