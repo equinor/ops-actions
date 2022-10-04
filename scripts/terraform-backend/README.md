@@ -42,6 +42,6 @@ It accepts the following arguments:
 
 ## References
 
-- [Terraform backend type: azurerm](https://www.terraform.io/language/settings/backends/azurerm)
 - [Store Terraform state in Azure Storage](https://learn.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage?tabs=azure-cli)
 - [Security recommendations for Azure Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/security-recommendations)
+- [Terraform backend configuration for Azure Storage](https://www.terraform.io/language/settings/backends/azurerm)
