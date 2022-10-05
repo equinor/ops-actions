@@ -43,8 +43,14 @@ The script accepts the following arguments:
    2. If it exist, it will store the ObjectId as a variable to be used with RBAC later
 7. Check if current Subscription Context matches Subscription provided as input
    1. Function will exit if it does not match
-8. Check if RBAC Assignment is defined
+8. Check which RBAC Scope is defined, Resource Group, Resource or Subscription Level
    1. Check if Resource Groups in Config file has match for RBAC Role defined
+      1. If it does not exist, it will be added
+      2. If it exist, it will skip
+   2. Check if Resource match for RBAC Role defined
+      1. If it does not exist, it will be added
+      2. If it exist, it will skip
+   3. Check if Subscription in has match for RBAC Role defined
       1. If it does not exist, it will be added
       2. If it exist, it will skip
 9. Create GitHub Environment where Secrets will be stored
@@ -65,22 +71,73 @@ The script accepts the following arguments:
 1. Populate your variables and run the Function:
 
     ```powershell
-    $AddRbacRole         = $True
+    # Resource Group Level Example
     $AppRegistrationName = "APP_REGISTRATION_NAME"
     $OidcPath            = ".\src\config\oidc"
     $ConfigFile          = "$OidcPath\oidc-config.json"
     $Environment         = "non-prod"
     $FicName             = "github-actions"
+    $RbacScope           = "resourceGroup"
     $Repository          = "equinor/your-repository"
     $SubscriptionId      = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
     New-GitHubConnectionOIDC `
-        -AddRbacRole $AddRbacRole `
         -AppRegistrationName $AppRegistrationName `
         -ConfigFile $ConfigFile `
         -Environment $Environment `
         -FicName $FicName `
         -OidcPath $OidcPath `
+        -RbacScope $RbacScope `
+        -Repository $Repository `
+        -SubscriptionId $SubscriptionId
+    ```
+
+    ```powershell
+    # Subscription Level Example
+    $AppRegistrationName = "APP_REGISTRATION_NAME"
+    $OidcPath            = ".\src\config\oidc"
+    $ConfigFile          = "$OidcPath\oidc-config.json"
+    $Environment         = "non-prod"
+    $FicName             = "github-actions"
+    $RbacScope           = "subscription"
+    $Repository          = "equinor/your-repository"
+    $SubscriptionId      = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+    New-GitHubConnectionOIDC `
+        -AppRegistrationName $AppRegistrationName `
+        -ConfigFile $ConfigFile `
+        -Environment $Environment `
+        -FicName $FicName `
+        -OidcPath $OidcPath `
+        -RbacScope $RbacScope `
+        -Repository $Repository `
+        -SubscriptionId $SubscriptionId
+    ```
+
+    ```powershell
+    # Invdividual Resource Example
+    $AppRegistrationName = "APP_REGISTRATION_NAME"
+    $OidcPath            = ".\src\config\oidc"
+    $ConfigFile          = "$OidcPath\oidc-config.json"
+    $Environment         = "non-prod"
+    $FicName             = "github-actions"
+    $RbacScope           = "resourceGroup"
+    $Repository          = "equinor/your-repository"
+    $ResourceRbacRole    = "Key Vault Contributor"
+    $ResourceName        = "kv-demo-dev"
+    $ResourceType        = "Microsoft.KeyVault/vaults"
+    $SubscriptionId      = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+    New-GitHubConnectionOIDC `
+        -AppRegistrationName $AppRegistrationName `
+        -ConfigFile $ConfigFile `
+        -Environment $Environment `
+        -FicName $FicName `
+        -OidcPath $OidcPath `
+        -ResourceRbacRole $ResourceRbacRole `
+        -RbacScope $RbacScope `
+        -ResourceName $ResourceName `
+        -ResourceType $ResourceType `
         -Repository $Repository `
         -SubscriptionId $SubscriptionId
     ```

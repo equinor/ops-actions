@@ -1,42 +1,55 @@
-
 function New-GitHubConnectionOIDC {
     <#
         .DESCRIPTION
         Create a new Connection between Azure and GitHub using Service Principal and OIDC.
-        .PARAMETER AddRbacRole
-        Set to True if RBAC Role and Resource Groups are defined in Config File. Not mandatory.
         .PARAMETER AppRegistrationName
         Name of the App Registration in Azure AD.
         .PARAMETER ConfigFile
         Location for Config File.
-        .PARAMETER FicName
-        Name of Federated Identity Credential.
         .PARAMETER Environment
         Environment in GitHub (e.g. non-prod, prod).
+        .PARAMETER FicName
+        Name of Federated Identity Credential.
         .PARAMETER OidcPath
         Custom Path to store the OIDC Config.
+        .PARAMETER RbacScope
+        Scope for RBAC Roles (resourceGroup, resource or subscription level).
+        .PARAMETER Repository
+        Name of GitHub Repository (Optional).
+        .PARAMETER ResourceRbacRole
+        RBAC Role for individual resource (Optional).
+        .PARAMETER ResourceName
+        Name of individual resource for RBAC Scope (Optional).
+        .PARAMETER ResourceType
+        Resource Type for individual Resource for RBAC Scope (Optional).
         .PARAMETER SubscriptionId
         Subscription ID (GUID).
         .EXAMPLE
         # Import Module
         Import-Module ".\src\config\oidc\oidc.psm1" -Force
 
-        $AddRbacRole         = $True
         $AppRegistrationName = "APP_REGISTRATION_NAME"
         $OidcPath            = ".\src\config\oidc"
         $ConfigFile          = "$OidcPath\oidc-config.json"
         $Environment         = "non-prod"
         $FicName             = "github-actions"
+        $RbacScope           = "resourceGroup"
         $Repository          = "equinor/your-repository"
+        $ResourceRbacRole    = "Key Vault Contributor"
+        $ResourceName        = "kv-demo-dev"
+        $ResourceType        = "Microsoft.KeyVault/vaults"
         $SubscriptionId      = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
         New-GitHubConnectionOIDC `
-            -AddRbacRole $AddRbacRole `
             -AppRegistrationName $AppRegistrationName `
             -ConfigFile $ConfigFile `
             -Environment $Environment `
             -FicName $FicName `
             -OidcPath $OidcPath `
+            -ResourceRbacRole $ResourceRbacRole `
+            -RbacScope $RbacScope `
+            -ResourceName $ResourceName `
+            -ResourceType $ResourceType `
             -Repository $Repository `
             -SubscriptionId $SubscriptionId
     #>
@@ -45,8 +58,6 @@ function New-GitHubConnectionOIDC {
         ConfirmImpact = "Low"
     )]
     param (
-        [Parameter (Mandatory = $false)]
-        [Boolean] $AddRbacRole = $false,
         [Parameter (Mandatory = $true)]
         [String] $AppRegistrationName,
         [Parameter (Mandatory = $true)]
@@ -58,7 +69,16 @@ function New-GitHubConnectionOIDC {
         [Parameter (Mandatory = $true)]
         [String] $OidcPath,
         [Parameter (Mandatory = $true)]
+        [ValidateSet("resourceGroup", "subscription", "resource")]
+        [String] $RbacScope,
+        [Parameter (Mandatory = $true)]
         [String] $Repository,
+        [Parameter (Mandatory = $false)]
+        [String] $ResourceRbacRole,
+        [Parameter (Mandatory = $false)]
+        [String] $ResourceName,
+        [Parameter (Mandatory = $false)]
+        [String] $ResourceType,
         [Parameter (Mandatory = $true)]
         [String] $SubscriptionId
     )
@@ -157,58 +177,96 @@ function New-GitHubConnectionOIDC {
             Write-Error $_.Exception
         }
 
+        function Set-RbacRole {
+            [CmdletBinding(
+                SupportsShouldProcess = $True,
+                ConfirmImpact = "Low"
+            )]
+            param (
+                [Parameter (Mandatory = $true)]
+                [String] $RbacRole,
+                [Parameter (Mandatory = $true)]
+                [String] $Scope,
+                [Parameter (Mandatory = $true)]
+                [String] $SpObjectId,
+                [Parameter (Mandatory = $true)]
+                [String] $SubscriptionId
+            )
+            if ($PSCmdlet.ShouldProcess("RBAC Role '$RbacRole' for Scope '$Scope'")) {
+                $roleCheck = az role assignment list --role $rbacRole --scope $scope | ConvertFrom-Json
+                if ($roleCheck) {
+                    # Get all Role Assignments for Service Principal ObjectId
+                    foreach ($role in $roleCheck | Where-Object { $_.principalId -eq $spObjectId }) {
+                        # Check if Role Assignment is match for Service Principal ObjectId
+                        if (($role.principalId -eq $spObjectId) -and $($role.roleDefinitionName -eq $rbacRole)) {
+                            Write-Output "RBAC Role '$rbacRole' already exists for Service Principal '$spObjectId' at scope '$scope'"
+                        }
+                    }
+                }
+                elseif (!$roleCheck) {
+                    # Assign RBAC Role for Service Principal ObjectId
+                    Write-Output "Assigning role '$rbacRole' for Service Principal '$spObjectId' at scope '$scope'..."
+                    az role assignment create --role $rbacRole --subscription $SubscriptionId --assignee-object-id $spObjectId `
+                        --assignee-principal-type ServicePrincipal --scope $scope --output none
+                }
+            }
+        }
 
-        Write-Output "Checking if RBAC Assignment is defined"
-        # Check if AddRbacRole is specified, read config and assign roles for Resource Groups
-        if ($AddRbacRole -eq $true) {
-            Write-Output "Adding RBAC Roles"
+        Write-Output "Checking RBAC Assignment."
+        Write-Output "RBAC Assignment is set to '$RbacScope'"
+        if ($RbacScope -eq "resourceGroup") {
+            Write-Output "Starting RBAC Assignment for Resource Groups"
             Write-Output "Reading config..."
 
             $config         = Get-Content $ConfigFile | ConvertFrom-Json -AsHashtable
-            $rbacRole       = $config.roleAssignments.$Environment.rbacRole
-            $resourceGroups = $config.roleAssignments.$Environment.resourceGroups
+            $rbacRole       = $config.roleAssignments.$RbacScope.$Environment.rbacRole
+            $resourceGroups = $config.roleAssignments.$RbacScope.$Environment.resourceGroups
 
             Write-Output "Checking and creating RBAC Role Assignments..."
             foreach ($resourceGroup in $resourceGroups) {
                 try {
                     # Get Resource Group Object
-                    $rg = az group show --name $resourceGroup --subscription $SubscriptionId | ConvertFrom-Json
+                    $scope = az group show --name $resourceGroup --subscription $SubscriptionId --query id --output tsv
                     # Check Role Assignments for Resource Group Scope
-                    $roleCheck = az role assignment list --role $rbacRole --scope $rg.id | ConvertFrom-Json
-                    if ($roleCheck) {
-                        # Get all Role Assignments for Service Principal ObjectId
-                        foreach ($role in $roleCheck | Where-Object { $_.principalId -eq $spObjectId }) {
-                            # Check if Role Assignment is match for Service Principal ObjectId
-                            if (($role.principalId -eq $spObjectId) -and $($role.roleDefinitionName -eq $rbacRole)) {
-                                Write-Output "RBAC Role '$rbacRole' already exists for Service Principal '$spObjectId' at scope '$($rg.id)'"
-                            }
-                            else {
-                                Write-Output "Nothing to see here"
-                            }
-                        }
-                    }
-                    elseif (!$roleCheck) {
-                        # Assign RBAC Role to Service Principal ObjectId for Resource Group
-                        Write-Output "Assigning role '$rbacRole' for Service Principal '$spObjectId' at scope '$($rg.id)'..."
-                        az role assignment create --role $rbacRole --subscription $SubscriptionId --assignee-object-id $spObjectId `
-                            --assignee-principal-type ServicePrincipal --scope $rg.id --output none
-                    }
+                    Set-RbacRole -RbacRole $rbacRole -Scope $scope -SpObjectId $spObjectId -SubscriptionId $SubscriptionId
                 }
                 catch {
                     Write-Error $_.Exception
                 }
             }
         }
-        else {
-            Write-Output "No RBAC Assignment defined. Continuing!"
+        elseif ($RbacScope -eq "subscription") {
+            Write-Output "Starting RBAC Assignment for Subscription"
+            Write-Output "Reading config..."
+
+            $config   = Get-Content $ConfigFile | ConvertFrom-Json -AsHashtable
+            $rbacRole = $config.roleAssignments.$RbacScope.rbacRole
+
+            try {
+                $scope = "/subscriptions/$SubscriptionId"
+                Set-RbacRole -RbacRole $rbacRole -Scope $scope -SpObjectId $spObjectId -SubscriptionId $SubscriptionId
+            }
+            catch {
+                Write-Error $_.Exception
+            }
         }
-
-        Write-Output "Creating GitHub environment..."
-        gh api --method PUT "repos/$Repository/environments/$Environment"
-
-        Write-Output "Updating GitHub secrets..."
-        gh secret set 'AZURE_CLIENT_ID' --body $spClientId --repo $Repository --env $Environment
-        gh secret set 'AZURE_SUBSCRIPTION_ID' --body $SubscriptionId --repo $Repository --env $Environment
-        gh secret set 'AZURE_TENANT_ID' --body $tenantId --repo $Repository --env $Environment
+        elseif ($RbacScope -eq "resource") {
+            Write-Output "Starting RBAC Assignment for individual resource '$ResourceName'"
+            try {
+                $scope = az resource list --name $ResourceName --resource-type $ResourceType --subscription $SubscriptionId --query [].id --output tsv
+                Set-RbacRole -RbacRole $ResourceRbacRole -Scope $scope -SpObjectId $spObjectId -SubscriptionId $SubscriptionId
+            }
+            catch {
+                Write-Error $_.Exception
+            }
+        }
     }
+
+    Write-Output "Creating GitHub environment..."
+    gh api --method PUT "repos/$Repository/environments/$Environment"
+
+    Write-Output "Updating GitHub secrets..."
+    gh secret set 'AZURE_CLIENT_ID' --body $spClientId --repo $Repository --env $Environment
+    gh secret set 'AZURE_SUBSCRIPTION_ID' --body $SubscriptionId --repo $Repository --env $Environment
+    gh secret set 'AZURE_TENANT_ID' --body $tenantId --repo $Repository --env $Environment
 }
