@@ -14,7 +14,7 @@ on:
     branches:
       - main
 
-  # TODO: look into standardizing list format (e.g., space-separated only)
+  # TODO: look into standardizing list format (e.g., newline-separated only)
   workflow_call:
     inputs:
       branches:
