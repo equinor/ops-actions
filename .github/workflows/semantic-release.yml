@@ -36,7 +36,7 @@ on:
           @semantic-release/release-notes-generator,
           @semantic-release/github
 
-      extra_plugins:
+      additional_plugins:
         description: A space-separated list of additional plugins to install.
         type: string
         required: false
@@ -58,9 +58,9 @@ jobs:
           node-version: lts/*
 
       - name: Install additional plugins
-        run: npm install "$PLUGINS" -D
+        run: npm install "$ADDITIONAL_PLUGINS" -D
         env:
-          PLUGINS: ${{ inputs.extra_plugins }}
+          ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
 
       - name: Release
         run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
