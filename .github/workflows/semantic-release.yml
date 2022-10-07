@@ -6,6 +6,8 @@
 # - semantic-release: https://semantic-release.gitbook.io
 # - Conventional Commits: https://www.conventionalcommits.org
 
+# TODO: pin to latest patch release for all packages.
+
 on:
   # TODO: use this from another workflow instead.
   push:
@@ -36,7 +38,7 @@ on:
           @semantic-release/release-notes-generator,
           @semantic-release/github
 
-      additional_plugins:
+      additional-plugins:
         description: A newline-separated string of additional plugins to install.
         type: string
         required: false
@@ -59,7 +61,7 @@ jobs:
 
       - name: Install additional plugins
         env:
-          ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
+          ADDITIONAL_PLUGINS: ${{ inputs.additional-plugins }}
         run: |
           while read -r p
           do
@@ -68,8 +70,8 @@ jobs:
 
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PLUGINS: ${{ inputs.plugins }}
           BRANCHES: ${{ inputs.branches }}
+          PLUGINS: ${{ inputs.plugins }}
           PRESET: ${{ inputs.preset }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
