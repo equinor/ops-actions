@@ -38,7 +38,7 @@ on:
           @semantic-release/release-notes-generator,
           @semantic-release/github
 
-      additional-plugins:
+      additional_plugins:
         description: A newline-separated string of additional plugins to install.
         type: string
         required: false
@@ -61,7 +61,7 @@ jobs:
 
       - name: Install additional plugins
         env:
-          ADDITIONAL_PLUGINS: ${{ inputs.additional-plugins }}
+          ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
         run: |
           while read -r p
           do
