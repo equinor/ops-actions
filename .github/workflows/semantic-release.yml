@@ -61,10 +61,10 @@ jobs:
         env:
           ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
         run: |
-          echo "$ADDITIONAL_PLUGINS" | while read -r p
+          while read -r p
           do
             npm install "$p"
-          done
+          done <<< "$ADDITIONAL_PLUGINS"
 
       - name: Release
         run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
