@@ -16,7 +16,7 @@ on:
   workflow_call:
     inputs:
       branches:
-        description: A comma-separated list of branches to release on.
+        description: A comma-separated string of branches to release on.
         type: string
         required: false
         default: main
@@ -28,7 +28,7 @@ on:
         default: conventionalcommits
 
       plugins:
-        description: A comma-separated list of default plugins to use.
+        description: A comma-separated string of default plugins to use.
         type: string
         required: false
         default: >
@@ -37,7 +37,7 @@ on:
           @semantic-release/github
 
       additional_plugins:
-        description: A space-separated list of additional plugins to install.
+        description: A newline-separated string of additional plugins to install.
         type: string
         required: false
         default: conventional-changelog-conventionalcommits
@@ -58,9 +58,13 @@ jobs:
           node-version: lts/*
 
       - name: Install additional plugins
-        run: npm install "$ADDITIONAL_PLUGINS" -D
         env:
           ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
+        run: |
+          echo "$ADDITIONAL_PLUGINS" | while read -r p
+          do
+            npm install "$p"
+          done
 
       - name: Release
         run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
