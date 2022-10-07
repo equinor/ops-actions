@@ -67,9 +67,9 @@ jobs:
           done <<< "$ADDITIONAL_PLUGINS"
 
       - name: Release
-        run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLUGINS: ${{ inputs.plugins }}
           BRANCHES: ${{ inputs.branches }}
           PRESET: ${{ inputs.preset }}
+        run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
