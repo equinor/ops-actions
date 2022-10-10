@@ -64,6 +64,6 @@ jobs:
         run: |
           # Set Internal Field Separator (IFS) to read arrays from newline-separated strings
           IFS=$'\n'
-          readarray -t branches <<< "$BRANCHES"
-          readarray -t plugins <<< "$PLUGINS"
-          npx semantic-release --branches "${branches[@]}" --plugins "${plugins[@]}" --preset "$PRESET"
+          readarray -t branch_arr <<< "$BRANCHES"
+          readarray -t plugin_arr <<< "$PLUGINS"
+          npx semantic-release --branches "${branch_arr[@]}" --plugins "${plugin_arr[@]}" --preset "$PRESET"
