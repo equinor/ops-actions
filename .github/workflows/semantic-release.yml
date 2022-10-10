@@ -1,3 +1,6 @@
+# Fully automated release using semantic-release.
+# By default, creates a GitHub release on branch "main" using the conventionalcommits preset.
+
 on:
   workflow_call:
     inputs:
