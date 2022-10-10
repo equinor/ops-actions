@@ -1,16 +1,35 @@
-# Create a GitHub release on branch 'main' using semantic-release with the Conventional Commits preset.
-#
-# References:
-# - semantic-release: https://semantic-release.gitbook.io
-# - Conventional Commits: https://www.conventionalcommits.org
-
-name: Release
+# Fully automated release using semantic-release.
+# By default, creates a GitHub release on branch "main" using the conventionalcommits preset.
 
 on:
-  push:
-    branches:
-      - main
   workflow_call:
+    inputs:
+      branches:
+        description: A newline-separated string of branches to release on.
+        type: string
+        required: false
+        default: main
+
+      preset:
+        description: Which preset to use for semantic-release.
+        type: string
+        required: false
+        default: conventionalcommits
+
+      plugins:
+        description: A newline-separated string of default plugins to use.
+        type: string
+        required: false
+        default: |
+          @semantic-release/commit-analyzer
+          @semantic-release/release-notes-generator
+          @semantic-release/github
+
+      additional_plugins:
+        description: A newline-separated string of additional plugins to install.
+        type: string
+        required: false
+        default: conventional-changelog-conventionalcommits
 
 jobs:
   release:
@@ -21,13 +40,25 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - name: Install dependencies
-        run: npm install conventional-changelog-conventionalcommits
+
+      - name: Install additional plugins
+        env:
+          ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
+        run: |
+          while read -r p
+          do
+            npm install "$p"
+          done <<< "$ADDITIONAL_PLUGINS"
+
       - name: Release
         env:
+          BRANCHES: ${{ inputs.branches }}
+          PLUGINS: ${{ inputs.plugins }}
+          PRESET: ${{ inputs.preset }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --branches main --plugins '@semantic-release/commit-analyzer, @semantic-release/release-notes-generator, @semantic-release/github' --preset conventionalcommits
+        run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
