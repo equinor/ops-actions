@@ -1,0 +1,25 @@
+{
+    "roleAssignments": {
+        "resourceGroup": {
+            "non-prod": {
+                "rbacRole": "Contributor",
+                "resourceGroups": [
+                    "rg-demo-dev",
+                    "rg-demo-test",
+                    "rg-demo-sql-dev",
+                    "rg-demo-sql-test"
+                ]
+            },
+            "prod": {
+                "rbacRole": "Contributor",
+                "resourceGroups": [
+                    "rg-demo-prod",
+                    "rg-demo-sql-prod"
+                ]
+            }
+        },
+        "subscription": {
+            "rbacRole": "Contributor"
+        }
+    }
+}

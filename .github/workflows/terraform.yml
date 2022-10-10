@@ -1,5 +1,4 @@
-# Install Terraform, configure OpenID Connect (OIDC) authentication, create a Terraform plan, and apply the plan on push to branch 'main'.
-
+# Install Terraform, configure OpenID Connect (OIDC) authentication to Azure, create a Terraform plan, and apply the plan on push to branch 'main'.
 
 # Set permissions granted to GITHUB_TOKEN in caller workflow:
 
@@ -7,7 +6,7 @@
 #   id-token: write
 #   contents: read
 
-# Required when using OpenID Connect for authenticating to Azure.
+# Required when configuring OIDC authentication to Azure.
 
 on:
   workflow_call:
@@ -52,6 +51,8 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
 
+    # Configure OIDC authentication to Azure using environment variables.
+    # Required by the AzureRM backend and provider.
     env:
       ARM_USE_OIDC: true
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -77,6 +78,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
+        if: github.event_name == 'pull_request'
         run: terraform plan
 
       - name: Terraform Apply
