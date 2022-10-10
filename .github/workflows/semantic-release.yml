@@ -63,6 +63,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           IFS=$'\n'
-          readarray -t branch_arr <<< "$BRANCHES"
-          readarray -t plugin_arr <<< "$PLUGINS"
-          npx semantic-release --branches "${branch_arr[@]}" --plugins "${plugin_arr[@]}" --preset "$PRESET"
+          readarray -t branches_array <<< "$BRANCHES"
+          readarray -t plugins_array <<< "$PLUGINS"
+          npx semantic-release --branches "${branches_array[@]}" --plugins "${plugins_array[@]}" --preset "$PRESET"
