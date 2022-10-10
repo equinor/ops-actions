@@ -62,6 +62,6 @@ jobs:
           PRESET: ${{ inputs.preset }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          branches=$(readarray <<< "$BRANCHES")
-          plugins=$(readarray <<< "$PLUGINS")
-          npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
+          # Set Internal Field Separator (IFS) to create arrays from newline-separated strings
+          IFS=$'\n'
+          npx semantic-release --branches ($BRANCHES) --plugins ($PLUGINS) --preset "$PRESET"
