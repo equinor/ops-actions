@@ -50,10 +50,8 @@ jobs:
         env:
           ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
         run: |
-          while read -r p
-          do
-            npm install "$p"
-          done <<< "$ADDITIONAL_PLUGINS"
+          IFS=$'\n' read -ra plugins_array -d '' <<< "$ADDITIONAL_PLUGINS"
+          npm install "${plugins_array[@]}"
 
       - name: Release
         env:
