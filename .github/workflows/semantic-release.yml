@@ -61,5 +61,4 @@ jobs:
           PLUGINS: ${{ inputs.plugins }}
           PRESET: ${{ inputs.preset }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
+        run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
