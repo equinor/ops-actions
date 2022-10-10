@@ -1,9 +1,4 @@
 on:
-  # TODO: use this from another workflow instead.
-  push:
-    branches:
-      - main
-
   workflow_call:
     inputs:
       branches:
