@@ -18,8 +18,8 @@ on:
         type: string
         required: false
         default: |
-          @semantic-release/commit-analyzer,
-          @semantic-release/release-notes-generator,
+          @semantic-release/commit-analyzer
+          @semantic-release/release-notes-generator
           @semantic-release/github
 
       additional_plugins:
