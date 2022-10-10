@@ -1,24 +1,13 @@
-# TODO: update intro to be more generic, but specify that it uses Convential Commits by default.
-
-# Create a GitHub release on branch 'main' using semantic-release with the Conventional Commits preset.
-#
-# References:
-# - semantic-release: https://semantic-release.gitbook.io
-# - Conventional Commits: https://www.conventionalcommits.org
-
-# TODO: pin to latest patch release for all packages.
-
 on:
   # TODO: use this from another workflow instead.
   push:
     branches:
       - main
 
-  # TODO: look into standardizing list format (e.g., newline-separated only)
   workflow_call:
     inputs:
       branches:
-        description: A comma-separated string of branches to release on.
+        description: A newline-separated string of branches to release on.
         type: string
         required: false
         default: main
@@ -30,10 +19,10 @@ on:
         default: conventionalcommits
 
       plugins:
-        description: A comma-separated string of default plugins to use.
+        description: A newline-separated string of default plugins to use.
         type: string
         required: false
-        default: >
+        default: |
           @semantic-release/commit-analyzer,
           @semantic-release/release-notes-generator,
           @semantic-release/github
