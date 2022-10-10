@@ -64,4 +64,6 @@ jobs:
         run: |
           # Set Internal Field Separator (IFS) to create arrays from newline-separated strings
           IFS=$'\n'
-          npx semantic-release --branches ($BRANCHES) --plugins ($PLUGINS) --preset "$PRESET"
+          branches=($BRANCHES)
+          plugins=($PLUGINS)
+          npx semantic-release --branches "${branches[@]}" --plugins "${plugins[@]}" --preset "$PRESET"
