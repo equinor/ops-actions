@@ -50,8 +50,8 @@ jobs:
         env:
           ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
         run: |
-          readarray -t plugins <<< "$ADDITIONAL_PLUGINS"
-          npm install "${plugins[@]}"
+          readarray -t plugins_array <<< "$ADDITIONAL_PLUGINS"
+          npm install "${plugins_array[@]}"
 
       - name: Release
         env:
@@ -60,6 +60,6 @@ jobs:
           PRESET: ${{ inputs.preset }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          readarray -t branches <<< "$BRANCHES"
-          readarray -t plugins <<< "$PLUGINS"
-          npx semantic-release --branches "${branches[@]}" --plugins "${plugins[@]}" --preset "$PRESET"
+          readarray -t branches_array <<< "$BRANCHES"
+          readarray -t plugins_array <<< "$PLUGINS"
+          npx semantic-release --branches "${branches_array[@]}" --plugins "${plugins_array[@]}" --preset "$PRESET"
