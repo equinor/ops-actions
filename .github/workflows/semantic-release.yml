@@ -5,7 +5,7 @@ on:
   workflow_call:
     inputs:
       branches:
-        description: A comma-separated string of branches to release on.
+        description: A newline-separated string of branches to release on.
         type: string
         required: false
         default: main
@@ -17,12 +17,12 @@ on:
         default: conventionalcommits
 
       plugins:
-        description: A comma-separated string of default plugins to use.
+        description: A newline-separated string of default plugins to use.
         type: string
         required: false
-        default: >
-          @semantic-release/commit-analyzer,
-          @semantic-release/release-notes-generator,
+        default: |-
+          @semantic-release/commit-analyzer
+          @semantic-release/release-notes-generator
           @semantic-release/github
 
       additional_plugins:
@@ -50,10 +50,8 @@ jobs:
         env:
           ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
         run: |
-          while read -r p
-          do
-            npm install "$p"
-          done <<< "$ADDITIONAL_PLUGINS"
+          readarray -t plugins <<< "$ADDITIONAL_PLUGINS"
+          npm install "${plugins[@]}"
 
       - name: Release
         env:
@@ -61,4 +59,7 @@ jobs:
           PLUGINS: ${{ inputs.plugins }}
           PRESET: ${{ inputs.preset }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release --branches "$BRANCHES" --plugins "$PLUGINS" --preset "$PRESET"
+        run: |
+          readarray -t branches <<< "$BRANCHES"
+          readarray -t plugins <<< "$PLUGINS"
+          npx semantic-release --branches "${branches[@]}" --plugins "${plugins[@]}" --preset "$PRESET"
