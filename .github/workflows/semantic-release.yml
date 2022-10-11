@@ -8,7 +8,8 @@ on:
         description: A newline-separated string of branches to release on.
         type: string
         required: false
-        default: main
+        default: |-
+          main
 
       preset:
         description: Which preset to use for semantic-release.
@@ -29,7 +30,8 @@ on:
         description: A newline-separated string of additional plugins to install.
         type: string
         required: false
-        default: conventional-changelog-conventionalcommits
+        default: |-
+          conventional-changelog-conventionalcommits
 
 jobs:
   release:
