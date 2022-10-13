@@ -72,8 +72,8 @@ jobs:
 
       - name: Docker Push
         run: |
-          docker push $UNIQUE_TAG
-          docker push $LATEST_TAG
+          docker push "$UNIQUE_TAG"
+          docker push "$LATEST_TAG"
 
   deploy:
     name: Deploy
