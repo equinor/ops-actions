@@ -58,10 +58,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Docker Build
-        run: docker build . -t $UNIQUE_TAG -t $LATEST_TAG
+        run: docker build . -t "$UNIQUE_TAG" -t "$LATEST_TAG"
 
       - name: Docker Login
         uses: azure/docker-login@v1
@@ -72,8 +72,8 @@ jobs:
 
       - name: Docker Push
         run: |
-          docker push $UNIQUE_TAG
-          docker push $LATEST_TAG
+          docker push "$UNIQUE_TAG"
+          docker push "$LATEST_TAG"
 
   deploy:
     name: Deploy
