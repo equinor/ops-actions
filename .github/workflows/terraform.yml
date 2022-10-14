@@ -46,7 +46,12 @@ jobs:
     name: Terraform
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-    concurrency: terraform/${{ inputs.working_directory }}
+
+    # Queue jobs that target the same Terraform configuration.
+    concurrency:
+      group: terraform @ {{ inputs.working_directory }}
+      cancel-in-progress: false
+
     defaults:
       run:
         shell: bash
