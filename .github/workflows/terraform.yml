@@ -46,6 +46,7 @@ jobs:
     name: Terraform
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    concurrency: terraform/${{ inputs.working_directory }}
     defaults:
       run:
         shell: bash
