@@ -7,7 +7,7 @@ It accepts the following arguments:
 1. The name of the storage account to create.
 1. The name of the Azure resource group to create the storage account in.
 1. The Azure region to create the storage account in.
-1. The ID of the Azure AD object (user, group or service principal) that should be authorized to access the storage account.
+1. (Optional) The ID of the Azure AD object (user, group or service principal) that should be authorized to access the storage account.
 
 ## Prerequisites
 
@@ -38,6 +38,12 @@ It accepts the following arguments:
 
     ```bash
     ./terraform-backend.sh tfstate$RANDOM tfstate northeurope 00000000-0000-0000-0000-000000000000
+    ```
+
+    If the Terraform backend is to be accessed by a user or group, it is recommended to manage access using [Azure AD PIM](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-configure) instead. In this case, run the script without passing a value to the object ID argument:
+
+    ```bash
+    ./terraform-backend.sh tfstate$RANDOM tfstate northeurope
     ```
 
 ## References

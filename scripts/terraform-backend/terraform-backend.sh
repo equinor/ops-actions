@@ -6,7 +6,7 @@ readonly STORAGE_ACCOUNT_NAME="$1"
 readonly RESOURCE_GROUP_NAME="$2"
 readonly LOCATION="$3"
 readonly CONTAINER_NAME='tfstate'
-readonly OBJECT_ID="$4"
+readonly OBJECT_ID="${4:-}"
 
 az group create \
   --name "${RESOURCE_GROUP_NAME}" \
@@ -50,11 +50,13 @@ az storage container create \
   --auth-mode login \
   --output none
 
-az role assignment create \
-  --assignee "${OBJECT_ID}" \
-  --role 'Storage Blob Data Owner' \
-  --scope "${storage_account_id}" \
-  --output none
+if [[ -n "${OBJECT_ID}" ]]; then
+  az role assignment create \
+    --assignee "${OBJECT_ID}" \
+    --role 'Storage Blob Data Owner' \
+    --scope "${storage_account_id}" \
+    --output none
+fi
 
 az resource lock create \
   --name 'Terraform' \
