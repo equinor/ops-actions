@@ -16,6 +16,12 @@ on:
         type: string
         required: true
 
+      working_directory:
+        description: The working directory to run the Docker commands in.
+        type: string
+        default: "."
+        required: false
+
       registry_name:
         description: The name of the Azure Container Registry to push the Docker image to.
         type: string
@@ -44,13 +50,13 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -65,9 +71,10 @@ jobs:
         run: az acr login --name "$REGISTRY_NAME"
 
       - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: |
-           ${{ inputs.repository }}:latest
-           ${{ inputs.repository }}:${{ github.run_number }}
+        env:
+          TAG_UNIQUE: ${{ inputs.repository }}:${{ github.run_number }}
+          TAG_LATEST: ${{ inputs.repository }}:latest
+        run: |
+          docker build . -t "$TAG_UNIQUE" -t "$TAG_LATEST"
+          docker push "$TAG_UNIQUE"
+          docker push "$TAG_LATEST"
