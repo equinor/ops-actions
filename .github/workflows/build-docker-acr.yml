@@ -46,7 +46,7 @@ on:
         required: true
 
     outputs:
-      docker_image:
+      image:
         description: The Docker image that was built.
         value: ${{ jobs.build.outputs.image }}
 
