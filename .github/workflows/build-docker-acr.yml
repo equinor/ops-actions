@@ -38,11 +38,11 @@ on:
         required: true
 
       AZURE_SUBSCRIPTION_ID:
-        description: The ID of the Azure subscription to create the resources in.
+        description: The ID of the Azure subscription containing the Container Registry.
         required: true
 
       AZURE_TENANT_ID:
-        description: The ID of the Azure tenant to create the resources in.
+        description: The ID of the Azure tenant containing the Container Registry.
         required: true
 
     outputs:
