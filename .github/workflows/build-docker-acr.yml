@@ -3,6 +3,11 @@
 on:
   workflow_call:
     inputs:
+      environment:
+        description: The name of the GitHub environment that this job references.
+        type: string
+        required: true
+
       registry_name:
         description: The name of the Azure Container Registry to push the Docker image to.
         type: string
@@ -30,6 +35,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
 
     steps:
       - name: Checkout
