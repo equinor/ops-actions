@@ -45,14 +45,21 @@ on:
         description: The ID of the Azure tenant to create the resources in.
         required: true
 
+    outputs:
+      docker_image: ${{ jobs.build.outputs.image }}
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+
     defaults:
       run:
         working-directory: ${{ inputs.working_directory }}
+
+    outputs:
+      image: ${{ steps.build.outputs.image }}
 
     steps:
       - name: Checkout
@@ -71,6 +78,7 @@ jobs:
         run: az acr login --name "$REGISTRY_NAME"
 
       - name: Build and push
+        id: build
         env:
           TAG_UNIQUE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ github.run_number }}
           TAG_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
@@ -78,3 +86,4 @@ jobs:
           docker build . -t "$TAG_UNIQUE" -t "$TAG_LATEST"
           docker push "$TAG_UNIQUE"
           docker push "$TAG_LATEST"
+          echo "image=$TAG_UNIQUE" >> $GITHUB_OUTPUT
