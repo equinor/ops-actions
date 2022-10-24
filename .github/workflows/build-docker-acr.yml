@@ -1,5 +1,13 @@
 # TODO: Write description.
 
+# Set permissions granted to GITHUB_TOKEN in caller workflow:
+
+# permissions:
+#   id-token: write
+#   contents: read
+
+# Required when configuring OIDC authentication to Azure.
+
 on:
   workflow_call:
     inputs:
