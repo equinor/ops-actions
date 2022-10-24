@@ -62,7 +62,7 @@ jobs:
       - name: Login to ACR
         env:
           REGISTRY_NAME: ${{ inputs.registry_name }}
-        run: az acr login --name "$REGISTRY_NAME.azurecr.io"
+        run: az acr login --name "$REGISTRY_NAME"
 
       - name: Build and push
         uses: docker/build-push-action@v3
