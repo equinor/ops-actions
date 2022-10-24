@@ -72,8 +72,8 @@ jobs:
 
       - name: Build and push
         env:
-          TAG_UNIQUE: ${{ inputs.repository }}:${{ github.run_number }}
-          TAG_LATEST: ${{ inputs.repository }}:latest
+          TAG_UNIQUE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ github.run_number }}
+          TAG_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
         run: |
           docker build . -t "$TAG_UNIQUE" -t "$TAG_LATEST"
           docker push "$TAG_UNIQUE"
