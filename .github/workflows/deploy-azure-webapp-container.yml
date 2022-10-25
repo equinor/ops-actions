@@ -27,7 +27,7 @@ on:
         required: true
 
       app_settings_path:
-        description: A path ...
+        description: The path of a JSON file containing app settings to configure for the Azure Web App.
         type: string
         required: false
 
@@ -67,20 +67,16 @@ jobs:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
 
-        # TODO: simplify the rest of this
-
-      - name: Parse app settings
-        id: parse
-        if: github.event_name == "workflow_call" && github.event.inputs.app_settings_path != ""
+      - name: Read app settings
+        id: settings
+        if: github.event.inputs.app_settings_path != ""
         env:
-          APP_SETTINGS_PATH: ${{ inputs.app_settings_path }}
-        run: |
-          app_settings_json=$(jq -c '.' "$APP_SETTINGS_PATH")
-          echo "app_settings_json=$app_settings_json" >> $GITHUB_OUTPUT
+          JSON_PATH: ${{ inputs.app_settings_path }}
+        run: echo "json=$(cat "$JSON_PATH")" >> $GITHUB_OUTPUT
 
-      - name: Configure app settings
-        if: steps.parse.outputs.app_settings_json != ""
+      - name: Configure
+        if: steps.settings.outputs.json != ""
         uses: azure/appservice-settings@v1
         with:
           app-name: ${{ inputs.app_name }}
-          app-settings-json: ${{ steps.parse.outputs.app_settings_json }}
+          app-settings-json: ${{ steps.settings.outputs.json }}
