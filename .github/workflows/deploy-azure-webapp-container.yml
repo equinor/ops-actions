@@ -16,15 +16,20 @@ on:
         type: string
         required: true
 
+      image:
+        description: The Docker image to deploy.
+        type: string
+        required: true
+
       app_name:
         description: The name of the Azure Web App to deploy the Docker image to.
         type: string
         required: true
 
-      image:
-        description: The Docker image to deploy.
+      app_settings_path:
+        description: A path ...
         type: string
-        required: true
+        required: false
 
     secrets:
       AZURE_CLIENT_ID:
@@ -61,3 +66,21 @@ jobs:
         with:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
+
+        # TODO: simplify the rest of this
+
+      - name: Parse app settings
+        id: parse
+        if: github.event_name == "workflow_call" && github.event.inputs.app_settings_path != ""
+        env:
+          APP_SETTINGS_PATH: ${{ inputs.app_settings_path }}
+        run: |
+          app_settings_json=$(jq -c '.' "$APP_SETTINGS_PATH")
+          echo "app_settings_json=$app_settings_json" >> $GITHUB_OUTPUT
+
+      - name: Configure app settings
+        if: steps.parse.outputs.app_settings_json != ""
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: ${{ inputs.app_name }}
+          app-settings-json: ${{ steps.parse.outputs.app_settings_json }}
