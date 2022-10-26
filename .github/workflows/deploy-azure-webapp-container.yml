@@ -86,3 +86,6 @@ jobs:
         with:
           app-name: ${{ inputs.app_name }}
           app-settings-json: ${{ steps.settings.outputs.json }}
+          mask-inputs: false
+          # Use Key Vault references instead of including and masking secrets directly in app settings JSON.
+          # Docs: https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references
