@@ -79,7 +79,7 @@ jobs:
           if [[ -f "$JSON" ]]; then
             JSON=$(jq -c . "$JSON")
           fi
-          echo "json=$JSON" >> $GITHUB_OUTPUT
+          echo "json=$JSON" >> "$GITHUB_OUTPUT"
 
       - name: Configure
         uses: azure/appservice-settings@v1
