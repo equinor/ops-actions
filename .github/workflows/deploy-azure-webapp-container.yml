@@ -78,7 +78,7 @@ jobs:
         run: |
           if [[ -f "$JSON" ]]
           then
-            JSON=$(cat "$JSON")
+            JSON=$(jq -c . "$JSON")
           fi
           echo "json=$JSON" >> $GITHUB_OUTPUT
 
