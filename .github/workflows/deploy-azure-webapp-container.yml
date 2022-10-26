@@ -26,9 +26,10 @@ on:
         type: string
         required: true
 
-      app_settings_path:
-        description: The path of a JSON file containing app settings to configure for the Azure Web App.
+      app_settings:
+        description: The app settings to configure for the Azure Web App. Inline JSON or path of a JSON file.
         type: string
+        default: "{}"
         required: false
 
     secrets:
@@ -53,6 +54,9 @@ jobs:
       url: ${{ steps.deploy.outputs.webapp-url }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -69,13 +73,16 @@ jobs:
 
       - name: Read app settings
         id: settings
-        if: ${{ inputs.app_settings_path != '' }}
         env:
-          JSON_PATH: ${{ inputs.app_settings_path }}
-        run: echo "json=$(cat "$JSON_PATH")" >> $GITHUB_OUTPUT
+          JSON: ${{ inputs.app_settings }}
+        run: |
+          if [[ -f $JSON ]]
+          then
+            JSON=$(cat "$JSON")
+          fi
+          echo "json=$JSON" >> $GITHUB_OUTPUT
 
       - name: Configure
-        if: ${{ steps.settings.outputs.json != '' }}
         uses: azure/appservice-settings@v1
         with:
           app-name: ${{ inputs.app_name }}
