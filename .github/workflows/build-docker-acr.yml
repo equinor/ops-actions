@@ -88,4 +88,4 @@ jobs:
           docker build . -t "$TAG_UNIQUE" -t "$TAG_LATEST"
           docker push "$TAG_UNIQUE"
           docker push "$TAG_LATEST"
-          echo "image=$TAG_UNIQUE" >> $GITHUB_OUTPUT
+          echo "image=$TAG_UNIQUE" >> "$GITHUB_OUTPUT"
