@@ -81,4 +81,5 @@ jobs:
           azPSVersion: latest # TODO: Set specific version.
           inlineScript: |
             $AppSettings = Get-Content $env:APP_SETTINGS | ConvertFrom-Json -AsHashtable
-            Get-AzWebApp -Name $env:APP_NAME | Set-AzWebApp -AppSettings $AppSettings
+            $ResourceGroupName = (Get-AzWebApp $env:APP_NAME).ResourceGroup
+            Set-AzWebApp -Name $env:APP_NAME -ResourceGroupName $ResourceGroupName -AppSettings $AppSettings
