@@ -69,13 +69,13 @@ jobs:
 
       - name: Read app settings
         id: settings
-        if: github.event.inputs.app_settings_path != ""
+        if: ${{ inputs.app_settings_path != "" }}
         env:
           JSON_PATH: ${{ inputs.app_settings_path }}
         run: echo "json=$(cat "$JSON_PATH")" >> $GITHUB_OUTPUT
 
       - name: Configure
-        if: steps.settings.outputs.json != ""
+        if: ${{ steps.settings.outputs.json != "" }}
         uses: azure/appservice-settings@v1
         with:
           app-name: ${{ inputs.app_name }}
