@@ -76,7 +76,7 @@ jobs:
         env:
           JSON: ${{ inputs.app_settings }}
         run: |
-          if [[ -f $JSON ]]
+          if [[ -f "$JSON" ]]
           then
             JSON=$(cat "$JSON")
           fi
