@@ -34,13 +34,13 @@ on:
           conventional-changelog-conventionalcommits
 
       node_version:
-        description:
+        description: Specify specific version of Node.js, with default set to latest version.
         type: string
         required: false
         default: lts/*
 
       semantic_version:
-        description:
+        description: Specify specific version of semantic-release, with default set to latest version.
         type: string
         required: false
         default: latest
@@ -77,4 +77,4 @@ jobs:
         run: |
           readarray -t branches_array <<< "$BRANCHES"
           readarray -t plugins_array <<< "$PLUGINS"
-          npx "semantic-release@$SEMANTIC_VERISON" --branches "${branches_array[@]}" --plugins "${plugins_array[@]}" --preset "$PRESET"
+          npx "semantic-release@$SEMANTIC_VERSION" --branches "${branches_array[@]}" --plugins "${plugins_array[@]}" --preset "$PRESET"
