@@ -27,8 +27,9 @@ on:
         required: true
 
       app_settings:
-        description: The path of a JSON file containing the app settings to configure for the Azure Web App.
+        description: The app settings to configure for the Azure Web App. Inline JSON or path of a JSON file.
         type: string
+        default: "{}"
         required: false
 
     secrets:
@@ -62,7 +63,6 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          enable-AzPSSession: true
 
       - name: Deploy
         id: deploy
@@ -71,15 +71,18 @@ jobs:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
 
-        # TODO: Write description.
-      - name: Configure
-        uses: azure/powershell@v1
+      - name: Read app settings
+        id: settings
         env:
-          APP_NAME: ${{ inputs.app_name }}
-          APP_SETTINGS: ${{ inputs.app_settings }}
+          JSON: ${{ inputs.app_settings }}
+        run: |
+          if [[ -f "$JSON" ]]; then
+            JSON=$(jq -c . "$JSON")
+          fi
+          echo "json=$JSON" >> $GITHUB_OUTPUT
+
+      - name: Configure
+        uses: azure/appservice-settings@v1
         with:
-          azPSVersion: latest # TODO: Set specific version.
-          inlineScript: |
-            $AppSettings = Get-Content $env:APP_SETTINGS | ConvertFrom-Json -AsHashtable
-            $ResourceGroupName = (Get-AzWebApp $env:APP_NAME).ResourceGroup
-            Set-AzWebApp -Name $env:APP_NAME -ResourceGroupName $ResourceGroupName -AppSettings $AppSettings
+          app-name: ${{ inputs.app_name }}
+          app-settings-json: ${{ steps.settings.outputs.json }}
