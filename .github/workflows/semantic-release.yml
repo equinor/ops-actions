@@ -33,6 +33,18 @@ on:
         default: |-
           conventional-changelog-conventionalcommits
 
+      node_version:
+        description: Specify specific version of Node.js, with default set to latest version.
+        type: string
+        required: false
+        default: lts/*
+
+      semantic_version:
+        description: Specify specific version of semantic-release, with default set to latest version.
+        type: string
+        required: false
+        default: latest
+
 jobs:
   release:
     name: Release
@@ -46,7 +58,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: lts/*
+          node-version: ${{ inputs.node_version }}
 
       - name: Install additional plugins
         env:
@@ -61,7 +73,8 @@ jobs:
           PLUGINS: ${{ inputs.plugins }}
           PRESET: ${{ inputs.preset }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SEMANTIC_VERSION: ${{ inputs.semantic_version }}
         run: |
           readarray -t branches_array <<< "$BRANCHES"
           readarray -t plugins_array <<< "$PLUGINS"
-          npx semantic-release --branches "${branches_array[@]}" --plugins "${plugins_array[@]}" --preset "$PRESET"
+          npx "semantic-release@$SEMANTIC_VERSION" --branches "${branches_array[@]}" --plugins "${plugins_array[@]}" --preset "$PRESET"
