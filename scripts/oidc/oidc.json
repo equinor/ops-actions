@@ -1,12 +1,8 @@
 {
   "federatedCredential": {
     "name": "github-actions",
-    "issuer": "https://token.actions.githubusercontent.com",
     "subject": "repo:${REPO}:environment:${ENVIRONMENT}",
-    "description": "OIDC auth from GitHub Actions to Azure",
-    "audiences": [
-      "api://AzureADTokenExchange"
-    ]
+    "description": "OIDC auth from GitHub Actions to Azure"
   },
   "roleAssignments": [
     {
