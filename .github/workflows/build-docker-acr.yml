@@ -1,13 +1,5 @@
 # Login to Azure Container Registry using OpenID Connect (OIDC), then build and push Docker image.
 
-# Set permissions granted to GITHUB_TOKEN in caller workflow:
-
-# permissions:
-#   id-token: write
-#   contents: read
-
-# Required when configuring OIDC authentication to Azure.
-
 on:
   workflow_call:
     inputs:
