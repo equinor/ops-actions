@@ -31,7 +31,7 @@ fi
 echo "CLIENT_ID: $app_id"
 
 echo 'Checking if federated identity credential already exists...'
-fic=$(echo "$config" | jq '.federatedCredential += {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}')
+fic=$(echo "$config" | jq '.federatedCredential' | jq '. += {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}')
 fic_name=$(echo "$fic" | jq -r '.name')
 fic_id=$(az ad app federated-credential list --id "$app_id" --query "[?name == '$fic_name'].id" --output tsv)
 if [[ -z "$fic_id" ]]
