@@ -13,9 +13,6 @@ echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
 tenant_id=$(az account show --subscription "$SUBSCRIPTION_ID" --query tenantId --output tsv)
 echo "TENANT_ID: $tenant_id"
 
-echo 'Logging into GitHub...'
-gh auth login
-
 echo 'Reading config...'
 config=$(envsubst < "$CONFIG_FILE")
 
