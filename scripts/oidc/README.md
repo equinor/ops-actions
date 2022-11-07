@@ -48,6 +48,8 @@ The script accepts the following arguments:
     ./oidc.sh {APP_NAME} {SUBSCRIPTION_ID} {REPO} {ENVIRONMENT} {CONFIG_FILE}
     ```
 
+    > **Note:** `SUBSCRIPTION_ID`, `REPO` and `ENVIRONMENT` are available as environment variables in `CONFIG_FILE`.
+
     For example:
 
     ```bash
