@@ -30,13 +30,13 @@ The script accepts the following arguments:
 
 1. Login to Azure:
 
-    ```bash
+    ```console
     az login
     ```
 
 1. Login to GitHub:
 
-    ```bash
+    ```console
     gh auth login
     ```
 
@@ -44,7 +44,7 @@ The script accepts the following arguments:
 
 1. Run the script `oidc.sh`:
 
-    ```bash
+    ```console
     ./oidc.sh {APP_NAME} {SUBSCRIPTION_ID} {REPO} {ENVIRONMENT} {CONFIG_FILE}
     ```
 
@@ -52,7 +52,7 @@ The script accepts the following arguments:
 
     For example:
 
-    ```bash
+    ```console
     ./oidc.sh my-app 2e532de1-2fb2-4bd3-9700-bd3364e57ddf equinor/ops-actions development ./oidc.json
     ```
 
