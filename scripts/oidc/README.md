@@ -1,6 +1,6 @@
 # OpenID Connect
 
-This directory contains a script `oidc.sh` that will configure OpenID Connect (OIDC) to connect from GitHub Actions to Azure, without the need to store the Azure credentials as long-lived GitHub secrets.
+This directory contains a shell script `oidc.sh` that will configure OpenID Connect (OIDC) to connect from GitHub Actions to Azure, without the need to store the Azure credentials as long-lived GitHub secrets.
 
 It will:
 
@@ -20,6 +20,7 @@ The script accepts the following arguments:
 
 ## Prerequisites
 
+- [Install WSL](https://learn.microsoft.com/en-us/windows/wsl/install) - to run shell script
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credential, service principal and Azure role assignments
 - [Install GitHub CLI](https://cli.github.com) - to create GitHub environment secrets
 - [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file
@@ -27,6 +28,8 @@ The script accepts the following arguments:
 - Activate Azure role `Owner` at the subscription scope - to create Azure role assignments
 
 ## Usage
+
+1. Open Bash.
 
 1. Login to Azure:
 
