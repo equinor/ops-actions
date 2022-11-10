@@ -41,7 +41,7 @@ jobs:
 
     # Queue jobs that target the same Terraform configuration.
     concurrency:
-      group: terraform @ {{ inputs.working_directory }}
+      group: terraform @ ${{ inputs.working_directory }}
       cancel-in-progress: false
 
     defaults:
