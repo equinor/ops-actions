@@ -8,11 +8,6 @@ export REPO="$3"
 export ENVIRONMENT="$4"
 CONFIG_FILE="$5"
 
-echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
-
-tenant_id=$(az account show --subscription "$SUBSCRIPTION_ID" --query tenantId --output tsv)
-echo "TENANT_ID: $tenant_id"
-
 echo 'Reading config...'
 config=$(envsubst < "$CONFIG_FILE")
 
@@ -59,6 +54,10 @@ echo "$ras" | while read -r ra; do
   echo "Assigning role '$role' at scope '$scope'..."
   az role assignment create --role "$role" --subscription "$SUBSCRIPTION_ID" --assignee-object-id "$sp_id" --assignee-principal-type ServicePrincipal --scope "$scope" --output none
 done
+
+echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
+tenant_id=$(az account show --subscription "$SUBSCRIPTION_ID" --query tenantId --output tsv)
+echo "TENANT_ID: $tenant_id"
 
 echo 'Creating GitHub environment...'
 gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT"
