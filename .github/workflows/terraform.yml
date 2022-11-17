@@ -80,16 +80,17 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
-        if: github.event_name == 'pull_request'
-        run: terraform plan
-
       - name: Checkov
         if: github.event_name == 'pull_request'
         uses: bridgecrewio/checkov-action@master
         with:
-          framework: terraform
           directory: ${{ inputs.working_directory }}
+          framework: terraform
+          download_external_modules: true
+
+      - name: Terraform Plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
