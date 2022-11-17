@@ -95,7 +95,7 @@ jobs:
         uses: bridgecrewio/checkov-action@v12
         with:
           file: ${{ steps.tfplan.outputs.file }}
-          framework: terraform
+          framework: terraform_plan
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
