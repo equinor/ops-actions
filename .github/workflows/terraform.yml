@@ -24,7 +24,7 @@ on:
         description: A comma-separated string of Checkov check identifiers to skip.
         type: string
         required: false
-        default: CKV_AZURE_42, CKV_AZURE_110 # Don't require purge protection for Key Vaults
+        default: CKV_AZURE_42,CKV_AZURE_110 # Don't require purge protection for Key Vaults
 
     secrets:
       AZURE_CLIENT_ID:
