@@ -20,6 +20,12 @@ on:
         required: false
         default: latest
 
+      checkov_skip_check:
+        description: A comma-separated string of Checkov check identifiers to skip.
+        type: string
+        required: false
+        default: ''
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -66,9 +72,9 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      # Setup Python to run Checkov
+      # Setup Python for Checkov.
       - name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: "3.8"
 
@@ -81,21 +87,19 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
-        id: tfplan
-        if: github.event_name == 'pull_request'
-        run: |
-          file='terraform.tfplan'
-          terraform plan -out="$file"
-          echo "file=$file" >> "$GITHUB_OUTPUT"
-
-      # Run Checkov to perform static security analysis of Terraform plan.
+      # Run Checkov to perform static security analysis of Terraform configuration.
       - name: Checkov
-        if: steps.tfplan.outputs.file != ''
+        if: github.event_name == 'pull_request'
         uses: bridgecrewio/checkov-action@v12
         with:
-          file: ${{ steps.tfplan.outputs.file }}
-          framework: terraform_plan
+          directory: ${{ inputs.working_directory }}
+          framework: terraform
+          skip_check: ${{ inputs.checkov_skip_check }}
+          download_external_modules: true
+
+      - name: Terraform Plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
