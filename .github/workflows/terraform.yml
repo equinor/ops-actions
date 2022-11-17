@@ -12,7 +12,7 @@ on:
         description: The working directory to run the Terraform commands in.
         type: string
         required: false
-        default: '.'
+        default: "."
 
       terraform_version:
         description: The version of Terraform to install.
@@ -24,7 +24,7 @@ on:
         description: A comma-separated string of Checkov check identifiers to skip.
         type: string
         required: false
-        default: ''
+        default: CKV_AZURE_42, CKV_AZURE_110 # Don't require purge protection for Key Vaults
 
     secrets:
       AZURE_CLIENT_ID:
@@ -74,6 +74,7 @@ jobs:
 
       # Setup Python for Checkov.
       - name: Setup Python
+        if: github.event_name == 'pull_request'
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
