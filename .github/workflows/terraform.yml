@@ -66,6 +66,11 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.8"
+
       - name: Terraform Format
         run: terraform fmt -check
 
@@ -78,6 +83,12 @@ jobs:
       - name: Terraform Plan
         if: github.event_name == 'pull_request'
         run: terraform plan
+
+      - name: Checkov
+        if: github.event_name == 'pull_request'
+        uses: bridgecrewio/checkov-action@master
+        with:
+          framework: terraform
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
