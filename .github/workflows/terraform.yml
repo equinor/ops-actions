@@ -89,6 +89,7 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           framework: terraform
+          directory: ${{ inputs.working_directory }}
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
