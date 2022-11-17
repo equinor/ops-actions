@@ -66,11 +66,6 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Setup Python
-        uses: actions/setup-python@v1
-        with:
-          python-version: "3.8"
-
       - name: Terraform Format
         run: terraform fmt -check
 
@@ -80,14 +75,6 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Checkov
-        if: github.event_name == 'pull_request'
-        uses: bridgecrewio/checkov-action@master
-        with:
-          directory: ${{ inputs.working_directory }}
-          framework: terraform
-          download_external_modules: true
-
       - name: Terraform Plan
         if: github.event_name == 'pull_request'
         run: terraform plan
@@ -95,3 +82,23 @@ jobs:
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
         run: terraform apply -auto-approve
+
+  checkov:
+    name: Checkov
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.8"
+
+      - name: Test with Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: ${{ inputs.working_directory }}
+          framework: terraform
+          download_external_modules: true
