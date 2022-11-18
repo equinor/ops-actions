@@ -133,7 +133,7 @@ jobs:
 
             <details><summary>Show Checkov Results</summary>
 
-            ${{ steps.checkov.outputs.stdout }}
+            ${{ steps.checkov.outputs.results }}
 
             </details>
 
