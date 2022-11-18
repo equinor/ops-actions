@@ -115,11 +115,11 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            #### Checkov 🧪\`${{ steps.checkov.outcome }}\`
+            const output = `#### Terraform Format and Style :paintbrush:\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization :gear:\`${{ steps.init.outcome }}\`
+            #### Terraform Validation :robot:\`${{ steps.validate.outcome }}\`
+            #### Terraform Plan :book:\`${{ steps.plan.outcome }}\`
+            #### Checkov :test_tube:\`${{ steps.checkov.outcome }}\`
 
             <details><summary>Show Plan</summary>
 
