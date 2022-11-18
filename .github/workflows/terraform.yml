@@ -72,41 +72,31 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Terraform Format
-        run: terraform fmt -check
-
       - name: Terraform Init
         run: terraform init
 
+      - name: Terraform Format
+        if: github.ref != 'refs/heads/main'
+        run: terraform fmt -check
+
       - name: Terraform Validate
-        run: terraform validate
+        if: github.ref == 'refs/heads/main' && (success() || failure())
+        run: terraform validate # -no-color
 
       - name: Terraform Plan
         if: github.event_name == 'pull_request'
-        run: terraform plan
-
-      - name: Terraform Apply
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
-        run: terraform apply -auto-approve
-
-  checkov:
-    name: Checkov
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
+        run: terraform plan # -no-color
 
       # Run Checkov to perform static security analysis of Terraform configuration.
       - name: Checkov
+        if: github.event_name == 'pull_request'
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: ${{ inputs.working_directory }}
           framework: terraform
           skip_check: ${{ inputs.checkov_skip_check }}
           download_external_modules: true
+
+      - name: Terraform Apply
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
+        run: terraform apply -auto-approve
