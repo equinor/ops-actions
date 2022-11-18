@@ -96,7 +96,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color
+        run: terraform plan -no-color -input=false
 
       # Run Checkov to perform static security analysis of Terraform configuration.
       - name: Checkov
@@ -115,9 +115,6 @@ jobs:
       - name: Create PR comment
         if: github.event_name == 'pull_request' && (success() || failure())
         uses: actions/github-script@v6
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-          WORKING_DIRECTORY: ${{ inputs.working_directory }}
         with:
           script: |
             const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
@@ -128,19 +125,19 @@ jobs:
 
             <details><summary>Show Plan</summary>
 
-            \`\`\`\n
-            ${process.env.PLAN}
+            \`\`\`terraform
+            ${{ steps.plan.outputs.stdout }}
             \`\`\`
 
             </details>
 
             <details><summary>Show Checkov Results</summary>
 
-            ${process.env.CHECKOV_RESULTS}
+            ${{ steps.checkov.outputs.stdout }}
 
             </details>
 
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`, Working Directory: \`${{ env.WORKING_DIRECTORY }}\`*`;
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`, Working Directory: \`${{ inputs.working_directory }}\`*`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -151,4 +148,4 @@ jobs:
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -input=false
