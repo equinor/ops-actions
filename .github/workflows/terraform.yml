@@ -81,7 +81,6 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        if: github.ref != 'refs/heads/main'
         run: terraform fmt -check
 
       - name: Terraform Init
@@ -90,7 +89,6 @@ jobs:
 
       - name: Terraform Validate
         id: validate
-        if: github.ref != 'refs/heads/main' && (success() || failure())
         run: terraform validate -no-color
 
       - name: Terraform Plan
