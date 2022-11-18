@@ -55,7 +55,7 @@ jobs:
       id-token: write
       contents: read
       # Set permission required to create PR comment.
-      issues: write
+      pull-requests: write
 
     defaults:
       run:
