@@ -54,7 +54,7 @@ jobs:
       # Set permissions required to authenticate using OIDC.
       id-token: write
       contents: read
-      # Set permission required to create PR comment.
+      # Set permission required to create pull request comment.
       pull-requests: write
 
     defaults:
@@ -79,14 +79,14 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
       - name: Terraform Format
         id: fmt
         if: github.ref != 'refs/heads/main'
         run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
 
       - name: Terraform Validate
         id: validate
@@ -122,13 +122,15 @@ jobs:
           script: |
             const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Validation 🤖${{ steps.validate.outputs.stdout }}
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
             #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             #### Checkov 🧪\`${{ steps.checkov.outcome }}\`
 
             <details><summary>Show Plan</summary>
 
-            \`\`\`${process.env.PLAN}\`\`\`
+            \`\`\`\n
+            ${process.env.PLAN}
+            \`\`\`
 
             </details>
 
@@ -138,7 +140,7 @@ jobs:
 
             </details>
 
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.WORKING_DIRECTORY }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`, Working Directory: \`${{ env.WORKING_DIRECTORY }}\`*`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
