@@ -51,9 +51,9 @@ jobs:
       cancel-in-progress: false
 
     permissions:
-      # Set permissions required to authenticate using OIDC.
-      id-token: write
       contents: read
+      # Set permission required to login to Azure using OIDC.
+      id-token: write
       # Set permission required to create pull request comment.
       pull-requests: write
 
