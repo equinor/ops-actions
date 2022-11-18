@@ -100,6 +100,7 @@ jobs:
 
       # Run Checkov to perform static security analysis of Terraform configuration.
       - name: Checkov
+        id: checkov
         if: github.event_name == 'pull_request'
         uses: bridgecrewio/checkov-action@v12
         with:
