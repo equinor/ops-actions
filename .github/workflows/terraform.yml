@@ -94,8 +94,10 @@ jobs:
         with:
           directory: ${{ inputs.working_directory }}
           framework: terraform
-          skip_check: ${{ inputs.checkov_skip_check }}
           download_external_modules: true
+          skip_check: ${{ inputs.checkov_skip_check }}
+          quiet: true
+          output_format: github_failed_only
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
