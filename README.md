@@ -8,16 +8,4 @@
 
 ### OpenID Connect
 
-For reusable workflows that require authentication to Azure:
-
-1. Run [this script](./scripts/oidc/) to configure OpenID Connect for the repository containing the caller workflow.
-
-1. Set permissions granted to `GITHUB_TOKEN` in the caller workflow:
-
-    ```yaml
-    permissions:
-      id-token: write # Required for requesting JSON web token (JWT)
-      contents: read  # Required for actions/checkout
-    ```
-
-    Permissions can be set at the workflow or job scope.
+For reusable workflows that login to Azure, run [this script](./scripts/oidc/) to configure OpenID Connect for the repository containing the caller workflow.

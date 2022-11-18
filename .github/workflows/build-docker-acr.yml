@@ -48,6 +48,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
+    # Set permissions required to login to Azure using OIDC.
+    permissions:
+      id-token: write
+      contents: read
+
     defaults:
       run:
         working-directory: ${{ inputs.working_directory }}
