@@ -106,7 +106,7 @@ jobs:
       # Create pull request comment with plan and Checkov results.
       - name: Create PR comment
         if: github.event_name == 'pull_request' && (success() || failure())
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
