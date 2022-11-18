@@ -45,6 +45,11 @@ jobs:
       name: ${{ inputs.environment }}
       url: ${{ steps.deploy.outputs.webapp-url }}
 
+    # Set permissions required to login to Azure using OIDC.
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
