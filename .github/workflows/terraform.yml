@@ -73,19 +73,23 @@ jobs:
           terraform_version: ${{ inputs.terraform_version }}
 
       - name: Terraform Init
+        id: init
         run: terraform init
 
       - name: Terraform Format
+        id: fmt
         if: github.ref != 'refs/heads/main'
         run: terraform fmt -check
 
       - name: Terraform Validate
+        id: validate
         if: github.ref != 'refs/heads/main' && (success() || failure())
-        run: terraform validate # -no-color
+        run: terraform validate -no-color
 
       - name: Terraform Plan
+        id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan # -no-color
+        run: terraform plan -no-color
 
       # Run Checkov to perform static security analysis of Terraform configuration.
       - name: Checkov
@@ -98,6 +102,41 @@ jobs:
           skip_check: ${{ inputs.checkov_skip_check }}
           quiet: true
           output_format: github_failed_only
+
+      # Create pull request comment with plan and Checkov results.
+      - name: Create PR comment
+        if: github.event_name == 'pull_request' && (success() || failure())
+        uses: actions/github-script@v3
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖${{ steps.validate.outputs.stdout }}
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            #### Checkov 🧪\`${{ steps.checkov.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`${process.env.PLAN}\`\`\`
+
+            </details>
+
+            <details><summary>Show Checkov Results</summary>
+
+            ${process.env.CHECKOV_RESULTS}
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
