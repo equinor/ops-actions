@@ -50,6 +50,13 @@ jobs:
       group: terraform @ ${{ inputs.working_directory }}
       cancel-in-progress: false
 
+    permissions:
+      # Set permissions required to authenticate using OIDC.
+      id-token: write
+      contents: read
+      # Set permission required to create PR comment.
+      issues: write
+
     defaults:
       run:
         shell: bash
