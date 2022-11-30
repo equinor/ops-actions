@@ -141,7 +141,7 @@ jobs:
 
           </details>
 
-          *Pusher: \`@$GITHUB_ACTOR\`, Action: \`$GITHUB_EVENT_NAME\`" >> "$GITHUB_STEP_SUMMARY"
+          *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
