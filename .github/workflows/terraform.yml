@@ -109,40 +109,39 @@ jobs:
           quiet: true
           output_format: github_failed_only
 
-      # Create pull request comment with plan and Checkov results.
-      - name: Create PR comment
+      # Create summary with plan and Checkov results
+      - name: Create summary
         if: github.event_name == 'pull_request' && (success() || failure())
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const output = `#### Terraform Format and Style :paintbrush:\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization :gear:\`${{ steps.init.outcome }}\`
-            #### Terraform Validation :robot:\`${{ steps.validate.outcome }}\`
-            #### Terraform Plan :book:\`${{ steps.plan.outcome }}\`
-            #### Checkov :test_tube:\`${{ steps.checkov.outcome }}\`
+        env:
+          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
+          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
+          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
+          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
+          CHECKOV_OUTCOME: ${{ steps.checkov.outcome }}
+          TF_PLAN: ${{ steps.plan.outputs.stdout }}
+          CHECKOV_RESULTS: ${{ steps.checkov.outputs.results }}
+        run: |
+          summary="#### Terraform Format and Style :paintbrush:`$TF_FMT_OUTCOME`
+          #### Terraform Initialization :gear:`$TF_INIT_OUTCOME`
+          #### Terraform Validation :robot:`$TF_VALIDATE_OUTCOME`
+          #### Terraform Plan :book:`$TF_PLAN_OUTCOME`
+          #### Checkov :test_tube:`$CHECKOV_OUTCOME`
 
-            <details><summary>Show Plan</summary>
+          <details><summary>Show Plan</summary>
 
-            \`\`\`terraform
-            ${{ steps.plan.outputs.stdout }}
-            \`\`\`
+          ```terraform
+          $TF_PLAN
+          ```
 
-            </details>
+          </details>
 
-            <details><summary>Show Checkov Results</summary>
+          <details><summary>Show Checkov Results</summary>
 
-            ${{ steps.checkov.outputs.results }}
+          $CHECKOV_RESULTS
 
-            </details>
+          </details>
 
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`, Working Directory: \`${{ inputs.working_directory }}\`*`;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+          *Pusher: `@$GITHUB_ACTOR`, Action: `$GITHUB_EVENT_NAME`"
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
