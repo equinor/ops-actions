@@ -121,17 +121,17 @@ jobs:
           TF_PLAN: ${{ steps.plan.outputs.stdout }}
           CHECKOV_RESULTS: ${{ steps.checkov.outputs.results }}
         run: |
-          summary="#### Terraform Format and Style :paintbrush:`$TF_FMT_OUTCOME`
-          #### Terraform Initialization :gear:`$TF_INIT_OUTCOME`
-          #### Terraform Validation :robot:`$TF_VALIDATE_OUTCOME`
-          #### Terraform Plan :book:`$TF_PLAN_OUTCOME`
-          #### Checkov :test_tube:`$CHECKOV_OUTCOME`
+          echo "#### Terraform Format and Style :paintbrush:\`$TF_FMT_OUTCOME\`
+          #### Terraform Initialization :gear:\`$TF_INIT_OUTCOME\`
+          #### Terraform Validation :robot:\`$TF_VALIDATE_OUTCOME\`
+          #### Terraform Plan :book:\`$TF_PLAN_OUTCOME\`
+          #### Checkov :test_tube:\`$CHECKOV_OUTCOME\`
 
           <details><summary>Show Plan</summary>
 
-          ```terraform
+          \`\`\`terraform
           $TF_PLAN
-          ```
+          \`\`\`
 
           </details>
 
@@ -141,9 +141,7 @@ jobs:
 
           </details>
 
-          *Pusher: `@$GITHUB_ACTOR`, Action: `$GITHUB_EVENT_NAME`"
-
-          echo "$summary" >> $GITHUB_STEP_SUMMARY
+          *Pusher: \`@$GITHUB_ACTOR\`, Action: \`$GITHUB_EVENT_NAME\`" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
