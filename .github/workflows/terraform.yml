@@ -50,7 +50,7 @@ jobs:
       group: terraform @ ${{ inputs.working_directory }}
       cancel-in-progress: false
 
-    # Set permission required to login to Azure using OIDC.
+    # Set permissions required to login to Azure using OIDC.
     permissions:
       id-token: write
       contents: read
