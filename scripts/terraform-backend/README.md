@@ -46,7 +46,23 @@ It accepts the following arguments:
     ./terraform-backend.sh tfstate$RANDOM tfstate northeurope
     ```
 
-    If the backend should be accessed by a user or group, it is recommended to manage access using [Azure AD PIM](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-configure) instead.
+## Manage access using PIM
+
+This section contains instructions on how to assign and activate access to the backend using Azure AD Privileged Identity Management (PIM).
+
+### Assign access
+
+Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-assign-roles#assign-a-role) to create this assignment in PIM:
+
+| Resource type    | Resource                | Role                      | Member                |
+| ---------------- | ----------------------- | ------------------------- | --------------------- |
+| `Resource group` | `<RESOURCE_GROUP_NAME>` | `Storage Blob Data Owner` | `AZAPPL S000 - Owner` |
+
+This assignment will give access to the backend for subscription Owners.
+
+### Activate access
+
+Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-activate-your-roles#activate-a-role) to activate the assignment.
 
 ## References
 
