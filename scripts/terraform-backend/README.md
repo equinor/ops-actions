@@ -31,7 +31,7 @@ It accepts the following arguments:
 1. Run the script:
 
     ```bash
-    ./terraform-backend.sh <STORAGE_ACCOUNT_NAME> <RESOURCE_GROUP_NAME> <LOCATION> <OBJECT_ID>
+    ./terraform-backend.sh <STORAGE_ACCOUNT_NAME> <RESOURCE_GROUP_NAME> <LOCATION> [<OBJECT_ID>]
     ```
 
     For example:
