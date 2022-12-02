@@ -18,31 +18,31 @@ It accepts the following arguments:
 
 1. Login to Azure:
 
-    ```bash
+    ```console
     az login
     ```
 
 1. Set active subscription:
 
-    ```bash
+    ```console
     az account set -s <SUBSCRIPTION_NAME_OR_ID>
     ```
 
 1. Run the script:
 
-    ```bash
+    ```console
     ./terraform-backend.sh <STORAGE_ACCOUNT_NAME> <RESOURCE_GROUP_NAME> <LOCATION> [<OBJECT_ID>]
     ```
 
     For example:
 
-    ```bash
+    ```console
     ./terraform-backend.sh tfstate$RANDOM tfstate northeurope 00000000-0000-0000-0000-000000000000
     ```
 
     If the backend should not be accessed by a service principal, simply omit the object ID:
 
-    ```bash
+    ```console
     ./terraform-backend.sh tfstate$RANDOM tfstate northeurope
     ```
 
