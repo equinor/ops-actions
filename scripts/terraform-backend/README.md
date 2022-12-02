@@ -58,7 +58,8 @@ Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/pr
 | ---------------- | ------------------ | ------------------------- | ----------------- |
 | `Resource group` | `<RESOURCE_GROUP>` | `Storage Blob Data Owner` | `<USER_OR_GROUP>` |
 
-`<RESOURCE_GROUP>` is the resource group containing the backend and `<USER_OR_GROUP>` is the user or group that should be assigned access to the backend.
+- `<RESOURCE_GROUP>` is the resource group containing the backend.
+- `<USER_OR_GROUP>` is the user or group to assign access to the backend.
 
 ### Activate access
 
