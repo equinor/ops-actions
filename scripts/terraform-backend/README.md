@@ -46,21 +46,21 @@ It accepts the following arguments:
     ./terraform-backend.sh tfstate$RANDOM tfstate northeurope
     ```
 
-## Manage access using PIM
+## Manage access
 
-Access to the backend should be managed using Azure AD Privileged Identity Management (PIM) and restricted to members of Azure AD group `AZAPPL S<###> - Owner`.
+Access to the resource group containing the backend should be managed using Azure AD Privileged Identity Management (PIM) and restricted to members of Azure AD group `AZAPPL S<###> - Owner`.
 
 ### Assign access
 
-Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-assign-roles#assign-a-role) using the following values to assign access to the backend using PIM:
+Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-assign-roles#assign-a-role) to assign access to the backend using PIM:
 
-| Resource type    | Resource                | Role                      | Member                  |
-| ---------------- | ----------------------- | ------------------------- | ----------------------- |
-| `Resource group` | `<RESOURCE_GROUP_NAME>` | `Storage Blob Data Owner` | `AZAPPL S<###> - Owner` |
+| Resource type    | Resource           | Role                      | Member                  |
+| ---------------- | ------------------ | ------------------------- | ----------------------- |
+| `Resource group` | `<RESOURCE_GROUP>` | `Storage Blob Data Owner` | `AZAPPL S<###> - Owner` |
 
 ### Activate access
 
-Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-activate-your-roles#activate-a-role) to activate access to the backend using PIM.
+Members of `AZAPPL S<###> - Owner` can follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-activate-your-roles#activate-a-role) to activate access to the backend using PIM.
 
 ## References
 
