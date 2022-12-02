@@ -48,24 +48,25 @@ It accepts the following arguments:
 
 ## Manage access using PIM
 
-This section contains instructions on how to assign and activate access to the backend using Azure AD Privileged Identity Management (PIM).
-
-Only subscription Owners (members of Azure AD group `AZAPPL S000 - Owner`) should be assigned access to the backend, as it may contain infrastructure secrets.
+Access to the backend is considered a privilege and should be managed using Azure AD Privileged Identity Management (PIM).
 
 ### Assign access
 
-Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-assign-roles#assign-a-role) to create this assignment in PIM:
+Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-assign-roles#assign-a-role) using the following values to assign access to the backend using PIM:
 
-| Resource type    | Resource                | Role                      | Member                |
-| ---------------- | ----------------------- | ------------------------- | --------------------- |
-| `Resource group` | `<RESOURCE_GROUP_NAME>` | `Storage Blob Data Owner` | `AZAPPL S000 - Owner` |
+| Resource type    | Resource           | Role                      | Member            |
+| ---------------- | ------------------ | ------------------------- | ----------------- |
+| `Resource group` | `<RESOURCE_GROUP>` | `Storage Blob Data Owner` | `<USER_OR_GROUP>` |
+
+`<RESOURCE_GROUP>` is the resource group containing the backend, and `<USER_OR_GROUP>` is the user or group that should be assigned access to the backend.
 
 ### Activate access
 
-Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-activate-your-roles#activate-a-role) to activate the assignment.
+Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-activate-your-roles#activate-a-role) to activate access to the backend using PIM.
 
 ## References
 
 - [Store Terraform state in Azure Storage](https://learn.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage?tabs=azure-cli)
 - [Security recommendations for Azure Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/security-recommendations)
 - [Terraform backend configuration for Azure Storage](https://www.terraform.io/language/settings/backends/azurerm)
+- [Omnia PIM strategy](https://docs.omnia.equinor.com/governance/architecture/Omnia-PIM-Strategy/)
