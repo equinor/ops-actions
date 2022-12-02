@@ -48,18 +48,15 @@ It accepts the following arguments:
 
 ## Manage access using PIM
 
-Access to the backend is considered a privilege and should be managed using Azure AD Privileged Identity Management (PIM).
+Access to the backend should be managed using Azure AD Privileged Identity Management (PIM) and restricted to members of Azure AD group `AZAPPL S<###> - Owner`.
 
 ### Assign access
 
 Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-assign-roles#assign-a-role) using the following values to assign access to the backend using PIM:
 
-| Resource type    | Resource           | Role                      | Member            |
-| ---------------- | ------------------ | ------------------------- | ----------------- |
-| `Resource group` | `<RESOURCE_GROUP>` | `Storage Blob Data Owner` | `<USER_OR_GROUP>` |
-
-- `<RESOURCE_GROUP>` is the resource group containing the backend.
-- `<USER_OR_GROUP>` is the user or group to assign access to the backend.
+| Resource type    | Resource                | Role                      | Member                  |
+| ---------------- | ----------------------- | ------------------------- | ----------------------- |
+| `Resource group` | `<RESOURCE_GROUP_NAME>` | `Storage Blob Data Owner` | `AZAPPL S<###> - Owner` |
 
 ### Activate access
 
