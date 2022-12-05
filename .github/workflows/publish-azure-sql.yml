@@ -1,0 +1,64 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: The environment that the job references.
+        type: string
+        required: true
+
+      server_name:
+        description: The name of the Azure SQL server to publish the SQL project to.
+        type: string
+        required: true
+
+      database_name:
+        description: The name of the Azure SQL database to publish the SQL project to.
+        type: string
+        required: true
+
+      project_path:
+        description: The path of the SQL project to publish.
+        type: string
+        required: true
+
+    secrets:
+      AZURE_CLIENT_ID:
+        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: The ID of the Azure subscription to publish the SQL project to.
+        required: true
+
+      AZURE_TENANT_ID:
+        description: The ID of the Azure tenant to publish the SQL project to.
+        required: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    # Set permissions required to login to Azure using OIDC.
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Publish SQL project
+      uses: azure/sql-action@v2
+      with:
+        connection-string: Server=tcp:${{ inputs.server_name }}.database.windows.net,1433;Database=${{ inputs.database_name }};Authentication=Active Directory Default
+        path: ${{ inputs.project_path }}
+        action: publish
