@@ -7,17 +7,17 @@ on:
         required: true
 
       server_name:
-        description: The name of the Azure SQL server to publish the SQL project to.
+        description: The name of the Azure SQL server to deploy the SQL project to.
         type: string
         required: true
 
       database_name:
-        description: The name of the Azure SQL database to publish the SQL project to.
+        description: The name of the Azure SQL database to deploy the SQL project to.
         type: string
         required: true
 
       project_path:
-        description: The path of the SQL project to publish.
+        description: The path of the SQL project to build and deploy.
         type: string
         required: true
 
@@ -27,16 +27,16 @@ on:
         required: true
 
       AZURE_SUBSCRIPTION_ID:
-        description: The ID of the Azure subscription to publish the SQL project to.
+        description: The ID of the Azure subscription to deploy the SQL project to.
         required: true
 
       AZURE_TENANT_ID:
-        description: The ID of the Azure tenant to publish the SQL project to.
+        description: The ID of the Azure tenant to deploy the SQL project to.
         required: true
 
 jobs:
-  build:
-    name: Build
+  Deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
@@ -56,7 +56,7 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Publish SQL project
+    - name: Build and deploy SQL project
       uses: azure/sql-action@v2
       with:
         connection-string: Server=tcp:${{ inputs.server_name }}.database.windows.net,1433;Database=${{ inputs.database_name }};Authentication=Active Directory Default
