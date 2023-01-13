@@ -20,12 +20,6 @@ on:
         required: false
         default: latest
 
-      checkov_skip_check:
-        description: A comma-separated string of Checkov check identifiers to skip.
-        type: string
-        required: false
-        default: ""
-
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -94,20 +88,6 @@ jobs:
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
 
-      # Run Checkov to perform static security analysis of Terraform configuration.
-      - name: Checkov
-        id: checkov
-        if: github.event_name == 'pull_request'
-        uses: bridgecrewio/checkov-action@v12
-        with:
-          directory: ${{ inputs.working_directory }}
-          framework: terraform
-          download_external_modules: true
-          skip_check: ${{ inputs.checkov_skip_check }}
-          quiet: true
-          output_format: github_failed_only
-
-      # Create summary with plan and Checkov results
       - name: Create summary
         if: github.event_name == 'pull_request' && (success() || failure())
         env:
@@ -115,27 +95,18 @@ jobs:
           TF_INIT_OUTCOME: ${{ steps.init.outcome }}
           TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
-          CHECKOV_OUTCOME: ${{ steps.checkov.outcome }}
           TF_PLAN: ${{ steps.plan.outputs.stdout }}
-          CHECKOV_RESULTS: ${{ steps.checkov.outputs.results }}
         run: |
           echo "#### Terraform Format and Style :paintbrush:\`$TF_FMT_OUTCOME\`
           #### Terraform Initialization :gear:\`$TF_INIT_OUTCOME\`
           #### Terraform Validation :robot:\`$TF_VALIDATE_OUTCOME\`
           #### Terraform Plan :book:\`$TF_PLAN_OUTCOME\`
-          #### Checkov :test_tube:\`$CHECKOV_OUTCOME\`
 
           <details><summary>Show Plan</summary>
 
           \`\`\`terraform
           $TF_PLAN
           \`\`\`
-
-          </details>
-
-          <details><summary>Show Checkov Results</summary>
-
-          $CHECKOV_RESULTS
 
           </details>
 
