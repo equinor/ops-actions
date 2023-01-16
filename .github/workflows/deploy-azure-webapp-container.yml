@@ -68,21 +68,18 @@ jobs:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
 
-      - name: Read app settings
-        id: settings
+      # Configure app settings by calling Azure REST API directly.
+      # This will replace entire app settings object instead of simply adding new properties to it.
+      - name: Configure app settings
         env:
-          JSON: ${{ inputs.app_settings }}
+          APP_NAME: ${{ inputs.app_name }}
+          APP_SETTINGS: ${{ inputs.app_settings }}
         run: |
-          if [[ -f "$JSON" ]]; then
-            JSON=$(jq -c . "$JSON")
-          fi
-          echo "json=$JSON" >> "$GITHUB_OUTPUT"
+          app_id=$(az webapp list --query "[?name=='$APP_NAME'].id" -o tsv)
 
-      - name: Configure
-        uses: azure/appservice-settings@v1
-        with:
-          app-name: ${{ inputs.app_name }}
-          app-settings-json: ${{ steps.settings.outputs.json }}
-          mask-inputs: false
-          # Use Key Vault references instead of including and masking secrets directly in app settings JSON.
-          # Docs: https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references
+          if [[ -f "$APP_SETTINGS" ]]; then
+            APP_SETTINGS=$(cat "$APP_SETTINGS")
+          fi
+          body=$(jq '{properties: .}' <<< "$APP_SETTINGS")
+
+          az rest -m PUT -u "$app_id/config/appsettings?api-version=2022-03-01" -b "$body" --query properties -o json
