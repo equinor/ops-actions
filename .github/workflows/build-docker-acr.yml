@@ -63,8 +63,12 @@ jobs:
       run:
         working-directory: ${{ inputs.working_directory }}
 
+    env:
+      IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
+      IMAGE_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
+
     outputs:
-      image: ${{ steps.build.outputs.image }}
+      image: ${{ env.IMAGE }}
 
     steps:
       - name: Checkout
@@ -89,6 +93,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: |
-            ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
-            ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
+          tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
