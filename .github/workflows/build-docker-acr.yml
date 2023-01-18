@@ -69,6 +69,7 @@ jobs:
 
     outputs:
       image: ${{ env.IMAGE }}
+      image_latest: ${{ env.IMAGE_LATEST }}
 
     steps:
       - name: Checkout
