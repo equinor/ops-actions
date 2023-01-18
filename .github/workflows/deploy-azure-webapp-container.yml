@@ -86,7 +86,7 @@ jobs:
           app_id=$(az webapp list --query "[?name=='$APP_NAME'].id" -o tsv)
 
           if [[ -f "$APP_SETTINGS" ]]; then
-            APP_SETTINGS=$(cat < "$APP_SETTINGS")
+            APP_SETTINGS=$(cat "$APP_SETTINGS")
           fi
           APP_SETTINGS=$(envsubst <<< "$APP_SETTINGS")
           body=$(jq '{properties: .}' <<< "$APP_SETTINGS")
