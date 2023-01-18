@@ -24,6 +24,12 @@ on:
         type: string
         required: true
 
+      tag:
+        description: A tag for the image.
+        type: string
+        required: false
+        default: ${{ github.run_number }}
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -79,10 +85,10 @@ jobs:
       - name: Build and push
         id: build
         env:
-          TAG_UNIQUE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ github.run_number }}
-          TAG_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
+          IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
+          IMAGE_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
         run: |
-          docker build . -t "$TAG_UNIQUE" -t "$TAG_LATEST"
-          docker push "$TAG_UNIQUE"
-          docker push "$TAG_LATEST"
-          echo "image=$TAG_UNIQUE" >> "$GITHUB_OUTPUT"
+          docker build . -t "$IMAGE" -t "$IMAGE_LATEST"
+          docker push "$IMAGE"
+          docker push "$IMAGE_LATEST"
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
