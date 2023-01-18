@@ -86,8 +86,9 @@ jobs:
           app_id=$(az webapp list --query "[?name=='$APP_NAME'].id" -o tsv)
 
           if [[ -f "$APP_SETTINGS" ]]; then
-            APP_SETTINGS=$(envsubst < "$APP_SETTINGS")
+            APP_SETTINGS=$(cat < "$APP_SETTINGS")
           fi
+          APP_SETTINGS=$(envsubst <<< "$APP_SETTINGS")
           body=$(jq '{properties: .}' <<< "$APP_SETTINGS")
 
           az rest -m PUT -u "$app_id/config/appsettings?api-version=2022-03-01" -b "$body" --query properties -o json
