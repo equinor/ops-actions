@@ -1,5 +1,13 @@
 # Login to Azure using OpenID Connect (OIDC), then deploy Docker image to Azure Web App.
 
+# Default environment variables are available for the input app settings.
+# See docs for list of default environment variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+# Example app settings JSON:
+#   {
+#     "GITHUB_RUN_ID": "$GITHUB_RUN_ID"
+#     "GITHUB_RUN_NUMBER": "$GITHUB_RUN_NUMBER"
+#   }
+
 on:
   workflow_call:
     inputs:
@@ -80,6 +88,7 @@ jobs:
           if [[ -f "$APP_SETTINGS" ]]; then
             APP_SETTINGS=$(cat "$APP_SETTINGS")
           fi
+          APP_SETTINGS=$(envsubst <<< "$APP_SETTINGS")
           body=$(jq '{properties: .}' <<< "$APP_SETTINGS")
 
           az rest -m PUT -u "$app_id/config/appsettings?api-version=2022-03-01" -b "$body" --query properties -o json
