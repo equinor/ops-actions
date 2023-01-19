@@ -9,7 +9,7 @@ on:
         required: true
 
       working_directory:
-        description: The working directory to run the Docker commands in.
+        description: The path of the working directory containing the Dockerfile to build an image from.
         type: string
         default: "."
         required: false
@@ -59,16 +59,20 @@ jobs:
       id-token: write
       contents: read
 
-    defaults:
-      run:
-        working-directory: ${{ inputs.working_directory }}
+    env:
+      IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
+      IMAGE_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
 
     outputs:
-      image: ${{ steps.build.outputs.image }}
+      image: ${{ env.IMAGE }}
+      image_latest: ${{ env.IMAGE_LATEST }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -83,12 +87,8 @@ jobs:
         run: az acr login --name "$REGISTRY_NAME"
 
       - name: Build and push
-        id: build
-        env:
-          IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
-          IMAGE_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
-        run: |
-          docker build . -t "$IMAGE" -t "$IMAGE_LATEST"
-          docker push "$IMAGE"
-          docker push "$IMAGE_LATEST"
-          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.working_directory }}
+          tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
+          push: true
