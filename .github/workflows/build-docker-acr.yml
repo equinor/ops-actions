@@ -9,7 +9,7 @@ on:
         required: true
 
       working_directory:
-        description: The working directory to run the Docker commands in.
+        description: The path of the working directory containing the Dockerfile to build an image from.
         type: string
         default: "."
         required: false
