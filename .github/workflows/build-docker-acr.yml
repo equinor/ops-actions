@@ -6,7 +6,7 @@ on:
       environment:
         description: The name of the GitHub environment that this job references.
         type: string
-        required: true
+        required: false
 
       working_directory:
         description: The path of the working directory containing the Dockerfile to build an image from.
