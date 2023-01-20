@@ -5,7 +5,7 @@ set -eu
 APP_NAME="$1"
 export SUBSCRIPTION_ID="$2"
 export REPO="$3"
-export ENVIRONMENT="$4"
+export ENVIRONMENT="${4:-}"
 CONFIG_FILE="$5"
 
 echo 'Reading config...'
@@ -59,12 +59,18 @@ echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
 tenant_id=$(az account show --subscription "$SUBSCRIPTION_ID" --query tenantId --output tsv)
 echo "TENANT_ID: $tenant_id"
 
-echo 'Creating GitHub environment...'
-gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT"
-# GitHub CLI does not natively support creating environments (cli/cli#5149).
-# Create using GitHub API request instead.
-
 echo 'Updating GitHub secrets...'
-gh secret set 'AZURE_CLIENT_ID' --body "$app_id" --repo "$REPO" --env "$ENVIRONMENT"
-gh secret set 'AZURE_SUBSCRIPTION_ID' --body "$SUBSCRIPTION_ID" --repo "$REPO" --env "$ENVIRONMENT"
-gh secret set 'AZURE_TENANT_ID' --body "$tenant_id" --repo "$REPO" --env "$ENVIRONMENT"
+if [[ -n "$ENVIRONMENT" ]]; then
+  echo 'Creating GitHub environment...'
+  gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT"
+  # GitHub CLI does not natively support creating environments (cli/cli#5149).
+  # Create using GitHub API request instead.
+
+  gh secret set 'AZURE_CLIENT_ID' --body "$app_id" --repo "$REPO" --env "$ENVIRONMENT"
+  gh secret set 'AZURE_SUBSCRIPTION_ID' --body "$SUBSCRIPTION_ID" --repo "$REPO" --env "$ENVIRONMENT"
+  gh secret set 'AZURE_TENANT_ID' --body "$tenant_id" --repo "$REPO" --env "$ENVIRONMENT"
+else
+  gh secret set 'AZURE_CLIENT_ID' --body "$app_id" --repo "$REPO"
+  gh secret set 'AZURE_SUBSCRIPTION_ID' --body "$SUBSCRIPTION_ID" --repo "$REPO"
+  gh secret set 'AZURE_TENANT_ID' --body "$tenant_id" --repo "$REPO"
+fi

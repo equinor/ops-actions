@@ -8,21 +8,21 @@ It will:
 1. Create a federated credential for the Azure AD application
 1. Create a service principal for the Azure AD application
 1. Create Azure role assignments for the service principal
-1. Create GitHub environment secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
+1. Create GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 
 The script accepts the following arguments:
 
 1. The name of the Azure AD application to create
 1. The ID of the Azure subscription to configure OIDC for
 1. The GitHub repository to configure OIDC for
-1. The GitHub environment to configure OIDC for
+1. (Optional) The GitHub environment to configure OIDC for
 1. The path of the JSON file containing the OIDC configuration
 
 ## Prerequisites
 
 - [Install WSL](https://learn.microsoft.com/en-us/windows/wsl/install) - to run shell script
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credential, service principal and Azure role assignments
-- [Install GitHub CLI](https://cli.github.com) - to create GitHub environment secrets
+- [Install GitHub CLI](https://cli.github.com) - to create GitHub secrets
 - [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credential and service principal
 - Activate Azure role `Owner` at the subscription scope - to create Azure role assignments
@@ -59,6 +59,8 @@ The script accepts the following arguments:
     ```console
     ./oidc.sh my-app 2e532de1-2fb2-4bd3-9700-bd3364e57ddf equinor/ops-actions development ./oidc.json
     ```
+
+    To create the secrets at the repository level, pass an empty string `""` to argument `ENVIRONMENT` .
 
 ## References
 
