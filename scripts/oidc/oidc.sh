@@ -5,7 +5,7 @@ set -eu
 APP_NAME="$1"
 export SUBSCRIPTION_ID="$2"
 export REPO="$3"
-export ENVIRONMENT="${4:-}"
+export ENVIRONMENT="$4"
 CONFIG_FILE="$5"
 
 echo 'Reading config...'
