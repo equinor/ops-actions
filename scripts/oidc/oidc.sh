@@ -5,7 +5,7 @@ set -eu
 APP_NAME="$1"
 export SUBSCRIPTION_ID="$2"
 export REPO="$3"
-export ENVIRONMENT="$4"
+export ENVIRONMENT="${4:-}"
 CONFIG_FILE="$5"
 
 echo 'Reading config...'
@@ -59,10 +59,12 @@ echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
 tenant_id=$(az account show --subscription "$SUBSCRIPTION_ID" --query tenantId --output tsv)
 echo "TENANT_ID: $tenant_id"
 
-echo 'Creating GitHub environment...'
-gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT"
-# GitHub CLI does not natively support creating environments (cli/cli#5149).
-# Create using GitHub API request instead.
+if [[ -n "$ENVIRONMENT" ]]; then
+  echo 'Creating GitHub environment...'
+  gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT"
+  # GitHub CLI does not natively support creating environments (cli/cli#5149).
+  # Create using GitHub API request instead.
+fi
 
 echo 'Updating GitHub secrets...'
 gh secret set 'AZURE_CLIENT_ID' --body "$app_id" --repo "$REPO" --env "$ENVIRONMENT"
