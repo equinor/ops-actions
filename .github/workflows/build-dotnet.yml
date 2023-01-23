@@ -1,4 +1,4 @@
-# TODO: Write workflow description.
+# Restore, build and publish .NET Core application.
 
 on:
   workflow_call:
