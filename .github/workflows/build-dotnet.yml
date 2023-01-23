@@ -57,7 +57,7 @@ jobs:
         run: dotnet restore
 
       - name: Dotnet build
-        run: dotnet build --configuration "$CONFIGURATION"
+        run: dotnet build --no-restore
 
       - name: Dotnet publish
         env:
