@@ -43,6 +43,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CONFIGURATION: ${{ inputs.configuration }}
+      RUNTIME: ${{ inputs.runtime }}
+      SELF_CONTAINED: ${{ inputs.self_contained }}
       OUTPUT: myapp
 
     steps:
@@ -58,13 +60,10 @@ jobs:
         run: dotnet restore
 
       - name: Dotnet build
-        run: dotnet build --no-restore
+        run: dotnet build --no-restore --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED"
 
       - name: Dotnet publish
-        env:
-          RUNTIME: ${{ inputs.runtime }}
-          SELF_CONTAINED: ${{ inputs.self_contained }}
-        run: dotnet publish --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --configuration "$CONFIGURATION" --output "$OUTPUT"
+        run: dotnet publish --no-build --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
