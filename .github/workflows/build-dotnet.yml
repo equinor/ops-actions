@@ -23,7 +23,7 @@ on:
         description: The name of the build artifact to upload.
         type: string
         required: false
-        default: package
+        default: dotnet-app
 
     outputs:
       artifact_name:
