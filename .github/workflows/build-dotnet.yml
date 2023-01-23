@@ -12,7 +12,7 @@ on:
         description: Defines the build configuration.
         type: string
         required: false
-        default: Debug
+        default: Release
 
       runtime:
         description: Which runtime to publish the application for.
