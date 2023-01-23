@@ -51,13 +51,13 @@ jobs:
         run: dotnet restore
 
       - name: Dotnet build
-        run: dotnet build --configuration "$RELEASE"
+        run: dotnet build --configuration "$CONFIGURATION"
 
       - name: Dotnet publish
         env:
           RUNTIME: ${{ inputs.runtime }}
           SELF_CONTAINED: ${{ inputs.self_contained }}
-        run: dotnet publish --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --configuration "$RELEASE" --output "$OUTPUT"
+        run: dotnet publish --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --configuration "$CONFIGURATION" --output "$OUTPUT"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
