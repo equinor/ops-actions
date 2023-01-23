@@ -73,6 +73,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
+          path: package-artifact
 
       - name: Login to Azure
         uses: azure/login@v1
