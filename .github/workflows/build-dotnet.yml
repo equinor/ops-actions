@@ -18,6 +18,7 @@ on:
         description: Which runtime to publish the application for.
         type: string
         required: false
+        default: ""
 
       self_contained:
         description: Publish the .NET runtime with your application so the runtime doesn't need to be installed on the target machine?
