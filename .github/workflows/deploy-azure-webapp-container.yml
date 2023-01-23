@@ -29,7 +29,7 @@ on:
       app_settings:
         description: The app settings to configure for the Azure Web App. Inline JSON or path of a JSON file.
         type: string
-        default: "{}"
+        default: ""
         required: false
 
     secrets:
@@ -79,6 +79,7 @@ jobs:
       # Configure app settings by calling Azure REST API directly.
       # This will replace entire app settings object instead of simply adding new properties to it.
       - name: Configure app settings
+        if: inputs.app_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}
           APP_SETTINGS: ${{ inputs.app_settings }}
