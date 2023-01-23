@@ -8,6 +8,12 @@ on:
         type: string
         required: true
 
+      configuration:
+        description: Defines the build configuration.
+        type: string
+        required: false
+        default: Debug
+
       runtime:
         description: Which runtime to publish the application for.
         type: string
@@ -35,7 +41,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
-      CONFIGURATION: Release
+      CONFIGURATION: ${{ inputs.configuration }}
       OUTPUT: myapp
 
     steps:
