@@ -60,7 +60,7 @@ jobs:
         run: dotnet restore --runtime "$RUNTIME"
 
       - name: Dotnet build
-        run: dotnet build --no-restore --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED"
+        run: dotnet build --no-restore --configuration "$CONFIGURATION" --runtime "$RUNTIME"
 
       - name: Dotnet publish
         run: dotnet publish --no-build --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT"
