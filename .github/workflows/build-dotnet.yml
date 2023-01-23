@@ -15,7 +15,7 @@ on:
         default: Release
 
       runtime:
-        description: Which runtime to publish the application for.
+        description: Which runtime to build and publish the application for.
         type: string
         required: false
         default: ""
