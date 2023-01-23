@@ -20,13 +20,19 @@ on:
         required: false
         default: package
 
+    outputs:
+      artifact_name:
+        description: The name of the build artifact that was uploaded.
+        value: ${{ inputs.artifact_name }}
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     env:
       PROJECT: ${{ inputs.project }}
-      OUTPUT: build
+      CONFIGURATION: Release
+      OUTPUT: myapp
 
     steps:
       - name: Checkout
@@ -37,17 +43,17 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
-      - name: Install dependencies
+      - name: Dotnet restore
         run: dotnet restore "$PROJECT"
 
-      - name: Build
-        run: dotnet build "$PROJECT" --configuration Release --no-restore --output "$OUTPUT"
+      - name: Dotnet build
+        run: dotnet build "$PROJECT" --configuration "$RELEASE"
 
-      - name: Upload build artifact
+      - name: Dotnet publish
+        run: dotnet publish "$PROJECT" --configuration "$RELEASE" --output "$OUTPUT"
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ env.OUTPUT }}
-
-    outputs:
-      artifact_name: ${{ inputs.artifact_name }}
