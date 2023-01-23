@@ -45,7 +45,7 @@ jobs:
       CONFIGURATION: ${{ inputs.configuration }}
       RUNTIME: ${{ inputs.runtime }}
       SELF_CONTAINED: ${{ inputs.self_contained }}
-      OUTPUT: myapp
+      OUTPUT: dotnet-app
 
     steps:
       - name: Checkout
