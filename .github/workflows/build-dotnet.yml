@@ -14,6 +14,17 @@ on:
         required: false
         default: "."
 
+      runtime:
+        description: Which runtime to publish the application for.
+        type: string
+        required: false
+
+      self_contained:
+        description: Publish the .NET runtime with your application so the runtime doesn't need to be installed on the target machine?
+        type: boolean
+        required: false
+        default: false
+
       artifact_name:
         description: The name of the build artifact to upload.
         type: string
@@ -50,7 +61,10 @@ jobs:
         run: dotnet build "$PROJECT" --configuration "$RELEASE"
 
       - name: Dotnet publish
-        run: dotnet publish "$PROJECT" --configuration "$RELEASE" --output "$OUTPUT"
+        env:
+          RUNTIME: ${{ inputs.runtime }}
+          SELF_CONTAINED: ${{ inputs.self_contained }}
+        run: dotnet publish "$PROJECT" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --configuration "$RELEASE" --output "$OUTPUT"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
