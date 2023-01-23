@@ -8,12 +8,6 @@ on:
         type: string
         required: true
 
-      project:
-        description: The path of the project(s) to build.
-        type: string
-        required: false
-        default: "."
-
       runtime:
         description: Which runtime to publish the application for.
         type: string
@@ -41,7 +35,6 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
-      PROJECT: ${{ inputs.project }}
       CONFIGURATION: Release
       OUTPUT: myapp
 
@@ -55,16 +48,16 @@ jobs:
           dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Dotnet restore
-        run: dotnet restore "$PROJECT"
+        run: dotnet restore
 
       - name: Dotnet build
-        run: dotnet build "$PROJECT" --configuration "$RELEASE"
+        run: dotnet build --configuration "$RELEASE"
 
       - name: Dotnet publish
         env:
           RUNTIME: ${{ inputs.runtime }}
           SELF_CONTAINED: ${{ inputs.self_contained }}
-        run: dotnet publish "$PROJECT" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --configuration "$RELEASE" --output "$OUTPUT"
+        run: dotnet publish --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --configuration "$RELEASE" --output "$OUTPUT"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
