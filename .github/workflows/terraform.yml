@@ -1,13 +1,5 @@
 # Install Terraform, configure OpenID Connect (OIDC) authentication to Azure, create a Terraform plan, and apply the plan on push to branch 'main'.
 
-# Set permissions granted to GITHUB_TOKEN in caller workflow:
-
-# permissions:
-#   id-token: write
-#   contents: read
-
-# Required when configuring OIDC authentication to Azure.
-
 on:
   workflow_call:
     inputs:
@@ -20,7 +12,7 @@ on:
         description: The working directory to run the Terraform commands in.
         type: string
         required: false
-        default: '.'
+        default: "."
 
       terraform_version:
         description: The version of Terraform to install.
@@ -46,6 +38,17 @@ jobs:
     name: Terraform
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+
+    # Queue jobs that target the same Terraform configuration.
+    concurrency:
+      group: terraform @ ${{ inputs.working_directory }}
+      cancel-in-progress: false
+
+    # Set permissions required to login to Azure using OIDC.
+    permissions:
+      id-token: write
+      contents: read
+
     defaults:
       run:
         shell: bash
@@ -55,31 +58,61 @@ jobs:
     # Required by the AzureRM backend and provider.
     env:
       ARM_USE_OIDC: true
+      ARM_USE_AZUREAD: true
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
       - name: Terraform Format
+        id: fmt
         run: terraform fmt -check
 
       - name: Terraform Init
+        id: init
         run: terraform init
 
       - name: Terraform Validate
-        run: terraform validate
+        id: validate
+        run: terraform validate -no-color
 
       - name: Terraform Plan
-        run: terraform plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
+
+      - name: Create summary
+        if: github.event_name == 'pull_request' && (success() || failure())
+        env:
+          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
+          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
+          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
+          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
+          TF_PLAN: ${{ steps.plan.outputs.stdout }}
+        run: |
+          echo "#### Terraform Format and Style :paintbrush:\`$TF_FMT_OUTCOME\`
+          #### Terraform Initialization :gear:\`$TF_INIT_OUTCOME\`
+          #### Terraform Validation :robot:\`$TF_VALIDATE_OUTCOME\`
+          #### Terraform Plan :book:\`$TF_PLAN_OUTCOME\`
+
+          <details><summary>Show Plan</summary>
+
+          \`\`\`terraform
+          $TF_PLAN
+          \`\`\`
+
+          </details>
+
+          *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`*" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -input=false

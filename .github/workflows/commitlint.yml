@@ -4,32 +4,64 @@
 # - commitlint: https://commitlint.js.org
 # - Conventional Commits: https://www.conventionalcommits.org
 
-name: commitlint
+# Additional configuration can be set in `commitlint.config.js`.
+# Docs: https://commitlint.js.org/#/reference-configuration
 
 on:
-  pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
   workflow_call:
+    inputs:
+      node_version:
+        description: The version of Node.js to install.
+        type: string
+        required: false
+        default: lts/*
+
+      commitlint_version:
+        description: The version of commitlint to install.
+        type: string
+        required: false
+        default: latest
+
+      extends:
+        description: Newline-separated string of shareable configurations to extend.
+        type: string
+        required: false
+        default: |-
+          @commitlint/config-conventional
+
+      message:
+        description: Commit message to lint.
+        type: string
+        required: true
+
+      # TODO: Allow options other than explicitly specifying a commit message.
 
 jobs:
-  lint-pr:
-    name: Lint PR
+  commitlint:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: lts/*
-      - name: Install commitlint
-        run: npm install -g @commitlint/cli @commitlint/config-conventional
-      - name: Configure commitlint
-        run: |
-          echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
-      - name: Lint PR title
+          node-version: ${{ inputs.node_version }}
+
+      - name: Install dependencies
         env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-        run: echo "${PR_TITLE}" | commitlint
+          EXTENDS: ${{ inputs.extends }}
+        run: |
+          readarray -t extends_array <<< "$EXTENDS"
+          npm install "${extends_array[@]}"
+
+      - name: Lint
+        env:
+          VERSION: ${{ inputs.commitlint_version }}
+          EXTENDS: ${{ inputs.extends }}
+          MESSAGE: ${{ inputs.message }}
+        run: |
+          readarray -t extends_array <<< "$EXTENDS"
+          npx "commitlint@$VERSION" --extends "${extends_array[@]}" <<< "$MESSAGE"

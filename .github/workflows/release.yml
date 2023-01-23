@@ -1,0 +1,11 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Release
+    uses: ./.github/workflows/semantic-release.yml
