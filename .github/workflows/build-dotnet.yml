@@ -59,7 +59,7 @@ jobs:
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
-        run: dotnet publish --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-build --output "$OUTPUT"
+        run: dotnet publish --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
 
       # Upload an artifact containing the application.
       - name: Upload artifact
