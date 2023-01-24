@@ -1,4 +1,4 @@
-# Login to Azure using OpenID Connect (OIDC), then deploy Docker image to Azure Web App.
+# Login to Azure using OpenID Connect (OIDC), then deploy Docker image or package to Azure Web App.
 
 # Default environment variables are available for the input app settings.
 # See docs for list of default environment variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
@@ -17,9 +17,14 @@ on:
         required: true
 
       image:
-        description: The Docker image to deploy.
+        description: The Docker image to deploy. Required if "artifact_name" is not set.
         type: string
-        required: true
+        required: false
+
+      artifact_name:
+        description: The name of the artifact containing the package to deploy. Required if "image" is not set.
+        type: string
+        required: false
 
       app_name:
         description: The name of the Azure Web App to deploy the Docker image to.
@@ -62,6 +67,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Download artifact
+        id: download
+        if: inputs.artifact_name != ''
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: package-artifact
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -75,6 +88,7 @@ jobs:
         with:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
+          package: ${{ steps.download.outputs.download-path }}
 
       # Configure app settings by calling Azure REST API directly.
       # This will replace entire app settings object instead of simply adding new properties to it.
