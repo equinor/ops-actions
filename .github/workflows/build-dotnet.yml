@@ -36,6 +36,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
+      CONFIGURATION: Release
       RUNTIME: ${{ inputs.runtime }}
       SELF_CONTAINED: ${{ inputs.self_contained }}
       OUTPUT: dotnet-app
