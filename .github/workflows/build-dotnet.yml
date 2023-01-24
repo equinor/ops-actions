@@ -56,11 +56,11 @@ jobs:
 
       # Build the application for release/deployment.
       - name: Dotnet build
-        run: dotnet build --configuration Release --runtime "$RUNTIME" --no-restore
+        run: dotnet build --configuration "$CONFIGURATION" --runtime "$RUNTIME" --no-restore
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
-        run: dotnet publish --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
+        run: dotnet publish --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
 
       # Upload an artifact containing the application.
       - name: Upload artifact
