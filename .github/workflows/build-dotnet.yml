@@ -1,0 +1,70 @@
+# Restore, build and publish .NET Core application.
+
+on:
+  workflow_call:
+    inputs:
+      dotnet_version:
+        description: The version of .NET to install.
+        type: string
+        required: true
+
+      runtime:
+        description: Which runtime to publish the application for.
+        type: string
+        required: false
+        default: ""
+
+      self_contained:
+        description: Publish the .NET runtime with your application so the runtime doesn't need to be installed on the target machine?
+        type: boolean
+        required: false
+        default: false
+
+      artifact_name:
+        description: The name of the build artifact to upload.
+        type: string
+        required: false
+        default: dotnet-app
+
+    outputs:
+      artifact_name:
+        description: The name of the uploaded artifact containing the application.
+        value: ${{ inputs.artifact_name }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      CONFIGURATION: Release
+      RUNTIME: ${{ inputs.runtime }}
+      SELF_CONTAINED: ${{ inputs.self_contained }}
+      OUTPUT: dotnet-app
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ inputs.dotnet_version }}
+
+      # Restore dependencies for the application and runtime.
+      - name: Dotnet restore
+        run: dotnet restore --runtime "$RUNTIME"
+
+      # Build the application for release/deployment.
+      - name: Dotnet build
+        run: dotnet build --configuration "$CONFIGURATION" --runtime "$RUNTIME" --no-restore
+
+      # Publish the application and its dependencies to a folder for deployment.
+      - name: Dotnet publish
+        run: dotnet publish --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
+
+      # Upload an artifact containing the application.
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ env.OUTPUT }}
