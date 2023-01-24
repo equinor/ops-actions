@@ -63,7 +63,7 @@ jobs:
         run: dotnet build --configuration "$CONFIGURATION" --no-restore
 
       - name: Dotnet publish
-        run: dotnet publish --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" # --no-build
+        run: dotnet publish --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
