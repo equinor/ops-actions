@@ -57,7 +57,7 @@ jobs:
           dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Dotnet restore
-        run: dotnet restore
+        run: dotnet restore --runtime "$RUNTIME"
 
       - name: Dotnet build
         run: dotnet build --configuration "$CONFIGURATION" --runtime "$RUNTIME" --no-restore
