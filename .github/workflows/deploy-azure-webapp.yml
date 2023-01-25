@@ -43,11 +43,11 @@ on:
         required: true
 
       AZURE_SUBSCRIPTION_ID:
-        description: The ID of the Azure subscription to deploy the Docker image to.
+        description: The ID of the Azure subscription containing the Azure Web App.
         required: true
 
       AZURE_TENANT_ID:
-        description: The ID of the Azure tenant to deploy the Docker image to.
+        description: The ID of the Azure tenant containing the Azure Web App.
         required: true
 
 jobs:
