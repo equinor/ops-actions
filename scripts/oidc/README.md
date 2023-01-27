@@ -13,7 +13,6 @@ It will:
 The script accepts the following arguments:
 
 1. The name of the Azure AD application to create
-1. The name or ID of the Azure subscription to configure OIDC for
 1. The GitHub repository to configure OIDC for
 1. (Optional) The GitHub environment to configure OIDC for
 1. The path of the JSON file containing the OIDC configuration
