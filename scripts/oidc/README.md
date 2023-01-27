@@ -38,6 +38,12 @@ The script accepts the following arguments:
     az login
     ```
 
+1. Set Azure subscription:
+
+    ```console
+    az account set -s {SUBSCRIPTION_NAME_OR_ID}
+    ```
+
 1. Login to GitHub:
 
     ```console
@@ -49,7 +55,7 @@ The script accepts the following arguments:
 1. Run the script `oidc.sh`:
 
     ```console
-    ./oidc.sh {APP_NAME} {SUBSCRIPTION_NAME_OR_ID} {REPO} {ENVIRONMENT} {CONFIG_FILE}
+    ./oidc.sh {APP_NAME} {REPO} {ENVIRONMENT} {CONFIG_FILE}
     ```
 
     > **Note:** `SUBSCRIPTION_ID`, `REPO` and `ENVIRONMENT` are available as environment variables in `CONFIG_FILE`.
@@ -57,7 +63,7 @@ The script accepts the following arguments:
     For example:
 
     ```console
-    ./oidc.sh my-app my-subscription equinor/ops-actions development ./oidc.json
+    ./oidc.sh my-app equinor/ops-actions development ./oidc.json
     ```
 
     To create the secrets at the repository level, pass an empty string `""` to argument `ENVIRONMENT` .

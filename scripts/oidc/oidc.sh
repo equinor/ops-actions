@@ -3,17 +3,14 @@
 set -eu
 
 APP_NAME="$1"
-export SUBSCRIPTION="$2"
-export REPO="$3"
-export ENVIRONMENT="$4"
-CONFIG_FILE="$5"
+export REPO="$2"
+export ENVIRONMENT="$3"
+CONFIG_FILE="$4"
 
-az account set --subscription "$SUBSCRIPTION" --output none
-
-account=$(az account show --subscription "$SUBSCRIPTION" --query '{subscriptionName:name, subscriptionId:id, tenantId:tenantId}' --output json)
+account=$(az account show --query '{subscriptionName:name, subscriptionId:id, tenantId:tenantId}' --output json)
 
 subscription_name=$(jq -r '.subscriptionName' <<< "$account")
-read -r -p "Configure OIDC from GitHub repo $REPO to Azure subscription $subscription_name? (y/N) " response
+read -r -p "Configure OIDC from GitHub repo '$REPO' to Azure subscription '$subscription_name'? (y/N) " response
 case $response in
   [yY][eE][sS]|[yY])
     ;;
