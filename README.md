@@ -9,3 +9,7 @@
 ### OpenID Connect
 
 For reusable workflows that login to Azure, run [this script](./scripts/oidc/) to configure OpenID Connect for the repository containing the caller workflow.
+
+### Terraform backend
+
+For the `terraform.yml` workflow, run [this script](./scripts/terraform-backend/) to configure a Terraform backend.
