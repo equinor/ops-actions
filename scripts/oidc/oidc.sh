@@ -3,13 +3,31 @@
 set -eu
 
 APP_NAME="$1"
-export SUBSCRIPTION_ID="$2"
+export SUBSCRIPTION="$2"
 export REPO="$3"
 export ENVIRONMENT="$4"
 CONFIG_FILE="$5"
 
-echo 'Reading config...'
-config=$(envsubst < "$CONFIG_FILE")
+az account set --subscription "$SUBSCRIPTION" --output none
+
+account=$(az account show --subscription "$SUBSCRIPTION" --query '{subscriptionName:name, subscriptionId:id, tenantId:tenantId}' --output json)
+
+subscription_name=$(jq -r '.subscriptionName' <<< "$account")
+read -r -p "Configure OIDC from GitHub repo $REPO to Azure subscription $subscription_name? (y/N) " response
+case $response in
+  [yY][eE][sS]|[yY])
+    ;;
+  *)
+    exit 0
+    ;;
+esac
+
+SUBSCRIPTION_ID=$(jq -r '.subscriptionId' <<< "$account")
+export SUBSCRIPTION_ID
+echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
+
+tenant_id=$(jq -r '.tenantId' <<< "$account")
+echo "TENANT_ID: $tenant_id"
 
 echo 'Checking if application already exists...'
 app_id=$(az ad app list --filter "displayName eq '$APP_NAME'" --query [].appId --output tsv)
@@ -21,6 +39,9 @@ else
   echo 'Using existing application.'
 fi
 echo "CLIENT_ID: $app_id"
+
+echo 'Reading config...'
+config=$(envsubst < "$CONFIG_FILE")
 
 echo 'Checking if federated identity credential already exists...'
 fic=$(echo "$config" | jq '.federatedCredential + {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}')
@@ -54,10 +75,6 @@ echo "$ras" | while read -r ra; do
   echo "Assigning role '$role' at scope '$scope'..."
   az role assignment create --role "$role" --subscription "$SUBSCRIPTION_ID" --assignee-object-id "$sp_id" --assignee-principal-type ServicePrincipal --scope "$scope" --output none
 done
-
-echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
-tenant_id=$(az account show --subscription "$SUBSCRIPTION_ID" --query tenantId --output tsv)
-echo "TENANT_ID: $tenant_id"
 
 if [[ -n "$ENVIRONMENT" ]]; then
   echo 'Creating GitHub environment...'
