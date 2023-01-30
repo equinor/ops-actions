@@ -7,12 +7,9 @@ export REPO="$2"
 export ENVIRONMENT="$3"
 CONFIG_FILE="$4"
 
-# pre-flight checks START
-
-account=$(az account show --query '{subscriptionName:name, subscriptionId:id, tenantId:tenantId}' --output json)
-
 repo_name=$(gh repo view "$REPO" --json name --jq .name)
-subscription_name=$(jq -r '.subscriptionName' <<< "$account")
+subscription=$(az account show --query '{name:name, id:id, tenantId:tenantId}' --output json)
+subscription_name=$(jq -r '.name' <<< "$subscription")
 read -r -p "Configure OIDC from GitHub repo '$repo_name' to Azure subscription '$subscription_name'? (y/N) " response
 case $response in
   [yY][eE][sS]|[yY])
@@ -22,16 +19,15 @@ case $response in
     ;;
 esac
 
-config=$(envsubst < "$CONFIG_FILE")
-
-# pre-flight checks END
-
-SUBSCRIPTION_ID=$(jq -r '.subscriptionId' <<< "$account")
+SUBSCRIPTION_ID=$(jq -r '.id' <<< "$subscription")
 export SUBSCRIPTION_ID
 echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
 
-tenant_id=$(jq -r '.tenantId' <<< "$account")
+tenant_id=$(jq -r '.tenantId' <<< "$subscription")
 echo "TENANT_ID: $tenant_id"
+
+echo 'Reading config file...'
+config=$(envsubst < "$CONFIG_FILE")
 
 echo 'Checking if application already exists...'
 app_id=$(az ad app list --filter "displayName eq '$APP_NAME'" --query [].appId --output tsv)
