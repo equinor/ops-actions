@@ -7,6 +7,8 @@ export REPO="$2"
 export ENVIRONMENT="$3"
 CONFIG_FILE="$4"
 
+# pre-flight checks START
+
 account=$(az account show --query '{subscriptionName:name, subscriptionId:id, tenantId:tenantId}' --output json)
 
 subscription_name=$(jq -r '.subscriptionName' <<< "$account")
@@ -18,6 +20,16 @@ case $response in
     exit 0
     ;;
 esac
+
+if [[ -f "$CONFIG_FILE" ]]; then
+  echo 'Reading config file...'
+  config=$(envsubst < "$CONFIG_FILE")
+else
+  echo "Config file does not exist."
+  exit 1
+fi
+
+# pre-flight checks END
 
 SUBSCRIPTION_ID=$(jq -r '.subscriptionId' <<< "$account")
 export SUBSCRIPTION_ID
@@ -36,9 +48,6 @@ else
   echo 'Using existing application.'
 fi
 echo "CLIENT_ID: $app_id"
-
-echo 'Reading config...'
-config=$(envsubst < "$CONFIG_FILE")
 
 echo 'Checking if federated identity credential already exists...'
 fic=$(echo "$config" | jq '.federatedCredential + {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}')
