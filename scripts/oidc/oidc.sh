@@ -8,8 +8,8 @@ export ENVIRONMENT="$3"
 CONFIG_FILE="$4"
 
 repo_name=$(gh repo view "$REPO" --json name --jq .name)
-subscription=$(az account show --query '{name:name, id:id, tenantId:tenantId}' --output json)
-subscription_name=$(jq -r '.name' <<< "$subscription")
+account=$(az account show --query '{subscriptionName:name, subscriptionId:id, tenantId:tenantId}' --output json)
+subscription_name=$(jq -r '.subscriptionName' <<< "$account")
 read -r -p "Configure OIDC from GitHub repo '$repo_name' to Azure subscription '$subscription_name'? (y/N) " response
 case $response in
   [yY][eE][sS]|[yY])
@@ -19,11 +19,11 @@ case $response in
     ;;
 esac
 
-SUBSCRIPTION_ID=$(jq -r '.id' <<< "$subscription")
+SUBSCRIPTION_ID=$(jq -r '.subscriptionId' <<< "$account")
 export SUBSCRIPTION_ID
 echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
 
-tenant_id=$(jq -r '.tenantId' <<< "$subscription")
+tenant_id=$(jq -r '.tenantId' <<< "$account")
 echo "TENANT_ID: $tenant_id"
 
 echo 'Reading config file...'
