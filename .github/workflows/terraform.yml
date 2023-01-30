@@ -1,8 +1,5 @@
 # Install Terraform, configure OpenID Connect (OIDC) authentication to Azure, create a Terraform plan, and apply the plan on push to branch 'main'.
 
-# Terraform configuration requires Azure provider v3.20.0 or higher.
-# Ref: https://github.com/hashicorp/terraform-provider-azurerm/blob/main/CHANGELOG.md#3200-august-25-2022
-
 on:
   workflow_call:
     inputs:
