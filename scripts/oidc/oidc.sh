@@ -11,8 +11,9 @@ CONFIG_FILE="$4"
 
 account=$(az account show --query '{subscriptionName:name, subscriptionId:id, tenantId:tenantId}' --output json)
 
+repo_name=$(gh repo view "$REPO" --json name --jq .name)
 subscription_name=$(jq -r '.subscriptionName' <<< "$account")
-read -r -p "Configure OIDC from GitHub repo '$REPO' to Azure subscription '$subscription_name'? (y/N) " response
+read -r -p "Configure OIDC from GitHub repo '$repo_name' to Azure subscription '$subscription_name'? (y/N) " response
 case $response in
   [yY][eE][sS]|[yY])
     ;;
@@ -21,13 +22,7 @@ case $response in
     ;;
 esac
 
-if [[ -f "$CONFIG_FILE" ]]; then
-  echo 'Reading config file...'
-  config=$(envsubst < "$CONFIG_FILE")
-else
-  echo "Config file does not exist."
-  exit 1
-fi
+config=$(envsubst < "$CONFIG_FILE")
 
 # pre-flight checks END
 
