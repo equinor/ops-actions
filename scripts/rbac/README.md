@@ -19,6 +19,12 @@
 }
 ```
 
+## TODO
+
+- [ ] Add role assignments
+- [ ] Update role assignments
+- [ ] Remove role assignments
+
 ## Notes
 
 | In config | In Azure | Action |
