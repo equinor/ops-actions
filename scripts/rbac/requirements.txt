@@ -1,0 +1,7 @@
+azure-common
+azure-core
+azure-identity
+azure-mgmt-authorization
+azure-mgmt-core
+azure-mgmt-resource
+pyyaml

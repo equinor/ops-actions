@@ -1,0 +1,10 @@
+roleAssignments:
+  - principalId: ""
+    scope: ""
+    roleDefinitionName: Contributor
+    description: ""
+
+  - principalId: ""
+    scope: resourceGroups/rg-hkn-dev
+    roleDefinitionName: Contributor
+    description: ""
