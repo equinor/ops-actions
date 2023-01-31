@@ -1,4 +1,5 @@
 import os
+import re
 import yaml
 
 from azure.identity import DefaultAzureCredential
@@ -6,13 +7,21 @@ from azure.mgmt.authorization import AuthorizationManagementClient
 
 def read_config():
   config_file = open("rbac.yml", "r")
-  config = yaml.load(config_file, Loader=yaml.SafeLoader)
+  config = yaml.safe_load(config_file)
   role_assignments = config["roleAssignments"]
   return role_assignments
 
 def get_azure_role_assignments(authorization_client):
-  role_assignments = authorization_client.role_assignments.list_for_subscription(filter=None)
-  return role_assignments
+
+  def is_subscription_scope(role_assignment):
+    # Returns true if the role assignment is scoped at the subscription or lower
+    scope = getattr(role_assignment, "scope")
+    x = re.search("^/subscriptions/*", scope)
+    return x
+
+  role_assignments = authorization_client.role_assignments.list_for_subscription()
+  filtered = filter(is_subscription_scope, role_assignments)
+  return filtered
 
 def main():
   credential = DefaultAzureCredential()
