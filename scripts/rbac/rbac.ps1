@@ -6,25 +6,38 @@ param (
   [string]$baseScope = "/subscriptions/$((Get-AzContext).Subscription.Id)"
 )
 
-# Read config file
 if (Test-Path -Path $configFile -PathType Leaf) {
-  $config = Get-Content -Path $configFile | ConvertFrom-Json -AsHashtable -Depth 3
+  $configJson = Get-Content -Path $configFile -Raw
 }
 else {
-  Write-Error -Message "Config file '$configFile' does not exist." -ErrorAction Stop
+  Write-Error -Message "Configuration file '$configFile' does not exist." -ErrorAction Stop
 }
 
-# Get configured role assignments
+if ($null -eq $configJson) {
+  Write-Error "Configuration JSON is empty." -ErrorAction Stop
+}
+
+if (Test-Json -Json $configJson -ErrorAction SilentlyContinue) {
+  $config = ConvertFrom-Json -InputObject $configJson -AsHashtable -Depth 3
+}
+else {
+  Write-Error -Message "Configuration is not a valid JSON object." -ErrorAction Stop
+}
+
 $roleAssignmentsKey = "roleAssignments"
 if ($config.ContainsKey($roleAssignmentsKey)) {
   $configRoleAssignments = $config[$roleAssignmentsKey]
 }
 else {
-  Write-Error -Message "Config file does not contain key '$roleAssignmentsKey'." -ErrorAction Stop
+  Write-Error -Message "Configuration does not contain key '$roleAssignmentsKey'." -ErrorAction Stop
 }
+
+# todo: test that role assignments is a list
 
 # Prepend base scope to configured scopes
 foreach ($c in $configRoleAssignments) {
+  # todo: check for required keys
+
   $scope = $baseScope + $c.scope
   $c.scope = $scope
 }
