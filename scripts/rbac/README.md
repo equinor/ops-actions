@@ -12,7 +12,7 @@
     {
       "objectId": "string",
       "roleDefinitionId": "string",
-      "scope": "string",
+      "scope": "string", // optional; defaults to baseScope
       "description": "string" // optional
     }
   ]

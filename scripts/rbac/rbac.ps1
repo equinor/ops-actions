@@ -1,5 +1,9 @@
 param (
-  [string]$configFile = "rbac.json"
+  [Parameter(Mandatory = $false)]
+  [string]$configFile = "rbac.json",
+
+  [Parameter(Mandatory = $false)]
+  [string]$baseScope = "/subscriptions/$((Get-AzContext).Subscription.Id)"
 )
 
 # Read config file
@@ -8,13 +12,17 @@ $config = Get-Content $configFile | ConvertFrom-Json -AsHashtable -Depth 3
 # Get configured role assignments
 $configRoles = $config["roleAssignments"]
 
-# TODO: prepend "/subscriptions/$subscription_id" to value of attribute "scope" for all objects in $configRoles
+# Prepend base scope to configured scopes
+foreach ($c in $configRoles) {
+  $scope = $baseScope + $c.scope
+  $c.scope = $scope
+}
 
 # Get existing role assignments in Azure
-$azureRoles = Get-AzRoleAssignment | Where-Object { $_.scope -match "/subscriptions/*" }
+$azureRoles = Get-AzRoleAssignment | Where-Object { $_.scope -match "$baseScope/*" }
 
 # Compare configuration to Azure
-$comparison = Compare-Object -ReferenceObject $configRoles -DifferenceObject $azureRoles -Property ObjectId, RoleDefinitionId, Scope -IncludeEqual
+$comparison = Compare-Object -ReferenceObject $configRoles -DifferenceObject $azureRoles -Property objectId, roleDefinitionId, scope -IncludeEqual
 
 $add = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
 $remove = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
