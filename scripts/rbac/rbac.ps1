@@ -43,7 +43,7 @@ foreach ($c in $configRoleAssignments) {
 }
 
 # Get existing role assignments in Azure
-$azRoleAssignments = Get-AzRoleAssignment | Where-Object { $_.scope -match "$baseScope/*" }
+$azRoleAssignments = Get-AzRoleAssignment | Where-Object { $_.scope -match "^$baseScope/*" }
 
 # Compare configuration to Azure
 $comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property objectId, roleDefinitionId, scope -IncludeEqual
