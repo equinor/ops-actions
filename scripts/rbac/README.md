@@ -4,6 +4,12 @@
 
 - Azure PowerShell: `Install-Module Az`
 
+## Usage
+
+```powershell
+./rbac.ps1 -configFile "rbac.json" -parentScope "/subscriptions/<SUBSCRIPTION_ID>"
+```
+
 ## Config spec
 
 ```json
@@ -12,8 +18,29 @@
     {
       "objectId": "string",
       "roleDefinitionId": "string",
-      "scope": "string", // optional; defaults to baseScope
-      "description": "string" // optional
+      "childScope": "optional string",
+      "description": "optional string"
+    }
+  ]
+}
+```
+
+The scope of a configured role assignment is constructed based on the input `parentScope` and the configured `childScope`:
+
+```text
+scope = parentScope + childScope
+```
+
+Example config where `parentScope` is `/subscriptions/00000000-0000-0000-0000-000000000000`:
+
+```json
+{
+  "roleAssignments": [
+    {
+      "objectId": "00000000-0000-0000-0000-000000000000",
+      "roleDefinitionId": "00000000-0000-0000-0000-000000000000",
+      "childScope": "/resourceGroups/example-rg",
+      "description": "An example role assignment at the resource group scope."
     }
   ]
 }

@@ -2,8 +2,8 @@ param (
   [Parameter(Mandatory = $false)]
   [string]$configFile = "rbac.json",
 
-  [Parameter(Mandatory = $false)]
-  [string]$baseScope = "/subscriptions/$((Get-AzContext).Subscription.Id)"
+  [Parameter(Mandatory = $true)]
+  [string]$parentScope
 )
 
 if (Test-Path -Path $configFile -PathType Leaf) {
@@ -47,8 +47,8 @@ foreach ($roleAssignment in $configRoleAssignments) {
     Write-Error -Message "'$roleAssignmentsKey[$index]' is not of type 'object'." -ErrorAction Stop
   }
 
-  # Prepend base scope to configured scope
-  $roleAssignment.scope = $baseScope + $roleAssignment.scope
+  # Prepend parent scope to configured scope
+  $roleAssignment.scope = $parentScope + $roleAssignment.childScope
 
   # Verify that required keys are present and of the expected type
   foreach ($key in $requiredKeys) {
@@ -63,7 +63,7 @@ foreach ($roleAssignment in $configRoleAssignments) {
 }
 
 # Get existing role assignments in Azure
-$azRoleAssignments = Get-AzRoleAssignment | Where-Object { $_.scope -match "^$baseScope/*" }
+$azRoleAssignments = Get-AzRoleAssignment -Scope $parentScope | Where-Object { $_.scope -match "^$parentScope/*" }
 
 # Compare configuration to Azure
 $comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property $requiredKeys -IncludeEqual
