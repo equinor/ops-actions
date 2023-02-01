@@ -8,7 +8,7 @@ param (
 
 # Read config file
 if (Test-Path -Path $configFile -PathType Leaf) {
-  $config = Get-Content $configFile | ConvertFrom-Json -AsHashtable -Depth 3
+  $config = Get-Content -Path $configFile | ConvertFrom-Json -AsHashtable -Depth 3
 }
 else {
   Write-Error -Message "Config file '$configFile' does not exist." -ErrorAction Stop
