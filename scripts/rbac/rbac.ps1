@@ -7,7 +7,12 @@ param (
 )
 
 # Read config file
-$config = Get-Content $configFile | ConvertFrom-Json -AsHashtable -Depth 3
+if (Test-Path -Path $configFile -PathType Leaf) {
+  $config = Get-Content $configFile | ConvertFrom-Json -AsHashtable -Depth 3
+}
+else {
+  Write-Error -Message "Config file '$configFile' does not exist." -ErrorAction Stop
+}
 
 # Get configured role assignments
 $configRoles = $config["roleAssignments"]
