@@ -20,7 +20,7 @@ if ($config.ContainsKey($roleAssignmentsKey)) {
   $configRoleAssignments = $config[$roleAssignmentsKey]
 }
 else {
-  Write-Error -Message "Config file does not contain key '$roleAssignmentsKey'" -ErrorAction Stop
+  Write-Error -Message "Config file does not contain key '$roleAssignmentsKey'." -ErrorAction Stop
 }
 
 # Prepend base scope to configured scopes
