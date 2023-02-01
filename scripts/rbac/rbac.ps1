@@ -34,12 +34,11 @@ else {
 
 # todo: test that role assignments is a list
 
-# Prepend base scope to configured scopes
 foreach ($c in $configRoleAssignments) {
   # todo: check for required keys
 
-  $scope = $baseScope + $c.scope
-  $c.scope = $scope
+  # Prepend base scope to configured scopes
+  $c.scope = $baseScope + $c.scope
 }
 
 # Get existing role assignments in Azure
