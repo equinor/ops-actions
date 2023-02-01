@@ -18,7 +18,7 @@ if ($null -eq $configJson) {
 }
 
 if (Test-Json -Json $configJson -ErrorAction SilentlyContinue) {
-  $config = ConvertFrom-Json -InputObject $configJson -AsHashtable -Depth 3
+  $config = ConvertFrom-Json -InputObject $configJson -AsHashtable
 }
 else {
   Write-Error -Message "Configuration is not a valid JSON object." -ErrorAction Stop
@@ -32,20 +32,41 @@ else {
   Write-Error -Message "Configuration does not contain key '$roleAssignmentsKey'." -ErrorAction Stop
 }
 
-# todo: test that role assignments is a list
+if ($configRoleAssignments -isnot [Array]) {
+  Write-Error -Message "'$roleAssignmentsKey' is not of type 'list'." -ErrorAction Stop
+}
 
-foreach ($c in $configRoleAssignments) {
-  # todo: check for required keys
+# Define which keys are required for each role assignment object
+$requiredKeys = @("objectId", "roleDefinitionId", "scope")
 
-  # Prepend base scope to configured scopes
-  $c.scope = $baseScope + $c.scope
+foreach ($roleAssignment in $configRoleAssignments) {
+  $index = $configRoleAssignments.IndexOf($roleAssignment)
+
+  # Verify that role assignments are objects
+  if ($roleAssignment -isnot [Hashtable]) {
+    Write-Error -Message "'$roleAssignmentsKey[$index]' is not of type 'object'." -ErrorAction Stop
+  }
+
+  # Prepend base scope to configured scope
+  $roleAssignment.scope = $baseScope + $roleAssignment.scope
+
+  # Verify that required keys are present and of the expected type
+  foreach ($key in $requiredKeys) {
+    if (!$roleAssignment.ContainsKey($key)) {
+      Write-Error -Message "'$roleAssignmentsKey[$index]' does not contain required key '$key'." -ErrorAction Stop
+    }
+
+    if ($roleAssignment[$key] -isnot [String]) {
+      Write-Error -Message "'$roleAssignmentsKey[$index].$key' is not of type 'string'." -ErrorAction Stop
+    }
+  }
 }
 
 # Get existing role assignments in Azure
 $azRoleAssignments = Get-AzRoleAssignment | Where-Object { $_.scope -match "^$baseScope/*" }
 
 # Compare configuration to Azure
-$comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property objectId, roleDefinitionId, scope -IncludeEqual
+$comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property $requiredKeys -IncludeEqual
 
 $add = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
 $remove = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
