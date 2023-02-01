@@ -17,23 +17,23 @@ else {
 # Get configured role assignments
 $roleAssignmentsKey = "roleAssignments"
 if ($config.ContainsKey($roleAssignmentsKey)) {
-  $configRoles = $config[$roleAssignmentsKey]
+  $configRoleAssignments = $config[$roleAssignmentsKey]
 }
 else {
   Write-Error -Message "Config file does not contain key '$roleAssignmentsKey'" -ErrorAction Stop
 }
 
 # Prepend base scope to configured scopes
-foreach ($c in $configRoles) {
+foreach ($c in $configRoleAssignments) {
   $scope = $baseScope + $c.scope
   $c.scope = $scope
 }
 
 # Get existing role assignments in Azure
-$azureRoles = Get-AzRoleAssignment | Where-Object { $_.scope -match "$baseScope/*" }
+$azRoleAssignments = Get-AzRoleAssignment | Where-Object { $_.scope -match "$baseScope/*" }
 
 # Compare configuration to Azure
-$comparison = Compare-Object -ReferenceObject $configRoles -DifferenceObject $azureRoles -Property objectId, roleDefinitionId, scope -IncludeEqual
+$comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property objectId, roleDefinitionId, scope -IncludeEqual
 
 $add = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
 $remove = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
