@@ -1,5 +1,7 @@
 # RBAC
 
+PowerShell script which manages RBAC assignments at a given parent scope all of its child scopes.
+
 ## Prerequisites
 
 - Azure PowerShell: `Install-Module Az`
