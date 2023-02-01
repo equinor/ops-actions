@@ -15,7 +15,13 @@ else {
 }
 
 # Get configured role assignments
-$configRoles = $config["roleAssignments"]
+$roleAssignmentsKey = "roleAssignments"
+if ($config.ContainsKey($roleAssignmentsKey)) {
+  $configRoles = $config[$roleAssignmentsKey]
+}
+else {
+  Write-Error -Message "Config file does not contain key '$roleAssignmentsKey'" -ErrorAction Stop
+}
 
 # Prepend base scope to configured scopes
 foreach ($c in $configRoles) {
