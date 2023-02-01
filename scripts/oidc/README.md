@@ -19,7 +19,6 @@ The script accepts the following arguments:
 
 ## Prerequisites
 
-- [Install WSL](https://learn.microsoft.com/en-us/windows/wsl/install) - to run shell script
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credential, service principal and Azure role assignments
 - [Install GitHub CLI](https://cli.github.com) - to create GitHub secrets
 - [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file
