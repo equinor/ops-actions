@@ -1,6 +1,6 @@
 param (
-  [Parameter(Mandatory = $false)]
-  [string]$configFile = "rbac.json",
+  [Parameter(Mandatory = $true)]
+  [string]$configFile,
 
   [Parameter(Mandatory = $true)]
   [string]$parentScope
