@@ -41,6 +41,11 @@ Example config where `parentScope` is `/subscriptions/00000000-0000-0000-0000-00
     {
       "objectId": "00000000-0000-0000-0000-000000000000",
       "roleDefinitionId": "00000000-0000-0000-0000-000000000000",
+      "description": "An example role assignment at the subscription scope."
+    },
+    {
+      "objectId": "00000000-0000-0000-0000-000000000000",
+      "roleDefinitionId": "00000000-0000-0000-0000-000000000000",
       "childScope": "/resourceGroups/example-rg",
       "description": "An example role assignment at the resource group scope."
     }
