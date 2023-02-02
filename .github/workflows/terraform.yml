@@ -1,4 +1,4 @@
-# Install Terraform, configure OpenID Connect (OIDC) authentication to Azure, create a Terraform plan, and apply the plan on push to branch 'main'.
+# Install Terraform, configure OpenID Connect (OIDC) authentication to Azure, create a Terraform plan, and apply the plan on push to default branch or on schedule.
 
 on:
   workflow_call:
@@ -114,5 +114,5 @@ jobs:
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`*" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Terraform Apply
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/$${{ github.event.repository.default_branch }}') || github.event_name == 'schedule'
         run: terraform apply -auto-approve -input=false
