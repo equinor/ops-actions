@@ -71,11 +71,15 @@ Example config where `parentScope` is `/subscriptions/00000000-0000-0000-0000-00
 }
 ```
 
-## TODO
+## Features
 
-- [ ] Add role assignments
+- [ ] Create role assignments
 - [ ] Update role assignments
 - [ ] Remove role assignments
+- [ ] Create PIM assignments
+- [ ] Remove PIM assignments
+- [ ] Create locks
+- [ ] Remove locks
 
 ## Notes
 
