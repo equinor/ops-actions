@@ -8,9 +8,27 @@ PowerShell script which manages RBAC assignments at a given parent scope all of 
 
 ## Usage
 
-```powershell
-./rbac.ps1 -configFile "rbac.json" -parentScope "/subscriptions/<SUBSCRIPTION_ID>"
-```
+1. Open PowerShell.
+
+1. Login to Azure:
+
+    ```powershell
+    Connect-AzAccount
+    ```
+
+1. Set active Azure subscription:
+
+    ```powershell
+    $context = Set-AzContext -Subscription "<SUBSCRIPTION_NAME_OR_ID>"
+    ```
+
+1. Configure role assignments in a file `rbac.json`.
+
+1. Run script `rbac.ps1`:
+
+    ```powershell
+    ./rbac.ps1 -configFile "rbac.json" -parentScope "/subscriptions/$($context.Subscription.Id)"
+    ```
 
 ## Config spec
 
