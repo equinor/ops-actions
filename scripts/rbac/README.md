@@ -1,6 +1,6 @@
 # RBAC
 
-PowerShell script which manages RBAC assignments at a given parent scope all of its child scopes.
+PowerShell script which manages RBAC assignments at a given parent scope and all of its child scopes.
 
 ## Prerequisites
 
