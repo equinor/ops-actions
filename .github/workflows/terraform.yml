@@ -114,5 +114,5 @@ jobs:
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`*" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Terraform Apply
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/$${{ github.event.repository.default_branch }}') || github.event_name == 'schedule'
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/${{ github.event.repository.default_branch }}') || github.event_name == 'schedule'
         run: terraform apply -auto-approve -input=false
