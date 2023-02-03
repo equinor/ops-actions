@@ -26,6 +26,15 @@ echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
 tenant_id=$(jq -r .tenantId <<< "$account")
 echo "TENANT_ID: $tenant_id"
 
+echo "Reading config..."
+if [[ -f "$CONFIG_FILE" ]]; then
+  jsonschema -i "$CONFIG_FILE" oidc.schema.json
+  config=$(envsubst < "$CONFIG_FILE")
+else
+  echo "File '$CONFIG_FILE' does not exist."
+  exit 1
+fi
+
 echo "Checking if application already exists..."
 app_id=$(az ad app list --filter "displayName eq '$APP_NAME'" --query [].appId --output tsv)
 if [[ -z "$app_id" ]]; then
@@ -35,9 +44,6 @@ else
   echo "Using existing application."
 fi
 echo "CLIENT_ID: $app_id"
-
-echo "Reading config..."
-config=$(envsubst < "$CONFIG_FILE")
 
 echo "Checking if federated identity credential already exists..."
 fic=$(jq '.federatedCredential + {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}' <<< "$config")
