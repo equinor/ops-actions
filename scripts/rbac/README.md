@@ -32,6 +32,8 @@ PowerShell script which manages RBAC assignments at a given parent scope and all
 
 ## Config spec
 
+As defined in `rbac.schema.json`:
+
 ```json
 {
   "roleAssignments": [
