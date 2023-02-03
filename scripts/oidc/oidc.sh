@@ -19,6 +19,8 @@ case $response in
     ;;
 esac
 
+jsonschema -i "$CONFIG_FILE" oidc.schema.json
+
 SUBSCRIPTION_ID=$(jq -r '.subscriptionId' <<< "$account")
 export SUBSCRIPTION_ID
 echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"

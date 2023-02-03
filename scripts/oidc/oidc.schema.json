@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OIDC",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "federatedCredential": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "",
+          "type": "string"
+        },
+        "subject": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "required": ["name", "subject", "description"]
+    },
+    "roleAssignments": {
+      "description": "",
+      "type": "array",
+      "items": {
+        "description": "",
+        "type": "object",
+        "properties": {
+          "scope": {
+            "description": "",
+            "type": "string"
+          },
+          "role": {
+            "description": "",
+            "type": "string"
+          }
+        },
+        "required": []
+      }
+    }
+  },
+  "required": ["federatedCredential", "roleAssignments"]
+}
