@@ -7,8 +7,7 @@ export REPO="$2"
 export ENVIRONMENT="$3"
 CONFIG_FILE="$4"
 
-account=$(az account show --query "{name:name, id:id, tenantId:tenantId}" --output json)
-
+account=$(az account show --output json)
 subscription_name=$(jq -r .name <<< "$account")
 read -r -p "Configure OIDC from GitHub repo '$REPO' to Azure subscription '$subscription_name'? (y/N) " response
 case $response in
