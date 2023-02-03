@@ -83,7 +83,7 @@ tenant_id=$(jq -r .tenantId <<< "$account")
 
 if [[ -n "$ENVIRONMENT" ]]; then
   echo "Creating GitHub environment..."
-  gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT"
+  gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT" --silent
   # GitHub CLI does not natively support creating environments (cli/cli#5149).
   # Create using GitHub API request instead.
 fi
