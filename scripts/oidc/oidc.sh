@@ -2,10 +2,10 @@
 
 set -eu
 
-APP_NAME="$1"
-export REPO="$2"
-export ENVIRONMENT="$3"
-CONFIG_FILE="$4"
+APP_NAME=$1
+export REPO=$2
+export ENVIRONMENT=$3
+CONFIG_FILE=$4
 
 # TODO: use "gh repo list" to check existence of repo without redirecting errors to null (if possible)
 repo_name=$(gh repo view "$REPO" --json name --jq .name 2>/dev/null || true)
@@ -14,9 +14,8 @@ if [[ -z "$repo_name" ]]; then
   exit 1
 fi
 
-account=$(az account show --output json)
-
-SUBSCRIPTION_ID=$(jq -r .id <<< "$account")
+subscription=$(az account show --output json)
+SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
 export SUBSCRIPTION_ID
 
 if [[ -f "$CONFIG_FILE" ]]; then
@@ -27,7 +26,7 @@ else
   exit 1
 fi
 
-subscription_name=$(jq -r .name <<< "$account")
+subscription_name=$(jq -r .name <<< "$subscription")
 
 read -r -p "Configure OIDC from GitHub repo '$repo_name' to Azure subscription '$subscription_name'? (y/N) " response
 case $response in
@@ -79,7 +78,7 @@ while read -r ra; do
   az role assignment create --role "$role" --assignee-object-id "$sp_id" --assignee-principal-type ServicePrincipal --scope "$scope" --output none
 done <<< "$ras"
 
-tenant_id=$(jq -r .tenantId <<< "$account")
+tenant_id=$(jq -r .tenantId <<< "$subscription")
 
 if [[ -n "$ENVIRONMENT" ]]; then
   echo "Creating GitHub environment..."
