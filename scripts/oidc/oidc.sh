@@ -7,9 +7,16 @@ export REPO="$2"
 export ENVIRONMENT="$3"
 CONFIG_FILE="$4"
 
+# TODO: use "gh repo list" to check existence of repo without redirecting errors to null (if possible)
+repo_name=$(gh repo view "$REPO" --json name --jq .name 2>/dev/null || true)
+if [[ -z "$repo_name" ]]; then
+  echo "Repo '$REPO' does not exist."
+fi
+
 account=$(az account show --output json)
 subscription_name=$(jq -r .name <<< "$account")
-read -r -p "Configure OIDC from GitHub repo '$REPO' to Azure subscription '$subscription_name'? (y/N) " response
+
+read -r -p "Configure OIDC from GitHub repo '$repo_name' to Azure subscription '$subscription_name'? (y/N) " response
 case $response in
   [yY][eE][sS]|[yY])
     ;;
