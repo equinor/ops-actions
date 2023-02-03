@@ -7,13 +7,6 @@ export REPO=$2
 export ENVIRONMENT=$3
 CONFIG_FILE=$4
 
-# TODO: use "gh repo list" to check existence of repo without redirecting errors to null (if possible)
-repo_name=$(gh repo view "$REPO" --json name --jq .name 2>/dev/null || true)
-if [[ -z "$repo_name" ]]; then
-  echo "Repo '$REPO' does not exist."
-  exit 1
-fi
-
 subscription=$(az account show --output json)
 SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
 export SUBSCRIPTION_ID
@@ -23,6 +16,13 @@ if [[ -f "$CONFIG_FILE" ]]; then
   config=$(envsubst < "$CONFIG_FILE")
 else
   echo "File '$CONFIG_FILE' does not exist."
+  exit 1
+fi
+
+# TODO: use "gh repo list" to check existence of repo without redirecting errors to null (if possible)
+repo_name=$(gh repo view "$REPO" --json name --jq .name 2>/dev/null || true)
+if [[ -z "$repo_name" ]]; then
+  echo "Repo '$REPO' does not exist."
   exit 1
 fi
 
