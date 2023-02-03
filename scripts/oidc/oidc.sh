@@ -3,17 +3,12 @@
 set -eu
 
 APP_NAME=$1
-export REPO=$2
-export ENVIRONMENT=$3
+REPO=$2
+ENVIRONMENT=$3
 CONFIG_FILE=$4
-
-subscription=$(az account show --output json)
-SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
-export SUBSCRIPTION_ID
 
 if [[ -f "$CONFIG_FILE" ]]; then
   jsonschema -i "$CONFIG_FILE" oidc.schema.json
-  config=$(envsubst < "$CONFIG_FILE")
 else
   echo "File '$CONFIG_FILE' does not exist."
   exit 1
@@ -26,6 +21,7 @@ if [[ -z "$repo_name" ]]; then
   exit 1
 fi
 
+subscription=$(az account show --output json)
 subscription_name=$(jq -r .name <<< "$subscription")
 
 read -r -p "Configure OIDC from GitHub repo '$repo_name' to Azure subscription '$subscription_name'? (y/N) " response
@@ -36,6 +32,14 @@ case $response in
     exit 0
     ;;
 esac
+
+SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
+
+echo "Reading config..."
+export SUBSCRIPTION_ID
+export REPO
+export ENVIRONMENT
+config=$(envsubst < "$CONFIG_FILE")
 
 echo "Checking if application already exists..."
 app_id=$(az ad app list --filter "displayName eq '$APP_NAME'" --query [].appId --output tsv)
