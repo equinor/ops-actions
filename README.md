@@ -1,6 +1,6 @@
 # ops-actions
 
-![release workflow status badge](https://github.com/equinor/ops-actions/actions/workflows/release.yml/badge.svg?event=push&branch=main)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 [Reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for GitHub Actions, maintained by the [Ops team](https://github.com/orgs/equinor/teams/ops).
 
