@@ -10,63 +10,33 @@ if (Test-Path -Path $configFile -PathType Leaf) {
   $configJson = Get-Content -Path $configFile -Raw
 }
 else {
-  Write-Error -Message "Configuration file '$configFile' does not exist." -ErrorAction Stop
+  throw "Configuration file '$configFile' does not exist."
 }
 
 if ($null -eq $configJson) {
-  Write-Error "Configuration JSON is empty." -ErrorAction Stop
+  throw "Configuration JSON is empty."
 }
 
-if (Test-Json -Json $configJson -ErrorAction SilentlyContinue) {
+$schemaFile = "$PSScriptRoot\rbac.schema.json"
+if (Test-Json -Json $configJson -SchemaFile $schemaFile -ErrorAction SilentlyContinue -ErrorVariable JsonError) {
   $config = ConvertFrom-Json -InputObject $configJson -AsHashtable
 }
 else {
-  Write-Error -Message "Configuration is not a valid JSON object." -ErrorAction Stop
+  throw "Configuration JSON is invalid: $($JsonError[0].ToString())"
 }
 
-$roleAssignmentsKey = "roleAssignments"
-if ($config.ContainsKey($roleAssignmentsKey)) {
-  $configRoleAssignments = $config[$roleAssignmentsKey]
-}
-else {
-  Write-Error -Message "Configuration does not contain key '$roleAssignmentsKey'." -ErrorAction Stop
-}
-
-if ($configRoleAssignments -isnot [Array]) {
-  Write-Error -Message "'$roleAssignmentsKey' is not of type 'list'." -ErrorAction Stop
-}
-
-# Define which keys are required for each role assignment object
-$requiredKeys = @("objectId", "roleDefinitionId", "scope")
+$configRoleAssignments = $config["roleAssignments"]
 
 foreach ($roleAssignment in $configRoleAssignments) {
-  $index = $configRoleAssignments.IndexOf($roleAssignment)
-
-  # Verify that role assignments are objects
-  if ($roleAssignment -isnot [Hashtable]) {
-    Write-Error -Message "'$roleAssignmentsKey[$index]' is not of type 'object'." -ErrorAction Stop
-  }
-
   # Prepend parent scope to configured scope
   $roleAssignment.scope = $parentScope + $roleAssignment.childScope
-
-  # Verify that required keys are present and of the expected type
-  foreach ($key in $requiredKeys) {
-    if (!$roleAssignment.ContainsKey($key)) {
-      Write-Error -Message "'$roleAssignmentsKey[$index]' does not contain required key '$key'." -ErrorAction Stop
-    }
-
-    if ($roleAssignment[$key] -isnot [String]) {
-      Write-Error -Message "'$roleAssignmentsKey[$index].$key' is not of type 'string'." -ErrorAction Stop
-    }
-  }
 }
 
 # Get existing role assignments in Azure
 $azRoleAssignments = Get-AzRoleAssignment -Scope $parentScope | Where-Object { $_.scope -match "^$parentScope/*" }
 
 # Compare configuration to Azure
-$comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property $requiredKeys -IncludeEqual
+$comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property objectId, roleDefinitionId, scope -IncludeEqual
 
 $add = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
 $remove = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
