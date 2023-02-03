@@ -11,9 +11,22 @@ CONFIG_FILE="$4"
 repo_name=$(gh repo view "$REPO" --json name --jq .name 2>/dev/null || true)
 if [[ -z "$repo_name" ]]; then
   echo "Repo '$REPO' does not exist."
+  exit 1
 fi
 
 account=$(az account show --output json)
+
+SUBSCRIPTION_ID=$(jq -r .id <<< "$account")
+export SUBSCRIPTION_ID
+
+if [[ -f "$CONFIG_FILE" ]]; then
+  jsonschema -i "$CONFIG_FILE" oidc.schema.json
+  config=$(envsubst < "$CONFIG_FILE")
+else
+  echo "File '$CONFIG_FILE' does not exist."
+  exit 1
+fi
+
 subscription_name=$(jq -r .name <<< "$account")
 
 read -r -p "Configure OIDC from GitHub repo '$repo_name' to Azure subscription '$subscription_name'? (y/N) " response
@@ -24,22 +37,6 @@ case $response in
     exit 0
     ;;
 esac
-
-SUBSCRIPTION_ID=$(jq -r .id <<< "$account")
-export SUBSCRIPTION_ID
-echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
-
-tenant_id=$(jq -r .tenantId <<< "$account")
-echo "TENANT_ID: $tenant_id"
-
-echo "Reading config..."
-if [[ -f "$CONFIG_FILE" ]]; then
-  jsonschema -i "$CONFIG_FILE" oidc.schema.json
-  config=$(envsubst < "$CONFIG_FILE")
-else
-  echo "File '$CONFIG_FILE' does not exist."
-  exit 1
-fi
 
 echo "Checking if application already exists..."
 app_id=$(az ad app list --filter "displayName eq '$APP_NAME'" --query [].appId --output tsv)
@@ -81,6 +78,8 @@ while read -r ra; do
   echo "Assigning role '$role' at scope '$scope'..."
   az role assignment create --role "$role" --assignee-object-id "$sp_id" --assignee-principal-type ServicePrincipal --scope "$scope" --output none
 done <<< "$ras"
+
+tenant_id=$(jq -r .tenantId <<< "$account")
 
 if [[ -n "$ENVIRONMENT" ]]; then
   echo "Creating GitHub environment..."
