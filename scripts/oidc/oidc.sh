@@ -49,8 +49,7 @@ echo "Checking if federated identity credential already exists..."
 fic=$(jq '.federatedCredential + {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}' <<< "$config")
 fic_name=$(jq -r .name <<< "$fic")
 fic_id=$(az ad app federated-credential list --id "$app_id" --query "[?name == '$fic_name'].id" --output tsv)
-if [[ -z "$fic_id" ]]
-then
+if [[ -z "$fic_id" ]]; then
   echo "Creating federated identity credential..."
   az ad app federated-credential create --id "$app_id" --parameters "$fic" --output none
 else
@@ -60,8 +59,7 @@ fi
 
 echo "Checking if service principal already exists..."
 sp_id=$(az ad sp list --filter "appId eq '$app_id'" --query [].id --output tsv)
-if [[ -z "$sp_id" ]]
-then
+if [[ -z "$sp_id" ]]; then
   echo "Creating service principal..."
   sp_id=$(az ad sp create --id "$app_id" --query id --output tsv)
 else
