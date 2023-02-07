@@ -2,15 +2,29 @@
 
 set -eu
 
-APP_NAME="$1"
-export REPO="$2"
-export ENVIRONMENT="$3"
-CONFIG_FILE="$4"
+APP_NAME=$1
+REPO=$2
+ENVIRONMENT=$3
+CONFIG_FILE=$4
 
-account=$(az account show --query "{subscriptionName:name, subscriptionId:id, tenantId:tenantId}" --output json)
+if [[ -f "$CONFIG_FILE" ]]; then
+  jsonschema -i "$CONFIG_FILE" oidc.schema.json
+else
+  echo "File '$CONFIG_FILE' does not exist."
+  exit 1
+fi
 
-subscription_name=$(jq -r .subscriptionName <<< "$account")
-read -r -p "Configure OIDC from GitHub repo '$REPO' to Azure subscription '$subscription_name'? (y/N) " response
+# TODO: use "gh repo list" to check existence of repo without redirecting errors to null (if possible)
+repo_name=$(gh repo view "$REPO" --json name --jq .name 2>/dev/null || true)
+if [[ -z "$repo_name" ]]; then
+  echo "Repo '$REPO' does not exist."
+  exit 1
+fi
+
+subscription=$(az account show --output json)
+subscription_name=$(jq -r .name <<< "$subscription")
+
+read -r -p "Configure OIDC from GitHub repo '$repo_name' to Azure subscription '$subscription_name'? (y/N) " response
 case $response in
   [yY][eE][sS]|[yY])
     ;;
@@ -19,12 +33,13 @@ case $response in
     ;;
 esac
 
-SUBSCRIPTION_ID=$(jq -r .subscriptionId <<< "$account")
-export SUBSCRIPTION_ID
-echo "SUBSCRIPTION_ID: $SUBSCRIPTION_ID"
+SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
 
-tenant_id=$(jq -r .tenantId <<< "$account")
-echo "TENANT_ID: $tenant_id"
+echo "Reading config..."
+export SUBSCRIPTION_ID
+export REPO
+export ENVIRONMENT
+config=$(envsubst < "$CONFIG_FILE")
 
 echo "Checking if application already exists..."
 app_id=$(az ad app list --filter "displayName eq '$APP_NAME'" --query [].appId --output tsv)
@@ -36,15 +51,11 @@ else
 fi
 echo "CLIENT_ID: $app_id"
 
-echo "Reading config..."
-config=$(envsubst < "$CONFIG_FILE")
-
 echo "Checking if federated identity credential already exists..."
 fic=$(jq '.federatedCredential + {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}' <<< "$config")
 fic_name=$(jq -r .name <<< "$fic")
 fic_id=$(az ad app federated-credential list --id "$app_id" --query "[?name == '$fic_name'].id" --output tsv)
-if [[ -z "$fic_id" ]]
-then
+if [[ -z "$fic_id" ]]; then
   echo "Creating federated identity credential..."
   az ad app federated-credential create --id "$app_id" --parameters "$fic" --output none
 else
@@ -54,8 +65,7 @@ fi
 
 echo "Checking if service principal already exists..."
 sp_id=$(az ad sp list --filter "appId eq '$app_id'" --query [].id --output tsv)
-if [[ -z "$sp_id" ]]
-then
+if [[ -z "$sp_id" ]]; then
   echo "Creating service principal..."
   sp_id=$(az ad sp create --id "$app_id" --query id --output tsv)
 else
@@ -72,9 +82,11 @@ while read -r ra; do
   az role assignment create --role "$role" --assignee-object-id "$sp_id" --assignee-principal-type ServicePrincipal --scope "$scope" --output none
 done <<< "$ras"
 
+tenant_id=$(jq -r .tenantId <<< "$subscription")
+
 if [[ -n "$ENVIRONMENT" ]]; then
   echo "Creating GitHub environment..."
-  gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT"
+  gh api --method PUT "repos/$REPO/environments/$ENVIRONMENT" --silent
   # GitHub CLI does not natively support creating environments (cli/cli#5149).
   # Create using GitHub API request instead.
 fi
