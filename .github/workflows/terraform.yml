@@ -55,7 +55,8 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     env:
-      # Configure Terraform to run in automation
+      # Configure Terraform to run in automation.
+      # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
       TF_IN_AUTOMATION: true
 
       # Configure OIDC authentication to Azure using environment variables.
