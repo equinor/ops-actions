@@ -54,9 +54,13 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
 
-    # Configure OIDC authentication to Azure using environment variables.
-    # Required by the AzureRM backend and provider.
     env:
+      # Configure Terraform to run in automation.
+      # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
+      TF_IN_AUTOMATION: true
+
+      # Configure OIDC authentication to Azure using environment variables.
+      # Required by the AzureRM backend and provider.
       ARM_USE_OIDC: true
       ARM_USE_AZUREAD: true
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
