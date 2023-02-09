@@ -20,3 +20,5 @@ Supported Terraform providers:
 | ----- | ------------------- | ------------ |
 | Azure | `hashicorp/azurerm` | `>= v3.20.0` |
 | AzAPI | `azure/azapi`       | `>= v1.3.0`  |
+
+test if code owners are automatically assigned to PR review
