@@ -1,0 +1,54 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: The name of the GitHub environment that this job references.
+        type: string
+        required: true
+
+      image:
+        description: The Docker image to deploy.
+        type: string
+        required: true
+
+      app_name:
+        description: The name of the Azure Function App to deploy the Docker image to.
+        type: string
+        required: true
+
+    secrets:
+      AZURE_CLIENT_ID:
+        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: The ID of the Azure subscription to deploy the package to.
+        required: true
+
+      AZURE_TENANT_ID:
+        description: The ID of the Azure tenant to deploy the package to.
+        required: true
+
+jobs:
+  azure-function:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    # Set permissions required to login to Azure using OIDC.
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Deploy Azure Function
+        uses: azure/functions-container-action@v1
+        with:
+          app-name: ${{ inputs.app_name }}
+          image: ${{ inputs.image }}
