@@ -1,0 +1,68 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: The name of the GitHub environment that this job references.
+        type: string
+        required: true
+
+      artifact_name:
+        description: The name of the artifact containing the package to deploy.
+        type: string
+        required: true
+
+      app_name:
+        description: The name of the Azure Function App to deploy the package to.
+        type: string
+        required: true
+
+    secrets:
+      AZURE_CLIENT_ID:
+        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: The ID of the Azure subscription to deploy the package to.
+        required: true
+
+      AZURE_TENANT_ID:
+        description: The ID of the Azure tenant to deploy the package to.
+        required: true
+
+jobs:
+  azure-function:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    # Set permissions required to login to Azure using OIDC.
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifact
+        id: download
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+
+      - name: Unzip
+        env:
+          ZIP_FILE: ${{ inputs.artifact_name }}.zip
+        run: |
+          unzip "$ZIP_FILE"
+          rm "$ZIP_FILE"
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Deploy Azure Function
+        id: deploy
+        uses: azure/functions-action@v1
+        with:
+          app-name: ${{ inputs.app_name }}
+          package: ${{ steps.download.outputs.download-path }}
