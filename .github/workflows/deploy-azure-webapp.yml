@@ -24,9 +24,9 @@ on:
         required: true
 
       app_settings:
-        description: App settings to configure for the Azure Web App (inline JSON).
+        description: App settings to configure for the Azure Web App. Inline JSON or path of a JSON file.
         type: string
-        default: ""
+        default: "{}"
         required: false
 
     secrets:
@@ -87,8 +87,14 @@ jobs:
           package: ${{ steps.download.outputs.download-path }}
 
       - name: Configure app settings
-        uses: azure/appservice-settings@v1
-        with:
-          app-name: ${{ inputs.app_name }}
-          app-settings-json: ${{ inputs.app_settings }}
-          mask-inputs: false # Use key vault references instead (https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references)
+        env:
+          APP_NAME: ${{ inputs.app_name }}
+          APP_SETTINGS: ${{ inputs.app_settings }}
+        run: |
+          APP_ID=$(az webapp list --query "[?name=='$APP_NAME'].id" -o tsv)
+
+          if [[ -f "$APP_SETTINGS" ]]; then
+            APP_SETTINGS=$(cat "$APP_SETTINGS")
+          fi
+
+          az webapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" -o json
