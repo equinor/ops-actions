@@ -34,6 +34,14 @@ on:
         type: string
         required: true
 
+      helpurl:
+        description: Custom helpURL when error message.
+        type: string
+        required: false
+        default: |-
+          Get help here: https://github.com/equinor/sdscoredev-handbook#git-commits
+
+
       # TODO: Allow options other than explicitly specifying a commit message.
 
 jobs:
@@ -62,6 +70,7 @@ jobs:
           VERSION: ${{ inputs.commitlint_version }}
           EXTENDS: ${{ inputs.extends }}
           MESSAGE: ${{ inputs.message }}
+          HELPURL: ${{ inputs.helpurl }}
         run: |
           readarray -t extends_array <<< "$EXTENDS"
-          npx "commitlint@$VERSION" --extends "${extends_array[@]}" <<< "$MESSAGE"
+          npx "commitlint@$VERSION" --extends "${extends_array[@]}" <<< "$MESSAGE" --help-url "$HELPURL"
