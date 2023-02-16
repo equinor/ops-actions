@@ -26,7 +26,7 @@ on:
       app_settings:
         description: App settings to configure for the Azure Web App (inline JSON).
         type: string
-        default: ""
+        default: "{}"
         required: false
 
     secrets:
