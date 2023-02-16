@@ -41,17 +41,9 @@ jobs:
 
     steps:
       - name: Download artifact
-        id: download
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
-
-      - name: Unzip
-        env:
-          ZIP_FILE: ${{ inputs.artifact_name }}.zip
-        run: |
-          unzip "$ZIP_FILE"
-          rm "$ZIP_FILE"
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -65,4 +57,3 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: ${{ inputs.app_name }}
-          package: ${{ steps.download.outputs.download-path }}
