@@ -84,7 +84,6 @@ jobs:
         with:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
-          package: ${{ steps.download.outputs.download-path }}
 
       - name: Configure app settings
         env:
