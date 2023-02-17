@@ -101,20 +101,48 @@ jobs:
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           TF_PLAN: ${{ steps.plan.outputs.stdout }}
         run: |
-          echo "#### Terraform Format and Style :paintbrush:\`$TF_FMT_OUTCOME\`
-          #### Terraform Initialization :gear:\`$TF_INIT_OUTCOME\`
-          #### Terraform Validation :robot:\`$TF_VALIDATE_OUTCOME\`
-          #### Terraform Plan :book:\`$TF_PLAN_OUTCOME\`
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+            return comment.user.type === 'Bot' && comment.body.includes('Terraform Format and Style')
+            })
 
-          <details><summary>Show Plan</summary>
+            // 2. Prepare format of the comment
+            echo "#### Terraform Format and Style :paintbrush:\`$TF_FMT_OUTCOME\`
+            #### Terraform Initialization :gear:\`$TF_INIT_OUTCOME\`
+            #### Terraform Validation :robot:\`$TF_VALIDATE_OUTCOME\`
+            #### Terraform Plan :book:\`$TF_PLAN_OUTCOME\`
 
-          \`\`\`terraform
-          $TF_PLAN
-          \`\`\`
+            <details><summary>Show Plan</summary>
 
-          </details>
+            \`\`\`terraform
+            $TF_PLAN
+            \`\`\`
 
-          *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`*" >> "$GITHUB_STEP_SUMMARY"
+            </details>
+
+            *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`*" >> "$GITHUB_STEP_SUMMARY"
+
+             // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
