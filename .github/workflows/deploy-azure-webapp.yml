@@ -24,7 +24,7 @@ on:
         required: true
 
       app_settings:
-        description: App settings to configure for the Azure Web App (inline JSON).
+        description: App settings to configure for the Azure Web App. Space-separated KEY=VALUE format or inline JSON.
         type: string
         default: "{}"
         required: false
@@ -57,7 +57,6 @@ jobs:
 
     steps:
       - name: Download artifact
-        id: download
         if: inputs.artifact_name != ''
         uses: actions/download-artifact@v3
         with:
@@ -84,11 +83,12 @@ jobs:
         with:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
-          package: ${{ steps.download.outputs.download-path }}
 
       - name: Configure app settings
-        uses: azure/appservice-settings@v1
-        with:
-          app-name: ${{ inputs.app_name }}
-          app-settings-json: ${{ inputs.app_settings }}
-          mask-inputs: false # Use key vault references instead (https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references)
+        env:
+          APP_NAME: ${{ inputs.app_name }}
+          APP_SETTINGS: ${{ inputs.app_settings }}
+        run: |
+          RESOURCE_GROUP=$(az webapp list --query "[?name=='$APP_NAME'].resourceGroup" -o tsv)
+          echo "Resource group: $RESOURCE_GROUP"
+          az webapp config appsettings set -n "$APP_NAME" -g "$RESOURCE_GROUP" --settings "$APP_SETTINGS" -o json
