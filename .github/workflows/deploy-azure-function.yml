@@ -16,6 +16,12 @@ on:
         type: string
         required: true
 
+      app_settings:
+        description: App settings to configure for the Azure Function App. Space-separated KEY=VALUE format or inline JSON.
+        type: string
+        default: "{}"
+        required: false
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -41,7 +47,6 @@ jobs:
 
     steps:
       - name: Download artifact
-        id: download
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
@@ -65,4 +70,12 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: ${{ inputs.app_name }}
-          package: ${{ steps.download.outputs.download-path }}
+
+      - name: Configure app settings
+        env:
+          APP_NAME: ${{ inputs.app_name }}
+          APP_SETTINGS: ${{ inputs.app_settings }}
+        run: |
+          RESOURCE_GROUP=$(az functionapp list --query "[?name=='$APP_NAME'].resourceGroup" -o tsv)
+          echo "Resource group: $RESOURCE_GROUP"
+          az functionapp config appsettings set -n "$APP_NAME" -g "$RESOURCE_GROUP" --settings "$APP_SETTINGS" -o json
