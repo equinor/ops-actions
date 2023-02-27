@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "properties": {
+    "federatedCredential": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": ["name", "subject", "description"]
+    },
+    "roleAssignments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        },
+        "required": ["scope", "role"]
+      }
+    }
+  },
+  "required": ["federatedCredential", "roleAssignments"]
+}

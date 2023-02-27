@@ -1,5 +1,3 @@
-# Login to Azure using OpenID Connect (OIDC), then deploy Docker image or package to Azure Web App.
-
 on:
   workflow_call:
     inputs:
@@ -8,23 +6,18 @@ on:
         type: string
         required: true
 
-      image:
-        description: The Docker image to deploy. Required if "artifact_name" is not set.
-        type: string
-        required: false
-
       artifact_name:
-        description: The name of the artifact containing the package to deploy. Required if "image" is not set.
+        description: The name of the artifact containing the package to deploy.
         type: string
-        required: false
+        required: true
 
       app_name:
-        description: The name of the Azure Web App to deploy the Docker image to.
+        description: The name of the Azure Function App to deploy the package to.
         type: string
         required: true
 
       app_settings:
-        description: App settings to configure for the Azure Web App. Space-separated KEY=VALUE format or inline JSON.
+        description: App settings to configure for the Azure Function App. Space-separated KEY=VALUE format or inline JSON.
         type: string
         default: "{}"
         required: false
@@ -35,20 +28,17 @@ on:
         required: true
 
       AZURE_SUBSCRIPTION_ID:
-        description: The ID of the Azure subscription to deploy the Docker image to.
+        description: The ID of the Azure subscription to deploy the package to.
         required: true
 
       AZURE_TENANT_ID:
-        description: The ID of the Azure tenant to deploy the Docker image to.
+        description: The ID of the Azure tenant to deploy the package to.
         required: true
 
 jobs:
-  deploy:
-    name: Deploy
+  azure-function:
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ inputs.environment }}
-      url: ${{ steps.deploy.outputs.webapp-url }}
+    environment: ${{ inputs.environment }}
 
     # Set permissions required to login to Azure using OIDC.
     permissions:
@@ -57,13 +47,11 @@ jobs:
 
     steps:
       - name: Download artifact
-        if: inputs.artifact_name != ''
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
 
       - name: Unzip
-        if: inputs.artifact_name != ''
         env:
           ZIP_FILE: ${{ inputs.artifact_name }}.zip
         run: |
@@ -77,18 +65,17 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Deploy
+      - name: Deploy Azure Function
         id: deploy
-        uses: azure/webapps-deploy@v2
+        uses: azure/functions-action@v1
         with:
           app-name: ${{ inputs.app_name }}
-          images: ${{ inputs.image }}
 
       - name: Configure app settings
         env:
           APP_NAME: ${{ inputs.app_name }}
           APP_SETTINGS: ${{ inputs.app_settings }}
         run: |
-          RESOURCE_GROUP=$(az webapp list --query "[?name=='$APP_NAME'].resourceGroup" -o tsv)
+          RESOURCE_GROUP=$(az functionapp list --query "[?name=='$APP_NAME'].resourceGroup" -o tsv)
           echo "Resource group: $RESOURCE_GROUP"
-          az webapp config appsettings set -n "$APP_NAME" -g "$RESOURCE_GROUP" --settings "$APP_SETTINGS" -o json
+          az functionapp config appsettings set -n "$APP_NAME" -g "$RESOURCE_GROUP" --settings "$APP_SETTINGS" -o json

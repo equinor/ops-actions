@@ -13,14 +13,12 @@ It will:
 The script accepts the following arguments:
 
 1. The name of the Azure AD application to create
-1. The ID of the Azure subscription to configure OIDC for
 1. The GitHub repository to configure OIDC for
 1. (Optional) The GitHub environment to configure OIDC for
 1. The path of the JSON file containing the OIDC configuration
 
 ## Prerequisites
 
-- [Install WSL](https://learn.microsoft.com/en-us/windows/wsl/install) - to run shell script
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credential, service principal and Azure role assignments
 - [Install GitHub CLI](https://cli.github.com) - to create GitHub secrets
 - [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file
@@ -38,6 +36,12 @@ The script accepts the following arguments:
     az login
     ```
 
+1. Set Azure subscription:
+
+    ```console
+    az account set -s {SUBSCRIPTION_NAME_OR_ID}
+    ```
+
 1. Login to GitHub:
 
     ```console
@@ -49,7 +53,7 @@ The script accepts the following arguments:
 1. Run the script `oidc.sh`:
 
     ```console
-    ./oidc.sh {APP_NAME} {SUBSCRIPTION_ID} {REPO} {ENVIRONMENT} {CONFIG_FILE}
+    ./oidc.sh {APP_NAME} {REPO} {ENVIRONMENT} {CONFIG_FILE}
     ```
 
     > **Note:** `SUBSCRIPTION_ID`, `REPO` and `ENVIRONMENT` are available as environment variables in `CONFIG_FILE`.
@@ -57,7 +61,7 @@ The script accepts the following arguments:
     For example:
 
     ```console
-    ./oidc.sh my-app 2e532de1-2fb2-4bd3-9700-bd3364e57ddf equinor/ops-actions development ./oidc.json
+    ./oidc.sh my-app equinor/ops-actions development ./oidc.json
     ```
 
     To create the secrets at the repository level, pass an empty string `""` to argument `ENVIRONMENT` .
