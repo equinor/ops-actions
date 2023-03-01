@@ -26,7 +26,6 @@ on:
       app_settings:
         description: App settings to configure for the Azure Web App. Space-separated KEY=VALUE format or inline JSON.
         type: string
-        default: "{}"
         required: false
 
     secrets:
@@ -85,6 +84,7 @@ jobs:
           images: ${{ inputs.image }}
 
       - name: Configure app settings
+        if: inputs.app_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}
           APP_SETTINGS: ${{ inputs.app_settings }}
