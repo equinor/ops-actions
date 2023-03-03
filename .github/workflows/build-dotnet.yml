@@ -14,20 +14,8 @@ on:
         required: false
         default: "."
 
-      test_project:
-        description: Specify the path of a test project or solution file, or the path of a directory containing a test project or solution file.
-        type: string
-        required: false
-        default: ""
-
       runtime:
         description: Which runtime to publish the application for.
-        type: string
-        required: false
-        default: ""
-
-      collect:
-        description: Enables data collector for the test run.
         type: string
         required: false
         default: ""
@@ -37,6 +25,18 @@ on:
         type: boolean
         required: false
         default: false
+
+      test_project:
+        description: Specify the path of a test project or solution file, or the path of a directory containing a test project or solution file.
+        type: string
+        required: false
+        default: ""
+
+      test_collect:
+        description: Enables data collector for the test run.
+        type: string
+        required: false
+        default: ""
 
       artifact_name:
         description: The name of the build artifact to upload.
@@ -57,7 +57,6 @@ jobs:
       PROJECT: ${{ inputs.project }}
       CONFIGURATION: Release
       RUNTIME: ${{ inputs.runtime }}
-      COLLECT: ${{ inputs.collect }}
       SELF_CONTAINED: ${{ inputs.self_contained }}
       OUTPUT: dotnet-app
 
@@ -83,6 +82,7 @@ jobs:
         if: inputs.test_project != ''
         env:
           PROJECT: ${{ inputs.test_project }}
+          COLLECT: ${{ inputs.test_collect }}
         run: dotnet test "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
 
       # Publish the application and its dependencies to a folder for deployment.
