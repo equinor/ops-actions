@@ -8,6 +8,12 @@ on:
         type: string
         required: true
 
+      project:
+        description: Specify the path of the project or solution file, or the path of the directory containing the project or solution file.
+        type: string
+        required: false
+        default: "."
+
       runtime:
         description: Which runtime to publish the application for.
         type: string
@@ -36,6 +42,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
+      PROJECT: ${{ inputs.project }}
       CONFIGURATION: Release
       RUNTIME: ${{ inputs.runtime }}
       SELF_CONTAINED: ${{ inputs.self_contained }}
@@ -52,15 +59,15 @@ jobs:
 
       # Restore dependencies for the application and runtime.
       - name: Dotnet restore
-        run: dotnet restore --runtime "$RUNTIME"
+        run: dotnet restore "$PROJECT" --runtime "$RUNTIME"
 
       # Build the application for release/deployment.
       - name: Dotnet build
-        run: dotnet build --configuration "$CONFIGURATION" --runtime "$RUNTIME" --no-restore
+        run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --no-restore
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
-        run: dotnet publish --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
+        run: dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
 
       # Zip Dotnet publish output in order to drastically improve artifact upload performance.
       - name: Zip
