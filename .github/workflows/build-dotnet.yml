@@ -14,6 +14,12 @@ on:
         required: false
         default: "."
 
+      test_project:
+        description: Specify the path of a test project or solution file, or the path of a directory containing a test project or solution file.
+        type: string
+        required: false
+        default: ""
+
       runtime:
         description: Which runtime to publish the application for.
         type: string
@@ -74,7 +80,10 @@ jobs:
 
       # Execute unit tests.
       - name: Dotnet test
-        run: dotnet test --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT" --no-build
+        if: inputs.test_project != ''
+        env:
+          PROJECT: ${{ inputs.test_project }}
+        run: dotnet test "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
