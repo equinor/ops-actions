@@ -58,7 +58,6 @@ jobs:
       CONFIGURATION: Release
       RUNTIME: ${{ inputs.runtime }}
       SELF_CONTAINED: ${{ inputs.self_contained }}
-      OUTPUT: dotnet-app
 
     steps:
       - name: Checkout
@@ -87,15 +86,21 @@ jobs:
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
-        run: dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
+        id: publish
+        env:
+          OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
+        run: |
+          dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
+          echo "publish_path=$OUTPUT_PATH" >> "$GITHUB_OUTPUT"
 
       # Zip Dotnet publish output in order to drastically improve artifact upload performance.
       - name: Zip
         id: zip
         env:
           ZIP_FILE: ${{ runner.temp }}/${{ inputs.artifact_name }}.zip
+          PUBLISH_PATH: ${{ steps.publish.outputs.publish_path }}
         run: |
-          zip -r "$ZIP_FILE" "$OUTPUT"
+          zip -r "$ZIP_FILE" "$PUBLISH_PATH"
           echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
 
       # Upload an artifact containing the application.
