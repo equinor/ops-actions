@@ -59,6 +59,7 @@ jobs:
       RUNTIME: ${{ inputs.runtime }}
       SELF_CONTAINED: ${{ inputs.self_contained }}
       OUTPUT: dotnet-app
+      ZIP_FILE: ${{ inputs.artifact_name }}.zip
 
     steps:
       - name: Checkout
@@ -91,16 +92,11 @@ jobs:
 
       # Zip Dotnet publish output in order to drastically improve artifact upload performance.
       - name: Zip
-        id: zip
-        env:
-          ZIP_FILE: ${{ runner.temp }}/${{ inputs.artifact_name }}.zip
-        run: |
-          zip -r "$ZIP_FILE" "$OUTPUT"
-          echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
+        run: zip -r "$ZIP_FILE" "$OUTPUT"
 
       # Upload an artifact containing the application.
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ steps.zip.outputs.zip_file }}
+          path: ${{ env.ZIP_FILE }}
