@@ -91,7 +91,7 @@ jobs:
           OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
         run: |
           dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
-          echo "publish_path=$OUTPUT_PATH" >> "$GITHUB_OUTPUT"
+          echo "publish_path=$OUTPUT" >> "$GITHUB_OUTPUT"
 
       # Zip Dotnet publish output in order to drastically improve artifact upload performance.
       - name: Zip
