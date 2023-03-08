@@ -62,3 +62,36 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
+
+## Build .NET application and deploy to Azure Web App
+
+```yaml
+name: deploy-azure-webapp
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    uses: equinor/ops-actions/.github/workflows/build-dotnet.yml@main
+    with:
+      dotnet_version: "6.0.x"
+      project: src/Example/Example.csproj
+      test_project: |-
+        tests/Example.UnitTests/Example.UnitTests.csproj
+        tests/Example.IntegrationTests/Example.IntegrationTests.csproj
+      test_collect: XPlat Code Coverage
+
+  deploy:
+    needs: build
+    uses: equinor/ops-actions/.github/workflows/deploy-azure-webapp.yml@main
+    with:
+      environment: development
+      artifact_name: ${{ needs.build.outputs.artifact_name }}
+      app_name: example-app
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+```
