@@ -96,6 +96,9 @@ jobs:
           while read -r p; do
             dotnet test "$p" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
           done <<< "$PROJECT"
+        # This step might give a warning that the '--self-contained' option must be specified when the '--runtime' option is specified,
+        # however the '--self-contained' option is not available for the dotnet test command as of 8 March 2023.
+        # Consider the drawbacks of removing the '--runtime' option.
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
