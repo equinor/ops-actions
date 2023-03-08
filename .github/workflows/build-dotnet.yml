@@ -84,7 +84,7 @@ jobs:
 
       # Build the application for release/deployment.
       - name: Dotnet build
-        run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --no-restore
+        run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-restore
 
       # Execute unit tests.
       - name: Dotnet test
@@ -96,6 +96,7 @@ jobs:
           while read -r p; do
             dotnet test "$p" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
           done <<< "$PROJECT"
+        # The dotnet test command does not support the '--self-contained' option as of Mar 8, 2023 (https://github.com/dotnet/sdk/issues/31066).
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
