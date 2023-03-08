@@ -54,6 +54,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
+      CI: false
       PROJECT: ${{ inputs.project }}
       CONFIGURATION: Release
       RUNTIME: ${{ inputs.runtime }}
