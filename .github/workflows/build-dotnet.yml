@@ -94,7 +94,7 @@ jobs:
           COLLECT: ${{ inputs.test_collect }}
         run: |
           while read -r p; do
-            dotnet test "$p" --configuration "$CONFIGURATION" --collect "$COLLECT"
+            dotnet test "$p" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
           done <<< "$PROJECT"
 
       # Publish the application and its dependencies to a folder for deployment.
