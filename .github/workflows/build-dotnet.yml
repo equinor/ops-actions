@@ -84,7 +84,7 @@ jobs:
 
       # Build the application for release/deployment.
       - name: Dotnet build
-        run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --no-restore
+        run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-restore
 
       # Execute unit tests.
       - name: Dotnet test
