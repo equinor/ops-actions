@@ -96,6 +96,7 @@ jobs:
           while read -r p; do
             dotnet test "$p" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
           done <<< "$PROJECT"
+        # The dotnet test command does not support the '--self-contained' option as of Mar 8, 2023 (https://github.com/dotnet/sdk/issues/31066).
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
