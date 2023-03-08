@@ -96,11 +96,11 @@ jobs:
       # Zip Dotnet publish output in order to drastically improve artifact upload performance.
       - name: Zip
         id: zip
+        working-directory: ${{ steps.publish.outputs.publish_path }}
         env:
           ZIP_FILE: ${{ runner.temp }}/${{ inputs.artifact_name }}.zip
-          PUBLISH_PATH: ${{ steps.publish.outputs.publish_path }}
         run: |
-          zip -r "$ZIP_FILE" "$PUBLISH_PATH"
+          zip -r "$ZIP_FILE" .
           echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
 
       # Upload an artifact containing the application.
