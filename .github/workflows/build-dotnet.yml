@@ -36,7 +36,7 @@ on:
         default: false
 
       test_project:
-        description: Specify the path of a test project or solution file, or the path of a directory containing a test project or solution file.
+        description: Specify the path of a test project or solution file, or the path of a directory containing a test project or solution file. Pass a newline-separated string to specify multiple test projects.
         type: string
         required: false
         default: ""
@@ -92,7 +92,10 @@ jobs:
         env:
           PROJECT: ${{ inputs.test_project }}
           COLLECT: ${{ inputs.test_collect }}
-        run: dotnet test "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
+        run: |
+          while read -r p; do
+            dotnet test "$p" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
+          done <<< "$PROJECT"
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
