@@ -49,8 +49,7 @@ on:
         value: ${{ jobs.build.outputs.image }}
 
 jobs:
-  build:
-    name: Build
+  docker:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
