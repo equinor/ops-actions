@@ -46,7 +46,7 @@ on:
     outputs:
       image:
         description: The Docker image that was built.
-        value: ${{ jobs.build.outputs.image }}
+        value: ${{ jobs.docker.outputs.image }}
 
 jobs:
   docker:
