@@ -42,8 +42,7 @@ on:
         required: true
 
 jobs:
-  deploy:
-    name: Deploy
+  azure-webapp:
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment }}

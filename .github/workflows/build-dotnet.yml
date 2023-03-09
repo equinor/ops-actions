@@ -59,8 +59,7 @@ on:
         value: ${{ inputs.artifact_name }}
 
 jobs:
-  build:
-    name: Build
+  dotnet:
     runs-on: ubuntu-latest
     env:
       CI: ${{ inputs.ci }}

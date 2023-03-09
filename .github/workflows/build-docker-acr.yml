@@ -46,11 +46,10 @@ on:
     outputs:
       image:
         description: The Docker image that was built.
-        value: ${{ jobs.build.outputs.image }}
+        value: ${{ jobs.docker.outputs.image }}
 
 jobs:
-  build:
-    name: Build
+  docker:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 

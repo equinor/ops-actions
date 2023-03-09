@@ -35,7 +35,6 @@ on:
 
 jobs:
   terraform:
-    name: Terraform
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
