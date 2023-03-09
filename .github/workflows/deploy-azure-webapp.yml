@@ -6,7 +6,7 @@ on:
       environment:
         description: The name of the GitHub environment that this job references.
         type: string
-        required: true
+        required: false
 
       image:
         description: The Docker image to deploy. Required if "artifact_name" is not set.
