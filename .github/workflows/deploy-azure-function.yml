@@ -72,7 +72,7 @@ jobs:
 
       - name: Configure app settings
         if: inputs.app_settings != ''
-        uses: azure/appservice-settings
+        uses: azure/appservice-settings@v1
         with:
           app-name: ${{ inputs.app_name }}
           app-settings-json: ${{ inputs.app_settings }}
