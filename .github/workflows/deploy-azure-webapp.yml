@@ -24,7 +24,7 @@ on:
         required: true
 
       app_settings:
-        description: App settings to configure for the Azure Web App. Space-separated KEY=VALUE format or inline JSON.
+        description: App settings to configure for the Azure Web App. Inline JSON.
         type: string
         required: false
 
@@ -84,10 +84,7 @@ jobs:
 
       - name: Configure app settings
         if: inputs.app_settings != ''
-        env:
-          APP_NAME: ${{ inputs.app_name }}
-          APP_SETTINGS: ${{ inputs.app_settings }}
-        run: |
-          RESOURCE_GROUP=$(az webapp list --query "[?name=='$APP_NAME'].resourceGroup" -o tsv)
-          echo "Resource group: $RESOURCE_GROUP"
-          az webapp config appsettings set -n "$APP_NAME" -g "$RESOURCE_GROUP" --settings "$APP_SETTINGS" -o json
+        uses: azure/appservice-settings
+        with:
+          app-name: ${{ inputs.app_name }}
+          app-settings-json: ${{ inputs.app_settings }}
