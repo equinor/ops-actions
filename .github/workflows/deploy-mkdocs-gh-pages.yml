@@ -49,7 +49,9 @@ jobs:
         if: inputs.requirements != ''
         env:
           REQUIREMENTS: ${{ inputs.requirements }}
-        run: pip install -r "$REQUIREMENTS"
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r "$REQUIREMENTS"
 
       - name: Deploy MkDocs
         run: mkdocs gh-deploy --force
