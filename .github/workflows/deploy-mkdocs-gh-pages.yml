@@ -1,0 +1,52 @@
+# Something...
+
+on:
+  workflow_call:
+    inputs:
+      python_version:
+        description: The version of Python to install.
+        type: string
+        required: false
+        default: latest
+
+      mkdocs_version:
+        description: The version of MkDocs to install using PIP.
+        type: string
+        required: false
+        default: ">=1.0.0"
+
+      requirements:
+        description: The path of a file containing the Python packages to install using PIP, usually "requirements.txt".
+        type: string
+        required: false
+        default: ""
+
+jobs:
+  mkdocs:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python_version }}
+
+      - name: Install MkDocs
+        env:
+          MKDOCS_VERSION: ${{ inputs.mkdocs_version }}
+        run: pip install "mkdocs$MKDOCS_VERSION"
+
+      - name: Install dependencies
+        if: inputs.requirements != ''
+        env:
+          REQUIREMENTS: ${{ inputs.requirements }}
+        run: pip install -r "$REQUIREMENTS"
+
+      - name: Deploy MkDocs
+        run: mkdocs gh-deploy --force
