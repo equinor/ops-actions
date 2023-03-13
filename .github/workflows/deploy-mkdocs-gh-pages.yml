@@ -1,4 +1,7 @@
-# Something...
+# Deploy MkDocs to GitHub Pages
+
+# Make sure your GitHub pages site is currently being built from the "gh-pages" branch.
+# Ref: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
 on:
   workflow_call:
