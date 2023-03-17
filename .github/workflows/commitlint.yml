@@ -5,7 +5,7 @@
 # - Conventional Commits: https://www.conventionalcommits.org
 
 # Additional configuration can be set in `commitlint.config.js`.
-# Dcoumentation: https://commitlint.js.org/#/reference-configuration
+# Docs: https://commitlint.js.org/#/reference-configuration
 
 on:
   workflow_call:
