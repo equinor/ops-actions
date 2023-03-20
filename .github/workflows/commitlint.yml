@@ -55,12 +55,12 @@ jobs:
         with:
           node-version: ${{ inputs.node_version }}
 
-    - name: Install dependencies
-      env:
-        EXTENDS: ${{ inputs.extends }}
-      run: |
-        readarray -t extends_array <<< "$EXTENDS"
-        npm install "${extends_array[@]}"
+      - name: Install dependencies
+        env:
+          EXTENDS: ${{ inputs.extends }}
+        run: |
+          readarray -t extends_array <<< "$EXTENDS"
+          npm install "${extends_array[@]}"
 
     - name: Lint
       env:
