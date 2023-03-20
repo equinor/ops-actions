@@ -93,7 +93,6 @@ jobs:
           COLLECT: ${{ inputs.test_collect }}
         run: |
           echo "$PROJECT" |
-          tr -s "\n" |
           while read -r p; do
             dotnet test "$p" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
           done
