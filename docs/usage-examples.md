@@ -102,7 +102,8 @@ jobs:
 name: rotate-secrets
 
 on:
-  schedule: "0 9 1 * *" # "At 09:00 on day-of-month 1."
+  schedule:
+    - cron: "0 9 1 * *" # "At 09:00 on day-of-month 1."
 
 jobs:
   create-issue:
@@ -122,7 +123,8 @@ jobs:
 name: rotate-secrets
 
 on:
-  schedule: "0 9 1 * *" # "At 09:00 on day-of-month 1."
+  schedule:
+    - cron: "0 9 1 * *" # "At 09:00 on day-of-month 1."
 
 jobs:
   create-issue:
