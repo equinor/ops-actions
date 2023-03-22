@@ -25,7 +25,7 @@ on:
         default: ""
 
 jobs:
-  gh:
+  github-cli:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
