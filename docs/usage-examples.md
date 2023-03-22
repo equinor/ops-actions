@@ -95,3 +95,50 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
+
+## Create GitHub Issue
+
+```yaml
+name: rotate-secrets
+
+on:
+  schedule:
+    - cron: "0 9 1 * *" # "At 09:00 on day-of-month 1."
+
+jobs:
+  create-issue:
+    uses: equinor/ops-actions/.github/workflows/create-github-issue.yml@main
+    with:
+      title: Rotate secrets
+      body: |
+        - [ ] Delete expired client secrets
+        - [ ] Create new client secret and set expiration to 3 months
+        - [ ] Update key vault secret and set expiration to 3 months
+      assignee: sneezy,sleepy,dopey,docs,happy,bashful,grumpy
+```
+
+## Create GitHub Issue from template
+
+```yaml
+name: rotate-secrets
+
+on:
+  schedule:
+    - cron: "0 9 1 * *" # "At 09:00 on day-of-month 1."
+
+jobs:
+  create-issue:
+    uses: equinor/ops-actions/.github/workflows/create-github-issue.yml@main
+    with:
+      title: Rotate secrets
+      body_file: .github/ISSUE_TEMPLATE/secret-rotation.md
+      assignee: sneezy,sleepy,dopey,docs,happy,bashful,grumpy
+```
+
+where contents of `.github/ISSUE_TEMPLATE/secret-rotation.md` is:
+
+```markdown
+- [ ] Delete expired client secrets
+- [ ] Create new client secret and set expiration to 3 months
+- [ ] Update key vault secret and set expiration to 3 months
+```
