@@ -24,6 +24,12 @@ on:
         required: false
         default: ""
 
+      label:
+        description: A comma-separated string of labels to add to the issue, e.g. "documentation,good first issue".
+        type: string
+        required: false
+        default: ""
+
 jobs:
   github-cli:
     runs-on: ubuntu-latest
@@ -39,4 +45,5 @@ jobs:
           BODY: ${{ inputs.body }}
           BODY_FILE: ${{ inputs.body_file }}
           ASSIGNEE: ${{ inputs.assignee }}
-        run: gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY" --body-file "$BODY_FILE" --assignee "$ASSIGNEE"
+          LABEL: ${{ inputs.label }}
+        run: gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY" --body-file "$BODY_FILE" --assignee "$ASSIGNEE" --label "$LABEL"
