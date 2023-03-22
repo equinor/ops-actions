@@ -39,4 +39,4 @@ jobs:
           BODY: ${{ inputs.body }}
           BODY_FILE: ${{ inputs.body_file }}
           ASSIGNEE: ${{ inputs.assignee }}
-        run: gh issue create --repo "GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY" --body-file "$BODY_FILE" --assignee "$ASSIGNEE"
+        run: gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY" --body-file "$BODY_FILE" --assignee "$ASSIGNEE"
