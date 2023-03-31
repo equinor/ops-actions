@@ -97,7 +97,7 @@ function New-GitHubConnectionOIDC {
         try {
             if ($null -eq $spClientId) {
                 Write-Output 'Creating application...'
-                $spClientId = az ad app create --display-name $AppRegistrationName --query appId --output tsv
+                $spClientId = az ad app create --display-name $AppRegistrationName --sign-in-audience AzureADMyOrg --query appId --output tsv
             }
             else {
                 Write-Output "Using existing application."
@@ -218,8 +218,8 @@ function New-GitHubConnectionOIDC {
             Write-Output "Starting RBAC Assignment for Resource Groups"
             Write-Output "Reading config..."
 
-            $config         = Get-Content $ConfigFile | ConvertFrom-Json -AsHashtable
-            $rbacRole       = $config.roleAssignments.$RbacScope.$Environment.rbacRole
+            $config = Get-Content $ConfigFile | ConvertFrom-Json -AsHashtable
+            $rbacRole = $config.roleAssignments.$RbacScope.$Environment.rbacRole
             $resourceGroups = $config.roleAssignments.$RbacScope.$Environment.resourceGroups
 
             Write-Output "Checking and creating RBAC Role Assignments..."
@@ -239,7 +239,7 @@ function New-GitHubConnectionOIDC {
             Write-Output "Starting RBAC Assignment for Subscription"
             Write-Output "Reading config..."
 
-            $config   = Get-Content $ConfigFile | ConvertFrom-Json -AsHashtable
+            $config = Get-Content $ConfigFile | ConvertFrom-Json -AsHashtable
             $rbacRole = $config.roleAssignments.$RbacScope.rbacRole
 
             try {
