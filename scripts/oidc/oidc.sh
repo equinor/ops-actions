@@ -45,7 +45,7 @@ echo "Checking if application already exists..."
 app_id=$(az ad app list --filter "displayName eq '$APP_NAME'" --query [].appId --output tsv)
 if [[ -z "$app_id" ]]; then
   echo "Creating application..."
-  app_id=$(az ad app create --display-name "$APP_NAME" --query appId --output tsv)
+  app_id=$(az ad app create --display-name "$APP_NAME" --sign-in-audience AzureADMyOrg --query appId --output tsv)
 else
   echo "Using existing application."
 fi
