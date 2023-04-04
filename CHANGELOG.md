@@ -1,5 +1,28 @@
 # Changelog
 
+## [7.0.0](https://github.com/equinor/ops-actions/compare/v6.12.0...v7.0.0) (2023-04-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove SQL server secret rotation workflow ([#181](https://github.com/equinor/ops-actions/issues/181))
+* create GitHub issue ([#180](https://github.com/equinor/ops-actions/issues/180))
+* use common convention for workflow filenames ([#176](https://github.com/equinor/ops-actions/issues/176))
+
+### Features
+
+* remove SQL server secret rotation workflow ([#181](https://github.com/equinor/ops-actions/issues/181)) ([b62f9e1](https://github.com/equinor/ops-actions/commit/b62f9e1564cc64a5acabe6ac24e0a9ede0e8c5c9))
+
+
+### Reverts
+
+* create GitHub issue ([#180](https://github.com/equinor/ops-actions/issues/180)) ([dfb2eec](https://github.com/equinor/ops-actions/commit/dfb2eecd033d104679d0838aaacea86195dea503))
+
+
+### Code Refactoring
+
+* use common convention for workflow filenames ([#176](https://github.com/equinor/ops-actions/issues/176)) ([97f0cd8](https://github.com/equinor/ops-actions/commit/97f0cd84da43527c88be64447330e82beb6052da))
+
 ## [6.12.0](https://github.com/equinor/ops-actions/compare/v6.11.0...v6.12.0) (2023-03-22)
 
 
