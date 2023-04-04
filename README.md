@@ -27,4 +27,4 @@ See [usage examples](docs/usage-examples.md).
 
 ## Contributing
 
-See [contributing guidelines](CONTRIBUTING.md)
+See [contributing guidelines](CONTRIBUTING.md).
