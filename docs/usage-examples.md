@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/build-python.yml@v6.5.0
+    uses: equinor/ops-actions/.github/workflows/python.yml@main
     with:
       working_directory: src
       python_version: "3.10"
@@ -21,7 +21,7 @@ jobs:
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/deploy-azure-function.yml@v6.5.0
+    uses: equinor/ops-actions/.github/workflows/azure-function.yml@main
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
@@ -43,7 +43,7 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/build-python.yml@v6.5.0
+    uses: equinor/ops-actions/.github/workflows/python.yml@main
     with:
       working_directory: src
       python_version: "3.10"
@@ -52,7 +52,7 @@ jobs:
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/deploy-azure-webapp.yml@v6.5.0
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@main
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
@@ -74,7 +74,7 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/build-dotnet.yml@main
+    uses: equinor/ops-actions/.github/workflows/dotnet.yml@main
     with:
       dotnet_version: "6.0.x"
       project: src/Example/Example.csproj
@@ -85,7 +85,7 @@ jobs:
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/deploy-azure-webapp.yml@main
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@main
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
