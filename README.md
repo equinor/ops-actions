@@ -21,6 +21,10 @@ Supported Terraform providers:
 | Azure | `hashicorp/azurerm` | `>= v3.20.0` |
 | AzAPI | `azure/azapi`       | `>= v1.3.0`  |
 
-## Usage examples
+## Usage
 
-See [usage examples document](docs/usage-examples.md).
+See [usage examples](docs/usage-examples.md).
+
+## Contributing
+
+See [contributing guidelines](CONTRIBUTING.md)
