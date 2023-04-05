@@ -20,7 +20,7 @@ jobs:
     with:
       environment: development
       working_directory: terraform
-      terraform_version: ~1.3.0
+      terraform_version: ~1.0.0
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -154,3 +154,25 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
+
+## Publish MkDocs to GitHub Pages
+
+```yaml
+name: publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    uses: equinor/ops-actions/.github/workflows/mkdocs-gh-pages.yml@main
+    with:
+      mkdocs_version: ">=1.0.0"
+      python_version: "3.x"
+```
+
+> **Note**
+> Make sure your GitHub Pages site is currently being built from the `gh-pages` branch.
+> See [GitHub docs](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) for instructions on how to set this up.
