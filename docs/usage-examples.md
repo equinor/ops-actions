@@ -75,7 +75,7 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/python.yml@main
     with:
       working_directory: src
-      python_version: "3.10"
+      python_version: "3.x"
       pip_install_target: .python_packages/lib/site-packages # Required
 
   deploy:
