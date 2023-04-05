@@ -155,10 +155,10 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
-## Publish MkDocs to GitHub Pages
+## Deploy MkDocs to GitHub Pages
 
 ```yaml
-name: publish
+name: deploy
 
 on:
   push:
@@ -166,7 +166,7 @@ on:
       - main
 
 jobs:
-  publish:
+  deploy:
     uses: equinor/ops-actions/.github/workflows/mkdocs-gh-pages.yml@main
     with:
       mkdocs_version: ">=1.0.0"
