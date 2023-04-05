@@ -162,8 +162,7 @@ name: deploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
