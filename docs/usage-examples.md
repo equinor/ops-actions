@@ -27,6 +27,40 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
+## Build Docker image and deploy to Azure Web App
+
+```yaml
+name: build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    uses: equinor/ops-actions/.github/workflows/docker-acr@main
+    with:
+      working_directory: src
+      registry_name: example-cr
+      repository: example-app
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+  deploy:
+    needs: build
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@main
+    with:
+      environment: development
+      image: ${{ needs.build.outputs.image }}
+      app_name: example-app
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+```
+
 ## Build Python application and deploy to Azure Function App
 
 ```yaml
