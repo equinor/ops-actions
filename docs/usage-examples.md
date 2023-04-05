@@ -64,7 +64,7 @@ jobs:
 ## Build Python application and deploy to Azure Function App
 
 ```yaml
-name: deploy-azure-function
+name: build
 
 on:
   push:
@@ -94,7 +94,7 @@ jobs:
 ## Build Python application and deploy to Azure Web App
 
 ```yaml
-name: deploy-azure-webapp
+name: build
 
 on:
   push:
@@ -125,7 +125,7 @@ jobs:
 ## Build .NET application and deploy to Azure Web App
 
 ```yaml
-name: deploy-azure-webapp
+name: build
 
 on:
   push:
@@ -135,7 +135,7 @@ jobs:
   build:
     uses: equinor/ops-actions/.github/workflows/dotnet.yml@main
     with:
-      dotnet_version: "6.0.x"
+      dotnet_version: "6.x"
       project: src/Example/Example.csproj
       test_project: |-
         tests/Example.UnitTests/Example.UnitTests.csproj
