@@ -2,6 +2,31 @@
 
 This document contains usage examples for the reusable workflows in this repository.
 
+## Provision Azure resources using Terraform
+
+```yaml
+name: provision
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+jobs:
+  provision:
+    uses: equinor/ops-actions/.github/workflows/terraform.yml@main
+    with:
+      environment: development
+      working_directory: terraform
+      terraform_version: ~1.3.0
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+```
+
 ## Build Python application and deploy to Azure Function App
 
 ```yaml
