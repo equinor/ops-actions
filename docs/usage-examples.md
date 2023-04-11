@@ -163,6 +163,9 @@ name: deploy
 on:
   push:
     branches: [main]
+    paths:
+      - docs/**
+      - mkdocs.yml
 
 jobs:
   deploy:
