@@ -2,11 +2,11 @@
 
 set -eu
 
-readonly STORAGE_ACCOUNT_NAME="$1"
-readonly RESOURCE_GROUP_NAME="$2"
-readonly LOCATION="$3"
-readonly CONTAINER_NAME='tfstate'
-readonly SP_OBJECT_ID="${4:-}"
+readonly STORAGE_ACCOUNT_NAME=${1:?"STORAGE_ACCOUNT_NAME is unset or null"}
+readonly RESOURCE_GROUP_NAME=${2:?"RESOURCE_GROUP_NAME is unset or null"}
+readonly LOCATION=${3:?"LOCATION is unset or null"}
+readonly CONTAINER_NAME="tfstate"
+readonly SP_OBJECT_ID=${4:-""}
 
 az group create \
   --name "${RESOURCE_GROUP_NAME}" \

@@ -2,10 +2,10 @@
 
 set -eu
 
-APP_NAME=$1
-REPO=$2
-ENVIRONMENT=$3
-CONFIG_FILE=$4
+APP_NAME=${1:?"APP_NAME is unset or null"}
+REPO=${2:?"REPO is unset or null"}
+ENVIRONMENT=${3:-""}
+CONFIG_FILE=${4:?"CONFIG_FILE is unset or null"}
 
 if [[ -f "$CONFIG_FILE" ]]; then
   jsonschema -i "$CONFIG_FILE" oidc.schema.json
