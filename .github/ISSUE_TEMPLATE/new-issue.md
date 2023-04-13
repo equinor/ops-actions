@@ -26,6 +26,16 @@ assignees: ''
 
 ## Affected Items
 
-<!-- Provide information about affected items for the issue. -->
+<!-- Provide information if there are any affected items such as resources or files.
 
-- [x] None
+Example:
+
+Changes to App Service Plan SKU from Basic to Standard may affect the following resources:
+
+- App Service Plan
+- App Service
+- Key Vault
+  - Update Firewall if using App Service outbound IP addresses as they will change from new SKU
+-->
+
+- None
