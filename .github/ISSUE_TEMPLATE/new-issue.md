@@ -1,8 +1,8 @@
 ---
-name: New issue
-about: General new issue template
+name: Chore
+about: Issue template
 labels: ''
-title: ''
+title: 'chore():'
 assignees: ''
 
 ---
