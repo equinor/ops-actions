@@ -6,7 +6,7 @@
 
 ## Goal
 
-Provide a collection of **reusable** and **composable** workflows for common operational tasks such as infrastructure provisioning, configuration management and application deployment.
+Provide a collection of **reusable** and **composable** workflows for common operational tasks.
 
 Examples:
 
