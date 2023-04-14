@@ -6,7 +6,21 @@
 
 ## Goal
 
-Provide a collection of reusable workflows for common operational tasks such as infrastructure provisioning, configuration management and application deployment.
+Provide a collection of **reusable** and **composable** workflows for common operational tasks such as infrastructure provisioning, configuration management and application deployment.
+
+Examples:
+
+- `terraform.yml`: provision infrastructure using Terraform.
+- `docker.yml`: build Docker image and push to container registry.
+- `azure-webapp.yml`: deploy to Azure Web App.
+
+## Non-goal
+
+Provide a collection of reusable workflows for all specific scenarios.
+
+Examples:
+
+- `provision-infrastructure-using-terraform-and-build-docker-image-and-deploy-to-azure-webapp.yml`: you get the point...
 
 ## Prerequisites
 
