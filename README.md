@@ -6,7 +6,7 @@
 
 ## Goal
 
-Provide a collection of **reusable** and **composable** workflows for common operational tasks.
+Create **reusable** and **composable** workflows for common operational tasks.
 
 Examples:
 
@@ -16,7 +16,7 @@ Examples:
 
 ## Non-goal
 
-Provide a collection of reusable workflows for all specific scenarios.
+Don't create reusable workflows for very specific scenarios.
 
 Examples:
 
