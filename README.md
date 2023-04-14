@@ -4,6 +4,10 @@
 
 [Reusable GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for operational tasks.
 
+## Goal
+
+Provide a collection of reusable workflows for common operational tasks such as infrastructure provisioning, configuration management and application deployment.
+
 ## Prerequisites
 
 ### OpenID Connect
