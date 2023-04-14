@@ -20,7 +20,7 @@ Provide a collection of reusable workflows for all specific scenarios.
 
 Examples:
 
-- `provision-infrastructure-using-terraform-and-build-docker-image-and-deploy-to-azure-webapp.yml`: you get the point...
+- `provision-azure-webapp-using-terraform-then-build-a-docker-image-and-push-it-to-a-container-registry-then-deploy-that-image-to-the-azure-webapp.yml`: you get the point...
 
 ## Prerequisites
 
