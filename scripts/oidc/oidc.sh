@@ -67,17 +67,17 @@ environments=() # List of GitHub environments to configure OIDC for.
 
 while read -r fic
 do
-  fic=$(jq '. + {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}' <<< "$fic")
   fic_name=$(jq -r .name <<< "$fic")
   fic_id=$(az ad app federated-credential list --id "$app_id" --query "[?name == '$fic_name'].id" --output tsv)
+  parameters=$(jq '. + {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}' <<< "$fic")
 
   if [[ -z "$fic_id" ]]
   then
     echo "Creating federated identity credential '$fic_name'..."
-    az ad app federated-credential create --id "$app_id" --parameters "$fic" --output none
+    az ad app federated-credential create --id "$app_id" --parameters "$parameters" --output none
   else
     echo "Updating existing federated identity credential '$fic_name'..."
-    az ad app federated-credential update --id "$app_id" --federated-credential-id "$fic_id" --parameters "$fic" --output none
+    az ad app federated-credential update --id "$app_id" --federated-credential-id "$fic_id" --parameters "$parameters" --output none
   fi
 
   subject=$(jq -r .subject <<< "$fic")
