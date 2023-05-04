@@ -14,7 +14,6 @@ The script accepts the following arguments:
 
 1. The name of the Azure AD application to create
 1. The GitHub repository to configure OIDC for
-1. (Optional) The GitHub environment to configure OIDC for
 1. The path of the JSON file containing the OIDC configuration
 
 ## Prerequisites
@@ -48,23 +47,19 @@ The script accepts the following arguments:
     gh auth login
     ```
 
-1. Configure federated credential and role assignments in `oidc.json`.
+1. Configure federated credentials and role assignments in `oidc.json`.
 
 1. Run the script `oidc.sh`:
 
     ```console
-    ./oidc.sh {APP_NAME} {REPO} {ENVIRONMENT} {CONFIG_FILE}
+    ./oidc.sh {APP_NAME} {REPO} {CONFIG_FILE}
     ```
-
-    > **Note:** `SUBSCRIPTION_ID`, `REPO` and `ENVIRONMENT` are available as environment variables in `CONFIG_FILE`.
 
     For example:
 
     ```console
-    ./oidc.sh my-app equinor/ops-actions development ./oidc.json
+    ./oidc.sh my-app my-org/my-repo ./oidc.json
     ```
-
-    To create the secrets at the repository level, pass an empty string `""` to argument `ENVIRONMENT` .
 
 ## References
 

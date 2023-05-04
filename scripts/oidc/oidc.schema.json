@@ -1,20 +1,29 @@
 {
   "type": "object",
   "properties": {
-    "federatedCredential": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
+    "federatedCredentials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string",
+            "pattern": "^(repo:\\${REPO}:).*$",
+            "description": "The pattern to use for the federated credential subject. Must start with 'repo:${REPO}:'."
+          },
+          "description": {
+            "type": "string"
+          }
         },
-        "subject": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        }
-      },
-      "required": ["name", "subject", "description"]
+        "required": [
+          "name",
+          "subject",
+          "description"
+        ]
+      }
     },
     "roleAssignments": {
       "type": "array",
@@ -22,15 +31,23 @@
         "type": "object",
         "properties": {
           "scope": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^(/subscriptions/\\${SUBSCRIPTION_ID}).*$",
+            "description": "The scope to create the role assignment at. Must start with '/subscriptions/${SUBSCRIPTION_ID}'."
           },
           "role": {
             "type": "string"
           }
         },
-        "required": ["scope", "role"]
+        "required": [
+          "scope",
+          "role"
+        ]
       }
     }
   },
-  "required": ["federatedCredential", "roleAssignments"]
+  "required": [
+    "federatedCredentials",
+    "roleAssignments"
+  ]
 }

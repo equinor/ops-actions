@@ -1,9 +1,11 @@
 {
-  "federatedCredential": {
-    "name": "github-actions",
-    "subject": "repo:${REPO}:environment:${ENVIRONMENT}",
-    "description": "OIDC auth from GitHub Actions to Azure"
-  },
+  "federatedCredentials": [
+    {
+      "name": "deploy-dev",
+      "subject": "repo:${REPO}:environment:dev",
+      "description": "Deploy to dev environment"
+    }
+  ],
   "roleAssignments": [
     {
       "scope": "/subscriptions/${SUBSCRIPTION_ID}",
