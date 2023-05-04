@@ -14,8 +14,32 @@ The script accepts the following arguments:
 
 1. The name of the Azure AD application to create
 1. The GitHub repository to configure OIDC for
-1. (Optional) The GitHub environment to configure OIDC for
 1. The path of the JSON file containing the OIDC configuration
+
+## Configuration specification
+
+See the [JSON schema](oidc.schema.json) for the full specification.
+
+Example configuration:
+
+```json
+{
+  "federatedCredentials": [
+    {
+      "name": "deploy-dev",
+      "subject": "repo:${REPO}:environment:dev",
+      "description": "Deploy to dev environment"
+    }
+  ],
+  "roleAssignments": [
+    {
+      "scope": "/subscriptions/${SUBSCRIPTION_ID}",
+      "role": "Contributor"
+    }
+  ]
+}
+
+```
 
 ## Prerequisites
 
@@ -24,7 +48,7 @@ The script accepts the following arguments:
 - [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credential and service principal
 - Activate Azure role `Owner` at the subscription scope - to create Azure role assignments
-- GitHub repository role `Admin` - to create GitHub environment secrets
+- GitHub repository role `Admin` - to create GitHub secrets
 
 ## Usage
 
@@ -48,23 +72,19 @@ The script accepts the following arguments:
     gh auth login
     ```
 
-1. Configure federated credential and role assignments in `oidc.json`.
+1. Configure federated credentials and role assignments in `oidc.json`.
 
 1. Run the script `oidc.sh`:
 
     ```console
-    ./oidc.sh {APP_NAME} {REPO} {ENVIRONMENT} {CONFIG_FILE}
+    ./oidc.sh {APP_NAME} {REPO} {CONFIG_FILE}
     ```
-
-    > **Note:** `SUBSCRIPTION_ID`, `REPO` and `ENVIRONMENT` are available as environment variables in `CONFIG_FILE`.
 
     For example:
 
     ```console
-    ./oidc.sh my-app equinor/ops-actions development ./oidc.json
+    ./oidc.sh my-app my-org/my-repo ./oidc.json
     ```
-
-    To create the secrets at the repository level, pass an empty string `""` to argument `ENVIRONMENT` .
 
 ## References
 
