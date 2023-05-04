@@ -12,7 +12,7 @@
           "subject": {
             "type": "string",
             "pattern": "^(repo:\\${REPO}:).*$",
-            "description": "The pattern to use for the federated credential subject. Must start with 'repo:${REPO}:'."
+            "description": "The subject of the federated credential. Must start with 'repo:${REPO}:'."
           },
           "description": {
             "type": "string"
