@@ -126,12 +126,12 @@ done <<< "$ras"
 
 tenant_id=$(jq -r .tenantId <<< "$subscription")
 
-if [[ "$repo_level" ]]
+if [[ "$repo_level" == true ]]
 then
   echo "Creating GitHub repository secrets..."
   gh secret set "AZURE_CLIENT_ID" --repo "$REPO" --body "$app_id"
-  gh secret set "AZURE_SUBSCRIPTION_ID"--repo "$REPO" --body "$SUBSCRIPTION_ID"
-  gh secret set "AZURE_TENANT_ID"--repo "$REPO" --body "$tenant_id"
+  gh secret set "AZURE_SUBSCRIPTION_ID" --repo "$REPO" --body "$SUBSCRIPTION_ID"
+  gh secret set "AZURE_TENANT_ID" --repo "$REPO" --body "$tenant_id"
 fi
 
 # ============================================================================ #
@@ -147,6 +147,6 @@ do
 
   echo "Creating GitHub environment secrets for environment '$env'..."
   gh secret set "AZURE_CLIENT_ID" --repo "$REPO" --env "$env" --body "$app_id"
-  gh secret set "AZURE_SUBSCRIPTION_ID"--repo "$REPO" --env "$env" --body "$SUBSCRIPTION_ID"
-  gh secret set "AZURE_TENANT_ID"--repo "$REPO" --env "$env" --body "$tenant_id"
+  gh secret set "AZURE_SUBSCRIPTION_ID" --repo "$REPO" --env "$env" --body "$SUBSCRIPTION_ID"
+  gh secret set "AZURE_TENANT_ID" --repo "$REPO" --env "$env" --body "$tenant_id"
 done
