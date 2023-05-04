@@ -23,7 +23,7 @@ The script accepts the following arguments:
 - [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credential and service principal
 - Activate Azure role `Owner` at the subscription scope - to create Azure role assignments
-- GitHub repository role `Admin` - to create GitHub environment secrets
+- GitHub repository role `Admin` - to create GitHub secrets
 
 ## Usage
 
