@@ -16,6 +16,31 @@ The script accepts the following arguments:
 1. The GitHub repository to configure OIDC for
 1. The path of the JSON file containing the OIDC configuration
 
+## Configuration specification
+
+See the [JSON schema](oidc.schema.json) for the full specification.
+
+Example configuration:
+
+```json
+{
+  "federatedCredentials": [
+    {
+      "name": "deploy-dev",
+      "subject": "repo:${REPO}:environment:dev",
+      "description": "Deploy to dev environment"
+    }
+  ],
+  "roleAssignments": [
+    {
+      "scope": "/subscriptions/${SUBSCRIPTION_ID}",
+      "role": "Contributor"
+    }
+  ]
+}
+
+```
+
 ## Prerequisites
 
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credential, service principal and Azure role assignments
