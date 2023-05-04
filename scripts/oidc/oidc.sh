@@ -37,15 +37,12 @@ esac
 SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
 export SUBSCRIPTION_ID
 export REPO
-
-echo "Reading config..."
 config=$(envsubst < "$CONFIG_FILE")
 
 # ============================================================================ #
 # Create Azure AD application
 # ============================================================================ #
 
-echo "Checking if application already exists..."
 app_id=$(az ad app list --filter "displayName eq '$APP_NAME'" --query [].appId --output tsv)
 
 if [[ -z "$app_id" ]]
