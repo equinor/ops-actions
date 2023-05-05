@@ -6,6 +6,10 @@ APP_NAME=${1:?"APP_NAME is unset or null"}
 REPO=${2:?"REPO is unset or null"}
 CONFIG_FILE=${3:?"CONFIG_FILE is unset or null"}
 
+################################################################################
+# Verify config
+################################################################################
+
 if [[ -f "$CONFIG_FILE" ]]
 then
   jsonschema -i "$CONFIG_FILE" oidc.schema.json
@@ -14,19 +18,17 @@ else
   exit 1
 fi
 
-# TODO: check existence of repo without redirecting errors to null (if possible)
-repo_name=$(gh repo view "$REPO" --json name --jq .name 2>/dev/null || true)
-if [[ -z "$repo_name" ]]
-then
-  echo "Repo '$REPO' does not exist."
-  exit 1
-fi
+################################################################################
+# Verify target GitHub repo and Azure subscription
+################################################################################
 
+repo_name=$(gh repo view "$REPO" --json name --jq .name)
 subscription=$(az account show --output json)
 subscription_name=$(jq -r .name <<< "$subscription")
 
-read -r -p "Configure OIDC from GitHub repo '$repo_name' to Azure subscription \
-'$subscription_name'? (y/N) " response
+read -r -p "Configure OIDC from GitHub repo '$repo_name' to \
+Azure subscription '$subscription_name'? (y/N) " response
+
 case $response in
   [yY][eE][sS]|[yY])
     ;;
@@ -35,9 +37,15 @@ case $response in
     ;;
 esac
 
+################################################################################
+# Read config
+################################################################################
+
 SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
-export SUBSCRIPTION_ID
+
 export REPO
+export SUBSCRIPTION_ID
+
 config=$(envsubst < "$CONFIG_FILE")
 
 ################################################################################
