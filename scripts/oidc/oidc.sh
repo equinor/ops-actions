@@ -7,7 +7,7 @@ REPO=${2:?"REPO is unset or null"}
 CONFIG_FILE=${3:?"CONFIG_FILE is unset or null"}
 
 ################################################################################
-# Verify config
+# Verify OIDC configuration
 ################################################################################
 
 if [[ -f "$CONFIG_FILE" ]]
@@ -19,14 +19,14 @@ else
 fi
 
 ################################################################################
-# Verify target GitHub repo and Azure subscription
+# Verify target GitHub repository and Azure subscription
 ################################################################################
 
 repo_name=$(gh repo view "$REPO" --json name --jq .name)
 subscription=$(az account show --output json)
 subscription_name=$(jq -r .name <<< "$subscription")
 
-read -r -p "Configure OIDC from GitHub repo '$repo_name' to \
+read -r -p "Configure OIDC from GitHub repository '$repo_name' to \
 Azure subscription '$subscription_name'? (y/N) " response
 
 case $response in
@@ -38,7 +38,7 @@ case $response in
 esac
 
 ################################################################################
-# Read config
+# Read OIDC configuration
 ################################################################################
 
 SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
