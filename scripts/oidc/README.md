@@ -38,8 +38,13 @@ Example configuration:
     }
   ]
 }
-
 ```
+
+> **Note**
+>
+> `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
+>
+> `.roleAssignments[].scope` must start with `/subscriptions/${SUBSCRIPTION_ID}`.
 
 ## Prerequisites
 
