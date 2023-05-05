@@ -77,7 +77,7 @@ Example configuration:
     gh auth login
     ```
 
-1. Configure federated credentials and role assignments in `oidc.json`.
+1. Configure federated credentials and role assignments in a file `oidc.json`.
 
 1. Run the script `oidc.sh`:
 
