@@ -140,14 +140,14 @@ do
 done <<< "$ras"
 
 ################################################################################
-# Create GitHub repository secrets
+# Set GitHub repository secrets
 ################################################################################
 
 tenant_id=$(jq -r .tenantId <<< "$subscription")
 
 if [[ "$repo_level" == true ]]
 then
-  echo "Creating GitHub repository secrets..."
+  echo "Setting GitHub repository secrets..."
 
   gh secret set "AZURE_CLIENT_ID" --repo "$REPO" --body "$app_id"
 
@@ -157,7 +157,7 @@ then
 fi
 
 ################################################################################
-# Create GitHub environment secrets
+# Set GitHub environment secrets
 ################################################################################
 
 for env in "${!env_level[@]}"
@@ -168,7 +168,7 @@ do
   # Create using GitHub API request instead.
   gh api "repos/$REPO/environments/$env" --method PUT --silent
 
-  echo "Creating GitHub environment secrets for environment '$env'..."
+  echo "Setting GitHub environment secrets for environment '$env'..."
 
   gh secret set "AZURE_CLIENT_ID" --repo "$REPO" --env "$env" --body "$app_id"
 

@@ -8,7 +8,7 @@ It will:
 1. Create federated credentials for the Azure AD application
 1. Create a service principal for the Azure AD application
 1. Create Azure role assignments for the service principal
-1. Create GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
+1. Set GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 
 The script accepts the following arguments:
 
@@ -53,7 +53,7 @@ Example configuration:
 - [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
 - Activate Azure role `Owner` - to create Azure role assignments
-- GitHub repository role `Admin` - to create GitHub secrets
+- GitHub repository role `Admin` - to set GitHub secrets
 
 ## Usage
 
