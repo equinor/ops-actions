@@ -66,7 +66,14 @@ while read -r fic
 do
   fic_name=$(jq -r .name <<< "$fic")
   fic_id=$(az ad app federated-credential list --id "$app_id" --query "[?name == '$fic_name'].id" --output tsv)
-  parameters=$(jq '. + {"issuer": "https://token.actions.githubusercontent.com", "audiences": ["api://AzureADTokenExchange"]}' <<< "$fic")
+
+  parameters=$(jq '{
+    "name": .name,
+    "issuer": "https://token.actions.githubusercontent.com",
+    "subject": .subject,
+    "description": .description,
+    "audiences": ["api://AzureADTokenExchange"]
+  }' <<< "$fic")
 
   if [[ -z "$fic_id" ]]
   then
