@@ -60,7 +60,7 @@ fi
 fics=$(jq -c .federatedCredentials[] <<< "$config")
 
 repo_level=false # Should OIDC be configured at the repository level?
-environments=() # List of GitHub environments to configure OIDC for.
+declare -A env_level # Associative array of GitHub environments to configure OIDC for.
 
 while read -r fic
 do
@@ -83,7 +83,7 @@ do
   if [[ "$entity_type" == "environment" ]]
   then
     env=$(cut -d : -f 4 <<< "$subject")
-    environments+=("$env")
+    env_level[$env]=true
   else
     repo_level=true
   fi
@@ -109,7 +109,8 @@ fi
 
 ras=$(jq -c .roleAssignments[] <<< "$config")
 
-while read -r ra; do
+while read -r ra
+do
   role=$(jq -r .role <<< "$ra")
   scope=$(jq -r .scope <<< "$ra")
 
@@ -135,7 +136,7 @@ fi
 # Create GitHub environment secrets
 # ============================================================================ #
 
-for env in "${environments[@]}"
+for env in "${!env_level[@]}"
 do
   # GitHub CLI does not natively support creating environments (cli/cli#5149).
   # Create using GitHub API request instead.
