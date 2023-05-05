@@ -46,7 +46,7 @@ config=$(envsubst < "$CONFIG_FILE")
 
 app_id=$(az ad app list \
   --filter "displayName eq '$APP_NAME'" \
-  --query "[].appId" \
+  --query "[0].appId" \
   --output tsv)
 
 if [[ -z "$app_id" ]]
@@ -124,7 +124,7 @@ done <<< "$fics"
 
 sp_id=$(az ad sp list \
   --filter "appId eq '$app_id'" \
-  --query [].id \
+  --query "[0].id" \
   --output tsv)
 
 if [[ -z "$sp_id" ]]
