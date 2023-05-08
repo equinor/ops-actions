@@ -5,10 +5,10 @@ This directory contains a shell script `oidc.sh` that will configure OpenID Conn
 It will:
 
 1. Create an Azure AD application
-1. Create a federated credential for the Azure AD application
+1. Create federated credentials for the Azure AD application
 1. Create a service principal for the Azure AD application
 1. Create Azure role assignments for the service principal
-1. Create GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
+1. Set GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 
 The script accepts the following arguments:
 
@@ -38,17 +38,22 @@ Example configuration:
     }
   ]
 }
-
 ```
+
+> **Note**
+>
+> `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
+>
+> `.roleAssignments[].scope` must start with `/subscriptions/${SUBSCRIPTION_ID}`.
 
 ## Prerequisites
 
-- [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credential, service principal and Azure role assignments
+- [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure AD application, federated credentials, service principal and Azure role assignments
 - [Install GitHub CLI](https://cli.github.com) - to create GitHub secrets
 - [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file
-- Activate Azure AD role `Application Developer` - to create Azure AD application, federated credential and service principal
-- Activate Azure role `Owner` at the subscription scope - to create Azure role assignments
-- GitHub repository role `Admin` - to create GitHub secrets
+- Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
+- Activate Azure role `Owner` - to create Azure role assignments
+- GitHub repository role `Admin` - to set GitHub secrets
 
 ## Usage
 
@@ -72,7 +77,7 @@ Example configuration:
     gh auth login
     ```
 
-1. Configure federated credentials and role assignments in `oidc.json`.
+1. Configure federated credentials and role assignments in a file `oidc.json`.
 
 1. Run the script `oidc.sh`:
 
