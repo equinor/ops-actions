@@ -180,14 +180,17 @@ then
 
   gh secret set "AZURE_CLIENT_ID" \
     --repo "$REPO" \
+    --app actions \
     --body "$app_id"
 
   gh secret set "AZURE_SUBSCRIPTION_ID" \
     --repo "$REPO" \
+    --app actions \
     --body "$SUBSCRIPTION_ID"
 
   gh secret set "AZURE_TENANT_ID" \
     --repo "$REPO" \
+    --app actions \
     --body "$tenant_id"
 fi
 
@@ -208,16 +211,19 @@ do
 
   gh secret set "AZURE_CLIENT_ID" \
     --repo "$REPO" \
+    --app actions \
     --env "$env" \
     --body "$app_id"
 
   gh secret set "AZURE_SUBSCRIPTION_ID" \
     --repo "$REPO" \
+    --app actions \
     --env "$env" \
     --body "$SUBSCRIPTION_ID"
 
   gh secret set "AZURE_TENANT_ID" \
     --repo "$REPO" \
+    --app actions \
     --env "$env" \
     --body "$tenant_id"
 done
