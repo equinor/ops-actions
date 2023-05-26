@@ -50,6 +50,36 @@ az storage container create \
   --auth-mode login \
   --output none
 
+management_policy=$(jq --null-input '{
+  rules: [
+    {
+      name: "delete-old-versions",
+      enabled: true,
+      type: "Lifecycle",
+      definition: {
+        actions: {
+          version: {
+            delete: {
+              daysAfterCreationGreaterThan: 30,
+            }
+          }
+        },
+        filters: {
+          blobTypes: [
+            "blockBlob"
+          ]
+        }
+      }
+    }
+  ]
+}')
+
+az storage account management-policy create \
+  --account-name "${STORAGE_ACCOUNT_NAME}" \
+  --resource-group "${RESOURCE_GROUP_NAME}" \
+  --policy "${management_policy}" \
+  --output none
+
 if [[ -n "${SP_OBJECT_ID}" ]]; then
   az role assignment create \
     --assignee-object-id "${SP_OBJECT_ID}" \
