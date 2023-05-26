@@ -12,6 +12,7 @@ It accepts the following arguments:
 ## Prerequisites
 
 - [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
+- [Install jq](https://stedolan.github.io/jq/download/) - to create lifecycle management policy.
 - Azure role `Owner` at the subscription scope.
 
 ## Usage
