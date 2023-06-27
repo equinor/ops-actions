@@ -91,29 +91,57 @@ jobs:
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
 
-      - name: Create summary
+      - name: Create PR comment
+        uses: actions/github-script@v6
         if: github.event_name == 'pull_request' && (success() || failure())
         env:
-          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
-          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
-          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
-          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
-          TF_PLAN: ${{ steps.plan.outputs.stdout }}
-        run: |
-          echo "#### Terraform Format and Style :paintbrush:\`$TF_FMT_OUTCOME\`
-          #### Terraform Initialization :gear:\`$TF_INIT_OUTCOME\`
-          #### Terraform Validation :robot:\`$TF_VALIDATE_OUTCOME\`
-          #### Terraform Plan :book:\`$TF_PLAN_OUTCOME\`
+          HIDDEN_TAG: <!-- terraform @ ${{ inputs.working_directory }} --> # hidden HTML tag used to check if PR comment already exists
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // 1. Retrieve existing bot comments for the PR
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            })
+            const botComment = comments.find(comment => {
+              return comment.user.type === 'Bot' && comment.body.includes('${{ env.HIDDEN_TAG }}')
+            })
 
-          <details><summary>Show Plan</summary>
+            // 2. Prepare format of the comment
+            const output = `${{ env.HIDDEN_TAG }}
+            #### Terraform Format and Style :paintbrush:\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization :gear:\`${{ steps.init.outcome }}\`
+            #### Terraform Validation :robot:\`${{ steps.validate.outcome }}\`
+            #### Terraform Plan :book:\`${{ steps.plan.outcome }}\`
 
-          \`\`\`terraform
-          $TF_PLAN
-          \`\`\`
+            <details><summary>Show Plan</summary>
 
-          </details>
+            \`\`\`terraform
+            ${{ steps.plan.outputs.stdout }}
+            \`\`\`
 
-          *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`*" >> "$GITHUB_STEP_SUMMARY"
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.working_directory }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+            // 3. If we have a comment, update it, otherwise create a new one
+            if (botComment) {
+              github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: output
+              })
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: output
+              })
+            }
 
       - name: Terraform Apply
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
