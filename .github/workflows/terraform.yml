@@ -43,10 +43,13 @@ jobs:
       group: terraform @ ${{ inputs.working_directory }}
       cancel-in-progress: false
 
-    # Set permissions required to login to Azure using OIDC.
     permissions:
+      # Set permissions required to login to Azure using OIDC.
       id-token: write
       contents: read
+
+      # Set permissions required to create PR comment.
+      pull-requests: write
 
     defaults:
       run:
