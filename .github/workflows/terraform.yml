@@ -97,8 +97,6 @@ jobs:
       - name: Create PR comment
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request' && (success() || failure())
-        env:
-          HIDDEN_TAG: <!-- terraform @ ${{ inputs.working_directory }} --> # hidden HTML tag used to check if PR comment already exists
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -109,11 +107,11 @@ jobs:
               issue_number: context.issue.number,
             })
             const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('${{ env.HIDDEN_TAG }}')
+              return comment.user.type === 'Bot' && comment.body.includes('<!-- terraform @ ${{ inputs.working_directory }} -->')
             })
 
             // 2. Prepare format of the comment
-            const output = `${{ env.HIDDEN_TAG }}
+            const output = `<!-- terraform @ ${{ inputs.working_directory }} -->
             #### Terraform Format and Style :paintbrush:\`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization :gear:\`${{ steps.init.outcome }}\`
             #### Terraform Validation :robot:\`${{ steps.validate.outcome }}\`
