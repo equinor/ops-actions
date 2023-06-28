@@ -51,6 +51,7 @@ Example configuration:
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) (latest version as of writing: `2.49.0`) - to create Azure AD application, federated credentials, service principal and Azure role assignments
 - [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to create GitHub secrets
 - [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
+- Install jsonschema (`sudo apt install python3-jsonschema`) (latest version as of writing: `3.2.0`) - to validate JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
 - Activate Azure role `Owner` - to create Azure role assignments
 - GitHub repository role `Admin` - to set GitHub secrets
