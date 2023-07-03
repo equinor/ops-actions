@@ -97,6 +97,8 @@ jobs:
       - name: Create PR comment
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request' && (success() || failure())
+        env:
+          PLAN: ${{ steps.plan.outputs.stdout }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -120,7 +122,7 @@ jobs:
             <details><summary>Show Plan</summary>
 
             \`\`\`terraform
-            ${{ steps.plan.outputs.stdout }}
+            ${process.env.PLAN}
             \`\`\`
 
             </details>
