@@ -12,9 +12,9 @@ CONFIG_FILE=${3:?"CONFIG_FILE is unset or null"}
 
 if [[ -f "$CONFIG_FILE" ]]
 then
-  jsonschema -i "$CONFIG_FILE" oidc.schema.json
+  echo "Using config file '$CONFIG_FILE'."
 else
-  echo "File '$CONFIG_FILE' does not exist."
+  echo "Config file '$CONFIG_FILE' does not exist."
   exit 1
 fi
 
