@@ -1,5 +1,3 @@
-# Install Terraform, configure OpenID Connect (OIDC) authentication to Azure, create a Terraform plan, and apply the plan on push to branch 'main'.
-
 on:
   workflow_call:
     inputs:
@@ -33,40 +31,37 @@ on:
         description: The ID of the Azure tenant to create the resources in.
         required: true
 
+# Queue jobs that target the same Terraform configuration.
+concurrency:
+  group: terraform @ ${{ inputs.working_directory }}
+  cancel-in-progress: false
+
+# Set permissions required to login to Azure using OIDC.
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  # Configure Terraform to run in automation.
+  # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
+  TF_IN_AUTOMATION: true
+
+  # Configure OIDC authentication to Azure using environment variables.
+  # Required by the AzureRM backend and provider.
+  ARM_USE_OIDC: true
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
 jobs:
-  terraform:
+  plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
-
-    # Queue jobs that target the same Terraform configuration.
-    concurrency:
-      group: terraform @ ${{ inputs.working_directory }}
-      cancel-in-progress: false
-
-    permissions:
-      # Set permissions required to login to Azure using OIDC.
-      id-token: write
-      contents: read
-
-      # Set permissions required to create PR comment.
-      pull-requests: write
-
+    environment: ${{ inputs.environment }}-noop
     defaults:
       run:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
-
-    env:
-      # Configure Terraform to run in automation.
-      # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
-      TF_IN_AUTOMATION: true
-
-      # Configure OIDC authentication to Azure using environment variables.
-      # Required by the AzureRM backend and provider.
-      ARM_USE_OIDC: true
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
     steps:
       - name: Checkout
@@ -91,61 +86,54 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
 
-      - name: Create PR comment
-        uses: actions/github-script@v6
-        if: github.event_name == 'pull_request' && (success() || failure())
+      - name: Create job summary
+        if: success() || failure()
         env:
-          PLAN: ${{ steps.plan.outputs.stdout }}
+          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
+          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
+          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
+          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
+          TF_PLAN: ${{ steps.plan.outputs.stdout }}
+          WORKING_DIRECTORY: ${{ inputs.working_directory }}
+        run: |
+          echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
+          #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
+          #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
+          #### Terraform Plan 📖\`$TF_PLAN_OUTCOME\`
+
+          <details><summary>Show Plan</summary>
+
+          \`\`\`terraform
+          $TF_PLAN
+          \`\`\`
+
+          </details>
+
+          *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
+
+  apply:
+    name: Terraform Apply
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            // 1. Retrieve existing bot comments for the PR
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            })
-            const botComment = comments.find(comment => {
-              return comment.user.type === 'Bot' && comment.body.includes('<!-- terraform @ ${{ inputs.working_directory }} -->')
-            })
+          terraform_version: ${{ inputs.terraform_version }}
 
-            // 2. Prepare format of the comment
-            const output = `<!-- terraform @ ${{ inputs.working_directory }} -->
-            #### Terraform Format and Style :paintbrush:\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization :gear:\`${{ steps.init.outcome }}\`
-            #### Terraform Validation :robot:\`${{ steps.validate.outcome }}\`
-            #### Terraform Plan :book:\`${{ steps.plan.outcome }}\`
-
-            <details><summary>Show Plan</summary>
-
-            \`\`\`terraform
-            ${process.env.PLAN}
-            \`\`\`
-
-            </details>
-
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.working_directory }}\`, Workflow: \`${{ github.workflow }}\`*`;
-
-            // 3. If we have a comment, update it, otherwise create a new one
-            if (botComment) {
-              github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: output
-              })
-            } else {
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: output
-              })
-            }
+      - name: Terraform Init
+        run: terraform init
 
       - name: Terraform Apply
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
         run: terraform apply -auto-approve -input=false
