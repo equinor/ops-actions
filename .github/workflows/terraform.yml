@@ -4,7 +4,7 @@ on:
       environment:
         description: The environment that the job references.
         type: string
-        required: false
+        required: true
 
       working_directory:
         description: The working directory to run the Terraform commands in.
