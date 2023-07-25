@@ -4,6 +4,10 @@
 
 [Reusable GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for operational tasks.
 
+## Workflow library
+
+See [`.github/workflows`](.github/workflows/) directory.
+
 ## Goal
 
 Create **reusable** and **composable** workflows for common operational tasks.
