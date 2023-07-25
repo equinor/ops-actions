@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.4.1](https://github.com/equinor/ops-actions/compare/v7.4.0...v7.4.1) (2023-07-25)
+
+
+### Bug Fixes
+
+* **terraform:** don't run Apply without approval ([#208](https://github.com/equinor/ops-actions/issues/208)) ([2ad4ed6](https://github.com/equinor/ops-actions/commit/2ad4ed62056243bbde055d39f060007cf6302047))
+
 ## [7.4.0](https://github.com/equinor/ops-actions/compare/v7.3.0...v7.4.0) (2023-07-25)
 
 
