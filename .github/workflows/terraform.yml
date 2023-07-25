@@ -54,7 +54,7 @@ env:
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
 jobs:
-  plan:
+  terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}-noop
@@ -113,9 +113,9 @@ jobs:
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
-  apply:
-    name: Terraform Apply
-    needs: plan
+  terraform:
+    name: Terraform
+    needs: terraform-plan
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     defaults:
