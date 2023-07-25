@@ -11,9 +11,6 @@ on:
   push:
     branches: [main]
 
-  pull_request:
-    branches: [main]
-
 jobs:
   provision:
     uses: equinor/ops-actions/.github/workflows/terraform.yml@main
