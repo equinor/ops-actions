@@ -67,6 +67,9 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
 
+    outputs:
+      plan-exitcode: ${{ steps.plan.outputs.exitcode }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -90,7 +93,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false
+        run: terraform plan -no-color -input=false -detailed-exitcode
 
       - name: Create job summary
         if: success() || failure()
@@ -120,6 +123,11 @@ jobs:
   terraform:
     name: Terraform
     needs: terraform-plan
+
+    # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+    # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
+    if: needs.terraform-plan.outputs.plan-exitcode == 2
+
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     defaults:
