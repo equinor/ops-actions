@@ -5,6 +5,16 @@
 - Don't create reusable workflows containing a single step.
   This adds unnecessary complexity to the workflow chain.
 
+- Don't create conditionals based on the event that triggered the workflow, for example:
+
+  ```yaml
+  jobs:
+    example-job:
+      if: github.event_type == 'pull_request'
+  ```
+
+  This reduces the flexibility of the reusable workflow.
+
 ## Naming conventions
 
 - Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow and job names.
