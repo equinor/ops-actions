@@ -92,7 +92,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false -out="$RUNNER_TEMP/tfplan"
+        run: terraform plan -no-color -input=false -out="$RUNNER_TEMP/terraform.tfplan"
 
       - name: Create job summary
         if: success() || failure()
@@ -121,15 +121,15 @@ jobs:
 
       - name: Encrypt tfplan
         working-directory: ${{ runner.temp }}
-        run: gpg -c --batch --passphrase "$GITHUB_TOKEN" tfplan
+        run: gpg -c --batch --passphrase "$GITHUB_TOKEN" terraform.tfplan
         # Ref: https://www.redhat.com/sysadmin/encryption-decryption-gpg.
-        # Creates an encrypted file named "tfplan.gpg".
+        # Creates an encrypted file named "terraform.tfplan.gpg".
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: tfplan-${{ inputs.environment }}
-          path: ${{ runner.temp }}/tfplan.gpg
+          path: ${{ runner.temp }}/terraform.tfplan.gpg
 
   terraform:
     name: Terraform
@@ -154,14 +154,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: tfplan-${{ inputs.environment }}
-          path: ${{ runner.temp }}/tfplan.gpg
+          path: ${{ runner.temp }}/terraform.tfplan.gpg
 
       - name: Decrypt tfplan
         working-directory: ${{ runner.temp }}
-        run: gpg --batch --passphrase "$GITHUB_TOKEN" tfplan.gpg
+        run: gpg --batch --passphrase "$GITHUB_TOKEN" terraform.tfplan.gpg
 
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false tfplan
+        run: terraform apply -auto-approve -input=false terraform.tfplan
