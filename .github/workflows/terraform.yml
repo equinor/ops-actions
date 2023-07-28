@@ -125,7 +125,7 @@ jobs:
 
       - name: Encrypt tfplan
         working-directory: ${{ runner.temp }}
-        run: gpg -c --batch --pinentry-mode loopback --passphrase "$ENCRYPTION_KEY" terraform.tfplan
+        run: gpg -c --batch --passphrase "$ENCRYPTION_KEY" terraform.tfplan
         # Ref: https://www.redhat.com/sysadmin/encryption-decryption-gpg.
         # Creates an encrypted file named "terraform.tfplan.gpg".
 
@@ -162,7 +162,7 @@ jobs:
 
       - name: Decrypt tfplan
         working-directory: ${{ runner.temp }}
-        run: gpg --batch --pinentry-mode loopback --passphrase "$ENCRYPTION_KEY" terraform.tfplan.gpg
+        run: gpg --batch --passphrase "$ENCRYPTION_KEY" terraform.tfplan.gpg
 
       - name: Terraform Init
         run: terraform init
