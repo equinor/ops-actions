@@ -135,7 +135,6 @@ jobs:
           name: tfplan-${{ inputs.environment }}
           path: ${{ runner.temp }}/tfplan.gpg
           if-no-files-found: error
-          # TODO: set custom retention
 
   terraform:
     name: Terraform
