@@ -120,6 +120,7 @@ jobs:
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Encrypt tfplan
+        working-directory: ${{ runner.temp }}
         run: gpg -c --batch --passphrase "$GITHUB_TOKEN" tfplan
         # Ref: https://www.redhat.com/sysadmin/encryption-decryption-gpg.
         # Creates an encrypted file named "tfplan.gpg".
