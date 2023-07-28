@@ -31,8 +31,8 @@ on:
         description: The ID of the Azure tenant to create the resources in.
         required: true
 
-      ENCRYPTION_KEY:
-        description: The key to use for encrypting the Terraform plan file.
+      GPG_PASSPHRASE:
+        description: The passphrase used to encrypt the Terraform plan file using GPG.
         required: true
 
 # Queue jobs that target the same Terraform configuration.
@@ -57,7 +57,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+  GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
 jobs:
   terraform-plan:
@@ -125,7 +125,7 @@ jobs:
 
       - name: Encrypt tfplan
         working-directory: ${{ runner.temp }}
-        run: gpg -c --batch --passphrase "$ENCRYPTION_KEY" terraform.tfplan
+        run: gpg -c --batch --passphrase "$GPG_PASSPHRASE" terraform.tfplan
         # Ref: https://www.redhat.com/sysadmin/encryption-decryption-gpg.
         # Creates an encrypted file named "terraform.tfplan.gpg".
 
@@ -162,7 +162,7 @@ jobs:
 
       - name: Decrypt tfplan
         working-directory: ${{ runner.temp }}
-        run: gpg --batch --passphrase "$ENCRYPTION_KEY" terraform.tfplan.gpg
+        run: gpg --batch --passphrase "$GPG_PASSPHRASE" terraform.tfplan.gpg
 
       - name: Terraform Init
         run: terraform init
