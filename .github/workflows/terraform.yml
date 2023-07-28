@@ -157,7 +157,8 @@ jobs:
           path: ${{ runner.temp }}/tfplan.gpg
 
       - name: Decrypt tfplan
-        run: gpg --batch --passphrase "$GITHUB_TOKEN" "$RUNNER_TEMP/tfplan.gpg"
+        working-directory: ${{ runner.temp }}
+        run: gpg --batch --passphrase "$GITHUB_TOKEN" tfplan.gpg
 
       - name: Terraform Init
         run: terraform init
