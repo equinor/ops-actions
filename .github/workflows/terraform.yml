@@ -31,6 +31,10 @@ on:
         description: The ID of the Azure tenant to create the resources in.
         required: true
 
+      ENCRYPTION_KEY:
+        description: The key to use for encrypting the Terraform plan file.
+        required: true
+
 # Queue jobs that target the same Terraform configuration.
 concurrency:
   group: terraform @ ${{ inputs.working_directory }}
