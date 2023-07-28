@@ -53,6 +53,8 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   terraform-plan:
     name: Terraform Plan
@@ -90,7 +92,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false
+        run: terraform plan -no-color -input=false -out=tfplan
 
       - name: Create job summary
         if: success() || failure()
@@ -117,6 +119,17 @@ jobs:
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Encrypt tfplan
+        run: gpg -c --batch --passphrase "$GITHUB_TOKEN" tfplan
+        # Ref: https://www.redhat.com/sysadmin/encryption-decryption-gpg.
+        # Creates an encrypted file named "tfplan.gpg".
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan-${{ inputs.environment }}
+          path: tfplan.gpg
+
   terraform:
     name: Terraform
     needs: terraform-plan
@@ -136,8 +149,16 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan-${{ inputs.environment }}
+
+      - name: Decrypt tfplan
+        run: gpg --batch --passphrase "$GITHUB_TOKEN" tfplan.gpg
+
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false
+        run: terraform apply -auto-approve -input=false tfplan
