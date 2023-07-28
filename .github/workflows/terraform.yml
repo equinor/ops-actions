@@ -173,7 +173,7 @@ jobs:
         working-directory: ${{ runner.temp }}
         env:
           PASSPHRASE: ${{ needs.terraform-plan.outputs.encryption-passphrase }}
-        run: gpg --batch --passphrase "$GPG_PASSPHRASE" tfplan.gpg
+        run: gpg --batch --passphrase "$PASSPHRASE" tfplan.gpg
 
       - name: Terraform Init
         run: terraform init
