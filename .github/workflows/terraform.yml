@@ -31,7 +31,7 @@ on:
         description: The ID of the Azure tenant to create the resources in.
         required: true
 
-      GPG_PASSPHRASE:
+      ENCRYPTION_PASSPHRASE:
         description: The passphrase used to encrypt the Terraform plan file using GPG.
         required: true
 
@@ -57,7 +57,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+  GPG_PASSPHRASE: ${{ secrets.ENCRYPTION_PASSPHRASE }}
 
 jobs:
   terraform-plan:
