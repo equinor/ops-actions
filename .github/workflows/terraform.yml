@@ -97,6 +97,9 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color -input=false -out="$RUNNER_TEMP/tfplan"
+        # The tfplan file contains your full configuration, including sensitive data.
+        # As a result, it should be treated as a potentially-sensitive artifact.
+        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#out-filename.
 
       - name: Create job summary
         if: success() || failure()
@@ -126,8 +129,8 @@ jobs:
       - name: Encrypt tfplan
         working-directory: ${{ runner.temp }}
         run: gpg -c --batch --passphrase "$GPG_PASSPHRASE" tfplan
+        # Creates an encrypted file "tfplan.gpg".
         # Ref: https://www.redhat.com/sysadmin/encryption-decryption-gpg.
-        # Creates an encrypted file tfplan.gpg
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
