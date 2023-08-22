@@ -31,8 +31,8 @@ on:
         description: The ID of the Azure tenant to create the resources in.
         required: true
 
-      ENCRYPTION_PASSPHRASE:
-        description: The passphrase used to encrypt the Terraform plan file.
+      ENCRYPTION_KEY:
+        description: The key used to encrypt the Terraform configuration.
         required: true
 
 # Queue jobs that target the same Terraform configuration.
@@ -57,7 +57,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  GPG_PASSPHRASE: ${{ secrets.ENCRYPTION_PASSPHRASE }}
+  ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
 
 jobs:
   terraform-plan:
@@ -127,24 +127,19 @@ jobs:
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
-      # Encrypt Terraform plan file.
-      # Ref: https://www.redhat.com/sysadmin/encryption-decryption-gpg.
-      - name: Encrypt tfplan
-        run: |
-          gpg -c --batch --passphrase "$GPG_PASSPHRASE" tfplan
-          rm tfplan
-
-      # Archive Terraform configuration.
-      # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines.
       - name: Archive Terraform config
-        run: zip -r terraform.zip .
+        run: |
+          tar -cf terraform.tar .
+          7z a -p"$ENCRYPTION_KEY" -mhe=on terraform.tar.7z terraform.tar
+        # Refs:
+        # - https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines.
+        # - https://www.redhat.com/sysadmin/encrypting-decrypting-7zip
 
-      # Upload archive to artifact.
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: terraform
-          path: ${{ inputs.working_directory }}/terraform.zip
+          path: ${{ inputs.working_directory }}/terraform.tar.7z
           if-no-files-found: error
 
   terraform:
@@ -171,13 +166,10 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Unarchive Terraform config
+      - name: Extract Terraform config
         run: |
-          unzip terraform.zip
-          rm terraform.zip
-
-      - name: Decrypt tfplan
-        run: gpg --batch --passphrase "$GPG_PASSPHRASE" tfplan.gpg
+          7z x -p"$ENCRYPTION_KEY" terraform.tar.7z
+          tar xvf terraform.tar
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
