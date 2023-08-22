@@ -57,11 +57,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  # TODO: write a description of following envvars
-  ZIP_FILE: terraform.zip
-  TFPLAN_FILE: tfplan
   GPG_PASSPHRASE: ${{ secrets.ENCRYPTION_PASSPHRASE }}
-  ARTIFACT_NAME: terraform
 
 jobs:
   terraform-plan:
