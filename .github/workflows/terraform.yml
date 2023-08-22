@@ -57,7 +57,11 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+  # TODO: write a description of following envvars
+  ZIP_FILE: terraform.zip
+  TFPLAN_FILE: tfplan
   GPG_PASSPHRASE: ${{ secrets.ENCRYPTION_PASSPHRASE }}
+  ARTIFACT_NAME: terraform
 
 jobs:
   terraform-plan:
@@ -94,12 +98,13 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
+      # Create Terraform plan file.
+      # This file contains the full configuration, including sensitive data.
+      # As a result, it should be treated as a potentially-sensitive artifact.
+      # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#out-filename.
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false -out="$RUNNER_TEMP/tfplan"
-        # The tfplan file contains your full configuration, including sensitive data.
-        # As a result, it should be treated as a potentially-sensitive artifact.
-        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#out-filename.
+        run: terraform plan -no-color -input=false -out=tfplan
 
       - name: Create job summary
         if: success() || failure()
@@ -126,17 +131,24 @@ jobs:
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
+      # Encrypt Terraform plan file.
+      # Ref: https://www.redhat.com/sysadmin/encryption-decryption-gpg.
       - name: Encrypt tfplan
-        working-directory: ${{ runner.temp }}
-        run: gpg -c --batch --passphrase "$GPG_PASSPHRASE" tfplan
-        # Creates an encrypted file "tfplan.gpg".
-        # Ref: https://www.redhat.com/sysadmin/encryption-decryption-gpg.
+        run: |
+          gpg -c --batch --passphrase "$GPG_PASSPHRASE" tfplan
+          rm tfplan
 
+      # Archive Terraform configuration.
+      # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines.
+      - name: Archive Terraform config
+        run: zip -r terraform.zip .
+
+      # Upload archive to artifact.
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: tfplan-${{ inputs.environment }}
-          path: ${{ runner.temp }}/tfplan.gpg
+          name: terraform
+          path: ${{ inputs.working_directory }}/terraform.zip
           if-no-files-found: error
 
   terraform:
@@ -153,23 +165,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: terraform
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: tfplan-${{ inputs.environment }}
-          path: ${{ runner.temp }}
+      - name: Unarchive Terraform config
+        run: |
+          unzip terraform.zip
+          rm terraform.zip
 
       - name: Decrypt tfplan
-        working-directory: ${{ runner.temp }}
         run: gpg --batch --passphrase "$GPG_PASSPHRASE" tfplan.gpg
 
-      - name: Terraform Init
-        run: terraform init
-
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false "$RUNNER_TEMP/tfplan"
+        run: terraform apply -auto-approve -input=false tfplan
