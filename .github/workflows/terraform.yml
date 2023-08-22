@@ -32,7 +32,7 @@ on:
         required: true
 
       ENCRYPTION_PASSPHRASE:
-        description: The passphrase used to encrypt the Terraform plan file using GPG.
+        description: The passphrase used to encrypt the Terraform plan file.
         required: true
 
 # Queue jobs that target the same Terraform configuration.
