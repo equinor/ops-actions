@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.1.0](https://github.com/equinor/ops-actions/compare/v8.0.0...v8.1.0) (2023-08-23)
+
+
+### Features
+
+* **terraform:** skip Apply if no changes present ([#211](https://github.com/equinor/ops-actions/issues/211)) ([8f18f17](https://github.com/equinor/ops-actions/commit/8f18f177f18c1c557f4d94d8e8f8c088fa7e13f0))
+
 ## [8.0.0](https://github.com/equinor/ops-actions/compare/v7.4.1...v8.0.0) (2023-08-23)
 
 
