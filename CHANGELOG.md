@@ -1,5 +1,16 @@
 # Changelog
 
+## [8.0.0](https://github.com/equinor/ops-actions/compare/v7.4.1...v8.0.0) (2023-08-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **terraform:** Add secret `ENCRYPTION_PASSWORD`.
+
+### Features
+
+* **terraform:** pass config between jobs ([#216](https://github.com/equinor/ops-actions/issues/216)) ([16c0d93](https://github.com/equinor/ops-actions/commit/16c0d93f716fda7916bb616d3c17f788ef41b38b))
+
 ## [7.4.1](https://github.com/equinor/ops-actions/compare/v7.4.0...v7.4.1) (2023-07-25)
 
 
