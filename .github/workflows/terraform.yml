@@ -18,6 +18,12 @@ on:
         required: false
         default: latest
 
+      artifact_name:
+        description: The name of the artifact to upload.
+        type: string
+        required: false
+        default: terraform
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -136,7 +142,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.working_directory }}
+          name: ${{ inputs.artifact_name }}
           path: ${{ inputs.working_directory }}/terraform.tar.7z
           if-no-files-found: error
 
@@ -157,7 +163,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: ${{ inputs.working_directory }}
+          name: ${{ inputs.artifact_name }}
           path: ${{ inputs.working_directory }}
 
       - name: Setup Terraform
