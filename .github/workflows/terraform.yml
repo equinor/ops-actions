@@ -79,6 +79,9 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
 
+    outputs:
+      upload-outcome: ${{ steps.upload.outcome }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -106,7 +109,7 @@ jobs:
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false -out=tfplan
+        run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
 
       - name: Create job summary
         if: success() || failure()
@@ -134,11 +137,17 @@ jobs:
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Archive Terraform config
+        id: archive
+        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
+        if: steps.plan.outputs.exitcode == 2
         run: |
           tar -cf terraform.tar .
           7z a -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
 
       - name: Upload artifact
+        id: upload
+        if: steps.archive.outcome == 'success'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
@@ -148,6 +157,7 @@ jobs:
   terraform:
     name: Terraform
     needs: terraform-plan
+    if: needs.terraform-plan.outputs.upload-outcome == 'success'
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     defaults:
