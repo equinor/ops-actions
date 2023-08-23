@@ -38,7 +38,7 @@ on:
         required: true
 
       ENCRYPTION_KEY:
-        description: The key used to encrypt the Terraform configuration.
+        description: A key used to encrypt the archive containing the Terraform configuration and plan file.
         required: true
 
 # Queue jobs that target the same Terraform configuration.
@@ -103,7 +103,7 @@ jobs:
       # Create Terraform plan file.
       # This file contains the full configuration, including sensitive data.
       # As a result, it should be treated as a potentially-sensitive artifact.
-      # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#out-filename.
+      # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color -input=false -out=tfplan
@@ -133,13 +133,11 @@ jobs:
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
+      # Ref: https://www.redhat.com/sysadmin/encrypting-decrypting-7zip
       - name: Archive Terraform config
         run: |
           tar -cf terraform.tar .
           7z a -p"$ENCRYPTION_KEY" -mhe=on terraform.tar.7z terraform.tar
-        # Refs:
-        # - https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines.
-        # - https://www.redhat.com/sysadmin/encrypting-decrypting-7zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
