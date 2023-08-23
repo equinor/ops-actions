@@ -18,6 +18,12 @@ on:
         required: false
         default: latest
 
+      artifact_name:
+        description: The name of the artifact to upload.
+        type: string
+        required: false
+        default: terraform
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -29,6 +35,10 @@ on:
 
       AZURE_TENANT_ID:
         description: The ID of the Azure tenant to create the resources in.
+        required: true
+
+      ENCRYPTION_PASSWORD:
+        description: A password used to encrypt the archive containing the Terraform configuration and plan file.
         required: true
 
 # Queue jobs that target the same Terraform configuration.
@@ -52,6 +62,8 @@ env:
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+  ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
   terraform-plan:
@@ -88,9 +100,13 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
+      # Create Terraform plan file.
+      # This file contains the full configuration, including sensitive data.
+      # As a result, it should be treated as a potentially-sensitive artifact.
+      # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false
+        run: terraform plan -no-color -input=false -out=tfplan
 
       - name: Create job summary
         if: success() || failure()
@@ -117,6 +133,18 @@ jobs:
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Archive Terraform config
+        run: |
+          tar -cf terraform.tar .
+          7z a -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.working_directory }}/terraform.tar.7z
+          if-no-files-found: error
+
   terraform:
     name: Terraform
     needs: terraform-plan
@@ -131,13 +159,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.working_directory }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Terraform Init
-        run: terraform init
+      - name: Extract Terraform config
+        run: |
+          7z x -p"$ENCRYPTION_PASSWORD" terraform.tar.7z
+          tar -xf terraform.tar
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false
+        run: terraform apply -auto-approve -input=false tfplan
