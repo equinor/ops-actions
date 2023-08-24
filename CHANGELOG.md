@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.2.0](https://github.com/equinor/ops-actions/compare/v8.1.0...v8.2.0) (2023-08-24)
+
+
+### Features
+
+* **terraform:** delete artifact after usage limit ([#219](https://github.com/equinor/ops-actions/issues/219)) ([84d9708](https://github.com/equinor/ops-actions/commit/84d97084f8d38fa49156f679eccb6134703b68b9))
+
 ## [8.1.0](https://github.com/equinor/ops-actions/compare/v8.0.0...v8.1.0) (2023-08-23)
 
 
