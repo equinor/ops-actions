@@ -22,7 +22,12 @@ jobs:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }} 
 ```
+
+> **Note**
+> Secret `ENCRYPTION_PASSWORD` should contain a randomly generated and strong password.
+> It will be used to encrypt the contents of the uploaded artifact, which may contain sensitive information.
 
 ## Build Docker image and deploy to Azure Web App
 
