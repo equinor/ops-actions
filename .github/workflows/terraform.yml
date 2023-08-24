@@ -153,6 +153,10 @@ jobs:
           name: ${{ inputs.artifact_name }}
           path: ${{ inputs.working_directory }}/terraform.tar.7z
           if-no-files-found: error
+          # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
+          # If a workflow reaches this limit, it will be cancelled and the artifact will no longer be needed.
+          # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
+          retention-days: 35
 
   terraform:
     name: Terraform
