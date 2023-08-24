@@ -142,7 +142,7 @@ jobs:
         # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
         if: steps.plan.outputs.exitcode == 2
         run: |
-          tar -cf terraform.tar .
+          tar -cf terraform.tar .terraform tfplan
           7z a -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
 
       - name: Upload artifact
