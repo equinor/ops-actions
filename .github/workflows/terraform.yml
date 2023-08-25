@@ -191,3 +191,13 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
+
+      # Once the Terraform plan file has been applied, the artifact is no longer needed.
+      # Delete it to save storage space.
+      - name: Delete artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
+        run: |
+          artifact_id=$(gh api -X GET "/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" --jq "(.artifacts[] | select(.name==\"$ARTIFACT_NAME\")).id")
+          gh api -X DELETE "/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id"
