@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.3.1](https://github.com/equinor/ops-actions/compare/v8.3.0...v8.3.1) (2023-08-25)
+
+
+### Bug Fixes
+
+* **terraform:** unable to delete artifact ([#227](https://github.com/equinor/ops-actions/issues/227)) ([c41a4e9](https://github.com/equinor/ops-actions/commit/c41a4e9f6da227950a6f6c7158965567d4f0ef89))
+
 ## [8.3.0](https://github.com/equinor/ops-actions/compare/v8.2.0...v8.3.0) (2023-08-25)
 
 
