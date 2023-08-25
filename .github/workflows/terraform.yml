@@ -49,7 +49,7 @@ concurrency:
 permissions:
   # Set permissions required to login to Azure using OIDC.
   id-token: write
-  contents: write # Only read permission is required for OIDC, however write permission is required to explicitly delete artifact.
+  contents: read
 
 env:
   # Configure Terraform to run in automation.
