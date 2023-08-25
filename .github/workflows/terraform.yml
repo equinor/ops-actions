@@ -46,10 +46,10 @@ concurrency:
   group: terraform @ ${{ inputs.working_directory }}
   cancel-in-progress: false
 
-# Set permissions required to login to Azure using OIDC.
 permissions:
+  # Set permissions required to login to Azure using OIDC.
   id-token: write
-  contents: read
+  contents: write # Only read permission is required for OIDC, however write permission is required to explicitly delete artifact.
 
 env:
   # Configure Terraform to run in automation.
