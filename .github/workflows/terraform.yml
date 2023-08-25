@@ -195,9 +195,6 @@ jobs:
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
       - name: Delete artifact
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACT_NAME: ${{ inputs.artifact_name }}
-        run: |
-          artifact_id=$(gh api -X GET -H "X-GitHub-Api-Version:2022-11-28" "/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" --jq "(.artifacts[] | select(.name==\"$ARTIFACT_NAME\")).id")
-          gh api -X DELETE -H "X-GitHub-Api-Version:2022-11-28" "/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id"
+        uses: GeekyEggo/delete-artifact@54ab544f12cdb7b71613a16a2b5a37a9ade990af
+        with:
+          name: ${{ inputs.artifact_name }}
