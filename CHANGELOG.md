@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.3.0](https://github.com/equinor/ops-actions/compare/v8.2.0...v8.3.0) (2023-08-25)
+
+
+### Features
+
+* **terraform:** delete artifact after Apply ([#224](https://github.com/equinor/ops-actions/issues/224)) ([691bfe6](https://github.com/equinor/ops-actions/commit/691bfe6889ad71a35dbb3c16aa67d2a12c068e5f))
+
 ## [8.2.0](https://github.com/equinor/ops-actions/compare/v8.1.0...v8.2.0) (2023-08-24)
 
 
