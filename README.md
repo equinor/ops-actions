@@ -26,23 +26,6 @@ Examples:
 
 - `provision-azure-webapp-using-terraform-then-build-a-docker-image-and-push-it-to-a-container-registry-then-deploy-that-image-to-the-azure-webapp.yml`: you get the point...
 
-## Prerequisites
-
-### OpenID Connect
-
-For reusable workflows that login to Azure, run [this script](./scripts/oidc/) to configure OpenID Connect for the repository containing the caller workflow.
-
-### Terraform backend
-
-For the `terraform.yml` workflow, run [this script](./scripts/terraform-backend/) to configure a Terraform backend.
-
-Supported Terraform providers:
-
-| Name  | Source              | Version      |
-| ----- | ------------------- | ------------ |
-| Azure | `hashicorp/azurerm` | `>= v3.20.0` |
-| AzAPI | `azure/azapi`       | `>= v1.3.0`  |
-
 ## Usage
 
 See [usage examples](docs/usage-examples.md).

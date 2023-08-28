@@ -4,6 +4,8 @@ This document contains usage examples for the reusable workflows in this reposit
 
 ## Provision Azure resources using Terraform
 
+Example:
+
 ```yaml
 name: provision
 
@@ -22,14 +24,25 @@ jobs:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }} 
+      ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 ```
 
-> **Note**
-> Secret `ENCRYPTION_PASSWORD` should contain a randomly generated and strong password.
-> It will be used to encrypt the contents of the uploaded artifact, which may contain sensitive information.
+Prerequisites:
 
-## Build Docker image and deploy to Azure Web App
+- [Configure Azure credentials](../scripts/oidc/README.md)
+- [Configure Terraform backend](../scripts/terraform-backend/README.md)
+- Configure GitHub secret `ENCRYPTION_PASSWORD` with a randomly generated password (used to encrypt the uploaded artifact, as it may contain sensitive infrastructure configuration)
+
+Supported Terraform providers:
+
+| Name  | Source              | Version      |
+| ----- | ------------------- | ------------ |
+| Azure | `hashicorp/azurerm` | `>= v3.20.0` |
+| AzAPI | `azure/azapi`       | `>= v1.3.0`  |
+
+## Deploy Docker container to Azure Web App
+
+Example:
 
 ```yaml
 name: build
@@ -63,7 +76,13 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
-## Build Python application and deploy to Azure Function App
+Prerequisites:
+
+- [Configure Azure credentials](../scripts/oidc/README.md)
+
+## Deploy Python application to Azure Function App
+
+Example:
 
 ```yaml
 name: build
@@ -93,7 +112,13 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
-## Build Python application and deploy to Azure Web App
+Prerequisites:
+
+- [Configure Azure credentials](../scripts/oidc/README.md)
+
+## Deploy Python application to Azure Web App
+
+Example:
 
 ```yaml
 name: build
@@ -124,7 +149,13 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
-## Build .NET application and deploy to Azure Web App
+Prerequisites:
+
+- [Configure Azure credentials](../scripts/oidc/README.md)
+
+## Deploy .NET application to Azure Web App
+
+Example:
 
 ```yaml
 name: build
@@ -157,7 +188,13 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
+Prerequisites:
+
+- [Configure Azure credentials](../scripts/oidc/README.md)
+
 ## Deploy MkDocs to GitHub Pages
+
+Example:
 
 ```yaml
 name: deploy
@@ -177,6 +214,6 @@ jobs:
       python_version: "3.x"
 ```
 
-> **Note**
-> Make sure your GitHub Pages site is currently being built from the `gh-pages` branch.
-> See [GitHub docs](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) for instructions on how to set this up.
+Prerequisites:
+
+- [Configure GitHub Pages site to built from the `gh-pages` branch](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
