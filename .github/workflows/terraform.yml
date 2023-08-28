@@ -68,8 +68,7 @@ env:
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
-  terraform-plan:
-    name: Terraform Plan
+  tfplan:
     runs-on: ubuntu-latest
 
     # Run Terraform Plan in a separate "no operation" (noop) environment.
@@ -160,10 +159,9 @@ jobs:
           # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
           retention-days: 35
 
-  terraform-apply:
-    name: Terraform Apply
-    needs: terraform-plan
-    if: needs.terraform-plan.outputs.upload-outcome == 'success'
+  tfapply:
+    needs: tfplan
+    if: needs.tfplan.outputs.upload-outcome == 'success'
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     defaults:
