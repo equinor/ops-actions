@@ -1,4 +1,4 @@
-name: release-please
+name: 🚀 Create release
 
 on:
   push:

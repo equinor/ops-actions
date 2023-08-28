@@ -1,3 +1,5 @@
+name: ♻ azure-function
+
 on:
   workflow_call:
     inputs:

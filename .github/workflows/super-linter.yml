@@ -1,12 +1,7 @@
 # Run GitHub Super-Linter to validate the codebase.
-
-name: Lint Codebase
+name: ♻ super-linter
 
 on:
-  pull_request:
-    branches:
-      - main
-
   workflow_call:
 
 jobs:

@@ -1,3 +1,5 @@
+name: ♻ python
+
 on:
   workflow_call:
     inputs:
