@@ -7,6 +7,8 @@
 # Additional configuration can be set in `commitlint.config.js`.
 # Docs: https://commitlint.js.org/#/reference-configuration
 
+name: ♻ commitlint
+
 on:
   workflow_call:
     inputs:

@@ -1,4 +1,5 @@
 # Login to Azure using OpenID Connect (OIDC), then deploy Docker image or package to Azure Web App.
+name: ♻ azure-webapp
 
 on:
   workflow_call:

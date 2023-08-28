@@ -1,4 +1,5 @@
 # Restore, build and publish .NET Core application.
+name: ♻ dotnet
 
 on:
   workflow_call:

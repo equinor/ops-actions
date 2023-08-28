@@ -1,0 +1,10 @@
+name: 🧹 Lint codebase
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    uses: ./.github/workflows/super-linter.yml
