@@ -97,6 +97,22 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Get public IP
+        id: public-ip
+        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
+
+      - name: Add IP to Storage account firewall
+        env:
+          PUBLIC_IP: ${{ steps.public-ip.outputs.ipv4 }}
+        run: az storage account network-rule add --account-name "" --resource-group "" --ip-address "$PUBLIC_IP" --output none
+
       - name: Terraform Init
         id: init
         run: terraform init
@@ -112,6 +128,12 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
+
+      - name: Remove IP from Storage account firewall
+        if: always()
+        env:
+          PUBLIC_IP: ${{ steps.public-ip.outputs.ipv4 }}
+        run: az storage account network-rule remove --account-name "" --resource-group "" --ip-address "$PUBLIC_IP" --output none
 
       - name: Create job summary
         if: success() || failure()
@@ -191,8 +213,30 @@ jobs:
           7z x -p"$ENCRYPTION_PASSWORD" terraform.tar.7z
           tar -xf terraform.tar
 
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.ARM_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Get public IP
+        id: public-ip
+        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
+
+      - name: Add IP to Storage account firewall
+        env:
+          PUBLIC_IP: ${{ steps.public-ip.outputs.ipv4 }}
+        run: az storage account network-rule add --account-name "" --resource-group "" --ip-address "$PUBLIC_IP" --output none
+
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
+
+      - name: Remove IP from Storage account firewall
+        if: always()
+        env:
+          PUBLIC_IP: ${{ steps.public-ip.outputs.ipv4 }}
+        run: az storage account network-rule remove --account-name "" --resource-group "" --ip-address "$PUBLIC_IP" --output none
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
