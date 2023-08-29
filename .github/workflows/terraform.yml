@@ -97,16 +97,16 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
+      - name: Get public IP
+        id: public-ip
+        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.ARM_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-
-      - name: Get public IP
-        id: public-ip
-        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
 
       - name: Add IP to Storage account firewall
         env:
@@ -213,16 +213,16 @@ jobs:
           7z x -p"$ENCRYPTION_PASSWORD" terraform.tar.7z
           tar -xf terraform.tar
 
+      - name: Get public IP
+        id: public-ip
+        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.ARM_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-
-      - name: Get public IP
-        id: public-ip
-        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
 
       - name: Add IP to Storage account firewall
         env:
