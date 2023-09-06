@@ -2,9 +2,8 @@
 
 set -eu
 
-APP_NAME=${1:?"APP_NAME is unset or null"}
-REPO=${2:?"REPO is unset or null"}
-CONFIG_FILE=${3:?"CONFIG_FILE is unset or null"}
+REPO=${1:?"REPO is unset or null"}
+CONFIG_FILE=${2:?"CONFIG_FILE is unset or null"}
 
 ################################################################################
 # Verify OIDC configuration
@@ -52,8 +51,10 @@ config=$(envsubst < "$CONFIG_FILE")
 # Create Azure AD application
 ################################################################################
 
+app_name=$(jq -r .appName <<< "$config")
+
 app_id=$(az ad app list \
-  --filter "displayName eq '$APP_NAME'" \
+  --filter "displayName eq '$app_name'" \
   --query "[0].appId" \
   --output tsv)
 
@@ -62,7 +63,7 @@ then
   echo "Creating application..."
 
   app_id=$(az ad app create \
-    --display-name "$APP_NAME" \
+    --display-name "$app_name" \
     --sign-in-audience AzureADMyOrg \
     --query appId \
     --output tsv)
