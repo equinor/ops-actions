@@ -24,7 +24,7 @@ Example configuration:
   "federatedCredentials": [
     {
       "name": "deploy-dev",
-      "subject": "repo:my-org/my-repo:environment:dev",
+      "subject": "repo:${REPO}:environment:dev",
       "description": "Deploy to dev environment"
     }
   ],
@@ -38,6 +38,9 @@ Example configuration:
 ```
 
 > **Note**
+>
+> `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
+>
 > `.roleAssignments[].scope` must start with `/subscriptions/${SUBSCRIPTION_ID}`.
 
 ## Prerequisites
@@ -50,6 +53,9 @@ Example configuration:
 - GitHub repository role `Admin` - to set GitHub secrets
 
 ## Usage
+
+> **Note**
+> The script must be run from the GitHub repository to configure OIDC for.
 
 1. Open Bash.
 

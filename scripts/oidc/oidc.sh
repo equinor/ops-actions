@@ -5,17 +5,20 @@ set -eu
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 
 ################################################################################
-# Verify target Azure subscription
+# Verify target GitHub repository and Azure subscription
 ################################################################################
+
+REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
 
 ACCOUNT=$(az account show --output json)
 ACCOUNT_NAME=$(jq -r .name <<< "$ACCOUNT")
 SUBSCRIPTION_ID=$(jq -r .id <<< "$ACCOUNT")
 TENANT_ID=$(jq -r .tenantId <<< "$ACCOUNT")
 
-read -r -p "Configure OIDC to Azure subscription '$ACCOUNT_NAME'? (y/N) " resp
+read -r -p "Configure OIDC from GitHub repository '$REPO' to \
+  Azure subscription '$ACCOUNT_NAME'? (y/N) " response
 
-case $resp in
+case $response in
   [yY][eE][sS]|[yY])
     ;;
   *)
@@ -23,6 +26,7 @@ case $resp in
     ;;
 esac
 
+export REPO
 export SUBSCRIPTION_ID
 
 ################################################################################
@@ -90,7 +94,7 @@ fi
 
 federated_credentials=$(jq -c .federatedCredentials[] <<< "$config")
 
-declare -A secret_scopes # Associative array of scopes to set GitHub secrets at.
+declare -a environments # Array of GitHub environments to configure OIDC for.
 
 while read -r fic
 do
@@ -128,7 +132,6 @@ do
   fi
 
   subject=$(jq -r .subject <<< "$fic")
-  repo=$(cut -d : -f 2 <<< "$subject")
   entity_type=$(cut -d : -f 3 <<< "$subject")
   env=""
 
@@ -137,8 +140,7 @@ do
     env=$(cut -d : -f 4 <<< "$subject")
   fi
 
-  secret_scope="$repo:$env"
-  secret_scopes[$secret_scope]=true
+  environments+=("$env")
 done <<< "$federated_credentials"
 
 ################################################################################
@@ -166,32 +168,22 @@ done <<< "$role_assignments"
 # Set GitHub secrets
 ################################################################################
 
-for scope in "${!secret_scopes[@]}"
+for env in "${environments[@]}"
 do
-  repo=$(cut -d : -f 1 <<< "$scope")
-  env=$(cut -d : -f 2 <<< "$scope")
-
-  if [[ -n "$env" ]]
-  then
-    level="environment '$env'"
-  else
-    level="repository"
-  fi
-
-  echo "Setting secrets for GitHub repository '$repo' at $level level."
+  echo "Setting secrets for GitHub repository '$REPO' environment '$env'..."
 
   gh secret set "AZURE_CLIENT_ID" \
-    --repo "$repo" \
+    --repo "$REPO" \
     --env "$env" \
     --body "$app_id"
 
   gh secret set "AZURE_SUBSCRIPTION_ID" \
-    --repo "$repo" \
+    --repo "$REPO" \
     --env "$env" \
     --body "$SUBSCRIPTION_ID"
 
   gh secret set "AZURE_TENANT_ID" \
-    --repo "$repo" \
+    --repo "$REPO" \
     --env "$env" \
     --body "$TENANT_ID"
-done
+done | sort -u
