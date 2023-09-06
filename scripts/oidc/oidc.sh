@@ -5,18 +5,6 @@ set -eu
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 
 ################################################################################
-# Verify OIDC configuration
-################################################################################
-
-if [[ -f "$CONFIG_FILE" ]]
-then
-  echo "Using config file '$CONFIG_FILE'."
-else
-  echo "Config file '$CONFIG_FILE' does not exist."
-  exit 1
-fi
-
-################################################################################
 # Verify target Azure subscription
 ################################################################################
 
@@ -35,11 +23,19 @@ case $resp in
     ;;
 esac
 
+export SUBSCRIPTION_ID
+
 ################################################################################
 # Read OIDC configuration
 ################################################################################
 
-export SUBSCRIPTION_ID
+if [[ -f "$CONFIG_FILE" ]]
+then
+  echo "Using config file '$CONFIG_FILE'."
+else
+  echo "Config file '$CONFIG_FILE' does not exist."
+  exit 1
+fi
 
 config=$(envsubst < "$CONFIG_FILE")
 
