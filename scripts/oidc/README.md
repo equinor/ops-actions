@@ -12,8 +12,6 @@ It will:
 
 The script accepts the following arguments:
 
-1. The name of the Azure AD application to create
-1. The GitHub repository to configure OIDC for
 1. The path of the JSON file containing the OIDC configuration
 
 ## Configuration specification
@@ -22,10 +20,11 @@ Example configuration:
 
 ```json
 {
+  "appName": "my-app",
   "federatedCredentials": [
     {
       "name": "deploy-dev",
-      "subject": "repo:${REPO}:environment:dev",
+      "subject": "repo:my-org/my-repo:environment:dev",
       "description": "Deploy to dev environment"
     }
   ],
@@ -39,9 +38,6 @@ Example configuration:
 ```
 
 > **Note**
->
-> `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
->
 > `.roleAssignments[].scope` must start with `/subscriptions/${SUBSCRIPTION_ID}`.
 
 ## Prerequisites
@@ -75,18 +71,18 @@ Example configuration:
     gh auth login
     ```
 
-1. Configure federated credentials and role assignments in a file `oidc.json`.
+1. Configure application name, federated credentials and role assignments in a file `oidc.json`.
 
 1. Run the script `oidc.sh`:
 
     ```console
-    ./oidc.sh {APP_NAME} {REPO} {CONFIG_FILE}
+    ./oidc.sh {CONFIG_FILE}
     ```
 
     For example:
 
     ```console
-    ./oidc.sh my-app my-org/my-repo ./oidc.json
+    ./oidc.sh ./oidc.json
     ```
 
 ## References
