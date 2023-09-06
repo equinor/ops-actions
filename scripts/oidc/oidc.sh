@@ -2,12 +2,31 @@
 
 set -eu
 
-APP_NAME=${1:?"APP_NAME is unset or null"}
-REPO=${2:?"REPO is unset or null"}
-CONFIG_FILE=${3:?"CONFIG_FILE is unset or null"}
+CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 
 ################################################################################
-# Verify OIDC configuration
+# Verify target Azure subscription
+################################################################################
+
+ACCOUNT=$(az account show --output json)
+ACCOUNT_NAME=$(jq -r .name <<< "$ACCOUNT")
+SUBSCRIPTION_ID=$(jq -r .id <<< "$ACCOUNT")
+TENANT_ID=$(jq -r .tenantId <<< "$ACCOUNT")
+
+read -r -p "Configure OIDC to Azure subscription '$ACCOUNT_NAME'? (y/N) " resp
+
+case $resp in
+  [yY][eE][sS]|[yY])
+    ;;
+  *)
+    exit 0
+    ;;
+esac
+
+export SUBSCRIPTION_ID
+
+################################################################################
+# Read OIDC configuration
 ################################################################################
 
 if [[ -f "$CONFIG_FILE" ]]
@@ -18,42 +37,16 @@ else
   exit 1
 fi
 
-################################################################################
-# Verify target GitHub repository and Azure subscription
-################################################################################
-
-repo_name=$(gh repo view "$REPO" --json name --jq .name)
-subscription=$(az account show --output json)
-subscription_name=$(jq -r .name <<< "$subscription")
-
-read -r -p "Configure OIDC from GitHub repository '$repo_name' to \
-Azure subscription '$subscription_name'? (y/N) " response
-
-case $response in
-  [yY][eE][sS]|[yY])
-    ;;
-  *)
-    exit 0
-    ;;
-esac
-
-################################################################################
-# Read OIDC configuration
-################################################################################
-
-SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
-
-export REPO
-export SUBSCRIPTION_ID
-
 config=$(envsubst < "$CONFIG_FILE")
 
 ################################################################################
 # Create Azure AD application
 ################################################################################
 
+app_name=$(jq -r .appName <<< "$config")
+
 app_id=$(az ad app list \
-  --filter "displayName eq '$APP_NAME'" \
+  --filter "displayName eq '$app_name'" \
   --query "[0].appId" \
   --output tsv)
 
@@ -62,7 +55,7 @@ then
   echo "Creating application..."
 
   app_id=$(az ad app create \
-    --display-name "$APP_NAME" \
+    --display-name "$app_name" \
     --sign-in-audience AzureADMyOrg \
     --query appId \
     --output tsv)
@@ -71,13 +64,33 @@ else
 fi
 
 ################################################################################
+# Create Azure AD service principal
+################################################################################
+
+sp_id=$(az ad sp list \
+  --filter "appId eq '$app_id'" \
+  --query "[0].id" \
+  --output tsv)
+
+if [[ -z "$sp_id" ]]
+then
+  echo "Creating service principal..."
+
+  sp_id=$(az ad sp create \
+    --id "$app_id" \
+    --query id \
+    --output tsv)
+else
+  echo "Using existing service principal."
+fi
+
+################################################################################
 # Create Azure AD application federated credentials
 ################################################################################
 
 federated_credentials=$(jq -c .federatedCredentials[] <<< "$config")
 
-repo_level=false # Should OIDC be configured at the repository level?
-declare -A env_level # Associative array of environments to configure OIDC for.
+declare -A secret_scopes # Associative array of scopes to set GitHub secrets at.
 
 while read -r fic
 do
@@ -115,37 +128,18 @@ do
   fi
 
   subject=$(jq -r .subject <<< "$fic")
+  repo=$(cut -d : -f 2 <<< "$subject")
   entity_type=$(cut -d : -f 3 <<< "$subject")
+  env=""
 
   if [[ "$entity_type" == "environment" ]]
   then
     env=$(cut -d : -f 4 <<< "$subject")
-    env_level[$env]=true
-  else
-    repo_level=true
   fi
+
+  secret_scope="$repo:$env"
+  secret_scopes[$secret_scope]=true
 done <<< "$federated_credentials"
-
-################################################################################
-# Create Azure AD service principal
-################################################################################
-
-sp_id=$(az ad sp list \
-  --filter "appId eq '$app_id'" \
-  --query "[0].id" \
-  --output tsv)
-
-if [[ -z "$sp_id" ]]
-then
-  echo "Creating service principal..."
-
-  sp_id=$(az ad sp create \
-    --id "$app_id" \
-    --query id \
-    --output tsv)
-else
-  echo "Using existing service principal."
-fi
 
 ################################################################################
 # Create Azure role assignments
@@ -169,48 +163,26 @@ do
 done <<< "$role_assignments"
 
 ################################################################################
-# Set GitHub repository secrets
+# Set GitHub secrets
 ################################################################################
 
-tenant_id=$(jq -r .tenantId <<< "$subscription")
-
-if [[ "$repo_level" == true ]]
-then
-  echo "Setting GitHub repository secrets..."
-
-  gh secret set "AZURE_CLIENT_ID" \
-    --repo "$REPO" \
-    --body "$app_id"
-
-  gh secret set "AZURE_SUBSCRIPTION_ID" \
-    --repo "$REPO" \
-    --body "$SUBSCRIPTION_ID"
-
-  gh secret set "AZURE_TENANT_ID" \
-    --repo "$REPO" \
-    --body "$tenant_id"
-fi
-
-################################################################################
-# Set GitHub environment secrets
-################################################################################
-
-for env in "${!env_level[@]}"
+for scope in "${!secret_scopes[@]}"
 do
-  echo "Setting GitHub environment secrets for environment '$env'..."
+  repo=$(cut -d : -f 1 <<< "$scope")
+  env=$(cut -d : -f 2 <<< "$scope")
 
   gh secret set "AZURE_CLIENT_ID" \
-    --repo "$REPO" \
+    --repo "$repo" \
     --env "$env" \
     --body "$app_id"
 
   gh secret set "AZURE_SUBSCRIPTION_ID" \
-    --repo "$REPO" \
+    --repo "$repo" \
     --env "$env" \
     --body "$SUBSCRIPTION_ID"
 
   gh secret set "AZURE_TENANT_ID" \
-    --repo "$REPO" \
+    --repo "$repo" \
     --env "$env" \
-    --body "$tenant_id"
+    --body "$TENANT_ID"
 done
