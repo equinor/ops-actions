@@ -21,9 +21,9 @@ fi
 ################################################################################
 
 subscription=$(az account show --output json)
-sub_name=$(jq -r .name <<< "$subscription")
+subscription_name=$(jq -r .name <<< "$subscription")
 
-read -r -p "Configure OIDC to Azure subscription '$sub_name'? (y/N) " response
+read -r -p "Configure OIDC to Azure subscription '$subscription_name'? (y/N) " response
 
 case $response in
   [yY][eE][sS]|[yY])
@@ -173,7 +173,7 @@ tenant_id=$(jq -r .tenantId <<< "$subscription")
 
 for repo in "${!repos[@]}"
 do
-  echo "Setting GitHub repository secrets..."
+  echo "Setting secrets for GitHub repository '$repo'..."
 
   gh secret set "AZURE_CLIENT_ID" \
     --repo "$repo" \
@@ -197,8 +197,7 @@ do
   repo=$(cut -d : -f 2 <<< "$subject")
   env=$(cut -d : -f 4 <<< "$subject")
 
-  echo "Setting GitHub environment secrets for environment '$env' \
-    in repository '$repo'..."
+  echo "Setting environment secrets for environment '$env' in GitHub repository '$repo'..."
 
   gh secret set "AZURE_CLIENT_ID" \
     --repo "$repo" \
