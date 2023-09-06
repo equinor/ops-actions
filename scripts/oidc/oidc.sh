@@ -197,13 +197,6 @@ fi
 
 for env in "${!env_level[@]}"
 do
-  echo "Creating GitHub environment '$env'..."
-
-  # GitHub CLI does not natively support creating environments (cli/cli#5149).
-  gh api "repos/$REPO/environments/$env" \
-    --method PUT \
-    --silent
-
   echo "Setting GitHub environment secrets for environment '$env'..."
 
   gh secret set "AZURE_CLIENT_ID" \
