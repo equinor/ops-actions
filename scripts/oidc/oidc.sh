@@ -21,8 +21,8 @@ fi
 ################################################################################
 
 ACCOUNT=$(az account show --output json)
-SUBSCRIPTION_ID=$(jq -r .id <<< "$ACCOUNT")
 ACCOUNT_NAME=$(jq -r .name <<< "$ACCOUNT")
+SUBSCRIPTION_ID=$(jq -r .id <<< "$ACCOUNT")
 TENANT_ID=$(jq -r .tenantId <<< "$ACCOUNT")
 
 read -r -p "Configure OIDC to Azure subscription '$ACCOUNT_NAME'? (y/N) " resp
