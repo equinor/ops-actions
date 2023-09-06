@@ -72,6 +72,27 @@ else
 fi
 
 ################################################################################
+# Create Azure AD service principal
+################################################################################
+
+sp_id=$(az ad sp list \
+  --filter "appId eq '$app_id'" \
+  --query "[0].id" \
+  --output tsv)
+
+if [[ -z "$sp_id" ]]
+then
+  echo "Creating service principal..."
+
+  sp_id=$(az ad sp create \
+    --id "$app_id" \
+    --query id \
+    --output tsv)
+else
+  echo "Using existing service principal."
+fi
+
+################################################################################
 # Create Azure AD application federated credentials
 ################################################################################
 
@@ -126,27 +147,6 @@ do
     repo_level=true
   fi
 done <<< "$federated_credentials"
-
-################################################################################
-# Create Azure AD service principal
-################################################################################
-
-sp_id=$(az ad sp list \
-  --filter "appId eq '$app_id'" \
-  --query "[0].id" \
-  --output tsv)
-
-if [[ -z "$sp_id" ]]
-then
-  echo "Creating service principal..."
-
-  sp_id=$(az ad sp create \
-    --id "$app_id" \
-    --query id \
-    --output tsv)
-else
-  echo "Using existing service principal."
-fi
 
 ################################################################################
 # Create Azure role assignments
