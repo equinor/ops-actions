@@ -197,13 +197,6 @@ do
   repo=$(cut -d : -f 2 <<< "$subject")
   env=$(cut -d : -f 4 <<< "$subject")
 
-  echo "Creating GitHub environment '$env' in repo '$repo'..."
-
-  # GitHub CLI does not natively support creating environments (cli/cli#5149).
-  gh api "repos/$repo/environments/$env" \
-    --method PUT \
-    --silent
-
   echo "Setting GitHub environment secrets for environment '$env' \
     in repository '$repo'..."
 
