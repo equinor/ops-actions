@@ -171,6 +171,15 @@ do
   repo=$(cut -d : -f 1 <<< "$scope")
   env=$(cut -d : -f 2 <<< "$scope")
 
+  if [[ -n "$env" ]]
+  then
+    level="environment '$env'"
+  else
+    level="repository"
+  fi
+
+  echo "Setting secrets for GitHub repository '$repo' at $level level."
+
   gh secret set "AZURE_CLIENT_ID" \
     --repo "$repo" \
     --env "$env" \
