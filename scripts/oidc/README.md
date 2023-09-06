@@ -43,7 +43,7 @@ Example configuration:
 ## Prerequisites
 
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) (latest version as of writing: `2.49.0`) - to create Azure AD application, federated credentials, service principal and Azure role assignments
-- [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to create GitHub secrets
+- [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to set GitHub secrets
 - [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
 - Activate Azure role `Owner` - to create Azure role assignments
