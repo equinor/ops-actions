@@ -94,6 +94,8 @@ fi
 
 federated_credentials=$(jq -c .federatedCredentials[] <<< "$config")
 
+declare -A secret_scopes # Associative array of scopes to set GitHub secrets at.
+
 while read -r fic
 do
   fic_name=$(jq -r .name <<< "$fic")
