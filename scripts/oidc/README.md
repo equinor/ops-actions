@@ -82,7 +82,7 @@ Example configuration:
     For example:
 
     ```console
-    ./oidc.sh ./oidc.json
+    ./oidc.sh oidc.json
     ```
 
 ## References
