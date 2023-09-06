@@ -5,8 +5,8 @@ This directory contains a Bash script `oidc.sh` that will configure OpenID Conne
 It will:
 
 1. Create an Azure AD application
-1. Create federated credentials for the Azure AD application
 1. Create a service principal for the Azure AD application
+1. Create federated credentials for the Azure AD application
 1. Create Azure role assignments for the service principal
 1. Set GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 

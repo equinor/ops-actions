@@ -17,15 +17,17 @@ else
 fi
 
 ################################################################################
-# Verify target GitHub repository and Azure subscription
+# Verify target Azure subscription
 ################################################################################
 
-subscription=$(az account show --output json)
-subscription_name=$(jq -r .name <<< "$subscription")
+ACCOUNT=$(az account show --output json)
+SUBSCRIPTION_ID=$(jq -r .id <<< "$ACCOUNT")
+ACCOUNT_NAME=$(jq -r .name <<< "$ACCOUNT")
+TENANT_ID=$(jq -r .tenantId <<< "$ACCOUNT")
 
-read -r -p "Configure OIDC to Azure subscription '$subscription_name'? (y/N) " response
+read -r -p "Configure OIDC to Azure subscription '$ACCOUNT_NAME'? (y/N) " resp
 
-case $response in
+case $resp in
   [yY][eE][sS]|[yY])
     ;;
   *)
@@ -36,8 +38,6 @@ esac
 ################################################################################
 # Read OIDC configuration
 ################################################################################
-
-SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
 
 export SUBSCRIPTION_ID
 
@@ -94,9 +94,6 @@ fi
 
 federated_credentials=$(jq -c .federatedCredentials[] <<< "$config")
 
-declare -A repos # Associative array of repositores to configure OIDC for.
-declare -A env_subjects # Associative array of environments to configure OIDC for.
-
 while read -r fic
 do
   fic_name=$(jq -r .name <<< "$fic")
@@ -135,13 +132,15 @@ do
   subject=$(jq -r .subject <<< "$fic")
   repo=$(cut -d : -f 2 <<< "$subject")
   entity_type=$(cut -d : -f 3 <<< "$subject")
+  env=""
 
   if [[ "$entity_type" == "environment" ]]
   then
-    env_subjects[$subject]=true
-  else
-    repos[$repo]=true
+    env=$(cut -d : -f 4 <<< "$subject")
   fi
+
+  secret_scope="$repo:$env"
+  secret_scopes[$secret_scope]=true
 done <<< "$federated_credentials"
 
 ################################################################################
@@ -166,38 +165,13 @@ do
 done <<< "$role_assignments"
 
 ################################################################################
-# Set GitHub repository secrets
+# Set GitHub secrets
 ################################################################################
 
-tenant_id=$(jq -r .tenantId <<< "$subscription")
-
-for repo in "${!repos[@]}"
+for scope in "${!secret_scopes[@]}"
 do
-  echo "Setting secrets for GitHub repository '$repo'..."
-
-  gh secret set "AZURE_CLIENT_ID" \
-    --repo "$repo" \
-    --body "$app_id"
-
-  gh secret set "AZURE_SUBSCRIPTION_ID" \
-    --repo "$repo" \
-    --body "$SUBSCRIPTION_ID"
-
-  gh secret set "AZURE_TENANT_ID" \
-    --repo "$repo" \
-    --body "$tenant_id"
-done
-
-################################################################################
-# Set GitHub environment secrets
-################################################################################
-
-for subject in "${!env_subjects[@]}"
-do
-  repo=$(cut -d : -f 2 <<< "$subject")
-  env=$(cut -d : -f 4 <<< "$subject")
-
-  echo "Setting environment secrets for environment '$env' in GitHub repository '$repo'..."
+  repo=$(cut -d : -f 1 <<< "$scope")
+  env=$(cut -d : -f 2 <<< "$scope")
 
   gh secret set "AZURE_CLIENT_ID" \
     --repo "$repo" \
@@ -212,5 +186,5 @@ do
   gh secret set "AZURE_TENANT_ID" \
     --repo "$repo" \
     --env "$env" \
-    --body "$tenant_id"
+    --body "$TENANT_ID"
 done
