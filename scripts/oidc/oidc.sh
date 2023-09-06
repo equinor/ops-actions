@@ -2,8 +2,7 @@
 
 set -eu
 
-REPO=${1:?"REPO is unset or null"}
-CONFIG_FILE=${2:?"CONFIG_FILE is unset or null"}
+CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 
 ################################################################################
 # Verify OIDC configuration
@@ -21,12 +20,10 @@ fi
 # Verify target GitHub repository and Azure subscription
 ################################################################################
 
-repo_name=$(gh repo view "$REPO" --json name --jq .name)
 subscription=$(az account show --output json)
-subscription_name=$(jq -r .name <<< "$subscription")
+sub_name=$(jq -r .name <<< "$subscription")
 
-read -r -p "Configure OIDC from GitHub repository '$repo_name' to \
-Azure subscription '$subscription_name'? (y/N) " response
+read -r -p "Configure OIDC to Azure subscription '$sub_name'? (y/N) " response
 
 case $response in
   [yY][eE][sS]|[yY])
@@ -42,7 +39,6 @@ esac
 
 SUBSCRIPTION_ID=$(jq -r .id <<< "$subscription")
 
-export REPO
 export SUBSCRIPTION_ID
 
 config=$(envsubst < "$CONFIG_FILE")
@@ -98,8 +94,8 @@ fi
 
 federated_credentials=$(jq -c .federatedCredentials[] <<< "$config")
 
-repo_level=false # Should OIDC be configured at the repository level?
-declare -A env_level # Associative array of environments to configure OIDC for.
+declare -A repos # Associative array of repositores to configure OIDC for.
+declare -A env_subjects # Associative array of environments to configure OIDC for.
 
 while read -r fic
 do
@@ -137,14 +133,14 @@ do
   fi
 
   subject=$(jq -r .subject <<< "$fic")
+  repo=$(cut -d : -f 2 <<< "$subject")
   entity_type=$(cut -d : -f 3 <<< "$subject")
 
   if [[ "$entity_type" == "environment" ]]
   then
-    env=$(cut -d : -f 4 <<< "$subject")
-    env_level[$env]=true
+    env_subjects[$subject]=true
   else
-    repo_level=true
+    repos[$repo]=true
   fi
 done <<< "$federated_credentials"
 
@@ -175,50 +171,54 @@ done <<< "$role_assignments"
 
 tenant_id=$(jq -r .tenantId <<< "$subscription")
 
-if [[ "$repo_level" == true ]]
-then
+for repo in "${!repos[@]}"
+do
   echo "Setting GitHub repository secrets..."
 
   gh secret set "AZURE_CLIENT_ID" \
-    --repo "$REPO" \
+    --repo "$repo" \
     --body "$app_id"
 
   gh secret set "AZURE_SUBSCRIPTION_ID" \
-    --repo "$REPO" \
+    --repo "$repo" \
     --body "$SUBSCRIPTION_ID"
 
   gh secret set "AZURE_TENANT_ID" \
-    --repo "$REPO" \
+    --repo "$repo" \
     --body "$tenant_id"
-fi
+done
 
 ################################################################################
 # Set GitHub environment secrets
 ################################################################################
 
-for env in "${!env_level[@]}"
+for subject in "${!env_subjects[@]}"
 do
-  echo "Creating GitHub environment '$env'..."
+  repo=$(cut -d : -f 2 <<< "$subject")
+  env=$(cut -d : -f 4 <<< "$subject")
+
+  echo "Creating GitHub environment '$env' in repo '$repo'..."
 
   # GitHub CLI does not natively support creating environments (cli/cli#5149).
-  gh api "repos/$REPO/environments/$env" \
+  gh api "repos/$repo/environments/$env" \
     --method PUT \
     --silent
 
-  echo "Setting GitHub environment secrets for environment '$env'..."
+  echo "Setting GitHub environment secrets for environment '$env' \
+    in repository '$repo'..."
 
   gh secret set "AZURE_CLIENT_ID" \
-    --repo "$REPO" \
+    --repo "$repo" \
     --env "$env" \
     --body "$app_id"
 
   gh secret set "AZURE_SUBSCRIPTION_ID" \
-    --repo "$REPO" \
+    --repo "$repo" \
     --env "$env" \
     --body "$SUBSCRIPTION_ID"
 
   gh secret set "AZURE_TENANT_ID" \
-    --repo "$REPO" \
+    --repo "$repo" \
     --env "$env" \
     --body "$tenant_id"
 done
