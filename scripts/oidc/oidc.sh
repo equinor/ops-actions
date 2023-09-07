@@ -5,17 +5,20 @@ set -eu
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 
 ################################################################################
-# Verify target Azure subscription
+# Verify target GitHub repository and Azure subscription
 ################################################################################
+
+REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
 
 ACCOUNT=$(az account show --output json)
 ACCOUNT_NAME=$(jq -r .name <<< "$ACCOUNT")
 SUBSCRIPTION_ID=$(jq -r .id <<< "$ACCOUNT")
 TENANT_ID=$(jq -r .tenantId <<< "$ACCOUNT")
 
-read -r -p "Configure OIDC to Azure subscription '$ACCOUNT_NAME'? (y/N) " resp
+read -r -p "Configure OIDC from GitHub repository '$REPO' to \
+Azure subscription '$ACCOUNT_NAME'? (y/N) " response
 
-case $resp in
+case $response in
   [yY][eE][sS]|[yY])
     ;;
   *)
@@ -23,6 +26,7 @@ case $resp in
     ;;
 esac
 
+export REPO
 export SUBSCRIPTION_ID
 
 ################################################################################
@@ -90,7 +94,8 @@ fi
 
 federated_credentials=$(jq -c .federatedCredentials[] <<< "$config")
 
-declare -A secret_scopes # Associative array of scopes to set GitHub secrets at.
+repo_level=false # Should OIDC be configured at the repository level?
+declare -A environments # Associative array of environments to configure OIDC for.
 
 while read -r fic
 do
@@ -128,17 +133,15 @@ do
   fi
 
   subject=$(jq -r .subject <<< "$fic")
-  repo=$(cut -d : -f 2 <<< "$subject")
   entity_type=$(cut -d : -f 3 <<< "$subject")
-  env=""
 
   if [[ "$entity_type" == "environment" ]]
   then
     env=$(cut -d : -f 4 <<< "$subject")
+    environments[$env]=true
+  else
+    repo_level=true
   fi
-
-  secret_scope="$repo:$env"
-  secret_scopes[$secret_scope]=true
 done <<< "$federated_credentials"
 
 ################################################################################
@@ -163,35 +166,40 @@ do
 done <<< "$role_assignments"
 
 ################################################################################
-# Set GitHub secrets
+# Set GitHub repository secrets
 ################################################################################
 
-for scope in "${!secret_scopes[@]}"
-do
-  repo=$(cut -d : -f 1 <<< "$scope")
-  env=$(cut -d : -f 2 <<< "$scope")
-
-  if [[ -n "$env" ]]
-  then
-    level="environment '$env'"
-  else
-    level="repository"
-  fi
-
-  echo "Setting secrets for GitHub repository '$repo' at $level level."
+if [[ "$repo_level" ]]
+then
+  echo "Setting GitHub repository secrets..."
 
   gh secret set "AZURE_CLIENT_ID" \
-    --repo "$repo" \
+    --body "$app_id"
+
+  gh secret set "AZURE_SUBSCRIPTION_ID" \
+    --body "$SUBSCRIPTION_ID"
+
+  gh secret set "AZURE_TENANT_ID" \
+    --body "$TENANT_ID"
+fi
+
+################################################################################
+# Set GitHub environment secrets
+################################################################################
+
+for env in "${!environments[@]}"
+do
+  echo "Setting GitHub environment secrets for environment '$env'..."
+
+  gh secret set "AZURE_CLIENT_ID" \
     --env "$env" \
     --body "$app_id"
 
   gh secret set "AZURE_SUBSCRIPTION_ID" \
-    --repo "$repo" \
     --env "$env" \
     --body "$SUBSCRIPTION_ID"
 
   gh secret set "AZURE_TENANT_ID" \
-    --repo "$repo" \
     --env "$env" \
     --body "$TENANT_ID"
 done
