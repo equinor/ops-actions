@@ -11,9 +11,9 @@ CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
 
 ACCOUNT=$(az account show --output json)
-ACCOUNT_NAME=$(jq -r .name <<< "$ACCOUNT")
-SUBSCRIPTION_ID=$(jq -r .id <<< "$ACCOUNT")
-TENANT_ID=$(jq -r .tenantId <<< "$ACCOUNT")
+ACCOUNT_NAME=$(echo "$ACCOUNT" | jq -r .name)
+SUBSCRIPTION_ID=$(echo "$ACCOUNT" | jq -r .id)
+TENANT_ID=$(echo "$ACCOUNT" | jq -r .tenantId)
 
 read -r -p "Configure OIDC from GitHub repository '$REPO' to \
 Azure subscription '$ACCOUNT_NAME'? (y/N) " response
@@ -47,7 +47,7 @@ config=$(envsubst < "$CONFIG_FILE")
 # Create Azure AD application
 ################################################################################
 
-app_name=$(jq -r .appName <<< "$config")
+app_name=$(echo "$config" | jq -r .appName)
 
 app_id=$(az ad app list \
   --filter "displayName eq '$app_name'" \
@@ -99,20 +99,20 @@ declare -A environments # Environments to configure OIDC for.
 
 for fic in "${fics[@]}"
 do
-  fic_name=$(jq -r .name <<< "$fic")
+  fic_name=$(echo "$fic" | jq -r .name)
 
   fic_id=$(az ad app federated-credential list \
     --id "$app_id" \
     --query "[?name == '$fic_name'].id" \
     --output tsv)
 
-  parameters=$(jq '{
+  parameters=$(echo "$fic" | jq '{
     "name": .name,
     "issuer": "https://token.actions.githubusercontent.com",
     "subject": .subject,
     "description": .description,
     "audiences": ["api://AzureADTokenExchange"]
-  }' <<< "$fic")
+  }')
 
   if [[ -z "$fic_id" ]]
   then
@@ -132,12 +132,12 @@ do
       --output none
   fi
 
-  subject=$(jq -r .subject <<< "$fic")
-  entity_type=$(cut -d : -f 3 <<< "$subject")
+  subject=$(echo "$fic" | jq -r .subject)
+  entity_type=$(echo "$subject" | cut -d : -f 3)
 
   if [[ "$entity_type" == "environment" ]]
   then
-    env=$(cut -d : -f 4 <<< "$subject")
+    env=$(echo "$subject" | cut -d : -f 4)
     environments[$env]=true
   else
     repo_level=true
@@ -152,8 +152,8 @@ readarray -t role_assignments <<< "$(echo "$config" | jq -c .roleAssignments[])"
 
 for role_assignment in "${role_assignments[@]}"
 do
-  role=$(jq -r .role <<< "$role_assignment")
-  scope=$(jq -r .scope <<< "$role_assignment")
+  role=$(echo "$role_assignment" | jq -r .role)
+  scope=$(echo "$role_assignment" | jq -r .scope)
 
   echo "Assigning role '$role' at scope '$scope'..."
 
