@@ -92,12 +92,12 @@ fi
 # Create Azure AD application federated credentials
 ################################################################################
 
-federated_credentials=$(jq -c .federatedCredentials[] <<< "$config")
+readarray -t fics <<< "$(echo "$config" | jq -c .federatedCredentials[])"
 
 repo_level=false # Should OIDC be configured at the repository level?
-declare -A environments # Associative array of environments to configure OIDC for.
+declare -A environments # Environments to configure OIDC for.
 
-while read -r fic
+for fic in "${fics[@]}"
 do
   fic_name=$(jq -r .name <<< "$fic")
 
@@ -142,15 +142,15 @@ do
   else
     repo_level=true
   fi
-done <<< "$federated_credentials"
+done
 
 ################################################################################
 # Create Azure role assignments
 ################################################################################
 
-role_assignments=$(jq -c .roleAssignments[] <<< "$config")
+readarray -t role_assignments <<< "$(echo "$config" | jq -c .roleAssignments[])"
 
-while read -r role_assignment
+for role_assignment in "${role_assignments[@]}"
 do
   role=$(jq -r .role <<< "$role_assignment")
   scope=$(jq -r .scope <<< "$role_assignment")
@@ -163,7 +163,7 @@ do
     --assignee-principal-type ServicePrincipal \
     --scope "$scope" \
     --output none
-done <<< "$role_assignments"
+done
 
 ################################################################################
 # Set GitHub repository secrets
