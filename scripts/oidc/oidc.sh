@@ -10,13 +10,13 @@ CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 
 REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
 
-ACCOUNT=$(az account show --output json)
-ACCOUNT_NAME=$(echo "$ACCOUNT" | jq -r .name)
-SUBSCRIPTION_ID=$(echo "$ACCOUNT" | jq -r .id)
-TENANT_ID=$(echo "$ACCOUNT" | jq -r .tenantId)
+SUBSCRIPTION=$(az account show --output json)
+SUBSCRIPTION_NAME=$(echo "$SUBSCRIPTION" | jq -r .name)
+SUBSCRIPTION_ID=$(echo "$SUBSCRIPTION" | jq -r .id)
+TENANT_ID=$(echo "$SUBSCRIPTION" | jq -r .tenantId)
 
 read -r -p "Configure OIDC from GitHub repository '$REPO' to \
-Azure subscription '$ACCOUNT_NAME'? (y/N) " response
+Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " response
 
 case $response in
   [yY][eE][sS]|[yY])
