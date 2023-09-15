@@ -51,6 +51,7 @@ Example configuration:
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
 - Activate Azure role `Owner` - to create Azure role assignments
 - GitHub repository role `Admin` - to set GitHub secrets
+- If a federated credential is configured with subject `repo:${REPO}:environment:<environment>`, create GitHub environment `<environment>`.
 
 ## Usage
 
