@@ -169,7 +169,7 @@ done
 # Set GitHub repository secrets
 ################################################################################
 
-if [[ "$repo_level" ]]
+if [[ "$repo_level" == true ]]
 then
   echo "Setting GitHub repository secrets..."
 
