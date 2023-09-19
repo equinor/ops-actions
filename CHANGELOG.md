@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.4.0](https://github.com/equinor/ops-actions/compare/v8.3.1...v8.4.0) (2023-09-19)
+
+
+### Features
+
+* **terraform:** plan job deploys temporarily ([#250](https://github.com/equinor/ops-actions/issues/250)) ([a5c2dbf](https://github.com/equinor/ops-actions/commit/a5c2dbf3a85d173e609dd81efdc2bc2d366e42a0))
+
 ## [8.3.1](https://github.com/equinor/ops-actions/compare/v8.3.0...v8.3.1) (2023-08-25)
 
 
