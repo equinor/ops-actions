@@ -71,9 +71,6 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
-
-    # Run Terraform Plan in a separate "no operation" (noop) environment.
-    # This allows Terraform Plan to run without requiring a manual approval.
     environment: ${{ inputs.environment }}
 
     defaults:
