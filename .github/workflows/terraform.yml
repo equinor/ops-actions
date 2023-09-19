@@ -74,7 +74,7 @@ jobs:
 
     # Run Terraform Plan in a separate "no operation" (noop) environment.
     # This allows Terraform Plan to run without requiring a manual approval.
-    environment: ${{ inputs.environment }}-noop
+    environment: ${{ inputs.environment }}
 
     defaults:
       run:
