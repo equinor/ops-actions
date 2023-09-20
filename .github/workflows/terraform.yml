@@ -89,6 +89,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ inputs.terraform_version }}
+          terraform_wrapper: true # Makes Terraform commands stdout and exitcode available in step outputs
 
       - name: Terraform Format
         id: fmt
