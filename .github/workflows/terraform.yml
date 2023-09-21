@@ -54,6 +54,10 @@ permissions:
   contents: read
 
 env:
+  # Ensure use of open-source Terraform versions.
+  # (versions 1.6.0 and above are source-available)
+  TERRAFORM_VERSION: "${{ inputs.terraform_version }} || <1.6.0"
+
   # Configure Terraform to run in automation.
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
   TF_IN_AUTOMATION: true
@@ -88,7 +92,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: ${{ inputs.terraform_version }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: true # Makes Terraform commands stdout and exitcode available in step outputs
 
       - name: Terraform Format
@@ -182,7 +186,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: ${{ inputs.terraform_version }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Extract Terraform config
         run: |
