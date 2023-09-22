@@ -56,7 +56,7 @@ permissions:
 env:
   # Ensure use of open-source Terraform versions.
   # (versions 1.6.0 and above are source-available)
-  TERRAFORM_VERSION: "${{ inputs.terraform_version }} <1.5.0"
+  TERRAFORM_VERSION: "${{ inputs.terraform_version }} <1.6.0"
 
   # Configure Terraform to run in automation.
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
