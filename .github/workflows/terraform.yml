@@ -122,7 +122,6 @@ jobs:
           TF_INIT_OUTCOME: ${{ steps.init.outcome }}
           TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
-          TF_PLAN: ${{ steps.plan.outputs.stdout }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         run: |
           echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
@@ -133,7 +132,7 @@ jobs:
           <details><summary>Show Plan</summary>
 
           \`\`\`terraform
-          $TF_PLAN
+          ${{ steps.plan.outputs.stdout }}
           \`\`\`
 
           </details>
