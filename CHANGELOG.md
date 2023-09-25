@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.5.2](https://github.com/equinor/ops-actions/compare/v8.5.1...v8.5.2) (2023-09-25)
+
+
+### Bug Fixes
+
+* **terraform:** Bash throws error if plan too long ([#259](https://github.com/equinor/ops-actions/issues/259)) ([0cf9966](https://github.com/equinor/ops-actions/commit/0cf9966638f7062c9de7584d560371f1dd787b9d))
+
 ## [8.5.1](https://github.com/equinor/ops-actions/compare/v8.5.0...v8.5.1) (2023-09-22)
 
 
