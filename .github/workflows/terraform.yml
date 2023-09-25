@@ -76,7 +76,6 @@ jobs:
     name: Terraform Plan
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-
     defaults:
       run:
         shell: bash
