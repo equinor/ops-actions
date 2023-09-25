@@ -114,6 +114,8 @@ jobs:
         id: plan
         run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
 
+      # The stdout of the plan step must not be set in an intermediate environment variable,
+      # as long environment variables will cause Bash to throw an error "Argument list too long" on startup.
       - name: Create job summary
         if: success() || failure()
         env:
