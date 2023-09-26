@@ -100,6 +100,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: 'Az login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get GitHub Public IP
+        id: github_public_ip
+        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
+
+      - name: Add GitHub IP to Key Vault
+        run: |
+          az storage account network-rule remove \
+            --resource-group "${{ env.resource_group_name }}" \
+            --account-name "${{ env.storage_account_name }}" \
+            --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
