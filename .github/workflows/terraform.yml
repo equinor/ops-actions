@@ -14,6 +14,11 @@ on:
         required: false
         default: "."
 
+      subscription:
+        description: The subscription to deploy in
+        type: string
+        required: true
+
       terraform_version:
         description: The version of Terraform to install.
         type: string
@@ -66,6 +71,9 @@ env:
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
+
+  resource_group_name: ${{ inputs.subscription }}-tfstate
+  key_vault_name: kv-${{ inputs.subscription }}-${{ inputs.environment }}
 
 jobs:
   terraform-plan:
@@ -173,6 +181,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: 'Az login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get GitHub Public IP
+        id: github_public_ip
+        uses: haythem/public-ip@v1.3
+
+      - name: Add GitHub IP to Key Vault
+        run: |
+          az keyvault account network-rule add \
+            --resource-group "${{ env.resource_group_name }}" \
+            --name "${{ env.key_vault_name }}" \
+            --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
+
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
@@ -198,3 +224,10 @@ jobs:
         uses: GeekyEggo/delete-artifact@54ab544f12cdb7b71613a16a2b5a37a9ade990af
         with:
           name: ${{ inputs.artifact_name }}
+
+      - name: Revoke GitHub IP on Key Vault
+        run: |
+          az storage account network-rule remove \
+            --resource-group "${{ env.resource_group_name }}" \
+            --name "${{ env.key_vault_name }}" \
+            --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
