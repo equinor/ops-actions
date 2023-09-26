@@ -227,7 +227,7 @@ jobs:
 
       - name: Revoke GitHub IP on Key Vault
         run: |
-          az storage account network-rule remove \
+          az keyvault account network-rule remove \
             --resource-group "${{ env.resource_group_name }}" \
             --name "${{ env.key_vault_name }}" \
             --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
