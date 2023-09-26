@@ -14,8 +14,13 @@ on:
         required: false
         default: "."
 
-      subscription:
-        description: The subscription to deploy in
+      project:
+        description: The project to deploy in
+        type: string
+        required: true
+
+      project_id:
+        description: The project id.
         type: string
         required: true
 
@@ -72,8 +77,10 @@ env:
 
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
-  resource_group_name: ${{ inputs.subscription }}-tfstate
-  key_vault_name: kv-${{ inputs.subscription }}-${{ inputs.environment }}
+  container_name: tfstate
+  key: ${{ inputs.environment }}.${{ inputs.project }}.terraform.tfstate
+  resource_group_name: ${{ inputs.project_id }}-tfstate
+  storage_account_name: st${{ inputs.project }}infra${{ inputs.environment }}
 
 jobs:
   terraform-plan:
@@ -105,7 +112,12 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config='container_name=${{ env.container_name }}' \
+            -backend-config='key=${{ env.key }}' \
+            -backend-config='resource_group_name=${{ env.resource_group_name }}' \
+            -backend-config='storage_account_name=${{ env.storage_account_name }}'
 
       - name: Terraform Validate
         id: validate
@@ -190,13 +202,13 @@ jobs:
 
       - name: Get GitHub Public IP
         id: github_public_ip
-        uses: haythem/public-ip@v1.3
+        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
 
       - name: Add GitHub IP to Key Vault
         run: |
-          az keyvault account network-rule add \
+          az storage account network-rule remove \
             --resource-group "${{ env.resource_group_name }}" \
-            --name "${{ env.key_vault_name }}" \
+            --account-name "${{ env.storage_account_name }}" \
             --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
 
       - name: Download artifact
@@ -227,7 +239,7 @@ jobs:
 
       - name: Revoke GitHub IP on Key Vault
         run: |
-          az keyvault account network-rule remove \
+          az storage account network-rule remove \
             --resource-group "${{ env.resource_group_name }}" \
-            --name "${{ env.key_vault_name }}" \
+            --account-name "${{ env.storage_account_name }}" \
             --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
