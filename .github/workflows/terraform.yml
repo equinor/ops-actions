@@ -118,6 +118,9 @@ jobs:
             --account-name "${{ env.storage_account_name }}" \
             --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
 
+      - name: Lets sleep for 30 seconds for FW rule to complete
+        run: sleep 30s
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -228,6 +231,9 @@ jobs:
             --resource-group "${{ env.resource_group_name }}" \
             --account-name "${{ env.storage_account_name }}" \
             --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
+
+      - name: Lets sleep for 30 seconds for FW rule to complete
+        run: sleep 30s
 
       - name: Download artifact
         uses: actions/download-artifact@v3
