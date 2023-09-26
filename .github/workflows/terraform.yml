@@ -199,6 +199,13 @@ jobs:
           # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
           retention-days: 35
 
+      - name: Revoke GitHub IP on Key Vault
+        run: |
+          az storage account network-rule remove \
+            --resource-group "${{ env.resource_group_name }}" \
+            --account-name "${{ env.storage_account_name }}" \
+            --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
+
   terraform:
     name: Terraform
     needs: terraform-plan
