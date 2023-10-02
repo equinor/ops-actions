@@ -19,7 +19,7 @@ jobs:
     with:
       environment: development
       working_directory: terraform
-      terraform_version: 1.0.0
+      terraform_version: "1.5.0"
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -96,7 +96,7 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/python.yml@main
     with:
       working_directory: src
-      python_version: 3.10
+      python_version: "3.10"
       pip_install_target: .python_packages/lib/site-packages # Required
 
   deploy:
@@ -132,7 +132,7 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/python.yml@main
     with:
       working_directory: src
-      python_version: 3.10
+      python_version: "3.10"
       venv_path: antenv # Required
       pip_install_target: .python_packages/lib/site-packages # Required
 
@@ -168,7 +168,7 @@ jobs:
   build:
     uses: equinor/ops-actions/.github/workflows/dotnet.yml@main
     with:
-      dotnet_version: 6.0
+      dotnet_version: "6.0"
       project: src/Example/Example.csproj
       test_project: |-
         tests/Example.UnitTests/Example.UnitTests.csproj
@@ -210,8 +210,8 @@ jobs:
   deploy:
     uses: equinor/ops-actions/.github/workflows/mkdocs-gh-pages.yml@main
     with:
-      mkdocs_version: 1.0.0
-      python_version: 3.10
+      mkdocs_version: "1.0.0"
+      python_version: "3.10"
 ```
 
 Prerequisites:
