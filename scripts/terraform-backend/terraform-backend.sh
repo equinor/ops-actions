@@ -24,6 +24,7 @@ storage_account_id="$(az storage account create \
   --min-tls-version TLS1_2 \
   --allow-blob-public-access false \
   --allow-shared-key-access false \
+  --allow-cross-tenant-replication false \
   --query id \
   --output tsv)"
 
