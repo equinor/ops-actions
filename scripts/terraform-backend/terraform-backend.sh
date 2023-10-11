@@ -6,7 +6,6 @@ readonly STORAGE_ACCOUNT_NAME=${1:?"STORAGE_ACCOUNT_NAME is unset or null"}
 readonly RESOURCE_GROUP_NAME=${2:?"RESOURCE_GROUP_NAME is unset or null"}
 readonly LOCATION=${3:?"LOCATION is unset or null"}
 readonly CONTAINER_NAME="tfstate"
-readonly SP_OBJECT_ID=${4:-""}
 
 az group create \
   --name "${RESOURCE_GROUP_NAME}" \
@@ -81,20 +80,11 @@ az storage account management-policy create \
   --policy "${management_policy}" \
   --output none
 
-if [[ -n "${SP_OBJECT_ID}" ]]; then
-  az role assignment create \
-    --assignee-object-id "${SP_OBJECT_ID}" \
-    --assignee-principal-type ServicePrincipal \
-    --role 'Storage Blob Data Owner' \
-    --scope "${storage_account_id}" \
-    --output none
-fi
-
 az resource lock create \
   --name 'Terraform' \
-  --lock-type ReadOnly \
+  --lock-type CanNotDelete \
   --resource "${storage_account_id}" \
-  --notes 'Prevent changes to Terraform backend configuration' \
+  --notes "Prevent deletion of Terraform backend" \
   --output none
 
 echo "resource_group_name = \"${RESOURCE_GROUP_NAME}\"
