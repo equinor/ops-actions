@@ -47,7 +47,7 @@ It accepts the following arguments:
     ```json
     {
       "role": "Storage Blob Data Owner",
-      "scope": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP_NAME>/storageAccounts/<STORAGE_ACCOUNT_NAME>"
+      "scope": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/<RESOURCE_GROUP_NAME>/storageAccounts/<STORAGE_ACCOUNT_NAME>"
     }
     ```
 
