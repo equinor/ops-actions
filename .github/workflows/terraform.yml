@@ -20,6 +20,13 @@ on:
         required: false
         default: ~1.5.0
 
+      backend_config:
+        description: The path of a configuration file containing the remaining arguments for a partial backend configuration.
+        type: string
+        required: false
+        default: ""
+        # Ref: https://developer.hashicorp.com/terraform/language/settings/backends/configuration#partial-configuration
+
       artifact_name:
         description: The name of the artifact to upload.
         type: string
@@ -100,7 +107,9 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        env:
+          BACKEND_CONFIG: "${{ github.workspace }}/${{ inputs.backend_config }}"
+        run: terraform init -backend-config="$BACKEND_CONFIG"
 
       - name: Terraform Validate
         id: validate
