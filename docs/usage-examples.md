@@ -20,6 +20,7 @@ jobs:
       environment: development
       working_directory: terraform
       terraform_version: "1.5.0"
+      backend_config: config/tfbackend/dev.azurerm.tfbackend.json
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

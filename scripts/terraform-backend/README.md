@@ -4,15 +4,31 @@ This directory contains a script `terraform-backend.sh` that will create an Azur
 
 It accepts the following arguments:
 
-1. The name of the storage account to create.
-1. The name of the Azure resource group to create the storage account in.
 1. The Azure region to create the storage account in.
+1. The path of the JSON file containing the Terraform backend configuration.
 
 ## Prerequisites
 
-- [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) (latest version as of writing: `2.49.0`).
-- [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to create lifecycle management policy.
+- [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) (latest version as of writing: `2.49.0`) - to create Azure resource group, storage account and container
+- [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
 - Azure role `Owner` at the subscription scope.
+
+## Configuration specification
+
+Example configuration:
+
+```json
+{
+  "resource_group_name": "tfstate",
+  "storage_account_name": "tfstate32417",
+  "container_name": "tfstate",
+  "use_azuread_auth": true
+}
+```
+
+> **Note**
+>
+> `.use_azuread_auth` should be `true`.
 
 ## Usage
 
@@ -22,22 +38,25 @@ It accepts the following arguments:
     az login
     ```
 
-1. Set active subscription:
+1. Set Azure subscription:
 
     ```console
     az account set -s <SUBSCRIPTION_NAME_OR_ID>
     ```
 
+1. Configure resource group name, storage account name and container name in a file `*.azurerm.tfbackend.json`,
+   e.g. `dev.azurerm.tfbackend.json`.
+
 1. Run the script:
 
     ```console
-    ./terraform-backend.sh <STORAGE_ACCOUNT_NAME> <RESOURCE_GROUP_NAME> <LOCATION>
+    ./terraform-backend.sh <LOCATION> <CONFIG_FILE>
     ```
 
     For example:
 
     ```console
-    ./terraform-backend.sh tfstate$RANDOM tfstate northeurope
+    ./terraform-backend.sh northeurope dev.azurerm.tfbackend.json
     ```
 
 1. Configure OIDC to authenticate from GitHub Actions to the Terraform backend using the [OIDC script](../oidc/README.md).
