@@ -21,7 +21,7 @@ on:
         default: ~1.5.0
 
       backend_config:
-        description: The path of a configuration file containing the remaining arguments for a partial backend configuration.
+        description: The path, relative to the working directory, of a configuration file containing the remaining arguments for a partial backend configuration.
         type: string
         required: false
         default: ""
