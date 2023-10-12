@@ -134,10 +134,13 @@ az storage account management-policy create \
   --policy "${management_policy}" \
   --output none
 
+<<<<<<< HEAD
 ################################################################################
 # Create Azure resource lock
 ################################################################################
 
+=======
+>>>>>>> main
 az resource lock create \
   --name 'Terraform' \
   --lock-type CanNotDelete \

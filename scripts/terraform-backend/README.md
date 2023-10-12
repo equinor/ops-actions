@@ -59,25 +59,19 @@ Example configuration:
     ./terraform-backend.sh northeurope dev.azurerm.tfbackend.json
     ```
 
-## Manage access
+1. Configure OIDC to authenticate from GitHub Actions to the Terraform backend using the [OIDC script](../oidc/README.md).
 
-Access to the resource group containing the backend should be managed using Azure AD Privileged Identity Management (PIM) and restricted to members of Azure AD group `AZAPPL S<###> - Owner`.
+    The JSON file containing the OIDC configuration must contain the following role assignment:
 
-### Assign access
-
-Follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-assign-roles#assign-a-role) to assign access to the backend using PIM:
-
-| Resource type    | Resource           | Role                      | Member                  |
-| ---------------- | ------------------ | ------------------------- | ----------------------- |
-| `Resource group` | `<RESOURCE_GROUP>` | `Storage Blob Data Owner` | `AZAPPL S<###> - Owner` |
-
-### Activate access
-
-Members of `AZAPPL S<###> - Owner` can follow [these steps](https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-activate-your-roles#activate-a-role) to activate access to the backend using PIM.
+    ```json
+    {
+      "role": "Storage Blob Data Owner",
+      "scope": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/<RESOURCE_GROUP_NAME>/storageAccounts/<STORAGE_ACCOUNT_NAME>"
+    }
+    ```
 
 ## References
 
 - [Store Terraform state in Azure Storage](https://learn.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage?tabs=azure-cli)
 - [Security recommendations for Azure Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/security-recommendations)
 - [Terraform backend configuration for Azure Storage](https://www.terraform.io/language/settings/backends/azurerm)
-- [Omnia PIM strategy](https://docs.omnia.equinor.com/governance/architecture/Omnia-PIM-Strategy/)
