@@ -1,5 +1,13 @@
 # Changelog
 
+## [8.7.0](https://github.com/equinor/ops-actions/compare/v8.6.0...v8.7.0) (2023-10-12)
+
+
+### Features
+
+* **azure-webapp:** add optional input `runs_on` ([#273](https://github.com/equinor/ops-actions/issues/273)) ([1d9fb31](https://github.com/equinor/ops-actions/commit/1d9fb318ddb99ff2709af9d524c0dcab3c1e941a))
+* **dotnet:** add optional input `runs_on` ([#272](https://github.com/equinor/ops-actions/issues/272)) ([dd8620e](https://github.com/equinor/ops-actions/commit/dd8620e596c3de93bf599a783dd426a6f255303b))
+
 ## [8.6.0](https://github.com/equinor/ops-actions/compare/v8.5.2...v8.6.0) (2023-10-12)
 
 
