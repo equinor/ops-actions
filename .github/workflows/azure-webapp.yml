@@ -15,7 +15,7 @@ on:
         required: false
 
       runs_on:
-        description:
+        description: Which runner to run the job on.
         type: string
         required: false
         default: ubuntu-latest
