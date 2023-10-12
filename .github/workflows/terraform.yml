@@ -69,6 +69,8 @@ env:
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
   TF_IN_AUTOMATION: true
 
+  TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }}
+
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
   ARM_USE_OIDC: true
@@ -107,9 +109,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        env:
-          BACKEND_CONFIG: "${{ github.workspace }}/${{ inputs.backend_config }}"
-        run: terraform init -backend-config="$BACKEND_CONFIG"
+        run: terraform init
 
       - name: Terraform Validate
         id: validate
