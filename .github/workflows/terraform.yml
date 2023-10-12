@@ -21,7 +21,7 @@ on:
         default: ~1.5.0
 
       backend_config:
-        description: The path, relative to the working directory, of a configuration file containing the remaining arguments for a partial backend configuration.
+        description: The path of a configuration file containing the remaining arguments for a partial backend configuration.
         type: string
         required: false
         default: ""
@@ -69,7 +69,7 @@ env:
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
   TF_IN_AUTOMATION: true
 
-  TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }}
+  TF_CLI_ARGS_init: -backend-config=${{ github.workspace }}/${{ inputs.backend_config }}
 
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
