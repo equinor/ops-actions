@@ -86,7 +86,7 @@ jobs:
           dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Update npm
-        if: ${{ inputs.npm_version }} != ''
+        if: inputs.npm_version != ''
         env:
           NPM_VERSION: ${{ inputs.npm_version }}
         run: npm install -g "npm@$NPM_VERSION"
