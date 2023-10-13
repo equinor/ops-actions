@@ -14,12 +14,6 @@ on:
         type: string
         required: false
 
-      runs_on:
-        description: Which runner to run the job on.
-        type: string
-        required: false
-        default: ubuntu-latest
-
       artifact_name:
         description: The name of the artifact containing the package to deploy. Required if "image" is not set.
         type: string
@@ -50,7 +44,7 @@ on:
 
 jobs:
   azure-webapp:
-    runs-on: ${{ inputs.runs_on }}
+    runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment }}
       url: ${{ steps.deploy.outputs.webapp-url }}
