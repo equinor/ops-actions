@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.7.2](https://github.com/equinor/ops-actions/compare/v8.7.1...v8.7.2) (2023-10-13)
+
+
+### Bug Fixes
+
+* **dotnet:** skip NPM update step if not required ([#280](https://github.com/equinor/ops-actions/issues/280)) ([0931dfe](https://github.com/equinor/ops-actions/commit/0931dfee6e423e0961ee382d9aa4ee121595f000))
+
 ## [8.7.1](https://github.com/equinor/ops-actions/compare/v8.7.0...v8.7.1) (2023-10-13)
 
 
