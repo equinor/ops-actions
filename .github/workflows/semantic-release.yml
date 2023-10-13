@@ -1,5 +1,6 @@
 # Fully automated release using semantic-release.
 # By default, creates a GitHub release on branch "main" using the conventionalcommits preset.
+name: ♻ semantic-release
 
 on:
   workflow_call:
@@ -46,8 +47,7 @@ on:
         default: latest
 
 jobs:
-  release:
-    name: Release
+  semantic-release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

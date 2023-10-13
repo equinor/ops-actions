@@ -1,11 +1,17 @@
-# ops-actions
+# Ops Actions
 
-![release workflow status badge](https://github.com/equinor/ops-actions/actions/workflows/release.yml/badge.svg?event=push&branch=main)
+[Reusable GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for common operational tasks.
 
-[Reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for GitHub Actions, maintained by the [Ops team](https://github.com/orgs/equinor/teams/ops).
+Examples:
 
-## Prerequisites
+- 🌲 `terraform.yml`: provision cloud environment using Terraform.
+- 📦 `docker.yml`: build Docker image and push to container registry.
+- 🚀 `azure-webapp.yml`: deploy to Azure Web App.
 
-### OpenID Connect
+## Usage
 
-For reusable workflows that login to Azure, run [this script](./scripts/oidc/) to configure OpenID Connect for the repository containing the caller workflow.
+See [usage examples](docs/usage-examples.md).
+
+## Contributing
+
+See [contributing guidelines](CONTRIBUTING.md).

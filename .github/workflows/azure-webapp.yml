@@ -1,12 +1,5 @@
 # Login to Azure using OpenID Connect (OIDC), then deploy Docker image or package to Azure Web App.
-
-# Default environment variables are available for the input app settings.
-# See docs for list of default environment variables: https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-# Example app settings JSON:
-#   {
-#     "GITHUB_RUN_ID": "$GITHUB_RUN_ID"
-#     "GITHUB_RUN_NUMBER": "$GITHUB_RUN_NUMBER"
-#   }
+name: ♻ azure-webapp
 
 on:
   workflow_call:
@@ -14,7 +7,7 @@ on:
       environment:
         description: The name of the GitHub environment that this job references.
         type: string
-        required: true
+        required: false
 
       image:
         description: The Docker image to deploy. Required if "artifact_name" is not set.
@@ -32,9 +25,8 @@ on:
         required: true
 
       app_settings:
-        description: The app settings to configure for the Azure Web App. Inline JSON or path of a JSON file.
+        description: App settings to configure for the Azure Web App. Inline JSON.
         type: string
-        default: ""
         required: false
 
     secrets:
@@ -51,8 +43,8 @@ on:
         required: true
 
 jobs:
-  deploy:
-    name: Deploy
+  azure-webapp:
+    # The steps for this job assume that OS is Ubuntu.
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.environment }}
@@ -64,16 +56,19 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - name: Download artifact
-        id: download
         if: inputs.artifact_name != ''
         uses: actions/download-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
-          path: package-artifact
+
+      - name: Unzip
+        if: inputs.artifact_name != ''
+        env:
+          ZIP_FILE: ${{ inputs.artifact_name }}.zip
+        run: |
+          unzip "$ZIP_FILE"
+          rm "$ZIP_FILE"
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -88,22 +83,11 @@ jobs:
         with:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
-          package: ${{ steps.download.outputs.download-path }}
 
-      # Configure app settings by calling Azure REST API directly.
-      # This will replace entire app settings object instead of simply adding new properties to it.
       - name: Configure app settings
         if: inputs.app_settings != ''
-        env:
-          APP_NAME: ${{ inputs.app_name }}
-          APP_SETTINGS: ${{ inputs.app_settings }}
-        run: |
-          app_id=$(az webapp list --query "[?name=='$APP_NAME'].id" -o tsv)
-
-          if [[ -f "$APP_SETTINGS" ]]; then
-            APP_SETTINGS=$(cat "$APP_SETTINGS")
-          fi
-          APP_SETTINGS=$(envsubst <<< "$APP_SETTINGS")
-          body=$(jq '{properties: .}' <<< "$APP_SETTINGS")
-
-          az rest -m PUT -u "$app_id/config/appsettings?api-version=2022-03-01" -b "$body" --query properties -o json
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: ${{ inputs.app_name }}
+          app-settings-json: ${{ inputs.app_settings }}
+          mask-inputs: false

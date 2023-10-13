@@ -1,4 +1,4 @@
-name: Release
+name: 🚀 Create release
 
 on:
   push:
@@ -6,6 +6,9 @@ on:
       - main
 
 jobs:
-  release:
-    name: Release
-    uses: ./.github/workflows/semantic-release.yml
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: simple

@@ -1,0 +1,138 @@
+# Restore, build and publish .NET Core application.
+name: ♻ dotnet
+
+on:
+  workflow_call:
+    inputs:
+      dotnet_version:
+        description: The version of .NET to install.
+        type: string
+        required: true
+
+      ci:
+        description: Configure workflow to run in CI mode.
+        type: boolean
+        required: false
+        default: true
+        # Should be set to true in most cases.
+        # Known exceptions:
+        # - When set to true, NPM warnings are treated as errors. Set to false to prevent this behaviour.
+
+      project:
+        description: Specify the path of the project or solution file, or the path of the directory containing the project or solution file.
+        type: string
+        required: false
+        default: "."
+
+      runtime:
+        description: Which runtime to publish the application for.
+        type: string
+        required: false
+        default: ""
+
+      self_contained:
+        description: Publish the .NET runtime with your application so the runtime doesn't need to be installed on the target machine?
+        type: boolean
+        required: false
+        default: false
+
+      test_project:
+        description: Specify the path of a test project or solution file, or the path of a directory containing a test project or solution file. Pass a newline-separated string to specify multiple test projects.
+        type: string
+        required: false
+        default: ""
+
+      test_collect:
+        description: Enables data collector for the test run.
+        type: string
+        required: false
+        default: ""
+
+      npm_version:
+        description: A specific version of npm to install. Use to override pre-installed version on GitHub-hosted runners.
+        type: string
+        required: false
+
+      artifact_name:
+        description: The name of the build artifact to upload.
+        type: string
+        required: false
+        default: dotnet-app
+
+    outputs:
+      artifact_name:
+        description: The name of the uploaded artifact containing the application.
+        value: ${{ inputs.artifact_name }}
+
+jobs:
+  dotnet:
+    # The steps for this job assume that OS is Ubuntu.
+    # Use the "runtime" input to specify target OS and architecture instead.
+    runs-on: ubuntu-latest
+    env:
+      CI: ${{ inputs.ci }}
+      PROJECT: ${{ inputs.project }}
+      CONFIGURATION: Release
+      RUNTIME: ${{ inputs.runtime }}
+      SELF_CONTAINED: ${{ inputs.self_contained }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ inputs.dotnet_version }}
+
+      - name: Update npm
+        if: inputs.npm_version != ''
+        env:
+          NPM_VERSION: ${{ inputs.npm_version }}
+        run: npm install -g "npm@$NPM_VERSION"
+
+      # Restore dependencies for the application and runtime.
+      - name: Dotnet restore
+        run: dotnet restore "$PROJECT" --runtime "$RUNTIME"
+
+      # Build the application for release/deployment.
+      - name: Dotnet build
+        run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-restore
+
+      # Execute unit tests.
+      - name: Dotnet test
+        if: inputs.test_project != ''
+        env:
+          PROJECT: ${{ inputs.test_project }}
+          COLLECT: ${{ inputs.test_collect }}
+        run: |
+          echo "$PROJECT" |
+          while read -r p; do
+            dotnet test "$p" --configuration "$CONFIGURATION" --collect "$COLLECT"
+          done
+
+      # Publish the application and its dependencies to a folder for deployment.
+      - name: Dotnet publish
+        id: publish
+        env:
+          OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
+        run: |
+          dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --output "$OUTPUT" --no-build
+          echo "publish_path=$OUTPUT" >> "$GITHUB_OUTPUT"
+
+      # Zip Dotnet publish output in order to drastically improve artifact upload performance.
+      - name: Zip
+        id: zip
+        working-directory: ${{ steps.publish.outputs.publish_path }}
+        env:
+          ZIP_FILE: ${{ runner.temp }}/${{ inputs.artifact_name }}.zip
+        run: |
+          zip -r "$ZIP_FILE" .
+          echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
+
+      # Upload an artifact containing the application.
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ steps.zip.outputs.zip_file }}

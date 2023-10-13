@@ -1,4 +1,4 @@
-# Install Terraform, configure OpenID Connect (OIDC) authentication to Azure, create a Terraform plan, and apply the plan on push to branch 'main'.
+name: ♻ terraform
 
 on:
   workflow_call:
@@ -18,7 +18,20 @@ on:
         description: The version of Terraform to install.
         type: string
         required: false
-        default: latest
+        default: ~1.5.0
+
+      backend_config:
+        description: The path of a configuration file containing the remaining arguments for a partial backend configuration.
+        type: string
+        required: false
+        default: ""
+        # Ref: https://developer.hashicorp.com/terraform/language/settings/backends/configuration#partial-configuration
+
+      artifact_name:
+        description: The name of the artifact to upload.
+        type: string
+        required: false
+        default: terraform
 
     secrets:
       AZURE_CLIENT_ID:
@@ -33,35 +46,52 @@ on:
         description: The ID of the Azure tenant to create the resources in.
         required: true
 
+      ENCRYPTION_PASSWORD:
+        description: A password used to encrypt the archive containing the Terraform configuration and plan file.
+        required: true
+
+# Queue jobs that target the same Terraform configuration.
+concurrency:
+  group: terraform @ ${{ inputs.working_directory }}
+  cancel-in-progress: false
+
+# Set permissions required to login to Azure using OIDC.
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  # Ensure use of open-source Terraform versions.
+  # (versions 1.6.0 and above are source-available)
+  TERRAFORM_VERSION: "${{ inputs.terraform_version }} <1.6.0"
+
+  # Configure Terraform to run in automation.
+  # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
+  TF_IN_AUTOMATION: true
+
+  TF_CLI_ARGS_init: -backend-config=${{ github.workspace }}/${{ inputs.backend_config }}
+
+  # Configure OIDC authentication to Azure using environment variables.
+  # Required by the AzureRM backend and provider.
+  ARM_USE_OIDC: true
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+  ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
+
 jobs:
-  terraform:
-    name: Terraform
+  terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-
-    # Queue jobs that target the same Terraform configuration.
-    concurrency:
-      group: terraform @ ${{ inputs.working_directory }}
-      cancel-in-progress: false
-
-    # Set permissions required to login to Azure using OIDC.
-    permissions:
-      id-token: write
-      contents: read
-
     defaults:
       run:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
 
-    # Configure OIDC authentication to Azure using environment variables.
-    # Required by the AzureRM backend and provider.
-    env:
-      ARM_USE_OIDC: true
-      ARM_USE_AZUREAD: true
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+    outputs:
+      upload-outcome: ${{ steps.upload.outcome }}
 
     steps:
       - name: Checkout
@@ -70,7 +100,8 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: ${{ inputs.terraform_version }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: true # Makes Terraform commands stdout and exitcode available in step outputs
 
       - name: Terraform Format
         id: fmt
@@ -84,35 +115,97 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
+      # Create Terraform plan file.
+      # This file contains the full configuration, including sensitive data.
+      # As a result, it should be treated as a potentially-sensitive artifact.
+      # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
+        run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
 
-      - name: Create summary
-        if: github.event_name == 'pull_request' && (success() || failure())
+      # The stdout of the plan step must not be set in an intermediate environment variable.
+      # Long environment variables will cause Bash to throw an error "Argument list too long" on startup.
+      - name: Create job summary
+        if: success() || failure()
         env:
-          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
-          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
-          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
-          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
-          TF_PLAN: ${{ steps.plan.outputs.stdout }}
+          WORKING_DIRECTORY: ${{ inputs.working_directory }}
         run: |
-          echo "#### Terraform Format and Style :paintbrush:\`$TF_FMT_OUTCOME\`
-          #### Terraform Initialization :gear:\`$TF_INIT_OUTCOME\`
-          #### Terraform Validation :robot:\`$TF_VALIDATE_OUTCOME\`
-          #### Terraform Plan :book:\`$TF_PLAN_OUTCOME\`
+          tfplan='${{ steps.plan.outputs.stdout }}'
+
+          echo "#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
 
           <details><summary>Show Plan</summary>
 
           \`\`\`terraform
-          $TF_PLAN
+          $tfplan
           \`\`\`
 
           </details>
 
-          *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`*" >> "$GITHUB_STEP_SUMMARY"
+          *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Archive Terraform config
+        id: archive
+        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
+        if: steps.plan.outputs.exitcode == 2
+        run: |
+          tar -cf terraform.tar .
+          7z a -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
+
+      - name: Upload artifact
+        id: upload
+        if: steps.archive.outcome == 'success'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.working_directory }}/terraform.tar.7z
+          if-no-files-found: error
+          # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
+          # If a workflow reaches this limit, it will be cancelled and the artifact will no longer be needed.
+          # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
+          retention-days: 35
+
+  terraform:
+    name: Terraform
+    needs: terraform-plan
+    if: needs.terraform-plan.outputs.upload-outcome == 'success'
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.working_directory }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Extract Terraform config
+        run: |
+          7z x -p"$ENCRYPTION_PASSWORD" terraform.tar.7z
+          tar -xf terraform.tar
 
       - name: Terraform Apply
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'schedule'
-        run: terraform apply -auto-approve -input=false
+        run: terraform apply -auto-approve -input=false tfplan
+
+      # Once the Terraform plan file has been applied, the artifact is no longer needed.
+      # Delete it to save storage space.
+      - name: Delete artifact
+        uses: GeekyEggo/delete-artifact@54ab544f12cdb7b71613a16a2b5a37a9ade990af
+        with:
+          name: ${{ inputs.artifact_name }}

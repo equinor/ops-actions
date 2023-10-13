@@ -7,6 +7,8 @@
 # Additional configuration can be set in `commitlint.config.js`.
 # Docs: https://commitlint.js.org/#/reference-configuration
 
+name: ♻ commitlint
+
 on:
   workflow_call:
     inputs:
@@ -33,6 +35,11 @@ on:
         description: Commit message to lint.
         type: string
         required: true
+
+      help_url:
+        description: Custom help URL for error messages.
+        type: string
+        required: false
 
       # TODO: Allow options other than explicitly specifying a commit message.
 
@@ -62,6 +69,7 @@ jobs:
           VERSION: ${{ inputs.commitlint_version }}
           EXTENDS: ${{ inputs.extends }}
           MESSAGE: ${{ inputs.message }}
+          HELP_URL: ${{ inputs.help_url }}
         run: |
           readarray -t extends_array <<< "$EXTENDS"
-          npx "commitlint@$VERSION" --extends "${extends_array[@]}" <<< "$MESSAGE"
+          npx "commitlint@$VERSION" --extends "${extends_array[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"
