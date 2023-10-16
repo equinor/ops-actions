@@ -19,7 +19,7 @@ on:
         required: true
 
       app_settings:
-        description: App settings to configure for the Azure Function App. Inline JSON.
+        description: App settings to configure for the Azure Function App. Space-separated string in KEY=VALUE format or inline JSON.
         type: string
         required: false
 
