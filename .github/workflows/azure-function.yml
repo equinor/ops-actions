@@ -78,5 +78,5 @@ jobs:
           APP_NAME: ${{ inputs.app_name }}
           APP_SETTINGS: ${{ inputs.app_settings }}
         run: |
-          app_id=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          az functionapp config appsettings set --ids "$app_id" --settings "$app_settings" --query properties --output json
+          APP_ID=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
+          az functionapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" --query properties --output json
