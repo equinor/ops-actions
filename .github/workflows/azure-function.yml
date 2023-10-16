@@ -19,7 +19,7 @@ on:
         required: true
 
       app_settings:
-        description: App settings to configure for the Azure Function App. Space-separated string in KEY=VALUE format or inline JSON.
+        description: App settings to configure for the Azure Function App. Space-separated string in "KEY=VALUE" format or inline JSON.
         type: string
         required: false
 
@@ -79,4 +79,4 @@ jobs:
           APP_SETTINGS: ${{ inputs.app_settings }}
         run: |
           APP_ID=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          az functionapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" --query properties --output json
+          az functionapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" --output json
