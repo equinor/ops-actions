@@ -74,8 +74,9 @@ jobs:
 
       - name: Configure app settings
         if: inputs.app_settings != ''
-        uses: azure/appservice-settings@v1
-        with:
-          app-name: ${{ inputs.app_name }}
-          app-settings-json: ${{ inputs.app_settings }}
-          mask-inputs: false
+        env:
+          APP_NAME: ${{ inputs.app_name }}
+          APP_SETTINGS: ${{ inputs.app_settings }}
+        run: |
+          APP_ID=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
+          az functionapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" --output json
