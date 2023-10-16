@@ -25,7 +25,7 @@ on:
         required: true
 
       app_settings:
-        description: App settings to configure for the Azure Web App. Space-separated string in "KEY=VALUE" format or inline JSON.
+        description: App settings to configure for the Azure Web App. Space-separated string in '"KEY1=VALUE1" "KEY2=VALUE2"' format or inline JSON.
         type: string
         required: false
 
