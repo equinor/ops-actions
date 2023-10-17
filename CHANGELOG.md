@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.7.4](https://github.com/equinor/ops-actions/compare/v8.7.3...v8.7.4) (2023-10-17)
+
+
+### Bug Fixes
+
+* **terraform:** empty backend config throws error ([#286](https://github.com/equinor/ops-actions/issues/286)) ([e75cbea](https://github.com/equinor/ops-actions/commit/e75cbea2473ac411fbe090717caf8beed9989b24))
+
 ## [8.7.3](https://github.com/equinor/ops-actions/compare/v8.7.2...v8.7.3) (2023-10-17)
 
 
