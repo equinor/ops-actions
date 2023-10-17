@@ -52,7 +52,6 @@ on:
         description: A specific version of npm to install. Use to override pre-installed version on GitHub-hosted runners.
         type: string
         required: false
-        default: ""
 
       artifact_name:
         description: The name of the build artifact to upload.
@@ -67,6 +66,8 @@ on:
 
 jobs:
   dotnet:
+    # The steps for this job assume that OS is Ubuntu.
+    # Use the "runtime" input to specify target OS and architecture instead.
     runs-on: ubuntu-latest
     env:
       CI: ${{ inputs.ci }}
@@ -85,7 +86,7 @@ jobs:
           dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Update npm
-        if: ${{ inputs.npm_version }} != ""
+        if: inputs.npm_version != ''
         env:
           NPM_VERSION: ${{ inputs.npm_version }}
         run: npm install -g "npm@$NPM_VERSION"
@@ -107,9 +108,8 @@ jobs:
         run: |
           echo "$PROJECT" |
           while read -r p; do
-            dotnet test "$p" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --collect "$COLLECT"
+            dotnet test "$p" --configuration "$CONFIGURATION" --collect "$COLLECT"
           done
-        # The dotnet test command does not support the '--self-contained' option as of Mar 8, 2023 (https://github.com/dotnet/sdk/issues/31066).
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
@@ -117,7 +117,7 @@ jobs:
         env:
           OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
         run: |
-          dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
+          dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --output "$OUTPUT" --no-build
           echo "publish_path=$OUTPUT" >> "$GITHUB_OUTPUT"
 
       # Zip Dotnet publish output in order to drastically improve artifact upload performance.

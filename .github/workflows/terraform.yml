@@ -28,7 +28,14 @@ on:
         description: The version of Terraform to install.
         type: string
         required: false
-        default: latest
+        default: ~1.5.0
+
+      backend_config:
+        description: The path of a configuration file containing the remaining arguments for a partial backend configuration.
+        type: string
+        required: false
+        default: ""
+        # Ref: https://developer.hashicorp.com/terraform/language/settings/backends/configuration#partial-configuration
 
       artifact_name:
         description: The name of the artifact to upload.
@@ -64,9 +71,15 @@ permissions:
   contents: read
 
 env:
+  # Ensure use of open-source Terraform versions.
+  # (versions 1.6.0 and above are source-available)
+  TERRAFORM_VERSION: "${{ inputs.terraform_version }} <1.6.0"
+
   # Configure Terraform to run in automation.
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
   TF_IN_AUTOMATION: true
+
+  TF_CLI_ARGS_init: -backend-config=${{ github.workspace }}/${{ inputs.backend_config }}
 
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
@@ -87,7 +100,6 @@ jobs:
     name: Terraform Plan
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-
     defaults:
       run:
         shell: bash
@@ -124,7 +136,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: ${{ inputs.terraform_version }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: true # Makes Terraform commands stdout and exitcode available in step outputs
 
       - name: Terraform Format
@@ -152,25 +164,24 @@ jobs:
         id: plan
         run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
 
+      # The stdout of the plan step must not be set in an intermediate environment variable.
+      # Long environment variables will cause Bash to throw an error "Argument list too long" on startup.
       - name: Create job summary
         if: success() || failure()
         env:
-          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
-          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
-          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
-          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
-          TF_PLAN: ${{ steps.plan.outputs.stdout }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         run: |
-          echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
-          #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
-          #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
-          #### Terraform Plan 📖\`$TF_PLAN_OUTCOME\`
+          tfplan='${{ steps.plan.outputs.stdout }}'
+
+          echo "#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
 
           <details><summary>Show Plan</summary>
 
           \`\`\`terraform
-          $TF_PLAN
+          $tfplan
           \`\`\`
 
           </details>
@@ -206,8 +217,9 @@ jobs:
             --account-name "${{ env.storage_account_name }}" \
             --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
 
-  terraform:
-    name: Terraform
+
+  terraform-apply:
+    name: Terraform Apply
     needs: terraform-plan
     if: needs.terraform-plan.outputs.upload-outcome == 'success'
     runs-on: ubuntu-latest
@@ -251,7 +263,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: ${{ inputs.terraform_version }}
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Extract Terraform config
         run: |

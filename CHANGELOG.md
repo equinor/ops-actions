@@ -1,5 +1,69 @@
 # Changelog
 
+## [8.7.3](https://github.com/equinor/ops-actions/compare/v8.7.2...v8.7.3) (2023-10-17)
+
+
+### Bug Fixes
+
+* remove calls to outdated action ([#283](https://github.com/equinor/ops-actions/issues/283)) ([1c29fc1](https://github.com/equinor/ops-actions/commit/1c29fc16aa3d0498901e47427580440da13e2f79))
+
+## [8.7.2](https://github.com/equinor/ops-actions/compare/v8.7.1...v8.7.2) (2023-10-13)
+
+
+### Bug Fixes
+
+* **dotnet:** skip NPM update step if not required ([#280](https://github.com/equinor/ops-actions/issues/280)) ([0931dfe](https://github.com/equinor/ops-actions/commit/0931dfee6e423e0961ee382d9aa4ee121595f000))
+
+## [8.7.1](https://github.com/equinor/ops-actions/compare/v8.7.0...v8.7.1) (2023-10-13)
+
+
+### Bug Fixes
+
+* **dotnet:** don't specify runtime for test and publish ([#276](https://github.com/equinor/ops-actions/issues/276)) ([1ad1560](https://github.com/equinor/ops-actions/commit/1ad15608f2604f8097b4c1a55893f060eb0cf5ea))
+* **dotnet:** skip NPM update step if not required ([#275](https://github.com/equinor/ops-actions/issues/275)) ([f181815](https://github.com/equinor/ops-actions/commit/f181815ad26e35bad0551c042d86cf06cc42bac9))
+
+
+### Reverts
+
+* **azure-webapp:** add optional input `runs_on` ([#278](https://github.com/equinor/ops-actions/issues/278)) ([7d22977](https://github.com/equinor/ops-actions/commit/7d22977f4724187e9c451c19865773dfd0788394))
+* **dotnet:** add optional input `runs_on` ([#279](https://github.com/equinor/ops-actions/issues/279)) ([10576cc](https://github.com/equinor/ops-actions/commit/10576cc086fbe240e51de1ffb535b49e300a9250))
+
+## [8.7.0](https://github.com/equinor/ops-actions/compare/v8.6.0...v8.7.0) (2023-10-12)
+
+
+### Features
+
+* **azure-webapp:** add optional input `runs_on` ([#273](https://github.com/equinor/ops-actions/issues/273)) ([1d9fb31](https://github.com/equinor/ops-actions/commit/1d9fb318ddb99ff2709af9d524c0dcab3c1e941a))
+* **dotnet:** add optional input `runs_on` ([#272](https://github.com/equinor/ops-actions/issues/272)) ([dd8620e](https://github.com/equinor/ops-actions/commit/dd8620e596c3de93bf599a783dd426a6f255303b))
+
+## [8.6.0](https://github.com/equinor/ops-actions/compare/v8.5.2...v8.6.0) (2023-10-12)
+
+
+### Features
+
+* **terraform:** configure partial backend ([#267](https://github.com/equinor/ops-actions/issues/267)) ([e4d564b](https://github.com/equinor/ops-actions/commit/e4d564bbeecdaf930fdae578dc9931bd20942427))
+
+## [8.5.2](https://github.com/equinor/ops-actions/compare/v8.5.1...v8.5.2) (2023-09-25)
+
+
+### Bug Fixes
+
+* **terraform:** Bash throws error if plan too long ([#259](https://github.com/equinor/ops-actions/issues/259)) ([0cf9966](https://github.com/equinor/ops-actions/commit/0cf9966638f7062c9de7584d560371f1dd787b9d))
+
+## [8.5.1](https://github.com/equinor/ops-actions/compare/v8.5.0...v8.5.1) (2023-09-22)
+
+
+### Bug Fixes
+
+* **terraform:** use latest 1.5 patch version ([#257](https://github.com/equinor/ops-actions/issues/257)) ([00f63a8](https://github.com/equinor/ops-actions/commit/00f63a8299ebf070c695b2d7f544ff457ccfa8e8))
+
+## [8.5.0](https://github.com/equinor/ops-actions/compare/v8.4.0...v8.5.0) (2023-09-22)
+
+
+### Features
+
+* **terraform:** ensure use of open-source release ([#255](https://github.com/equinor/ops-actions/issues/255)) ([106cda4](https://github.com/equinor/ops-actions/commit/106cda4cbf13895affc5d65a38a1bbc085dff89b))
+
 ## [8.4.0](https://github.com/equinor/ops-actions/compare/v8.3.1...v8.4.0) (2023-09-19)
 
 
