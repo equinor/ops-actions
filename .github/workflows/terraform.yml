@@ -79,11 +79,9 @@ env:
 
   BACKEND_CONFIG: ${{ inputs.backend_config }}
 
-  ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
-
   PRE_FLIGHT_SCRIPT: |
-    RESOURCE_GROUP=$(jq -r .resource_group_name "$BACKEND_CONFIG")
-    ACCOUNT_NAME=$(jq -r .storage_account_name "$BACKEND_CONFIG")
+    RESOURCE_GROUP=$(jq -r .resource_group_name ${{ inputs.backend_config }})
+    ACCOUNT_NAME=$(jq -r .storage_account_name ${{ inputs.backend_config }})
     IP_ADDRESS=$(curl https://api.ipify.org)
 
     # Make environment variables available to other steps and jobs.
