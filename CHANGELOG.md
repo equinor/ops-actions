@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.8.0](https://github.com/equinor/ops-actions/compare/v8.7.4...v8.8.0) (2023-10-18)
+
+
+### Features
+
+* **docker:** set default repository ([#289](https://github.com/equinor/ops-actions/issues/289)) ([20f84c3](https://github.com/equinor/ops-actions/commit/20f84c3b374033043bc98f790fd372749a13db15))
+
 ## [8.7.4](https://github.com/equinor/ops-actions/compare/v8.7.3...v8.7.4) (2023-10-17)
 
 
