@@ -23,8 +23,7 @@ on:
       backend_config:
         description: The path, relative to the working directory, of a configuration file containing the remaining arguments for a partial backend configuration.
         type: string
-        required: false
-        default: ""
+        required: true
         # Ref: https://developer.hashicorp.com/terraform/language/settings/backends/configuration#partial-configuration
 
       artifact_name:
@@ -78,7 +77,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  BACKEND_CONFIG_PATH: ${{ inputs.backend_config }}
+  BACKEND_CONFIG: ${{ inputs.backend_config }}
 
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
@@ -111,7 +110,6 @@ jobs:
 
       # Required for Azure CLI commands
       - name: Login to Azure
-        if: inputs.backend_config != ''
         uses: Azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -120,11 +118,9 @@ jobs:
 
       - name: Add public IP to Azure Storage account network rules
         id: firewall
-        if: inputs.backend_config != ''
         run: |
-          backend_config=$(cat "$BACKEND_CONFIG_PATH")
-          resource_group_name=$(echo "$backend_config" | jq -r .resource_group_name)
-          storage_account_name=$(echo "$backend_config" | jq -r .account_name)
+          resource_group_name=$(jq -r .resource_group_name "$BACKEND_CONFIG")
+          storage_account_name=$(jq -r .storage_account_name "$BACKEND_CONFIG")
           ip_address=$(curl https://api.ipify.org)
 
           az storage account network-rule add -g "$resource_group_name" -n "$storage_account_name" --ip-address "$ip_address" -o none
@@ -198,11 +194,11 @@ jobs:
           retention-days: 35
 
       - name: Remove public IP from Azure Storage account network rules
-        if: steps.firewall.outcome == 'success' && always()
+        if: always()
         env:
           RESOURCE_GROUP_NAME: ${{ steps.firewall.outputs.resource_group_name }}
           STORAGE_ACCOUNT_NAME: ${{ steps.firewall.outputs.storage_account_name }}
-          IP_ADDRESS: ${{ steps.firewall.outputs.ip }}
+          IP_ADDRESS: ${{ steps.firewall.outputs.ip_address }}
         run: az storage account network-rule remove -g "$RESOURCE_GROUP_NAME" -n "$STORAGE_ACCOUNT_NAME" --ip-address "$IP_ADDRESS" -o none
 
   terraform-apply:
@@ -236,7 +232,28 @@ jobs:
           7z x -p"$ENCRYPTION_PASSWORD" terraform.tar.7z
           tar -xf terraform.tar
 
-      # TODO: Add IP address to Azure Storage account network rules
+      # Required for Azure CLI commands
+      - name: Login to Azure
+        uses: Azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Add public IP to Azure Storage account network rules
+        id: firewall
+        run: |
+          resource_group_name=$(jq -r .resource_group_name "$BACKEND_CONFIG")
+          storage_account_name=$(jq -r .storage_account_name "$BACKEND_CONFIG")
+          ip_address=$(curl https://api.ipify.org)
+
+          az storage account network-rule add -g "$resource_group_name" -n "$storage_account_name" --ip-address "$ip_address" -o none
+
+          }
+            echo "resource_group_name=$resource_group_name"
+            echo "storage_account_name=$storage_account_name"
+            echo "ip_address=$ip_address"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
@@ -248,4 +265,10 @@ jobs:
         with:
           name: ${{ inputs.artifact_name }}
 
-      # TODO: Remove IP address from Azure Storage account network rules
+      - name: Remove public IP from Azure Storage account network rules
+        if: always()
+        env:
+          RESOURCE_GROUP_NAME: ${{ steps.firewall.outputs.resource_group_name }}
+          STORAGE_ACCOUNT_NAME: ${{ steps.firewall.outputs.storage_account_name }}
+          IP_ADDRESS: ${{ steps.firewall.outputs.ip_address }}
+        run: az storage account network-rule remove -g "$RESOURCE_GROUP_NAME" -n "$STORAGE_ACCOUNT_NAME" --ip-address "$IP_ADDRESS" -o none
