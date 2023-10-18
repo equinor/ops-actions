@@ -212,7 +212,7 @@ jobs:
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
-      app_name: app-example-dev
+      app_name: app-foobar-dev
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
