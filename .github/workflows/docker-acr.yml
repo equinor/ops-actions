@@ -23,7 +23,8 @@ on:
       repository:
         description: The repository in the Azure Container Registry to push the Docker image to.
         type: string
-        required: true
+        required: false
+        default: ${{ github.repository }}
 
       tag:
         description: A tag for the image.
