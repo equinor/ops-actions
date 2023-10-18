@@ -81,6 +81,23 @@ env:
 
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
+  PRE_TASKS: |
+    RESOURCE_GROUP=$(jq -r .resource_group_name "$BACKEND_CONFIG")
+    ACCOUNT_NAME=$(jq -r .storage_account_name "$BACKEND_CONFIG")
+    IP_ADDRESS=$(curl https://api.ipify.org)
+
+    az storage account network-rule add --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
+
+    # Make environment variables available to other steps and jobs
+
+    {
+      echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> "$GITHUB_ENV"
+      echo "ACCOUNT_NAME=$ACCOUNT_NAME" >> "$GITHUB_ENV"
+      echo "IP_ADDRESS=$IP_ADDRESS" >> "$GITHUB_ENV"
+    } >> "$GITHUB_ENV"
+
+  POST_TASKS: az storage account network-rule remove --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
+
 jobs:
   terraform-plan:
     name: Terraform Plan
@@ -116,19 +133,8 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Set Azure CLI config
-        run: |
-          az config set \
-            defaults.group=$(jq -r .resource_group_name "$BACKEND_CONFIG") \
-            storage.account=$(jq -r .storage_account_name "$BACKEND_CONFIG") \
-            core.output=none
-
-      - name: Add public IP to Azure Storage account network rules
-        id: firewall
-        run: |
-          ip_address=$(curl https://api.ipify.org)
-          az storage account network-rule add --ip-address "$ip_address"
-          echo "ip_address=$ip_address" >> "$GITHUB_OUTPUT"
+      - name: Pre-init tasks
+        run: ${{ env.PRE_TASKS }}
 
       - name: Terraform Init
         id: init
@@ -145,6 +151,10 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
+
+      - name: Post-plan tasks
+        if: always()
+        run: ${{ env.POST_TASKS }}
 
       # The stdout of the plan step must not be set in an intermediate environment variable.
       # Long environment variables will cause Bash to throw an error "Argument list too long" on startup.
@@ -192,12 +202,6 @@ jobs:
           # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
           retention-days: 35
 
-      - name: Remove public IP from Azure Storage account network rules
-        if: always()
-        env:
-          IP_ADDRESS: ${{ steps.firewall.outputs.ip_address }}
-        run: az storage account network-rule remove --ip-address "$IP_ADDRESS"
-
   terraform-apply:
     name: Terraform Apply
     needs: terraform-plan
@@ -237,22 +241,15 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Set Azure CLI config
-        run: |
-          az config set \
-            defaults.group=$(jq -r .resource_group_name "$BACKEND_CONFIG") \
-            storage.account=$(jq -r .storage_account_name "$BACKEND_CONFIG") \
-            core.output=none
-
-      - name: Add public IP to Azure Storage account network rules
-        id: firewall
-        run: |
-          ip_address=$(curl https://api.ipify.org)
-          az storage account network-rule add --ip-address "$ip_address"
-          echo "ip_address=$ip_address" >> "$GITHUB_OUTPUT"
+      - name: Pre-apply tasks
+        run: ${{ env.PRE_TASKS }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
+
+      - name: Post-apply tasks
+        if: always()
+        run: ${{ env.POST_TASKS }}
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
@@ -260,9 +257,3 @@ jobs:
         uses: GeekyEggo/delete-artifact@54ab544f12cdb7b71613a16a2b5a37a9ade990af
         with:
           name: ${{ inputs.artifact_name }}
-
-      - name: Remove public IP from Azure Storage account network rules
-        if: always()
-        env:
-          IP_ADDRESS: ${{ steps.firewall.outputs.ip_address }}
-        run: az storage account network-rule remove --ip-address "$IP_ADDRESS"
