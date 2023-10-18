@@ -81,7 +81,7 @@ env:
 
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
-  PRE_TASKS: |
+  PRE_FLIGHT_TASKS: |
     RESOURCE_GROUP=$(jq -r .resource_group_name "$BACKEND_CONFIG")
     ACCOUNT_NAME=$(jq -r .storage_account_name "$BACKEND_CONFIG")
     IP_ADDRESS=$(curl https://api.ipify.org)
@@ -97,7 +97,7 @@ env:
 
     az storage account network-rule add --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
 
-  POST_TASKS: az storage account network-rule remove --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
+  POST_FLIGHT_TASKS: az storage account network-rule remove --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
 
 jobs:
   terraform-plan:
@@ -134,7 +134,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Pre-init tasks
+      - name: Pre-flight tasks
         run: ${{ env.PRE_TASKS }}
 
       - name: Terraform Init
@@ -153,7 +153,7 @@ jobs:
         id: plan
         run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
 
-      - name: Post-plan tasks
+      - name: Post-flight tasks
         if: always()
         run: ${{ env.POST_TASKS }}
 
@@ -242,13 +242,13 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Pre-apply tasks
+      - name: Pre-flight tasks
         run: ${{ env.PRE_TASKS }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
 
-      - name: Post-apply tasks
+      - name: Post-flight tasks
         if: always()
         run: ${{ env.POST_TASKS }}
 
