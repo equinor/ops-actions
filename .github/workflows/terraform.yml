@@ -86,15 +86,16 @@ env:
     ACCOUNT_NAME=$(jq -r .storage_account_name "$BACKEND_CONFIG")
     IP_ADDRESS=$(curl https://api.ipify.org)
 
-    az storage account network-rule add --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
-
-    # Make environment variables available to other steps and jobs
-
+    # Make environment variables available to other steps and jobs.
+    # It's important that this is done before trying to update the Storage account network rules,
+    # as these variables will be used by the job that reverts this change if an error occurs.
     {
       echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> "$GITHUB_ENV"
       echo "ACCOUNT_NAME=$ACCOUNT_NAME" >> "$GITHUB_ENV"
       echo "IP_ADDRESS=$IP_ADDRESS" >> "$GITHUB_ENV"
     } >> "$GITHUB_ENV"
+
+    az storage account network-rule add --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
 
   POST_TASKS: az storage account network-rule remove --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
 
