@@ -81,7 +81,7 @@ env:
 
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
-  PRE_FLIGHT_TASKS: |
+  PRE_FLIGHT_SCRIPT: |
     RESOURCE_GROUP=$(jq -r .resource_group_name "$BACKEND_CONFIG")
     ACCOUNT_NAME=$(jq -r .storage_account_name "$BACKEND_CONFIG")
     IP_ADDRESS=$(curl https://api.ipify.org)
@@ -97,7 +97,7 @@ env:
 
     az storage account network-rule add --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
 
-  POST_FLIGHT_TASKS: az storage account network-rule remove --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
+  POST_FLIGHT_SCRIPT: az storage account network-rule remove --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
 
 jobs:
   terraform-plan:
@@ -134,8 +134,8 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Pre-flight tasks
-        run: ${{ env.PRE_TASKS }}
+      - name: Run pre-flight script
+        run: ${{ env.PRE_FLIGHT_SCRIPT }}
 
       - name: Terraform Init
         id: init
@@ -153,9 +153,9 @@ jobs:
         id: plan
         run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
 
-      - name: Post-flight tasks
+      - name: Run post-flight script
         if: always()
-        run: ${{ env.POST_TASKS }}
+        run: ${{ env.POST_FLIGHT_SCRIPT }}
 
       # The stdout of the plan step must not be set in an intermediate environment variable.
       # Long environment variables will cause Bash to throw an error "Argument list too long" on startup.
@@ -242,15 +242,15 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Pre-flight tasks
-        run: ${{ env.PRE_TASKS }}
+      - name: Run pre-flight script
+        run: ${{ env.PRE_FLIGHT_SCRIPT }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
 
-      - name: Post-flight tasks
+      - name: Run post-flight script
         if: always()
-        run: ${{ env.POST_TASKS }}
+        run: ${{ env.POST_FLIGHT_SCRIPT }}
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
