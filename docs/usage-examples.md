@@ -2,6 +2,9 @@
 
 This document contains usage examples for the reusable workflows in this repository.
 
+For all workflow calls, replace `<release>` with the latest relase, for example `v1.0.0`.
+Releases are available [here](https://github.com/equinor/ops-actions/releases).
+
 ## Provision Azure resources using Terraform
 
 Example:
@@ -15,12 +18,11 @@ on:
 
 jobs:
   provision:
-    uses: equinor/ops-actions/.github/workflows/terraform.yml@main
+    uses: equinor/ops-actions/.github/workflows/terraform.yml@<release>
     with:
       environment: development
       working_directory: terraform
-      terraform_version: "1.5.0"
-      backend_config: config/tfbackend/dev.azurerm.tfbackend.json
+      terraform_version: 1.5.7
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -43,7 +45,7 @@ Supported Terraform providers:
 
 ## Deploy Docker container to Azure Web App
 
-Example:
+Azure Container Registry example:
 
 ```yaml
 name: build
@@ -54,11 +56,9 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/docker-acr@main
+    uses: equinor/ops-actions/.github/workflows/docker-acr@<release>
     with:
-      working_directory: src
-      registry_name: example-cr
-      repository: example-app
+      registry_name: crfoobardev
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -66,11 +66,11 @@ jobs:
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@main
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@<release>
     with:
       environment: development
       image: ${{ needs.build.outputs.image }}
-      app_name: example-app
+      app_name: app-foobar-dev
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -80,6 +80,37 @@ jobs:
 Prerequisites:
 
 - [Configure Azure credentials](../scripts/oidc/README.md)
+
+Generic container registry example:
+
+```yaml
+name: build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    uses: equinor/ops-actions/.github/workflows/docker@<release>
+    with:
+      registry: ghcr.io
+      username: ${{ github.actor }}
+    secrets:
+      password: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    needs: build
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@<release>
+    with:
+      environment: development
+      image: ${{ needs.build.outputs.image }}
+      app_name: app-foobar-dev
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+```
 
 ## Deploy Python application to Azure Function App
 
@@ -94,19 +125,19 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/python.yml@main
+    uses: equinor/ops-actions/.github/workflows/python.yml@<release>
     with:
       working_directory: src
-      python_version: "3.10"
+      python_version: 3.10
       pip_install_target: .python_packages/lib/site-packages # Required
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/azure-function.yml@main
+    uses: equinor/ops-actions/.github/workflows/azure-function.yml@<release>
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
-      app_name: example-func
+      app_name: func-foobar-dev
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -130,20 +161,20 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/python.yml@main
+    uses: equinor/ops-actions/.github/workflows/python.yml@<release>
     with:
       working_directory: src
-      python_version: "3.10"
+      python_version: 3.10
       venv_path: antenv # Required
       pip_install_target: .python_packages/lib/site-packages # Required
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@main
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@<release>
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
-      app_name: example-app
+      app_name: app-foobar-dev
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -167,22 +198,21 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/dotnet.yml@main
+    uses: equinor/ops-actions/.github/workflows/dotnet.yml@<release>
     with:
-      dotnet_version: "6.0"
+      dotnet_version: 6.0
       project: src/Example/Example.csproj
       test_project: |-
         tests/Example.UnitTests/Example.UnitTests.csproj
         tests/Example.IntegrationTests/Example.IntegrationTests.csproj
-      test_collect: XPlat Code Coverage
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@main
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@<release>
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
-      app_name: example-app
+      app_name: app-foobar-dev
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -209,10 +239,10 @@ on:
 
 jobs:
   deploy:
-    uses: equinor/ops-actions/.github/workflows/mkdocs-gh-pages.yml@main
+    uses: equinor/ops-actions/.github/workflows/mkdocs-gh-pages.yml@<release>
     with:
-      mkdocs_version: "1.0.0"
-      python_version: "3.10"
+      python_version: 3.10
+      mkdocs_version: 1.4
 ```
 
 Prerequisites:

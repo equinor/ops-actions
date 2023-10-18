@@ -28,7 +28,8 @@ on:
       repository:
         description: The repository in the Docker registry to push the image to.
         type: string
-        required: true
+        required: false
+        default: ${{ github.repository }}
 
       tag:
         description: A tag for the image.
