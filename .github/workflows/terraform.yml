@@ -84,6 +84,8 @@ env:
     ACCOUNT_NAME=$(jq -r .storage_account_name ${{ inputs.backend_config }})
     IP_ADDRESS=$(curl https://api.ipify.org)
 
+    echo "IP address: $IP_ADDRESS"
+
     # Make environment variables available to other steps and jobs.
     # It's important that this is done before trying to update the Storage account network rules,
     # as these variables will be used by the job that reverts this change if an error occurs.
@@ -93,9 +95,9 @@ env:
       echo "IP_ADDRESS=$IP_ADDRESS" >> "$GITHUB_ENV"
     } >> "$GITHUB_ENV"
 
-    az storage account network-rule add --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
+    az storage account network-rule add --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS" --output none
 
-  POST_FLIGHT_SCRIPT: az storage account network-rule remove --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS"
+  POST_FLIGHT_SCRIPT: az storage account network-rule remove --resource-group "$RESOURCE_GROUP" --account-name "$ACCOUNT_NAME" --ip-address "$IP_ADDRESS" --output none
 
 jobs:
   terraform-plan:
