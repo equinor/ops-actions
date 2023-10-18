@@ -14,16 +14,6 @@ on:
         required: false
         default: "."
 
-      project:
-        description: The project to deploy in
-        type: string
-        required: true
-
-      project_id:
-        description: The project id.
-        type: string
-        required: true
-
       terraform_version:
         description: The version of Terraform to install.
         type: string
@@ -88,12 +78,9 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
+  BACKEND_CONFIG_PATH: ${{ inputs.backend_config }}
 
-  container_name: tfstate
-  key: ${{ inputs.environment }}.${{ inputs.project }}.terraform.tfstate
-  resource_group_name: ${{ inputs.project_id }}-tfstate
-  storage_account_name: st${{ inputs.project }}infra${{ inputs.environment }}
+  ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
   terraform-plan:
@@ -112,27 +99,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: 'Az login'
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Get GitHub Public IP
-        id: github_public_ip
-        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
-
-      - name: Add GitHub IP to Key Vault
-        run: |
-          az storage account network-rule remove \
-            --resource-group "${{ env.resource_group_name }}" \
-            --account-name "${{ env.storage_account_name }}" \
-            --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
-
-      - name: Lets sleep for 30 seconds for FW rule to complete
-        run: sleep 30s
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -143,14 +109,33 @@ jobs:
         id: fmt
         run: terraform fmt -check
 
+      # Required for Azure CLI commands
+      - name: Login to Azure
+        if: inputs.backend_config != ''
+        uses: Azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Add public IP to Azure Storage account network rules
+        id: firewall
+        if: inputs.backend_config != ''
+        run: |
+          backend_config=$(cat "$BACKEND_CONFIG_PATH")
+          resource_group_name=$(echo "$backend_config" | jq -r .resource_group_name)
+          storage_account_name=$(echo "$backend_config" | jq -r .account_name)
+          ip_address=$(curl https://api.ipify.org)
+
+          az storage account network-rule add -g "$resource_group_name" -n "$storage_account_name" --ip-address "$ip_address" -o none
+
+          echo "resource_group_name=$resource_group_name" >> "$GITHUB_OUTPUT"
+          echo "storage_account_name=$storage_account_name" >> "$GITHUB_OUTPUT"
+          echo "ip_address=$ip_address" >> "$GITHUB_OUTPUT"
+
       - name: Terraform Init
         id: init
-        run: |
-          terraform init \
-            -backend-config='container_name=${{ env.container_name }}' \
-            -backend-config='key=${{ env.key }}' \
-            -backend-config='resource_group_name=${{ env.resource_group_name }}' \
-            -backend-config='storage_account_name=${{ env.storage_account_name }}'
+        run: terraform init
 
       - name: Terraform Validate
         id: validate
@@ -210,13 +195,13 @@ jobs:
           # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
           retention-days: 35
 
-      - name: Revoke GitHub IP on Key Vault
-        run: |
-          az storage account network-rule remove \
-            --resource-group "${{ env.resource_group_name }}" \
-            --account-name "${{ env.storage_account_name }}" \
-            --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
-
+      - name: Remove public IP from Azure Storage account network rules
+        if: steps.firewall.outcome == 'success' && always()
+        env:
+          RESOURCE_GROUP_NAME: ${{ steps.firewall.outputs.resource_group_name }}
+          STORAGE_ACCOUNT_NAME: ${{ steps.firewall.outputs.storage_account_name }}
+          IP_ADDRESS: ${{ steps.firewall.outputs.ip }}
+        run: az storage account network-rule remove -g "$RESOURCE_GROUP_NAME" -n "$STORAGE_ACCOUNT_NAME" --ip-address "$IP_ADDRESS" -o none
 
   terraform-apply:
     name: Terraform Apply
@@ -232,27 +217,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: 'Az login'
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Get GitHub Public IP
-        id: github_public_ip
-        uses: haythem/public-ip@bdddd92c198b0955f0b494a8ebeac529754262ff
-
-      - name: Add GitHub IP to Key Vault
-        run: |
-          az storage account network-rule remove \
-            --resource-group "${{ env.resource_group_name }}" \
-            --account-name "${{ env.storage_account_name }}" \
-            --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
-
-      - name: Lets sleep for 30 seconds for FW rule to complete
-        run: sleep 30s
 
       - name: Download artifact
         uses: actions/download-artifact@v3
@@ -279,10 +243,3 @@ jobs:
         uses: GeekyEggo/delete-artifact@54ab544f12cdb7b71613a16a2b5a37a9ade990af
         with:
           name: ${{ inputs.artifact_name }}
-
-      - name: Revoke GitHub IP on Key Vault
-        run: |
-          az storage account network-rule remove \
-            --resource-group "${{ env.resource_group_name }}" \
-            --account-name "${{ env.storage_account_name }}" \
-            --ip-address ${{ steps.github_public_ip.outputs.ipv4 }} >/dev/null
