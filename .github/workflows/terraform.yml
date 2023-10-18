@@ -196,10 +196,8 @@ jobs:
       - name: Remove public IP from Azure Storage account network rules
         if: always()
         env:
-          RESOURCE_GROUP_NAME: ${{ steps.firewall.outputs.resource_group_name }}
-          STORAGE_ACCOUNT_NAME: ${{ steps.firewall.outputs.storage_account_name }}
           IP_ADDRESS: ${{ steps.firewall.outputs.ip_address }}
-        run: az storage account network-rule remove -g "$RESOURCE_GROUP_NAME" -n "$STORAGE_ACCOUNT_NAME" --ip-address "$IP_ADDRESS" -o none
+        run: az storage account network-rule remove --ip-address "$IP_ADDRESS"
 
   terraform-apply:
     name: Terraform Apply
@@ -240,20 +238,19 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
+      - name: Set Azure CLI config
+        run: |
+          az config set \
+            defaults.group=$(jq -r .resource_group_name "$BACKEND_CONFIG") \
+            storage.account=$(jq -r .storage_account_name "$BACKEND_CONFIG") \
+            core.output=none
+
       - name: Add public IP to Azure Storage account network rules
         id: firewall
         run: |
-          resource_group_name=$(jq -r .resource_group_name "$BACKEND_CONFIG")
-          storage_account_name=$(jq -r .storage_account_name "$BACKEND_CONFIG")
           ip_address=$(curl https://api.ipify.org)
-
-          az storage account network-rule add -g "$resource_group_name" -n "$storage_account_name" --ip-address "$ip_address" -o none
-
-          }
-            echo "resource_group_name=$resource_group_name"
-            echo "storage_account_name=$storage_account_name"
-            echo "ip_address=$ip_address"
-          } >> "$GITHUB_OUTPUT"
+          az storage account network-rule add --ip-address "$ip_address"
+          echo "ip_address=$ip_address" >> "$GITHUB_OUTPUT"
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
@@ -268,7 +265,5 @@ jobs:
       - name: Remove public IP from Azure Storage account network rules
         if: always()
         env:
-          RESOURCE_GROUP_NAME: ${{ steps.firewall.outputs.resource_group_name }}
-          STORAGE_ACCOUNT_NAME: ${{ steps.firewall.outputs.storage_account_name }}
           IP_ADDRESS: ${{ steps.firewall.outputs.ip_address }}
-        run: az storage account network-rule remove -g "$RESOURCE_GROUP_NAME" -n "$STORAGE_ACCOUNT_NAME" --ip-address "$IP_ADDRESS" -o none
+        run: az storage account network-rule remove --ip-address "$IP_ADDRESS"
