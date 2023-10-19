@@ -112,7 +112,6 @@ For example:
 - When adding, updating or removing federated credentials in the configuration file, you'll need to manually delete old federated credentials.
 - When adding, updating or removing role assignments in the configuration file, you'll need to manually delete old role assignments.
 
-
 ## References
 
 - [Microsoft Docs](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure)
