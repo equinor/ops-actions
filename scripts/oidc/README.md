@@ -103,10 +103,15 @@ The CI reference and the appropriate Application Owners can be found in [Service
 
 ## Updating configuration
 
-Changing the specifications of the `oidc.json` config, requires you to run the `oidc.sh` script again as well as manually updating the old specifications in Azure. Running the script again does not update the existing specification, it just creates new versions.
+Updating the `oidc.json` configuration file requires you to run the `oidc.sh` script again.
+Rerunning the script only performs create/update operations, not delete operations.
 
-- Updating the App Registration name will create a new App Registration, and you'll need to manually delete the old one in Azure.
-- When updating the role and/or scope set for `.roleAssignments` in the configuration, you'll need to open Azure and manually delete the old role assignment.
+For example:
+
+- When updating the App Registration name, a new App Registration will be created, and you'll need to manually delete the old one.
+- When adding, updating or removing federated credentials in the configuration file, you'll need to manually delete old federated credentials.
+- When adding, updating or removing role assignments in the configuration file, you'll need to manually delete old role assignments.
+
 
 ## References
 
