@@ -59,7 +59,7 @@ Example configuration:
     ./terraform-backend.sh northeurope dev.azurerm.tfbackend.json
     ```
 
-1. Configure OIDC to authenticate from GitHub Actions to the Terraform backend using the [OIDC script](../oidc/README.md).
+1. Create a service principal for accessing the backend in automation using the [OIDC script](../oidc/README.md).
 
     The JSON file containing the OIDC configuration must contain the following role assignment:
 
@@ -69,6 +69,12 @@ Example configuration:
       "scope": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/<RESOURCE_GROUP_NAME>/storageAccounts/<STORAGE_ACCOUNT_NAME>"
     }
     ```
+
+    > **Note**
+    >
+    > The `terraform-backend.sh` script adds a read-only lock named `Terraform` to the created Storage account.
+    > This prevents modifications to the Terraform backend configuration.
+    > In order to add role assignments to the Storage account, the read-only lock must be *temporarily* removed.
 
 ## References
 

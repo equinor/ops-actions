@@ -140,7 +140,7 @@ az storage account management-policy create \
 
 az resource lock create \
   --name 'Terraform' \
-  --lock-type CanNotDelete \
+  --lock-type ReadOnly \
   --resource "${storage_account_id}" \
-  --notes "Prevent deletion of Terraform backend" \
+  --notes "Prevent changes to Terraform backend configuration" \
   --output none
