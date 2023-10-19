@@ -39,6 +39,8 @@ Example configuration:
 
 > **Note**
 >
+> `appName:` should follow the [App Registration naming convention](https://urban-waffle-59ea765a.pages.github.io/azure/active-directory/app-registrations/).
+>
 > `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
 >
 > `.roleAssignments[].scope` must start with `/subscriptions/${SUBSCRIPTION_ID}`.
@@ -50,7 +52,8 @@ Example configuration:
 - [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
 - Activate Azure role `Owner` - to create Azure role assignments
-- GitHub repository role `Admin` - to set GitHub secrets
+  > **Note:** Minimum scope required is what's defined for role assignment in the `oidc.json` config.
+- GitHub repository role `Admin` - to set GitHub environment secrets
 - If a federated credential is configured with subject `repo:${REPO}:environment:<environment>`, create GitHub environment `<environment>` and set appropriate deployment protection rules.
 
 ## Usage
@@ -91,6 +94,19 @@ Example configuration:
     ```console
     ./oidc.sh oidc.json
     ```
+
+### After running the `oidc.sh` script
+
+After the App Registration has been created, by Equinor policy, one or more Application Owners from Equinor needs to be set for the App Registration as well as a CI reference.
+
+The CI reference and the appropriate Application Owners can be found in [ServiceNow's](https://equinor.service-now.com/selfservice?id=cmdb_ci_list&table=cmdb_ci_spkg&spa=1&filter=operational_statusNOT%20IN2,5&p=1) list for IT applications, under the relevant application.
+
+## Updating configuration
+
+Changing the specifications of the `oidc.json` config, requires you to run the `oidc.sh` script again as well as manually updating the old specifications in Azure. Running the script again does not update the existing specification, it just creates new versions.
+
+- Updating the App Registration name will create a new App Registration, and you'll need to manually delete the old one in Azure.
+- When updating the role and/or scope set for `.roleAssignments` in the configuration, you'll need to open Azure and manually delete the old role assignment.
 
 ## References
 
