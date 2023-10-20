@@ -23,9 +23,7 @@ markdownTemplate = """# {0}
 
 ## Outputs
 
-{4}
-
-"""
+{4}"""
 ########################################################################
 
 def createMarkdownTable(items):
