@@ -20,9 +20,8 @@ jobs:
 
 ## Inputs
 
-
 | Name |  Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
+| --- |  --- | --- | --- | --- |
 | environment | string | True | N/A | The environment that the job references. | 
 | working_directory | string | False | . | The working directory to run the Terraform commands in. | 
 | terraform_version | string | False | ~1.5.0 | The version of Terraform to install. | 
@@ -32,17 +31,15 @@ jobs:
 
 ## Secrets
 
-
-| Name |  Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| AZURE_CLIENT_ID | N/A | True | N/A | The client ID of the Azure AD service principal to use for authenticating to Azure. | 
-| AZURE_SUBSCRIPTION_ID | N/A | True | N/A | The ID of the Azure subscription to create the resources in. | 
-| AZURE_TENANT_ID | N/A | True | N/A | The ID of the Azure tenant to create the resources in. | 
-| ENCRYPTION_PASSWORD | N/A | True | N/A | A password used to encrypt the archive containing the Terraform configuration and plan file. | 
+| Name |  Required | Description |
+| --- |  --- | --- |
+| AZURE_CLIENT_ID | True | The client ID of the Azure AD service principal to use for authenticating to Azure. | 
+| AZURE_SUBSCRIPTION_ID | True | The ID of the Azure subscription to create the resources in. | 
+| AZURE_TENANT_ID | True | The ID of the Azure tenant to create the resources in. | 
+| ENCRYPTION_PASSWORD | True | A password used to encrypt the archive containing the Terraform configuration and plan file. | 
 
 
 ## Outputs
 
-
-| Name |  Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
+| Name |  Description |
+| --- |  --- |

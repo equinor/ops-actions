@@ -31,11 +31,14 @@ def createMarkdownTable(items, properties):
   Create a Markdown table from given items based on given properties.
   """
 
-  table = "\n| Name | "
+  header = "| Name | "
+  separator = "| --- | "
   for p in properties:
-    table += " {0} |".format(p)
+    header += " {0} |".format(p)
+    separator += " --- |"
 
-  table += "\n| --- | --- | --- | --- | --- |\n" # TODO: dynamically create number of columns
+  table = ""
+  table += "{0}\n{1}\n".format(header, separator)
 
   for key, value in items:
     row = "| {0} | ".format(key)
@@ -92,8 +95,8 @@ def main(yamlFile, outputDir):
   exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
   inputsTable = createMarkdownTable(inputs.items(), ["Type", "Required", "Default", "Description"])
-  secretsTable = createMarkdownTable(secrets.items(), ["Type", "Required", "Default", "Description"]) # TODO
-  outputsTable = createMarkdownTable(outputs.items(), ["Type", "Required", "Default", "Description"]) # TODO
+  secretsTable = createMarkdownTable(secrets.items(), ["Required", "Description"])
+  outputsTable = createMarkdownTable(outputs.items(), ["Description"])
 
   outputFile = "{0}/{1}.md".format(outputDir, Path(yamlFile).stem)
   with open(outputFile, "w") as file:
