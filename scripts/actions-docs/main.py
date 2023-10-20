@@ -1,7 +1,18 @@
-import argparse
 import yaml
 
+from argparse import ArgumentParser
 from pathlib import Path
+
+def createMarkdownTable(items):
+  table = "\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n"
+  for name, properties in items:
+    type = properties.get("type") # Required
+    required = properties.get("required", "")
+    default = properties.get("default", "")
+    description = properties.get("description", "")
+    row = "| {0} | {1} | {2} | {3} | {4} |\n".format(name, type, required, default, description)
+    table += row
+  return table
 
 def main(yamlFile, outputDir):
   with open(yamlFile, "r") as file:
@@ -11,22 +22,20 @@ def main(yamlFile, outputDir):
   trigger = workflow[True]["workflow_call"]
   inputs = trigger["inputs"]
   # secrets = trigger["secrets"]
+  # outputs = trigger["outputs"]
 
-  table = "| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n"
-
-  for name, properties in inputs.items():
-    type = properties.get("type")
-    required = properties.get("required", "N/A")
-    default = properties.get("default", "N/A")
-    description = properties.get("description", "N/A")
-    row = "| {0} | {1} | {2} | {3} | {4} |\n".format(name, type, required, default, description)
-    table += row
+  inputsTable = createMarkdownTable(inputs.items())
 
   markdown = """# {0}
 
-## Inputs
+Write something here?
 
-{1}""".format(workflow_name, table)
+## Inputs
+{1}
+## Secrets
+
+## Outputs
+""".format(workflow_name, inputsTable)
 
   outputFile = "{0}/{1}.md".format(outputDir, Path(yamlFile).stem)
   with open(outputFile, "w") as file:
@@ -34,7 +43,7 @@ def main(yamlFile, outputDir):
     file.close()
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser()
+  parser = ArgumentParser()
   parser.add_argument("-f", "--file", type=str)
   parser.add_argument("-o", "--output", type=str, default=".")
   args = parser.parse_args()
