@@ -57,7 +57,7 @@ def main(yamlFile, outputDir):
     },
     "jobs": {
       "main": {
-        "uses": "equinor/ops-actions/.github/workflows/{0}.yml@{1}".format(Path(yamlFile).stem, "<latestTag>")
+        "uses": "equinor/ops-actions/.github/workflows/{0}.yml@{1}".format(Path(yamlFile).stem, latestTag.strip("\n"))
       }
     }
   }
