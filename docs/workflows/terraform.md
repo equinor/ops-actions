@@ -1,13 +1,13 @@
 # ♻ terraform
 
 ```yaml
-on:
+'on':
   push:
-    branches: [main]
-
+    branches:
+    - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/terraform.yml@v8.8.0
+    uses: equinor/ops-actions/.github/workflows/terraform.yml@<latestTag>
 
 ```
 
