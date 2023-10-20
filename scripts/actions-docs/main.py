@@ -51,6 +51,12 @@ def createMarkdownTable(items, properties):
 
   return table
 
+def readReusableWorkflow():
+  """
+  Reads a reusable GitHub Actions workflow, and returns its inputs, secrets and outputs.
+  """
+  pass
+
 def main(yamlFile, outputDir):
   with open(yamlFile, "r") as file:
     workflow = yaml.safe_load(file)
