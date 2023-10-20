@@ -51,6 +51,7 @@ Example configuration:
 - [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to set GitHub secrets
 - [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
+  > **Note:** Not necessary when updating the existing config.
 - Activate Azure role `Owner` - to create Azure role assignments
   > **Note:** Minimum scope required is what's defined for role assignment in the `oidc.json` config.
 - GitHub repository role `Admin` - to set GitHub environment secrets
@@ -109,7 +110,7 @@ Rerunning the script only performs create/update operations, not delete operatio
 For example:
 
 - When updating the App Registration name, a new App Registration will be created, and you'll need to manually delete the old one.
-- When adding, updating or removing federated credentials in the configuration file, you'll need to manually delete old federated credentials.
+- When adding, updating or removing federated credentials in the configuration file, you'll need to manually delete old federated credentials from the App Registration.
 - When adding, updating or removing role assignments in the configuration file, you'll need to manually delete old role assignments.
 
 ## References
