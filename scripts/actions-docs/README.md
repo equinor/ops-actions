@@ -2,6 +2,10 @@
 
 Python script for automatically generating documentation for reusable GitHub Actions workflows.
 
+## Prereqs:
+
+- Git
+
 ## Arguments
 
 - `-f`, `--file`: the input workflow YAML file.
