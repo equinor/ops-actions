@@ -9,7 +9,7 @@ jobs:
   main:
     uses: equinor/ops-actions/.github/workflows/commitlint.yml@v8.8.0
     inputs:
-      message: <message>
+      message: <string>
     secrets: {}
 
 ```

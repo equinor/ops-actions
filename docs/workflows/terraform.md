@@ -9,7 +9,7 @@ jobs:
   main:
     uses: equinor/ops-actions/.github/workflows/terraform.yml@v8.8.0
     inputs:
-      environment: <environment>
+      environment: <string>
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

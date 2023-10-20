@@ -9,8 +9,8 @@ jobs:
   main:
     uses: equinor/ops-actions/.github/workflows/docker.yml@v8.8.0
     inputs:
-      registry: <registry>
-      username: <username>
+      registry: <string>
+      username: <string>
     secrets:
       password: ${{ secrets.password }}
 

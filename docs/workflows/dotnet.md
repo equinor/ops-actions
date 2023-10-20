@@ -9,7 +9,7 @@ jobs:
   main:
     uses: equinor/ops-actions/.github/workflows/dotnet.yml@v8.8.0
     inputs:
-      dotnet_version: <dotnet_version>
+      dotnet_version: <string>
     secrets: {}
 
 ```

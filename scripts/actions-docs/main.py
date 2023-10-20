@@ -68,8 +68,9 @@ def main(yamlFile, outputDir):
   exampleInputs = {}
   for name, properties in inputs.items():
     required = properties["required"]
+    type = properties["type"]
     if required:
-      exampleInputs[name] = "<{0}>".format(name)
+      exampleInputs[name] = "<{0}>".format(type)
 
   exampleSecrets = {}
   for name, properties in secrets.items():
