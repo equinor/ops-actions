@@ -26,9 +26,21 @@ markdownTemplate = """# {0}
 {4}"""
 ########################################################################
 
-def createMarkdownTable(items):
-  table = "\n| Name | Type | Required | Default | Description |\n| --- | --- | --- | --- | --- |\n"
+def createMarkdownTable(items, properties):
+  """
+  Create a Markdown table from given items based on given properties.
+  """
+
+  header = "\n| "
+  for p in properties:
+    header += " {0} |".format(p)
+
+  header += "\n| --- | --- | --- | --- | --- |\n"
+
+  table = header
+
   for name, properties in items:
+    row = "| "
     type = properties.get("type") # Required
     required = properties.get("required", "")
     default = properties.get("default", "")
@@ -80,9 +92,9 @@ def main(yamlFile, outputDir):
   exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
   exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
-  inputsTable = createMarkdownTable(inputs.items())
-  secretsTable = createMarkdownTable(secrets.items())
-  outputsTable = createMarkdownTable(outputs.items())
+  inputsTable = createMarkdownTable(inputs.items(), ["Name", "Type", "Required", "Default", "Description"])
+  secretsTable = createMarkdownTable(secrets.items(), ["Name", "Type", "Required", "Default", "Description"]) # TODO
+  outputsTable = createMarkdownTable(outputs.items(), ["Name", "Type", "Required", "Default", "Description"]) # TODO
 
   outputFile = "{0}/{1}.md".format(outputDir, Path(yamlFile).stem)
   with open(outputFile, "w") as file:

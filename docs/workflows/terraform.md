@@ -21,7 +21,7 @@ jobs:
 ## Inputs
 
 
-| Name | Type | Required | Default | Description |
+|  Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | environment | string | True |  | The environment that the job references. |
 | working_directory | string | False | . | The working directory to run the Terraform commands in. |
@@ -33,7 +33,7 @@ jobs:
 ## Secrets
 
 
-| Name | Type | Required | Default | Description |
+|  Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | AZURE_CLIENT_ID | None | True |  | The client ID of the Azure AD service principal to use for authenticating to Azure. |
 | AZURE_SUBSCRIPTION_ID | None | True |  | The ID of the Azure subscription to create the resources in. |
@@ -44,7 +44,5 @@ jobs:
 ## Outputs
 
 
-| Name | Type | Required | Default | Description |
+|  Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-
-
