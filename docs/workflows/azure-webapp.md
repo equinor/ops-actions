@@ -11,9 +11,9 @@ jobs:
     inputs:
       app_name: <app_name>
     secrets:
-      AZURE_CLIENT_ID: <AZURE_CLIENT_ID>
-      AZURE_SUBSCRIPTION_ID: <AZURE_SUBSCRIPTION_ID>
-      AZURE_TENANT_ID: <AZURE_TENANT_ID>
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
 ```
 

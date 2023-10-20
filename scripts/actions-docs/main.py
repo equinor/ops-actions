@@ -72,7 +72,7 @@ def main(yamlFile, outputDir):
   for name, properties in secrets.items():
     required = properties["required"]
     if required:
-      exampleSecrets[name] = "<{0}>".format(name)
+      exampleSecrets[name] = "${{{{ secrets.{0} }}}}".format(name)
 
   exampleYaml["jobs"]["main"]["inputs"] = exampleInputs
   exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
