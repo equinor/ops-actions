@@ -8,6 +8,8 @@
 jobs:
   main:
     uses: equinor/ops-actions/.github/workflows/terraform.yml@v8.8.0
+    inputs:
+      environment: <environment>
 
 ```
 

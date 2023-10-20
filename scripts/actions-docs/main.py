@@ -61,7 +61,16 @@ def main(yamlFile, outputDir):
       }
     }
   }
-  print(exampleYaml)
+
+  exampleInputs = {}
+
+  for name, properties in inputs.items():
+    required = properties["required"]
+    if required:
+      exampleInputs[name] = "<{0}>".format(name)
+
+  exampleYaml["jobs"]["main"]["inputs"] = exampleInputs
+
   exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
   outputFile = "{0}/{1}.md".format(outputDir, Path(yamlFile).stem)
