@@ -10,6 +10,7 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/dotnet.yml@v8.8.0
     inputs:
       dotnet_version: <dotnet_version>
+    secrets: {}
 
 ```
 
@@ -31,4 +32,16 @@ jobs:
 
 ## Secrets
 
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+
+
 ## Outputs
+
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| artifact_name | None |  |  | The name of the uploaded artifact containing the application. |
+
+

@@ -11,6 +11,8 @@ jobs:
     inputs:
       registry: <registry>
       username: <username>
+    secrets:
+      password: ${{ secrets.password }}
 
 ```
 
@@ -29,4 +31,17 @@ jobs:
 
 ## Secrets
 
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| password | None | True |  | The password used to login to the Docker registry. |
+
+
 ## Outputs
+
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| image | None |  |  | The Docker image that was built. |
+
+

@@ -19,7 +19,12 @@ markdownTemplate = """# {0}
 
 ## Secrets
 
+{3}
+
 ## Outputs
+
+{4}
+
 """
 ########################################################################
 
@@ -40,11 +45,9 @@ def main(yamlFile, outputDir):
 
   workflow_name = workflow["name"]
   trigger = workflow[True]["workflow_call"]
-  inputs = trigger["inputs"]
-  secrets = trigger["secrets"]
-  # outputs = trigger["outputs"]
-
-  inputsTable = createMarkdownTable(inputs.items())
+  inputs = trigger.get("inputs", {})
+  secrets = trigger.get("secrets", {})
+  outputs = trigger.get("outputs", {})
 
   latestTag = subprocess.run(["git", "describe", "--tags", "--abbrev=0"], capture_output=True, text=True).stdout
   exampleYaml = {
@@ -78,9 +81,13 @@ def main(yamlFile, outputDir):
   exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
   exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
+  inputsTable = createMarkdownTable(inputs.items())
+  secretsTable = createMarkdownTable(secrets.items())
+  outputsTable = createMarkdownTable(outputs.items())
+
   outputFile = "{0}/{1}.md".format(outputDir, Path(yamlFile).stem)
   with open(outputFile, "w") as file:
-    file.write(markdownTemplate.format(workflow_name, exampleYamlString, inputsTable))
+    file.write(markdownTemplate.format(workflow_name, exampleYamlString, inputsTable, secretsTable, outputsTable))
     file.close()
 
 if __name__ == "__main__":
@@ -91,5 +98,3 @@ if __name__ == "__main__":
   yamlFile = args.file
   outputDir = args.output
   main(yamlFile, outputDir)
-
-# TODO: create simple usage example:

@@ -10,6 +10,11 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/terraform.yml@v8.8.0
     inputs:
       environment: <environment>
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 ```
 
@@ -27,4 +32,19 @@ jobs:
 
 ## Secrets
 
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| AZURE_CLIENT_ID | None | True |  | The client ID of the Azure AD service principal to use for authenticating to Azure. |
+| AZURE_SUBSCRIPTION_ID | None | True |  | The ID of the Azure subscription to create the resources in. |
+| AZURE_TENANT_ID | None | True |  | The ID of the Azure tenant to create the resources in. |
+| ENCRYPTION_PASSWORD | None | True |  | A password used to encrypt the archive containing the Terraform configuration and plan file. |
+
+
 ## Outputs
+
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+
+
