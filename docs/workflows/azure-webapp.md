@@ -10,6 +10,10 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v8.8.0
     inputs:
       app_name: <app_name>
+    secrets:
+      AZURE_CLIENT_ID: <AZURE_CLIENT_ID>
+      AZURE_SUBSCRIPTION_ID: <AZURE_SUBSCRIPTION_ID>
+      AZURE_TENANT_ID: <AZURE_TENANT_ID>
 
 ```
 

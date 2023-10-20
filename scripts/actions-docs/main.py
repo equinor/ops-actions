@@ -41,7 +41,7 @@ def main(yamlFile, outputDir):
   workflow_name = workflow["name"]
   trigger = workflow[True]["workflow_call"]
   inputs = trigger["inputs"]
-  # secrets = trigger["secrets"]
+  secrets = trigger["secrets"]
   # outputs = trigger["outputs"]
 
   inputsTable = createMarkdownTable(inputs.items())
@@ -63,14 +63,19 @@ def main(yamlFile, outputDir):
   }
 
   exampleInputs = {}
-
   for name, properties in inputs.items():
     required = properties["required"]
     if required:
       exampleInputs[name] = "<{0}>".format(name)
 
-  exampleYaml["jobs"]["main"]["inputs"] = exampleInputs
+  exampleSecrets = {}
+  for name, properties in secrets.items():
+    required = properties["required"]
+    if required:
+      exampleSecrets[name] = "<{0}>".format(name)
 
+  exampleYaml["jobs"]["main"]["inputs"] = exampleInputs
+  exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
   exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
   outputFile = "{0}/{1}.md".format(outputDir, Path(yamlFile).stem)
