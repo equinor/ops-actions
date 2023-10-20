@@ -31,22 +31,21 @@ def createMarkdownTable(items, properties):
   Create a Markdown table from given items based on given properties.
   """
 
-  header = "\n| "
+  table = "\n| Name | "
   for p in properties:
-    header += " {0} |".format(p)
+    table += " {0} |".format(p)
 
-  header += "\n| --- | --- | --- | --- | --- |\n"
+  table += "\n| --- | --- | --- | --- | --- |\n" # TODO: dynamically create number of columns
 
-  table = header
+  for key, value in items:
+    row = "| {0} | ".format(key)
 
-  for name, properties in items:
-    row = "| "
-    type = properties.get("type") # Required
-    required = properties.get("required", "")
-    default = properties.get("default", "")
-    description = properties.get("description", "")
-    row = "| {0} | {1} | {2} | {3} | {4} |\n".format(name, type, required, default, description)
-    table += row
+    for p in properties:
+      v = value.get(p.lower(), "N/A")
+      row += "{0} | ".format(v)
+
+    table += "{0}\n".format(row)
+
   return table
 
 def main(yamlFile, outputDir):
@@ -92,9 +91,9 @@ def main(yamlFile, outputDir):
   exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
   exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
-  inputsTable = createMarkdownTable(inputs.items(), ["Name", "Type", "Required", "Default", "Description"])
-  secretsTable = createMarkdownTable(secrets.items(), ["Name", "Type", "Required", "Default", "Description"]) # TODO
-  outputsTable = createMarkdownTable(outputs.items(), ["Name", "Type", "Required", "Default", "Description"]) # TODO
+  inputsTable = createMarkdownTable(inputs.items(), ["Type", "Required", "Default", "Description"])
+  secretsTable = createMarkdownTable(secrets.items(), ["Type", "Required", "Default", "Description"]) # TODO
+  outputsTable = createMarkdownTable(outputs.items(), ["Type", "Required", "Default", "Description"]) # TODO
 
   outputFile = "{0}/{1}.md".format(outputDir, Path(yamlFile).stem)
   with open(outputFile, "w") as file:
