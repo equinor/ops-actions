@@ -31,7 +31,9 @@ jobs:
       - name: Run script
         run: python "$SCRIPT_DIR/actions-docs.py"
 
-      - name: Commit changes
+      - name: Create PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           status=$(git status --porcelain)
           if [[ -n"$status" ]]; then
@@ -41,9 +43,5 @@ jobs:
             git add docs/workflows
             git commit -m "docs: update workflow usage"
             git push -u origin HEAD
+            gh pr create --base main --head "$BRANCH_NAME" --fill-first
           fi
-
-      - name: Create PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh pr create --base main --head "$BRANCH_NAME" --fill-first
