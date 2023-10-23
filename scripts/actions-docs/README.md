@@ -5,6 +5,7 @@ Python script for automatically generating documentation for reusable GitHub Act
 ## Prereqs
 
 - Git
+- Environment variable `GITHUB_REPO` in format `owner/repo`.
 
 ## Arguments
 

@@ -1,12 +1,37 @@
 name: 📚 Generate docs
-on: {}
+
+on:
+  release:
+    types:
+      - released
+
+  workflow_dispatch: {}
+
+env:
+  SCRIPT_DIR: scripts/actions-docs
+
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: 3.10.x
-      - run: pip install -r requirements.txt
-      - run: python3 scripts/actions-docs/main.py -f .github/workflows/terraform.yml -o docs/workflows
+
+      - name: Install requirements
+        run: pip install -r "$SCRIPT_DIR/requirements.txt"
+
+      - name: Run script
+        run: python3 "$SCRIPT_DIR/actions-docs.py"
+
+      - name: Create PR
+        run: |
+          branch=actions-docs--branches--main
+          git switch -c "$branch"
+          git add docs/workflows
+          git commit -m "docs: update workflow usage"
+          gh pr create --base main --head "$branch" --fill-first
