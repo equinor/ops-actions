@@ -20,5 +20,5 @@ python3 main.py -f <file_path>
 For example:
 
 ```console
-python3 main.py -f ../../.github/workflows/terraform.yml
+python3 actions-docs.py -f ../../.github/workflows/terraform.yml
 ```
