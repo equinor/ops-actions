@@ -81,7 +81,7 @@ def createMarkdownTable(items: dict, columns: list):
 
     for column in columns:
       value = item.get(column, "N/A")
-      row.append(str(value))
+      row.append(str(value).replace("\n", "<br>")) # Markdown tables do not support newlines in cells
 
     table.append(column_separator.join(row))
 
@@ -107,7 +107,6 @@ workflows = os.listdir(path)
 
 for wf in workflows:
   wfPath = os.path.join(path, wf)
-  # name, inputs, secrets, outputs = readReusableWorkflow(wfPath)
   wfOut = readReusableWorkflow(wfPath)
   if wfOut is None:
     continue
