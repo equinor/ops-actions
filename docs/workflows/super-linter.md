@@ -1,4 +1,4 @@
-# ♻ docker
+# ♻ super-linter
 
 ```yaml
 TODO: put usage example here.

@@ -1,4 +1,4 @@
-# ♻ docker
+# 🧹 Lint codebase
 
 ```yaml
 TODO: put usage example here.

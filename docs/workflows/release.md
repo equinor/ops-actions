@@ -1,4 +1,4 @@
-# ♻ docker
+# 🚀 Create release
 
 ```yaml
 TODO: put usage example here.

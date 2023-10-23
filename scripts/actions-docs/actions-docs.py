@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 
+import os
 import subprocess
 import yaml
 
@@ -14,21 +15,39 @@ from pathlib import Path
 markdownTemplate = """# {0}
 
 ```yaml
-{1}
+TODO: put usage example here.
 ```
 
 ## Inputs
 
-{2}
+{1}
 
 ## Secrets
 
-{3}
+{2}
 
 ## Outputs
 
-{4}"""
+{3}"""
 ########################################################################
+
+
+def readReusableWorkflow(path: str):
+  """
+  Reads a reusable GitHub Actions workflow, and returns its name, inputs, secrets and outputs.
+  """
+
+  with open(path, "r") as file:
+    workflow = yaml.safe_load(file)
+
+  name = workflow.get("name", Path(path).stem)
+  triggers = workflow.get("on", {})
+  call_trigger = triggers.get("workflow_call", {})
+  inputs = call_trigger.get("inputs", {})
+  secrets = call_trigger.get("secrets", {})
+  outputs = call_trigger.get("outputs", {})
+
+  return name, inputs, secrets, outputs
 
 
 def createMarkdownTable(items: dict, columns: list):
@@ -61,24 +80,7 @@ def createMarkdownTable(items: dict, columns: list):
   return "\n".join(table)
 
 
-def readReusableWorkflow():
-  """
-  Reads a reusable GitHub Actions workflow, and returns its inputs, secrets and outputs.
-  """
-  pass
-
-
 def main(yamlFile, outputDir):
-  with open(yamlFile, "r") as file:
-    workflow = yaml.safe_load(file)
-
-  workflow_name = workflow["name"]
-  trigger = workflow[True]["workflow_call"]
-  inputs = trigger.get("inputs", {})
-  secrets = trigger.get("secrets", {})
-  outputs = trigger.get("outputs", {})
-
-  latestTag = subprocess.run(["git", "describe", "--tags", "--abbrev=0"], capture_output=True, text=True).stdout
   exampleYaml = {
     "on": {
       "push": {
@@ -89,7 +91,7 @@ def main(yamlFile, outputDir):
     },
     "jobs": {
       "main": {
-        "uses": "equinor/ops-actions/.github/workflows/{0}.yml@{1}".format(Path(yamlFile).stem, latestTag.strip("\n"))
+        "uses": "equinor/ops-actions/.github/workflows/{0}.yml@{1}".format(Path(yamlFile).stem, latestTag)
       }
     }
   }
@@ -111,20 +113,30 @@ def main(yamlFile, outputDir):
   exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
   exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
-  inputsTable = createMarkdownTable(inputs, ["type", "required", "default", "description"])
-  secretsTable = createMarkdownTable(secrets, ["required", "description"])
-  outputsTable = createMarkdownTable(outputs, ["description"])
 
-  outputFile = "{0}/{1}.md".format(outputDir, Path(yamlFile).stem)
-  with open(outputFile, "w") as file:
-    file.write(markdownTemplate.format(workflow_name, exampleYamlString, inputsTable, secretsTable, outputsTable))
-    file.close()
-
-
+# Get arguments
 parser = ArgumentParser()
 parser.add_argument("-p", "--path", type=str, default=".github/workflows")
 parser.add_argument("-o", "--output", type=str, default="docs/workflows")
 args = parser.parse_args()
-yamlFile = args.file
-outputDir = args.output
-main(yamlFile, outputDir)
+path = args.path
+output = args.output
+
+# Get latest Git tag
+latestTag = subprocess.run(["git", "describe", "--tags", "--abbrev=0"], capture_output=True, text=True).stdout.strip("\n")
+
+workflows = os.listdir(path)
+
+for wf in workflows:
+  wfPath = os.path.join(path, wf)
+  name, inputs, secrets, outputs = readReusableWorkflow(wfPath)
+  inputsTable = createMarkdownTable(inputs, ["type", "required", "default", "description"])
+  secretsTable = createMarkdownTable(secrets, ["required", "description"])
+  outputsTable = createMarkdownTable(outputs, ["description"])
+
+  outPath = os.path.join(output, Path(wf).stem + ".md")
+  with open(outPath, "w") as file:
+    file.write(markdownTemplate.format(name, inputsTable, secretsTable, outputsTable))
+    file.close()
+
+# main(yamlFile, outputDir)

@@ -1,4 +1,4 @@
-# ♻ docker
+# 📚 Generate docs
 
 ```yaml
 TODO: put usage example here.

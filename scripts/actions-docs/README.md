@@ -13,7 +13,7 @@ Python script for automatically generating documentation for reusable GitHub Act
 
 ## Usage
 
-> **Note** Must be run from the root of the repo.
+> **Note** If using default values for arguments, must be run from the root of the repo.
 
 ```console
 python3 actions-docs.py
