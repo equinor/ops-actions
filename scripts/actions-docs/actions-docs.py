@@ -122,8 +122,8 @@ def main(yamlFile, outputDir):
 
 
 parser = ArgumentParser()
-parser.add_argument("-f", "--file", type=str)
-parser.add_argument("-o", "--output", type=str, default=".")
+parser.add_argument("-p", "--path", type=str, default=".github/workflows")
+parser.add_argument("-o", "--output", type=str, default="docs/workflows")
 args = parser.parse_args()
 yamlFile = args.file
 outputDir = args.output

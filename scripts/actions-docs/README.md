@@ -8,17 +8,21 @@ Python script for automatically generating documentation for reusable GitHub Act
 
 ## Arguments
 
-- `-f`, `--file`: the input workflow YAML file.
-- `-o`, `--output`: the output path to store the Markdown file in.
+- `-p`, `--path`: the path containing the workflows to generate docs for. Default is `.github/workflows`.
+- `-o`, `--output`: the output path to store the generated Markdown files in. Default is `docs/workflows`.
 
 ## Usage
 
+> **Note**
+>
+> Must be run from the root of the repo.
+
 ```console
-python3 main.py -f <file_path>
+python3 actions-docs.py
 ```
 
-For example:
+Specify path and output:
 
 ```console
-python3 actions-docs.py -f ../../.github/workflows/terraform.yml
+python3 actions-docs.py -p .github/workflows -o docs/workflows
 ```
