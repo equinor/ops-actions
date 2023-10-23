@@ -9,6 +9,7 @@ on:
 
 env:
   SCRIPT_DIR: scripts/actions-docs
+  BRANCH_NAME: actions-docs--branches--main
 
 jobs:
   docs:
@@ -30,15 +31,19 @@ jobs:
       - name: Run script
         run: python "$SCRIPT_DIR/actions-docs.py"
 
+      - name: Commit changes
+        run: |
+          status=$(git status --porcelain)
+          if [[ -n"$status" ]]; then
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git switch -c "$BRANCH_NAME"
+            git add docs/workflows
+            git commit -m "docs: update workflow usage"
+            git push -u origin HEAD
+          fi
+
       - name: Create PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          branch=actions-docs--branches--main
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git switch -c "$branch"
-          git add docs/workflows
-          git commit -m "docs: update workflow usage"
-          git push -u origin HEAD
-          gh pr create --base main --head "$branch" --fill-first
+        run: gh pr create --base main --head "$BRANCH_NAME" --fill-first
