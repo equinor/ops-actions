@@ -1,8 +1,12 @@
+#!/usr/bin/python3
+
+
 import subprocess
 import yaml
 
 from argparse import ArgumentParser
 from pathlib import Path
+
 
 ########################################################################
 # MARKDOWN TEMPLATE
@@ -26,36 +30,43 @@ markdownTemplate = """# {0}
 {4}"""
 ########################################################################
 
-def createMarkdownTable(items, properties):
+
+def createMarkdownTable(items: dict, columns: list):
   """
-  Create a Markdown table from given items based on given properties.
+  Convert a given dictionary "items" to a string in Markdown table format.
+
+  The given list "columns" defines which values to extract from the dictionary.
+
+  A column "key" will always be created based on each key in the dictionary.
   """
 
-  header = "| Name | "
-  separator = "| --- | "
-  for p in properties:
-    header += " {0} |".format(p)
-    separator += " --- |"
+  table = []
 
-  table = ""
-  table += "{0}\n{1}\n".format(header, separator)
+  # Create column headers
+  column_separator = " | "
+  table.append(column_separator.join(["key"] + columns))
+  table.append(column_separator.join(["---"] * (len(columns) + 1)))
 
-  for key, value in items:
-    row = "| {0} | ".format(key)
+  # Create rows
+  for key, item in items.items():
+    row = [key]
 
-    for p in properties:
-      v = value.get(p.lower(), "N/A")
-      row += "{0} | ".format(v)
+    for column in columns:
+      value = item.get(column, "N/A")
+      row.append(str(value))
 
-    table += "{0}\n".format(row)
+    table.append(column_separator.join(row))
 
-  return table
+  # Return table in Markdown format
+  return "\n".join(table)
+
 
 def readReusableWorkflow():
   """
   Reads a reusable GitHub Actions workflow, and returns its inputs, secrets and outputs.
   """
   pass
+
 
 def main(yamlFile, outputDir):
   with open(yamlFile, "r") as file:
@@ -100,20 +111,20 @@ def main(yamlFile, outputDir):
   exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
   exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
-  inputsTable = createMarkdownTable(inputs.items(), ["Type", "Required", "Default", "Description"])
-  secretsTable = createMarkdownTable(secrets.items(), ["Required", "Description"])
-  outputsTable = createMarkdownTable(outputs.items(), ["Description"])
+  inputsTable = createMarkdownTable(inputs, ["type", "required", "default", "description"])
+  secretsTable = createMarkdownTable(secrets, ["required", "description"])
+  outputsTable = createMarkdownTable(outputs, ["description"])
 
   outputFile = "{0}/{1}.md".format(outputDir, Path(yamlFile).stem)
   with open(outputFile, "w") as file:
     file.write(markdownTemplate.format(workflow_name, exampleYamlString, inputsTable, secretsTable, outputsTable))
     file.close()
 
-if __name__ == "__main__":
-  parser = ArgumentParser()
-  parser.add_argument("-f", "--file", type=str)
-  parser.add_argument("-o", "--output", type=str, default=".")
-  args = parser.parse_args()
-  yamlFile = args.file
-  outputDir = args.output
-  main(yamlFile, outputDir)
+
+parser = ArgumentParser()
+parser.add_argument("-f", "--file", type=str)
+parser.add_argument("-o", "--output", type=str, default=".")
+args = parser.parse_args()
+yamlFile = args.file
+outputDir = args.output
+main(yamlFile, outputDir)
