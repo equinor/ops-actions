@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: org/repo/.github/workflows/docker-acr.yml@v8.8.0
+    uses: equinor/ops-actions/.github/workflows/docker-acr.yml@v8.8.0
     inputs:
       registry_name: <string>
     secrets:
