@@ -2,7 +2,7 @@
 
 Python script for automatically generating documentation for reusable GitHub Actions workflows.
 
-## Prereqs:
+## Prereqs
 
 - Git
 
@@ -13,9 +13,7 @@ Python script for automatically generating documentation for reusable GitHub Act
 
 ## Usage
 
-> **Note**
->
-> Must be run from the root of the repo.
+> **Note** Must be run from the root of the repo.
 
 ```console
 python3 actions-docs.py
