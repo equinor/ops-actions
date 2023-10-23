@@ -41,8 +41,17 @@ def readReusableWorkflow(path: str):
     workflow = yaml.safe_load(file)
 
   name = workflow.get("name", Path(path).stem)
-  triggers = workflow.get("on", {})
-  call_trigger = triggers.get("workflow_call", {})
+
+  triggers = workflow.get(True, None) # YAML property "on" interpreted as True
+  if triggers is None:
+    print("{0} is not a reusable workflow".format(path))
+    return None
+
+  call_trigger = triggers.get("workflow_call", None)
+  if call_trigger is None:
+    print("{0} is not a reusable workflow".format(path))
+    return None
+
   inputs = call_trigger.get("inputs", {})
   secrets = call_trigger.get("secrets", {})
   outputs = call_trigger.get("outputs", {})
@@ -129,10 +138,15 @@ workflows = os.listdir(path)
 
 for wf in workflows:
   wfPath = os.path.join(path, wf)
-  name, inputs, secrets, outputs = readReusableWorkflow(wfPath)
-  inputsTable = createMarkdownTable(inputs, ["type", "required", "default", "description"])
-  secretsTable = createMarkdownTable(secrets, ["required", "description"])
-  outputsTable = createMarkdownTable(outputs, ["description"])
+  # name, inputs, secrets, outputs = readReusableWorkflow(wfPath)
+  wfOut = readReusableWorkflow(wfPath)
+  if wfOut is None:
+    continue
+
+  name = wfOut[0]
+  inputsTable = createMarkdownTable(wfOut[1], ["type", "required", "default", "description"])
+  secretsTable = createMarkdownTable(wfOut[2], ["required", "description"])
+  outputsTable = createMarkdownTable(wfOut[3], ["description"])
 
   outPath = os.path.join(output, Path(wf).stem + ".md")
   with open(outPath, "w") as file:
