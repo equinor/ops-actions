@@ -9,57 +9,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 
-########################################################################
-# MARKDOWN TEMPLATE
-########################################################################
-markdownTemplate = """# {0}
-
-```yaml
-{1}
-```
-
-## Inputs
-
-{2}
-
-## Secrets
-
-{3}
-
-## Outputs
-
-{4}"""
-########################################################################
-
-
-def readReusableWorkflow(path: str):
-    """
-    Reads a reusable GitHub Actions workflow, and returns its name, inputs, secrets and outputs.
-    """
-
-    with open(path, "r") as file:
-        workflow = yaml.safe_load(file)
-
-    name = workflow.get("name", Path(path).stem)
-
-    triggers = workflow.get(True, None)  # YAML property "on" interpreted as True
-    if triggers is None:
-        print("{0} is not a reusable workflow".format(path))
-        return None
-
-    call_trigger = triggers.get("workflow_call", None)
-    if call_trigger is None:
-        print("{0} is not a reusable workflow".format(path))
-        return None
-
-    inputs = call_trigger.get("inputs", {})
-    secrets = call_trigger.get("secrets", {})
-    outputs = call_trigger.get("outputs", {})
-
-    return name, inputs, secrets, outputs
-
-
-def createMarkdownTable(items: dict, columns: list):
+def dict_to_md_table(items: dict, columns: list):
     """
     Convert a given dictionary "items" to a string in Markdown table format.
 
@@ -91,7 +41,32 @@ def createMarkdownTable(items: dict, columns: list):
     return "\n".join(table)
 
 
-# Get arguments
+########################################################################
+# DEFINE MARKDOWN TEMPLATE
+########################################################################
+
+md_template = """# {0}
+
+```yaml
+{1}
+```
+
+## Inputs
+
+{2}
+
+## Secrets
+
+{3}
+
+## Outputs
+
+{4}"""
+
+###############################################################################
+# PARSE OPTIONAL SCRIPT ARGUMENTS
+###############################################################################
+
 parser = ArgumentParser()
 parser.add_argument("-p", "--path", type=str, default=".github/workflows")
 parser.add_argument("-o", "--output", type=str, default="docs/workflows")
@@ -99,70 +74,117 @@ args = parser.parse_args()
 path = args.path
 output = args.output
 
-# Get repo from envvar
+###############################################################################
+# GET REQUIRED ENVIRONMENT VARIABLES
+###############################################################################
+
 repo = os.getenv("GITHUB_REPO", "org/repo")
 
-# Get latest Git tag
+###############################################################################
+# GET LATEST RELEASE FROM GIT TAGS
+###############################################################################
+
 latestTag = subprocess.run(
     ["git", "describe", "--tags", "--abbrev=0"], capture_output=True, text=True
 ).stdout.strip("\n")
 
-workflows = os.listdir(path)
+###############################################################################
+# GET ALL REUSABLE WORKFLOW FILES AT GIVEN PATH
+###############################################################################
 
-for wf in workflows:
-    wfPath = os.path.join(path, wf)
-    wfOut = readReusableWorkflow(wfPath)
-    if wfOut is None:
+workflow_files = os.listdir(path)
+
+for workflow_file in workflow_files:
+    ############################################################################
+    # READ REUSABLE WORKFLOW
+    ############################################################################
+
+    workflow_path = os.path.join(path, workflow_file)
+    with open(workflow_path, "r") as f:
+        workflow = yaml.safe_load(f)
+
+    workflow_name = workflow.get("name", Path(workflow_path).stem)
+
+    ############################################################################
+    # GET WORKFLOW TRIGGERS
+    ############################################################################
+
+    # NOTE: YAML property "on" interpreted as True by PyYAML
+    workflow_triggers = workflow.get(True, None)
+
+    if workflow_triggers is None:
+        print("{0} is not a reusable workflow".format(workflow_file))
         continue
 
-    wfName = wfOut[0]
-    inputs = wfOut[1]
-    secrets = wfOut[2]
-    outputs = wfOut[3]
+    workflow_call = workflow_triggers.get("workflow_call", None)
+    if workflow_call is None:
+        print("{0} is not a reusable workflow".format(workflow_file))
+        continue
 
-    inputsTable = createMarkdownTable(
-        inputs, ["type", "required", "default", "description"]
+    ############################################################################
+    # GET WORKFLOW INPUTS, SECRETS AND OUTPUTS
+    ############################################################################
+
+    workflow_inputs = workflow_call.get("inputs", {})
+    workflow_secrets = workflow_call.get("secrets", {})
+    workflow_outputs = workflow_call.get("outputs", {})
+
+    workflow_inputs_md = dict_to_md_table(
+        workflow_inputs, ["type", "required", "default", "description"]
     )
-    secretsTable = createMarkdownTable(secrets, ["required", "description"])
-    outputsTable = createMarkdownTable(outputs, ["description"])
 
+    workflow_secrets_md = dict_to_md_table(
+        workflow_secrets, ["required", "description"]
+    )
+
+    workflow_outputs_md = dict_to_md_table(workflow_outputs, ["description"])
+
+    ############################################################################
     # CREATE USAGE EXAMPLE
+    ############################################################################
 
-    exampleYaml = {
+    usage_example = {
         "on": {"push": {"branches": ["main"]}},
-        "jobs": {"main": {"uses": "{0}/{1}@{2}".format(repo, wfPath, latestTag)}},
+        "jobs": {
+            "main": {"uses": "{0}/{1}@{2}".format(repo, workflow_path, latestTag)}
+        },
     }
 
-    exampleInputs = {}
+    example_inputs = {}
 
-    for name, properties in inputs.items():
-        required = properties["required"]
-
-        if required:
-            type = properties["type"]
-            exampleInputs[name] = "<{0}>".format(type)
-
-    if len(exampleInputs) > 0:
-        exampleYaml["jobs"]["main"]["inputs"] = exampleInputs
-
-    exampleSecrets = {}
-
-    for name, properties in secrets.items():
-        required = properties["required"]
+    for name, properties in workflow_inputs.items():
+        required = properties.get("required")
 
         if required:
-            exampleSecrets[name] = "${{{{ secrets.{0} }}}}".format(name)
+            type = properties.get("type")
+            example_inputs[name] = "<{0}>".format(type)
 
-    if len(exampleSecrets) > 0:
-        exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
+    if len(example_inputs) > 0:
+        usage_example["jobs"]["main"]["inputs"] = example_inputs
 
-    exampleYamlString = yaml.dump(exampleYaml, sort_keys=False)
+    example_secrets = {}
 
-    outPath = os.path.join(output, Path(wf).stem + ".md")
-    with open(outPath, "w") as file:
-        file.write(
-            markdownTemplate.format(
-                wfName, exampleYamlString, inputsTable, secretsTable, outputsTable
+    for name, properties in workflow_secrets.items():
+        required = properties.get("required")
+
+        if required:
+            example_secrets[name] = "${{{{ secrets.{0} }}}}".format(name)
+
+    if len(example_secrets) > 0:
+        usage_example["jobs"]["main"]["secrets"] = example_secrets
+
+    usage_example_yaml = yaml.dump(usage_example, sort_keys=False)
+
+    output_file = os.path.join(output, Path(workflow_path).stem + ".md")
+
+    with open(output_file, "w") as f:
+        f.write(
+            md_template.format(
+                workflow_name,
+                usage_example_yaml,
+                workflow_inputs_md,
+                workflow_secrets_md,
+                workflow_outputs_md,
             )
         )
-        file.close()
+        f.close()
