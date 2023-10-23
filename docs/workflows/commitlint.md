@@ -10,7 +10,6 @@ jobs:
     uses: org/repo/.github/workflows/commitlint.yml@v8.8.0
     inputs:
       message: <string>
-    secrets: {}
 
 ```
 

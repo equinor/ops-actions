@@ -139,20 +139,28 @@ for wf in workflows:
   }
 
   exampleInputs = {}
+
   for name, properties in inputs.items():
     required = properties["required"]
+
     if required:
       type = properties["type"]
       exampleInputs[name] = "<{0}>".format(type)
 
+  if len(exampleInputs) > 0:
+    exampleYaml["jobs"]["main"]["inputs"] = exampleInputs
+
   exampleSecrets = {}
+
   for name, properties in secrets.items():
     required = properties["required"]
+
     if required:
       exampleSecrets[name] = "${{{{ secrets.{0} }}}}".format(name)
 
-  exampleYaml["jobs"]["main"]["inputs"] = exampleInputs
-  exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
+  if len(exampleSecrets) > 0:
+    exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
+
   exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
   outPath = os.path.join(output, Path(wf).stem + ".md")
