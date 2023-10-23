@@ -31,9 +31,12 @@ jobs:
         run: python "$SCRIPT_DIR/actions-docs.py"
 
       - name: Create PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           branch=actions-docs--branches--main
           git switch -c "$branch"
           git add docs/workflows
           git commit -m "docs: update workflow usage"
+          git push -u origin HEAD
           gh pr create --base main --head "$branch" --fill-first
