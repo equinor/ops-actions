@@ -1,4 +1,4 @@
-# help_url
+# ♻ commitlint
 
 ```yaml
 'on':

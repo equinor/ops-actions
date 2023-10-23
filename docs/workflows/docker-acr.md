@@ -1,4 +1,4 @@
-# AZURE_TENANT_ID
+# ♻ docker-acr
 
 ```yaml
 'on':

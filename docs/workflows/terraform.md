@@ -1,4 +1,4 @@
-# ENCRYPTION_PASSWORD
+# ♻ terraform
 
 ```yaml
 'on':

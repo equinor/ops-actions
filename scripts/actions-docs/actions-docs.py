@@ -112,7 +112,7 @@ for wf in workflows:
   if wfOut is None:
     continue
 
-  name = wfOut[0]
+  wfName = wfOut[0]
   inputs = wfOut[1]
   secrets = wfOut[2]
   outputs = wfOut[3]
@@ -157,5 +157,5 @@ for wf in workflows:
 
   outPath = os.path.join(output, Path(wf).stem + ".md")
   with open(outPath, "w") as file:
-    file.write(markdownTemplate.format(name, exampleYamlString, inputsTable, secretsTable, outputsTable))
+    file.write(markdownTemplate.format(wfName, exampleYamlString, inputsTable, secretsTable, outputsTable))
     file.close()

@@ -1,4 +1,4 @@
-# semantic_version
+# ♻ semantic-release
 
 ```yaml
 'on':

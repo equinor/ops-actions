@@ -1,4 +1,4 @@
-# requirements
+# ♻ mkdocs-gh-pages
 
 ```yaml
 'on':
