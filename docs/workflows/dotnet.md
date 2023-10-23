@@ -1,7 +1,17 @@
-# ♻ dotnet
+# artifact_name
 
 ```yaml
-TODO: put usage example here.
+'on':
+  push:
+    branches:
+    - main
+jobs:
+  main:
+    uses: org/repo/.github/workflows/dotnet.yml@v8.8.0
+    inputs:
+      dotnet_version: <string>
+    secrets: {}
+
 ```
 
 ## Inputs

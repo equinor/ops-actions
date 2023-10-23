@@ -15,20 +15,20 @@ from pathlib import Path
 markdownTemplate = """# {0}
 
 ```yaml
-TODO: put usage example here.
+{1}
 ```
 
 ## Inputs
 
-{1}
+{2}
 
 ## Secrets
 
-{2}
+{3}
 
 ## Outputs
 
-{3}"""
+{4}"""
 ########################################################################
 
 
@@ -89,40 +89,6 @@ def createMarkdownTable(items: dict, columns: list):
   return "\n".join(table)
 
 
-def main(yamlFile, outputDir):
-  exampleYaml = {
-    "on": {
-      "push": {
-        "branches": [
-          "main"
-        ]
-      }
-    },
-    "jobs": {
-      "main": {
-        "uses": "equinor/ops-actions/.github/workflows/{0}.yml@{1}".format(Path(yamlFile).stem, latestTag)
-      }
-    }
-  }
-
-  exampleInputs = {}
-  for name, properties in inputs.items():
-    required = properties["required"]
-    type = properties["type"]
-    if required:
-      exampleInputs[name] = "<{0}>".format(type)
-
-  exampleSecrets = {}
-  for name, properties in secrets.items():
-    required = properties["required"]
-    if required:
-      exampleSecrets[name] = "${{{{ secrets.{0} }}}}".format(name)
-
-  exampleYaml["jobs"]["main"]["inputs"] = exampleInputs
-  exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
-  exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
-
-
 # Get arguments
 parser = ArgumentParser()
 parser.add_argument("-p", "--path", type=str, default=".github/workflows")
@@ -130,6 +96,9 @@ parser.add_argument("-o", "--output", type=str, default="docs/workflows")
 args = parser.parse_args()
 path = args.path
 output = args.output
+
+# Get repo from envvar
+repo=os.getenv("GITHUB_REPO", "org/repo")
 
 # Get latest Git tag
 latestTag = subprocess.run(["git", "describe", "--tags", "--abbrev=0"], capture_output=True, text=True).stdout.strip("\n")
@@ -144,13 +113,49 @@ for wf in workflows:
     continue
 
   name = wfOut[0]
-  inputsTable = createMarkdownTable(wfOut[1], ["type", "required", "default", "description"])
-  secretsTable = createMarkdownTable(wfOut[2], ["required", "description"])
-  outputsTable = createMarkdownTable(wfOut[3], ["description"])
+  inputs = wfOut[1]
+  secrets = wfOut[2]
+  outputs = wfOut[3]
+
+  inputsTable = createMarkdownTable(inputs, ["type", "required", "default", "description"])
+  secretsTable = createMarkdownTable(secrets, ["required", "description"])
+  outputsTable = createMarkdownTable(outputs, ["description"])
+
+  # CREATE USAGE EXAMPLE
+
+  exampleYaml = {
+    "on": {
+      "push": {
+        "branches": [
+          "main"
+        ]
+      }
+    },
+    "jobs": {
+      "main": {
+        "uses": "{0}/{1}@{2}".format(repo, wfPath, latestTag)
+      }
+    }
+  }
+
+  exampleInputs = {}
+  for name, properties in inputs.items():
+    required = properties["required"]
+    if required:
+      type = properties["type"]
+      exampleInputs[name] = "<{0}>".format(type)
+
+  exampleSecrets = {}
+  for name, properties in secrets.items():
+    required = properties["required"]
+    if required:
+      exampleSecrets[name] = "${{{{ secrets.{0} }}}}".format(name)
+
+  exampleYaml["jobs"]["main"]["inputs"] = exampleInputs
+  exampleYaml["jobs"]["main"]["secrets"] = exampleSecrets
+  exampleYamlString=yaml.dump(exampleYaml, sort_keys=False)
 
   outPath = os.path.join(output, Path(wf).stem + ".md")
   with open(outPath, "w") as file:
-    file.write(markdownTemplate.format(name, inputsTable, secretsTable, outputsTable))
+    file.write(markdownTemplate.format(name, exampleYamlString, inputsTable, secretsTable, outputsTable))
     file.close()
-
-# main(yamlFile, outputDir)

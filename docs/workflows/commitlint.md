@@ -1,7 +1,17 @@
-# ♻ commitlint
+# help_url
 
 ```yaml
-TODO: put usage example here.
+'on':
+  push:
+    branches:
+    - main
+jobs:
+  main:
+    uses: org/repo/.github/workflows/commitlint.yml@v8.8.0
+    inputs:
+      message: <string>
+    secrets: {}
+
 ```
 
 ## Inputs

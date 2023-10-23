@@ -1,7 +1,16 @@
-# ♻ mkdocs-gh-pages
+# requirements
 
 ```yaml
-TODO: put usage example here.
+'on':
+  push:
+    branches:
+    - main
+jobs:
+  main:
+    uses: org/repo/.github/workflows/mkdocs-gh-pages.yml@v8.8.0
+    inputs: {}
+    secrets: {}
+
 ```
 
 ## Inputs

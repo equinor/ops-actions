@@ -1,7 +1,19 @@
-# ♻ docker
+# password
 
 ```yaml
-TODO: put usage example here.
+'on':
+  push:
+    branches:
+    - main
+jobs:
+  main:
+    uses: org/repo/.github/workflows/docker.yml@v8.8.0
+    inputs:
+      registry: <string>
+      username: <string>
+    secrets:
+      password: ${{ secrets.password }}
+
 ```
 
 ## Inputs

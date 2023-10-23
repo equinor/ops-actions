@@ -1,7 +1,16 @@
-# ♻ semantic-release
+# semantic_version
 
 ```yaml
-TODO: put usage example here.
+'on':
+  push:
+    branches:
+    - main
+jobs:
+  main:
+    uses: org/repo/.github/workflows/semantic-release.yml@v8.8.0
+    inputs: {}
+    secrets: {}
+
 ```
 
 ## Inputs

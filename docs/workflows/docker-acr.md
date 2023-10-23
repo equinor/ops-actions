@@ -1,7 +1,20 @@
-# ♻ docker-acr
+# AZURE_TENANT_ID
 
 ```yaml
-TODO: put usage example here.
+'on':
+  push:
+    branches:
+    - main
+jobs:
+  main:
+    uses: org/repo/.github/workflows/docker-acr.yml@v8.8.0
+    inputs:
+      registry_name: <string>
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
 ```
 
 ## Inputs
