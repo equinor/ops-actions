@@ -100,6 +100,7 @@ for workflow_file in workflow_files:
     ############################################################################
 
     workflow_path = os.path.join(path, workflow_file)
+
     with open(workflow_path, "r") as f:
         workflow = yaml.safe_load(f)
 
@@ -117,6 +118,7 @@ for workflow_file in workflow_files:
         continue
 
     workflow_call = workflow_triggers.get("workflow_call", None)
+
     if workflow_call is None:
         print("{0} is not a reusable workflow".format(workflow_file))
         continue
