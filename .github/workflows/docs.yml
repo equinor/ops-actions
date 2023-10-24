@@ -5,7 +5,7 @@ on:
     types:
       - released
 
-  workflow_dispatch: {}
+  workflow_dispatch: {} # TODO: remove
 
 env:
   # Used by GitHub CLI for authenticating to GitHub
@@ -38,7 +38,9 @@ jobs:
         with:
           branch: actions-docs--branches--main
           add-paths: ${{ env.OUTPUT_PATH }}
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           commit-message: "docs: update workflow usage"
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           base: main
           title: "docs: update workflow usage"
           body: ""
