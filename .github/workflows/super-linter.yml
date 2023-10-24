@@ -3,10 +3,19 @@ name: ♻ super-linter
 
 on:
   workflow_call:
+    inputs:
+      filter_regex_exclude:
+        description: Exclude files from linting using a regex pattern.
+        type: string
+        required: false
+        default: ""
 
 jobs:
   super-linter:
     runs-on: ubuntu-latest
+    env:
+      FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
