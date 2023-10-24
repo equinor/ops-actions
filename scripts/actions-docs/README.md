@@ -18,6 +18,12 @@ This directory contains a Python script `actions-docs.sh` that will automaticall
 >
 > Must be run from the root of the repository.
 
+1. Login to GitHub:
+
+    ```console
+    gh auth login
+    ```
+
 1. Install requirements:
 
     ```console
