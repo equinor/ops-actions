@@ -174,7 +174,7 @@ for workflow_file in workflow_files:
             example_inputs[name] = "<{0}>".format(type)
 
     if len(example_inputs) > 0:
-        usage_example["jobs"]["main"]["inputs"] = example_inputs
+        usage_example["jobs"]["main"]["with"] = example_inputs
 
     example_secrets = {}
 
