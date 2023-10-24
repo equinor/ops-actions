@@ -48,7 +48,7 @@ jobs:
 
             # Commit and push changes
             git commit -m "docs: update workflow usage"
-            git push --force-with-lease
+            git push --set-upstream origin "$branch" --force-with-lease
 
             # Create a PR
             gh pr create --base main --head "$branch" --fill-first
