@@ -7,8 +7,8 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/commitlint.yml@v8.8.0
-    inputs:
+    uses: equinor/ops-actions/.github/workflows/commitlint.yml@v8.9.0
+    with:
       message: <string>
 
 ```
