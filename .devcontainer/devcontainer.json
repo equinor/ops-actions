@@ -19,6 +19,8 @@
       "extensions": [
         "GitHub.vscode-pull-request-github",
         "github.vscode-github-actions",
+        "ms-python.black-formatter",
+        "ms-python.isort",
         "DavidAnson.vscode-markdownlint"
       ]
     }
