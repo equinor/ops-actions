@@ -14,7 +14,9 @@ This directory contains a Python script `actions-docs.sh` that will automaticall
 
 ## Usage
 
-> **Note** Must be run from the root of the repository.
+> **Note**
+>
+> Must be run from the root of the repository.
 
 1. Install requirements:
 
