@@ -1,12 +1,13 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 
 import os
 import subprocess
-import yaml
 
 from argparse import ArgumentParser
 from pathlib import Path
+
+import yaml
 
 
 def dict_to_md_table(items: dict, columns: list):
