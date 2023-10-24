@@ -69,38 +69,43 @@ md_template = """# {workflow_name}
 ###############################################################################
 
 parser = ArgumentParser()
-parser.add_argument("-p", "--path", type=str, default=".github/workflows")
 parser.add_argument("-o", "--output", type=str, default="docs/workflows")
 args = parser.parse_args()
-path = args.path
 output_path = args.output
 
 ###############################################################################
-# GET REQUIRED ENVIRONMENT VARIABLES
+# GET GITHUB REPO NAME
 ###############################################################################
 
-repo = os.getenv("GITHUB_REPO", "owner/repo")
+repo = subprocess.run(
+    ["gh", "repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner"],
+    capture_output=True,
+    text=True,
+).stdout.strip("\n")
 
 ###############################################################################
-# GET LATEST RELEASE FROM GIT TAGS
+# GET LATEST GITHUB RELEASE
 ###############################################################################
 
-latestTag = subprocess.run(
-    ["git", "describe", "--tags", "--abbrev=0"], capture_output=True, text=True
+latest_tag = subprocess.run(
+    ["gh", "release", "view", "--json", "tagName", "--jq", ".tagName"],
+    capture_output=True,
+    text=True,
 ).stdout.strip("\n")
 
 ###############################################################################
 # GET ALL REUSABLE WORKFLOW FILES AT GIVEN PATH
 ###############################################################################
 
-workflow_files = os.listdir(path)
+workflows_path = ".github/workflows"
+workflow_files = os.listdir(workflows_path)
 
 for workflow_file in workflow_files:
     ############################################################################
     # READ REUSABLE WORKFLOW
     ############################################################################
 
-    workflow_path = os.path.join(path, workflow_file)
+    workflow_path = os.path.join(workflows_path, workflow_file)
 
     with open(workflow_path, "r") as f:
         workflow = yaml.safe_load(f)
@@ -149,7 +154,7 @@ for workflow_file in workflow_files:
     usage_example = {
         "on": {"push": {"branches": ["main"]}},
         "jobs": {
-            "main": {"uses": "{0}/{1}@{2}".format(repo, workflow_path, latestTag)}
+            "main": {"uses": "{0}/{1}@{2}".format(repo, workflow_path, latest_tag)}
         },
     }
 
@@ -189,9 +194,9 @@ for workflow_file in workflow_files:
             md_template.format(
                 workflow_name=workflow_name,
                 usage_example_yaml=usage_example_yaml,
-                workflow_inputs_md=workflow_inputs_md,
-                workflow_secrets_md=workflow_secrets_md,
-                workflow_outputs_md=workflow_outputs_md,
+                workflow_inputs=workflow_inputs_md,
+                workflow_secrets=workflow_secrets_md,
+                workflow_outputs=workflow_outputs_md,
             )
         )
         f.close()
