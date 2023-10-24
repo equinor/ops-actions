@@ -34,24 +34,11 @@ jobs:
         run: ./scripts/actions-docs/actions-docs.py -o "$OUTPUT_PATH"
 
       - name: Create PR
-        run: |
-          if [[ $(git status --porcelain "$OUTPUT_PATH") ]]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-            # Switch to branch, or create and switch to branch (if it does not exist)
-            branch="actions-docs--branches--main"
-            git switch "$branch" || git switch -c "$branch"
-
-            # Add auto-generated workflow docs
-            git add "$OUTPUT_PATH"
-
-            # Commit and push changes
-            git commit -m "docs: update workflow usage"
-            git push --set-upstream origin "$branch" --force-with-lease
-
-            # Create a PR
-            gh pr create --title "docs: update workflow usage" --body ""
-          else
-            echo "Documentation is up to date."
-          fi
+        uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38
+        with:
+          branch: actions-docs--branches--main
+          add-paths: ${{ env.OUTPUT_PATH }}
+          commit-message: "docs: update workflow usage"
+          base: main
+          title: "docs: update workflow usage"
+          body: ""
