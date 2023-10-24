@@ -5,10 +5,8 @@ on:
     types:
       - released
 
-  workflow_dispatch: {} # TODO: remove
-
 env:
-  # Used by GitHub CLI for authenticating to GitHub
+  # Used by GitHub CLI inside script for authenticating to GitHub
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   OUTPUT_PATH: docs/workflows
