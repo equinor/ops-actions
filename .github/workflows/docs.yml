@@ -31,17 +31,16 @@ jobs:
           pip install -r ./scripts/actions-docs/requirements.txt
 
       - name: Run script
-        run: ./scripts/actions-docs/actions-docs.py
+        run: ./scripts/actions-docs/actions-docs.py -o "$OUTPUT_PATH"
 
       - name: Create PR
         run: |
           if [[ $(git status --porcelain "$OUTPUT_PATH") ]]; then
-            branch="actions-docs--branches--main"
-
-            # Setup Git credentials using GitHub CLI
-            gh auth setup-git
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
             # Switch to branch, or create and switch to branch (if it does not exist)
+            branch="actions-docs--branches--main"
             git switch "$branch" || git switch -c "$branch"
 
             # Add auto-generated workflow docs
