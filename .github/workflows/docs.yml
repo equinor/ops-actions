@@ -51,7 +51,7 @@ jobs:
             git push --set-upstream origin "$branch" --force-with-lease
 
             # Create a PR
-            gh pr create --base main --head "$branch" --fill-first
+            gh pr create --title "docs: update workflow usage" --body ""
           else
             echo "Documentation is up to date."
           fi
