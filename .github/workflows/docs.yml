@@ -1,0 +1,58 @@
+name: 📚 Generate docs
+
+on:
+  release:
+    types:
+      - released
+
+  workflow_dispatch: {}
+
+env:
+  # Used by GitHub CLI for authenticating to GitHub
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  OUTPUT_PATH: docs/workflows
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10.12
+
+      - name: Install requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ./scripts/actions-docs/requirements.txt
+
+      - name: Run script
+        run: ./scripts/actions-docs/actions-docs.py
+
+      - name: Create PR
+        run: |
+          if [[ $(git status --porcelain "$OUTPUT_PATH") ]]; then
+            branch="actions-docs--branches--main"
+
+            # Setup Git credentials using GitHub CLI
+            gh auth setup-git
+
+            # Switch to branch, or create and switch to branch (if it does not exist)
+            git switch "$branch" || git switch -c "$branch"
+
+            # Add auto-generated workflow docs
+            git add "$OUTPUT_PATH"
+
+            # Commit and push changes
+            git commit -m "docs: update workflow usage"
+            git push --force-with-lease
+
+            # Create a PR
+            gh pr create --base main --head "$branch" --fill-first
+          else
+            echo "Documentation is up to date."
+          fi
