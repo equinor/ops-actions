@@ -45,23 +45,24 @@ def dict_to_md_table(items: dict, columns: list):
 # DEFINE MARKDOWN TEMPLATE
 ########################################################################
 
-md_template = """# {0}
+md_template = """# {workflow_name}
 
 ```yaml
-{1}
+{usage_example_yaml}
 ```
 
 ## Inputs
 
-{2}
+{workflow_inputs}
 
 ## Secrets
 
-{3}
+{workflow_secrets}
 
 ## Outputs
 
-{4}"""
+{workflow_outputs}
+"""
 
 ###############################################################################
 # PARSE OPTIONAL SCRIPT ARGUMENTS
@@ -72,13 +73,13 @@ parser.add_argument("-p", "--path", type=str, default=".github/workflows")
 parser.add_argument("-o", "--output", type=str, default="docs/workflows")
 args = parser.parse_args()
 path = args.path
-output = args.output
+output_path = args.output
 
 ###############################################################################
 # GET REQUIRED ENVIRONMENT VARIABLES
 ###############################################################################
 
-repo = os.getenv("GITHUB_REPO", "org/repo")
+repo = os.getenv("GITHUB_REPO", "owner/repo")
 
 ###############################################################################
 # GET LATEST RELEASE FROM GIT TAGS
@@ -177,16 +178,20 @@ for workflow_file in workflow_files:
 
     usage_example_yaml = yaml.dump(usage_example, sort_keys=False)
 
-    output_file = os.path.join(output, Path(workflow_path).stem + ".md")
+    ############################################################################
+    # CREATE OUTPUT MARKDOWN FILE
+    ############################################################################
+
+    output_file = os.path.join(output_path, Path(workflow_path).stem + ".md")
 
     with open(output_file, "w") as f:
         f.write(
             md_template.format(
-                workflow_name,
-                usage_example_yaml,
-                workflow_inputs_md,
-                workflow_secrets_md,
-                workflow_outputs_md,
+                workflow_name=workflow_name,
+                usage_example_yaml=usage_example_yaml,
+                workflow_inputs_md=workflow_inputs_md,
+                workflow_secrets_md=workflow_secrets_md,
+                workflow_outputs_md=workflow_outputs_md,
             )
         )
         f.close()
