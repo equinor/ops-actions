@@ -5,6 +5,7 @@ import os
 import subprocess
 from argparse import ArgumentParser
 from pathlib import Path
+from typing import Any, Dict
 
 import yaml
 
@@ -157,7 +158,7 @@ for workflow_file in workflow_files:
     # CREATE USAGE EXAMPLE
     ############################################################################
 
-    usage_example = {
+    usage_example: Dict[str, Any] = {
         "on": {"push": {"branches": ["main"]}},
         "jobs": {
             "main": {"uses": "{0}/{1}@{2}".format(repo, workflow_path, latest_tag)}
