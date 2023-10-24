@@ -1,27 +1,44 @@
-# Reusable workflows docs
+# Actions Docs
 
-Python script for automatically generating documentation for reusable GitHub Actions workflows.
+This directory contains a Python script `actions-docs.sh` that will automatically generate documentation for reusable GitHub Actions workflows.
 
-## Prereqs
+## Prerequisites
 
-- Git
-- Environment variable `GITHUB_REPO` in format `owner/repo`.
+- [Install Python](https://www.python.org/downloads/) (latest version as of writing: `3.10.12`) - to run Python script.
+- [Install pip](https://pip.pypa.io/en/stable/installation/) (latest version as of writing: `22.0.2`) - to install required Python packages.
+- [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.37.0`) - to get the name and latest release of the GitHub repository containing the reusable workflows.
 
 ## Arguments
 
-- `-p`, `--path`: the path containing the workflows to generate docs for. Default is `.github/workflows`.
 - `-o`, `--output`: the output path to store the generated Markdown files in. Default is `docs/workflows`.
 
 ## Usage
 
-> **Note** If using default values for arguments, must be run from the root of the repo.
+> **Note**
+>
+> Must be run from the root of the repository.
 
-```console
-python3 actions-docs.py
-```
+1. Login to GitHub:
 
-Specify path and output:
+    ```console
+    gh auth login
+    ```
 
-```console
-python3 actions-docs.py -p .github/workflows -o docs/workflows
-```
+1. Install requirements:
+
+    ```console
+    python -m pip install --upgrade pip
+    pip install -r scripts/actions-docs/requirements.txt
+    ```
+
+1. Run the script:
+
+    ```console
+    ./scripts/actions-docs/actions-docs.py
+    ```
+
+    Specify output path:
+
+    ```console
+    ./scripts/actions-docs/actions-docs.py -o docs/workflows
+    ```

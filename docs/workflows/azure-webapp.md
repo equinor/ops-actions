@@ -7,8 +7,8 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v8.8.0
-    inputs:
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v8.9.0
+    with:
       app_name: <string>
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}

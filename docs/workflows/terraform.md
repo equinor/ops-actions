@@ -7,8 +7,8 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/terraform.yml@v8.8.0
-    inputs:
+    uses: equinor/ops-actions/.github/workflows/terraform.yml@v8.9.0
+    with:
       environment: <string>
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
