@@ -5,10 +5,8 @@ on:
     types:
       - released
 
-  workflow_dispatch: {}
-
 env:
-  # Used by GitHub CLI for authenticating to GitHub
+  # Used by GitHub CLI inside script for authenticating to GitHub
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   OUTPUT_PATH: docs/workflows
@@ -31,28 +29,16 @@ jobs:
           pip install -r ./scripts/actions-docs/requirements.txt
 
       - name: Run script
-        run: ./scripts/actions-docs/actions-docs.py
+        run: ./scripts/actions-docs/actions-docs.py -o "$OUTPUT_PATH"
 
       - name: Create PR
-        run: |
-          if [[ $(git status --porcelain "$OUTPUT_PATH") ]]; then
-            branch="actions-docs--branches--main"
-
-            # Setup Git credentials using GitHub CLI
-            gh auth setup-git
-
-            # Switch to branch, or create and switch to branch (if it does not exist)
-            git switch "$branch" || git switch -c "$branch"
-
-            # Add auto-generated workflow docs
-            git add "$OUTPUT_PATH"
-
-            # Commit and push changes
-            git commit -m "docs: update workflow usage"
-            git push --force-with-lease
-
-            # Create a PR
-            gh pr create --base main --head "$branch" --fill-first
-          else
-            echo "Documentation is up to date."
-          fi
+        uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38
+        with:
+          branch: actions-docs--branches--main
+          add-paths: ${{ env.OUTPUT_PATH }}
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          commit-message: "docs: update workflow usage"
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          base: main
+          title: "docs: update workflow usage"
+          body: ""
