@@ -101,7 +101,10 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
-          terraform_wrapper: true # Makes Terraform commands stdout and exitcode available in step outputs
+          terraform_wrapper: false
+          # Enabling this would wrap all Terraform commands with debug logs (stdout, stderr etc.).
+          # These debug logs would be included in the job summary plan.
+          # Disable wrapper to prevent this.
 
       - name: Terraform Format
         id: fmt
@@ -113,7 +116,7 @@ jobs:
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate -no-color
+        run: terraform validate
 
       # Create Terraform plan file.
       # This file contains the full configuration, including sensitive data.
@@ -121,21 +124,25 @@ jobs:
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
+        run: terraform plan -input=false -out=tfplan
 
-      # The stdout of the plan step must not be set in an intermediate environment variable.
-      # Long environment variables will cause Bash to throw an error "Argument list too long" on startup.
+      # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
+      # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
       - name: Create job summary
         if: success() || failure()
         env:
+          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
+          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
+          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
+          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         run: |
-          tfplan='${{ steps.plan.outputs.stdout }}'
+          tfplan=$(terraform show tfplan -no-color)
 
-          echo "#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-          #### Terraform Initialization ⚙\`${{ steps.init.outcome }}\`
-          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
+          #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
+          #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
+          #### Terraform Plan 📖\`$TF_PLAN_OUTCOME\`
 
           <details><summary>Show Plan</summary>
 
@@ -149,16 +156,12 @@ jobs:
 
       - name: Archive Terraform config
         id: archive
-        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
-        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
-        if: steps.plan.outputs.exitcode == 2
         run: |
           tar -cf terraform.tar .
           7z a -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
 
       - name: Upload artifact
         id: upload
-        if: steps.archive.outcome == 'success'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
@@ -172,7 +175,6 @@ jobs:
   terraform-apply:
     name: Terraform Apply
     needs: terraform-plan
-    if: needs.terraform-plan.outputs.upload-outcome == 'success'
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     defaults:
