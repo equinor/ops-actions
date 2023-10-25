@@ -101,8 +101,10 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
-          # terraform_wrapper: true # Makes Terraform commands exitcode available in step outputs
           terraform_wrapper: false
+          # Enabling this would wrap all Terraform commands with debug logs (stdout, stderr etc.).
+          # These debug logs would be included in the job summary plan.
+          # Disable wrapper to prevent this.
 
       - name: Terraform Format
         id: fmt
@@ -122,7 +124,7 @@ jobs:
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
-        run: terraform plan -input=false -out=tfplan # -detailed-exitcode
+        run: terraform plan -input=false -out=tfplan
 
       # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
       # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
@@ -154,16 +156,12 @@ jobs:
 
       - name: Archive Terraform config
         id: archive
-        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
-        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
-        # if: steps.plan.outputs.exitcode == 2
         run: |
           tar -cf terraform.tar .
           7z a -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
 
       - name: Upload artifact
         id: upload
-        if: steps.archive.outcome == 'success'
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.artifact_name }}
@@ -177,7 +175,6 @@ jobs:
   terraform-apply:
     name: Terraform Apply
     needs: terraform-plan
-    if: needs.terraform-plan.outputs.upload-outcome == 'success'
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     defaults:
