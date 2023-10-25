@@ -122,7 +122,7 @@ jobs:
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
-        run: terraform plan -input=false -out=tfplan -detailed-exitcode
+        run: terraform plan -input=false -out=tfplan # -detailed-exitcode
 
       # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
       # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
