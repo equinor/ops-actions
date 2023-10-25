@@ -102,9 +102,11 @@ jobs:
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: false
-          # Enabling this would wrap all Terraform commands with debug logs (stdout, stderr etc.).
-          # These debug logs would be included in the job summary plan.
-          # Disable wrapper to prevent this.
+          # Wraps Terraform commands, exposing their stdout, stderr and exitcode.
+          # It also wraps Terraform command outputs with debug logs, including the output of the "terraform show" command.
+          # The "show" command is used to create a GitHub job summary containing the generated plan in a human-readable format.
+          # If the wrapper is enabled, the debug logs will be visible in the job summary.
+          # The wrapper must be disabled to prevent this.
 
       - name: Terraform Format
         id: fmt
@@ -125,7 +127,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         # Start Bash without fail-fast behavior.
-        # Required in order to explicitly check exitcode.
+        # Required in order to check exitcode.
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
         shell: bash {0}
         run: |
