@@ -113,7 +113,7 @@ jobs:
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate -no-color
+        run: terraform validate
 
       # Create Terraform plan file.
       # This file contains the full configuration, including sensitive data.
@@ -121,7 +121,7 @@ jobs:
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -input=false -out=tfplan -detailed-exitcode
+        run: terraform plan -input=false -out=tfplan -detailed-exitcode
 
       # The stdout of the plan step must not be set in an intermediate environment variable.
       # Long environment variables will cause Bash to throw an error "Argument list too long" on startup.
