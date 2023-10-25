@@ -123,8 +123,8 @@ jobs:
         id: plan
         run: terraform plan -input=false -out=tfplan -detailed-exitcode
 
-      # The stdout of the plan step must not be set in an intermediate environment variable.
-      # Long environment variables will cause Bash to throw an error "Argument list too long" on startup.
+      # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
+      # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
       - name: Create job summary
         if: success() || failure()
         env:
