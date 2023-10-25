@@ -128,14 +128,18 @@ jobs:
       - name: Create job summary
         if: success() || failure()
         env:
+          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
+          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
+          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
+          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         run: |
-          tfplan='${{ steps.plan.outputs.stdout }}'
+          tfplan=$(terraform show tfplan -no-color)
 
-          echo "#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-          #### Terraform Initialization ⚙\`${{ steps.init.outcome }}\`
-          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
+          #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
+          #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
+          #### Terraform Plan 📖\`$TF_PLAN_OUTCOME\`
 
           <details><summary>Show Plan</summary>
 
