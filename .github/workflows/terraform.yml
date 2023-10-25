@@ -106,7 +106,7 @@ jobs:
           # It also wraps Terraform command outputs with debug logs, including the output of the "terraform show" command.
           # The "show" command is used to create a GitHub job summary containing the generated plan in a human-readable format.
           # If the wrapper is enabled, the debug logs will be visible in the job summary.
-          # Disable the wrapper to prevent this from happening.
+          # The wrapper must be disabled to prevent this.
 
       - name: Terraform Format
         id: fmt
