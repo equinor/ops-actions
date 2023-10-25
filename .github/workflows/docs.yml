@@ -3,7 +3,7 @@ name: 📚 Generate docs
 on:
   release:
     types:
-      - released
+      - published
 
 env:
   # Used by GitHub CLI inside script for authenticating to GitHub
