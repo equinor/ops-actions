@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/docker-acr.yml@v8.9.0
+    uses: equinor/ops-actions/.github/workflows/docker-acr.yml@v8.10.1
     with:
       registry_name: <string>
     secrets:
