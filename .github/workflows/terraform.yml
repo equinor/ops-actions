@@ -142,6 +142,7 @@ jobs:
       # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
       - name: Create job summary
         if: success() || failure()
+        shell: bash {0}
         env:
           TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
           TF_INIT_OUTCOME: ${{ steps.init.outcome }}
