@@ -22,7 +22,8 @@
         "ms-python.black-formatter",
         "ms-python.isort",
         "ms-python.mypy-type-checker",
-        "DavidAnson.vscode-markdownlint"
+        "DavidAnson.vscode-markdownlint",
+        "timonwong.shellcheck"
       ]
     }
   },
