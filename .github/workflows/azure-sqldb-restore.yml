@@ -1,0 +1,91 @@
+name: ♻ azure-sqldb-restore
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: The name of the GitHub environment that this job references.
+        type: string
+        required: false
+
+      server_name:
+        description: The name of the Azure SQL server to deploy the database restore to.
+        type: string
+        required: true
+
+      database_name:
+        description: The name of the Azure SQL database to restore.
+        type: string
+        required: true
+
+      target_backup_time:
+        description: The target backup time in "yyyy/MM/dd HH:mm:ss".
+        type: string
+        required: true
+
+    secrets:
+      AZURE_CLIENT_ID:
+        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: The ID of the Azure subscription containing the Azure SQL server.
+        required: true
+
+      AZURE_TENANT_ID:
+        description: The ID of the Azure tenant containing the Azure SQL server.
+        required: true
+
+jobs:
+  azure-sqldb-restore:
+    name: Azure SQL DB restore
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    # Set permissions required to login to Azure using OIDC.
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Run Azure PowerShell script
+        uses: azure/powershell@v1
+        env:
+          SERVER_NAME: ${{ inputs.server_name }}
+          DATABASE_NAME: ${{ inputs.database_name }}
+          TARGET_BACKUP_TIME: ${{ inputs.target_backup_time }}
+        with:
+          azPSVersion: 10.4.1
+          errorActionPreference: Stop
+          inlineScript: |
+            $ServerName = $env:SERVER_NAME
+            $Server = Get-AzSqlServer -ServerName $ServerName
+            $Location = $Server.Location
+            $DatabaseName = $env:DATABASE_NAME
+            $TargetBackupTime = [datetime]$env:TARGET_BACKUP_TIME
+
+            $Backup = Get-AzSqlDatabaseLongTermRetentionBackup -ServerName $ServerName -Location $Location -DatabaseName $DatabaseName |
+            Where-Object { $_.BackupTime -LE $TargetBackupTime } |
+            Sort-Object -Property BackupTime -Descending |
+            Select-Object -First 1
+
+            if ($null -eq $Backup) {
+              throw "No backup available before or at target backup time $TargetBackupTime"
+            }
+
+            $ResourceId = $Backup.ResourceId
+            $ResourceGroupName = $Server.ResourceGroupName
+            $BackupTime = Get-Date -Date $Backup.BackupTime -Format "yyyy-MM-ddTHH-mmZ"
+            $TargetDatabaseName = "${DatabaseName}_$BackupTime"
+
+            Restore-AzSqlDatabase -FromLongTermRetentionBackup -ResourceId $ResourceId -ServerName $ServerName -ResourceGroupName $ResourceGroupName -TargetDatabaseName $TargetDatabaseName
