@@ -6,6 +6,7 @@ It accepts the following arguments:
 
 1. The Azure region to create the storage account in.
 1. The path of the JSON file containing the Terraform backend configuration.
+1. The object ID of the user, group or service principal that should have access to the backend.
 
 ## Prerequisites
 
@@ -50,31 +51,14 @@ Example configuration:
 1. Run the script:
 
     ```console
-    ./terraform-backend.sh <LOCATION> <CONFIG_FILE>
+    ./terraform-backend.sh <LOCATION> <CONFIG_FILE> <OBJECT_ID>
     ```
 
     For example:
 
     ```console
-    ./terraform-backend.sh northeurope dev.azurerm.tfbackend.json
+    ./terraform-backend.sh northeurope dev.azurerm.tfbackend.json 42a1284c-b0b1-4a64-afab-1a89ec7d0ac9
     ```
-
-1. Create a service principal for accessing the backend in automation using the [OIDC script](../oidc/README.md).
-
-    The JSON file containing the OIDC configuration must contain the following role assignment:
-
-    ```json
-    {
-      "role": "Storage Blob Data Owner",
-      "scope": "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/<RESOURCE_GROUP_NAME>/storageAccounts/<STORAGE_ACCOUNT_NAME>"
-    }
-    ```
-
-    > **Note**
-    >
-    > The `terraform-backend.sh` script adds a read-only lock named `Terraform` to the created Storage account.
-    > This prevents modifications to the Terraform backend configuration.
-    > In order to add role assignments to the Storage account, the read-only lock must be *temporarily* removed.
 
 ## References
 

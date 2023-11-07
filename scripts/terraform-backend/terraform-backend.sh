@@ -4,6 +4,7 @@ set -eu
 
 LOCATION=${1:?"LOCATION is unset or null"}
 CONFIG_FILE=${2:?"CONFIG_FILE is unset or null"}
+OBJECT_ID=${2:?"OBJECT_ID is unset or null"}
 
 ################################################################################
 # Verify target Azure subscription
@@ -133,6 +134,19 @@ az storage account management-policy create \
   --resource-group "${RESOURCE_GROUP_NAME}" \
   --policy "${management_policy}" \
   --output none
+
+################################################################################
+# Create Azure role assignment
+################################################################################
+
+if [[ -n "${OBJECT_ID}" ]]
+then
+  az role assignment create \
+    --assignee "${OBJECT_ID}" \
+    --role 'Storage Blob Data Owner' \
+    --scope "${storage_account_id}" \
+    --output none
+fi
 
 ################################################################################
 # Create Azure resource lock
