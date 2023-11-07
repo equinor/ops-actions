@@ -2,8 +2,9 @@
 
 set -eu
 
-LOCATION=${1:?"LOCATION is unset or null"}
-CONFIG_FILE=${2:?"CONFIG_FILE is unset or null"}
+CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
+LOCATION=${2:?"LOCATION is unset or null"}
+OBJECT_ID=${3:?"OBJECT_ID is unset or null"}
 
 ################################################################################
 # Verify target Azure subscription
@@ -59,7 +60,7 @@ storage_account_id="$(az storage account create \
   --location "${LOCATION}" \
   --sku Standard_GRS \
   --access-tier Hot \
-  --kind BlobStorage \
+  --kind StorageV2 \
   --https-only true \
   --min-tls-version TLS1_2 \
   --allow-blob-public-access false \
@@ -135,12 +136,22 @@ az storage account management-policy create \
   --output none
 
 ################################################################################
+# Create Azure role assignment
+################################################################################
+
+az role assignment create \
+  --assignee "${OBJECT_ID}" \
+  --role 'Storage Blob Data Owner' \
+  --scope "${storage_account_id}" \
+  --output none
+
+################################################################################
 # Create Azure resource lock
 ################################################################################
 
 az resource lock create \
   --name 'Terraform' \
-  --lock-type CanNotDelete \
+  --lock-type ReadOnly \
   --resource "${storage_account_id}" \
-  --notes "Prevent deletion of Terraform backend" \
+  --notes "Prevent changes to Terraform backend configuration" \
   --output none
