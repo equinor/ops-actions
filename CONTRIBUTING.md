@@ -15,13 +15,13 @@
     feat(terraform): skip Apply if no changes present
     ```
 
-    If you've updated multiple or no workflow files, don't specify a scope, for example:
+    If you've updated multiple or no workflow files, don't specify a scope:
 
     ```plaintext
     refactor: update workflow input descriptions
     ```
 
-    If you haven't updated any workflow files, use the `chore` type, for example:
+    If you haven't updated any workflow files, use the `chore` type:
 
     ```plaintext
     chore: update OIDC script
