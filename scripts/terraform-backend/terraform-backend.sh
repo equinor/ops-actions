@@ -60,7 +60,7 @@ storage_account_id="$(az storage account create \
   --location "${LOCATION}" \
   --sku Standard_GRS \
   --access-tier Hot \
-  --kind BlobStorage \
+  --kind StorageV2 \
   --https-only true \
   --min-tls-version TLS1_2 \
   --allow-blob-public-access false \
