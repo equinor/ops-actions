@@ -35,9 +35,9 @@ export SUBSCRIPTION_ID
 
 if [[ -f "$CONFIG_FILE" ]]
 then
-  echo "Using config file '$CONFIG_FILE'."
+  echo "Using config file '$CONFIG_FILE'." > /dev/tty
 else
-  echo "Config file '$CONFIG_FILE' does not exist."
+  echo "Config file '$CONFIG_FILE' does not exist." > /dev/tty
   exit 1
 fi
 
@@ -56,7 +56,7 @@ app_id=$(az ad app list \
 
 if [[ -z "$app_id" ]]
 then
-  echo "Creating application..."
+  echo "Creating application..." > /dev/tty
 
   app_id=$(az ad app create \
     --display-name "$app_name" \
@@ -64,7 +64,7 @@ then
     --query appId \
     --output tsv)
 else
-  echo "Using existing application."
+  echo "Using existing application." > /dev/tty
 fi
 
 ################################################################################
@@ -78,15 +78,17 @@ sp_id=$(az ad sp list \
 
 if [[ -z "$sp_id" ]]
 then
-  echo "Creating service principal..."
+  echo "Creating service principal..." > /dev/tty
 
   sp_id=$(az ad sp create \
     --id "$app_id" \
     --query id \
     --output tsv)
 else
-  echo "Using existing service principal."
+  echo "Using existing service principal." > /dev/tty
 fi
+
+echo "$sp_id"
 
 ################################################################################
 # Create Azure AD application federated credentials
@@ -116,14 +118,14 @@ do
 
   if [[ -z "$fic_id" ]]
   then
-    echo "Creating federated identity credential '$fic_name'..."
+    echo "Creating federated identity credential '$fic_name'..." > /dev/tty
 
     az ad app federated-credential create \
       --id "$app_id" \
       --parameters "$parameters" \
       --output none
   else
-    echo "Updating existing federated identity credential '$fic_name'..."
+    echo "Updating existing federated identity credential '$fic_name'..." > /dev/tty
 
     az ad app federated-credential update \
       --id "$app_id" \
@@ -155,7 +157,7 @@ do
   role=$(echo "$role_assignment" | jq -r .role)
   scope=$(echo "$role_assignment" | jq -r .scope)
 
-  echo "Assigning role '$role' at scope '$scope'..."
+  echo "Assigning role '$role' at scope '$scope'..." > /dev/tty
 
   az role assignment create \
     --role "$role" \
@@ -171,7 +173,7 @@ done
 
 if [[ "$repo_level" == true ]]
 then
-  echo "Setting GitHub repository secrets..."
+  echo "Setting GitHub repository secrets..." > /dev/tty
 
   gh secret set "AZURE_CLIENT_ID" \
     --body "$app_id"
@@ -189,7 +191,7 @@ fi
 
 for env in "${!environments[@]}"
 do
-  echo "Setting GitHub environment secrets for environment '$env'..."
+  echo "Setting GitHub environment secrets for environment '$env'..." > /dev/tty
 
   gh secret set "AZURE_CLIENT_ID" \
     --env "$env" \
