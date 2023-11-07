@@ -2,9 +2,9 @@
 
 set -eu
 
-LOCATION=${1:?"LOCATION is unset or null"}
-CONFIG_FILE=${2:?"CONFIG_FILE is unset or null"}
-OBJECT_ID=${2:?"OBJECT_ID is unset or null"}
+CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
+LOCATION=${2:?"LOCATION is unset or null"}
+OBJECT_ID=${3:?"OBJECT_ID is unset or null"}
 
 ################################################################################
 # Verify target Azure subscription
