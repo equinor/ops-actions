@@ -223,6 +223,48 @@ Prerequisites:
 
 - [Configure Azure credentials](../scripts/oidc/README.md)
 
+## Deploy Azure SQL database restore
+
+Example:
+
+```yaml
+name: 🐬 Deploy Azure SQL DB restore
+run-name: Deploy Azure SQL DB restore to ${{ inputs.environment }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Deploy database to environment
+        type: choice
+        options: [dev, test, qa, prod]
+        default: dev
+
+      target_backup_time:
+        description: Restore database to target backup time (in "yyyy/MM/dd HH:mm:ss" format)
+        type: string
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy ${{ inputs.environment }}
+    uses: equinor/ops-actions/.github/workflows/azure-sqldb-restore.yml@<release>
+    with:
+      environment: ${{ inputs.environment }}
+      server_name: sql-foobar-${{ inputs.environment }}
+      database_name: sqldb-foobar-${{ inputs.environment }}
+      target_backup_time: ${{ inputs.target_backup_time }}
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+```
+
+Prerequisites:
+
+- [Configure Azure credentials](../scripts/oidc/README.md)
+  - Azure role `SQL Server Contributor` must be assigned at the subscription scope
+
 ## Deploy MkDocs to GitHub Pages
 
 Example:

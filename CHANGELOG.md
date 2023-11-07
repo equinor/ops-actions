@@ -1,5 +1,47 @@
 # Changelog
 
+## [8.11.0](https://github.com/equinor/ops-actions/compare/v8.10.2...v8.11.0) (2023-11-06)
+
+
+### Features
+
+* add Azure SQL DB restore workflow ([#322](https://github.com/equinor/ops-actions/issues/322)) ([9447486](https://github.com/equinor/ops-actions/commit/94474867d82889809de1d9bb8cf5a3f197953d88))
+
+## [8.10.2](https://github.com/equinor/ops-actions/compare/v8.10.1...v8.10.2) (2023-11-03)
+
+
+### Bug Fixes
+
+* **dotnet:** support self-contained publish ([#323](https://github.com/equinor/ops-actions/issues/323)) ([36d1bee](https://github.com/equinor/ops-actions/commit/36d1beea687faa5fa7a913d7740ccf2c907c8e0d))
+
+## [8.10.1](https://github.com/equinor/ops-actions/compare/v8.10.0...v8.10.1) (2023-10-27)
+
+
+### Bug Fixes
+
+* **terraform:** no job summary on error ([#315](https://github.com/equinor/ops-actions/issues/315)) ([58b5f09](https://github.com/equinor/ops-actions/commit/58b5f0963150d12877a22bc21067ddb62c61ad91))
+
+## [8.10.0](https://github.com/equinor/ops-actions/compare/v8.9.1...v8.10.0) (2023-10-25)
+
+
+### Features
+
+* **terraform:** skip Apply if no changes present ([#310](https://github.com/equinor/ops-actions/issues/310)) ([265d3a4](https://github.com/equinor/ops-actions/commit/265d3a42cf3c3428f2e6bd59c43575b6c9e01325))
+
+## [8.9.1](https://github.com/equinor/ops-actions/compare/v8.9.0...v8.9.1) (2023-10-25)
+
+
+### Bug Fixes
+
+* **terraform:** error on plan with special chars ([#307](https://github.com/equinor/ops-actions/issues/307)) ([56243fd](https://github.com/equinor/ops-actions/commit/56243fd12551aab0ced8f17f03f6d6f1928a3c16))
+
+## [8.9.0](https://github.com/equinor/ops-actions/compare/v8.8.0...v8.9.0) (2023-10-24)
+
+
+### Features
+
+* **super-linter:** exclude files from linting ([#299](https://github.com/equinor/ops-actions/issues/299)) ([27aaa03](https://github.com/equinor/ops-actions/commit/27aaa037e40abc6f128332aa4ae7938433d4cdf3))
+
 ## [8.8.0](https://github.com/equinor/ops-actions/compare/v8.7.4...v8.8.0) (2023-10-18)
 
 
