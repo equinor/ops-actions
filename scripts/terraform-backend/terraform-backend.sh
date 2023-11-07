@@ -139,14 +139,11 @@ az storage account management-policy create \
 # Create Azure role assignment
 ################################################################################
 
-if [[ -n "${OBJECT_ID}" ]]
-then
-  az role assignment create \
-    --assignee "${OBJECT_ID}" \
-    --role 'Storage Blob Data Owner' \
-    --scope "${storage_account_id}" \
-    --output none
-fi
+az role assignment create \
+  --assignee "${OBJECT_ID}" \
+  --role 'Storage Blob Data Owner' \
+  --scope "${storage_account_id}" \
+  --output none
 
 ################################################################################
 # Create Azure resource lock
