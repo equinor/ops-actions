@@ -14,6 +14,10 @@ The script accepts the following arguments:
 
 1. The path of the JSON file containing the OIDC configuration
 
+The script outputs the following values:
+
+1. The object ID of the created service principal.
+
 ## Configuration specification
 
 Example configuration:
