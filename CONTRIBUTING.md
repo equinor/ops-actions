@@ -21,7 +21,7 @@
     refactor: update workflow input descriptions
     ```
 
-    If you haven't updated any workflow files, use the `chore` type:
+    If you've updated no workflow files, use the `chore` type:
 
     ```plaintext
     chore: update OIDC script
