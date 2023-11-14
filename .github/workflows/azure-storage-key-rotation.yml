@@ -1,0 +1,95 @@
+name: ♻ azure-storage-key-rotation
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: The name of the GitHub environment that this job references.
+        type: string
+        required: false
+
+      account_name:
+        description: The name of the Azure Storage account to rotate the key for.
+        type: string
+        required: false
+
+      vault_name:
+        description: The name of the Azure Key Vault to create a secret in.
+        type: string
+        required: false
+
+      secret_name:
+        description: The name of the Azure Key Vault secret to store the connection string in.
+        type: string
+        required: false
+
+    secrets:
+      AZURE_CLIENT_ID:
+        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: The ID of the Azure subscription containing the Azure resources.
+        required: true
+
+      AZURE_TENANT_ID:
+        description: The ID of the Azure tenant containing the Azure resources.
+        required: true
+
+jobs:
+  key-rotation:
+    name: Key rotation
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    env:
+      ACCOUNT_NAME: ${{ inputs.account_name }}
+      VAULT_NAME: ${{ inputs.vault_name }}
+      SECRET_NAME: ${{ inputs.secret_name }}
+
+    # Set permissions required to login to Azure using OIDC.
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Renew Azure Storage account key
+        id: az-storage-account-keys-renew
+        run: |
+          account_key=$(az storage account keys renew --key key1 --account-name "$ACCOUNT_NAME" --query "[0].value" --output tsv)
+          echo "::add-mask::$account_key"
+          connection_string="DefaultEndpointsProtocol=https;AccountName=$ACCOUNT_NAME;AccountKey=$account_key;EndpointSuffix=core.windows.net"
+          echo "connection-string=$connection_string" >> "$GITHUB_OUTPUT"
+
+      - name: List Azure Key Vault network rules
+        id: az-keyvault-network-rule-list
+        run: |
+          ip_address=$(curl "https://api.ipify.org" 2>/dev/null)
+          ip_rule=$(az keyvault network-rule list --name "$VAULT_NAME" --query "ipRules[? value == '$ip_address' || value == '$ip_address/32']" --output tsv)
+          echo "ip-address=$ip_address" >> "$GITHUB_OUTPUT"
+          echo "ip-rule=$ip_rule" >> "$GITHUB_OUTPUT"
+
+      - name: Add IP address to Azure Key Vault network rules
+        if: steps.az-keyvault-network-rule-list.outputs.ip-rule != ''
+        env:
+          IP_ADDRESS: ${{ steps.az-keyvault-network-rule-list.outputs.ip-address }}
+        run: az keyvault network-rule add --name "$VAULT_NAME" --ip-address "$IP_ADDRESS" --output none
+
+      - name: Set Azure Key Vault secret value
+        env:
+          CONNECTION_STRING: ${{ steps.az-storage-account-keys-renew.outputs.connection-string }}
+        run: az keyvault secret set --name "$SECRET_NAME" --value "$CONNECTION_STRING" --vault-name "$VAULT_NAME" --output none
+
+      - name: Remove IP address from Azure Key Vault network rules
+        # IP address must be removed even if preceding steps fail
+        if: (success() || failure()) && steps.az-keyvault-network-rule-list.outputs.ip-rule != ''
+        env:
+          IP_ADDRESS: ${{ steps.az-keyvault-network-rule-list.outputs.ip-address }}
+        run: az keyvault network-rule remove --name "$VAULT_NAME" --ip-address "$IP_ADDRESS" --output none
