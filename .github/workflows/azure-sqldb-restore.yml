@@ -19,7 +19,7 @@ on:
         required: true
 
       target_backup_time:
-        description: The target backup time in "yyyy/MM/dd HH:mm:ss".
+        description: The target backup time (UTC) in "yyyy/MM/dd HH:mm:ss" format.
         type: string
         required: true
 
