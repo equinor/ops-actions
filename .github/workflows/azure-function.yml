@@ -8,6 +8,12 @@ on:
         type: string
         required: false
 
+      runs_on:
+        description: Which OS runner to run the job on.
+        type: string
+        required: false
+        default: ubuntu-latest
+
       artifact_name:
         description: The name of the artifact containing the package to deploy.
         type: string
@@ -38,8 +44,12 @@ on:
 
 jobs:
   azure-function:
-    runs-on: ubuntu-latest
+    # The steps for this job runs on OS Ubuntu by default.
+    runs-on:  ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
+    defaults:
+      run:
+        shell: bash
 
     # Set permissions required to login to Azure using OIDC.
     permissions:
