@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.12.0](https://github.com/equinor/ops-actions/compare/v8.11.0...v8.12.0) (2023-11-22)
+
+
+### Features
+
+* **terraform:** speed up archiving of config ([#335](https://github.com/equinor/ops-actions/issues/335)) ([20bf45e](https://github.com/equinor/ops-actions/commit/20bf45e47c86b70e74e51c971bbe708d56cf844a))
+
 ## [8.11.0](https://github.com/equinor/ops-actions/compare/v8.10.2...v8.11.0) (2023-11-06)
 
 
