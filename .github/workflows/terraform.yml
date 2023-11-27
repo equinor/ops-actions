@@ -175,6 +175,8 @@ jobs:
         run: |
           tar -cf terraform.tar .
           7z a -mx=1 -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
+        # When running 7-Zip, set "-mx=1" for fastest level of compression, to ensure that this step runs as fast as possible.
+        # Could set "-mx=0" for no compression, but that would result in a much larger file size for the created archive file.
 
       - name: Upload artifact
         id: upload
