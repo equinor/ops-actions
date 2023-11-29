@@ -23,6 +23,12 @@ on:
         type: string
         required: false
 
+      package:
+        description: The path of the project to be published.
+        type: string
+        required: false
+        default: "."
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -35,6 +41,10 @@ on:
       AZURE_TENANT_ID:
         description: The ID of the Azure tenant to deploy the package to.
         required: true
+
+      FUNCTION_APP_PUBLISHING_PROFILE:
+        description: The credentials that will be used during deployment.
+        required: false
 
 jobs:
   azure-function:
@@ -71,6 +81,8 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: ${{ inputs.app_name }}
+          package: ${{ inputs.package }}
+          publish-profile: ${{ secrets.FUNCTION_APP_PUBLISHING_PROFILE }}
 
       - name: Configure app settings
         if: inputs.app_settings != ''
