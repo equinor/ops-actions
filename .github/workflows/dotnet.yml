@@ -4,6 +4,12 @@ name: ♻ dotnet
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: Which type of machine to run the job on.
+        type: string
+        required: false
+        default: ubuntu-latest
+
       dotnet_version:
         description: The version of .NET to install.
         type: string
@@ -66,9 +72,11 @@ on:
 
 jobs:
   dotnet:
-    # The steps for this job assume that OS is Ubuntu.
-    # Use the "runtime" input to specify target OS and architecture instead.
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
+    defaults:
+      run:
+        shell: bash
+
     env:
       CI: ${{ inputs.ci }}
       PROJECT: ${{ inputs.project }}
