@@ -12,7 +12,10 @@
         "properties": {
           "displayName": {
             "description": "",
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "objectId": {
             "description": "",
@@ -35,10 +38,18 @@
             "type": "string"
           }
         },
-        "required": ["displayName", "objectId", "roleDefinitionName", "roleDefinitionId", "scope"]
+        "required": [
+          "displayName",
+          "objectId",
+          "roleDefinitionName",
+          "roleDefinitionId",
+          "scope"
+        ]
       },
       "uniqueItems": true
     }
   },
-  "required": ["roleAssignments"]
+  "required": [
+    "roleAssignments"
+  ]
 }
