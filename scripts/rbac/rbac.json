@@ -2,7 +2,8 @@
   "roleAssignments": [
     {
       "objectId": "a16e6d69-4bed-4c9f-ab16-2f837e3aca33",
-      "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
+      "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+      "scope": "/subscriptions/ce8c6461-a20d-47a3-884c-6659cb74e53f"
     }
   ]
 }
