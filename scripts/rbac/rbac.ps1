@@ -38,20 +38,20 @@ $azRoleAssignments = Get-AzRoleAssignment -Scope $parentScope | Where-Object { $
 # Compare configuration to Azure
 $comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property objectId, roleDefinitionId, scope -IncludeEqual
 
-$add = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
-$remove = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
-$update = $comparison | Where-Object { $_.SideIndicator -eq "==" }
+$inConfig = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
+$inAzure = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
+$inBoth = $comparison | Where-Object { $_.SideIndicator -eq "==" }
 
-foreach ($a in $add) {
-  Write-Host "Creating role assignment: $($a | Out-String)"
+foreach ($i in $inConfig) {
+  Write-Host "In config: $($i | Out-String)"
 }
 
-foreach ($r in $remove) {
-  Write-Host "Removing role assignment: $($r | Out-String)"
+foreach ($i in $inAzure) {
+  Write-Host "In Azure: $($i | Out-String)"
 }
 
-foreach ($u in $update) {
-  Write-Host "Updating role assignment: $($u | Out-String)"
+foreach ($i in $inBoth) {
+  Write-Host "In both: $($i | Out-String)"
 }
 
 # TODO: prevent removal of Omnia assignments
