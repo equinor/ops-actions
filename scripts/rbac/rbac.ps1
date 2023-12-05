@@ -39,4 +39,6 @@ $inAzure = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
 
 $newConfig = $configRoleAssignments + $inAzure
 
-$newConfig | Select-Object -Property objectId, roleDefinitionId, scope | ConvertTo-Json -Depth 100 | Set-Content -Path $configFile
+@{
+  "roleAssignments" = $newConfig | Select-Object -Property objectId, roleDefinitionId, scope
+} | ConvertTo-Json -Depth 100 | Set-Content -Path $configFile
