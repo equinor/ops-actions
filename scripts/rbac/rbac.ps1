@@ -19,17 +19,18 @@ if ($null -eq $configJson) {
 
 $schemaFile = "$PSScriptRoot\rbac.schema.json"
 if (Test-Json -Json $configJson -SchemaFile $schemaFile -ErrorAction SilentlyContinue -ErrorVariable JsonError) {
-  $config = ConvertFrom-Json -InputObject $configJson -AsHashtable
+  $config = ConvertFrom-Json -InputObject $configJson
 }
 else {
   throw "Configuration JSON is invalid: $($JsonError[0].ToString())"
 }
 
-$configRoleAssignments = $config["roleAssignments"]
+$configRoleAssignments = $config.roleAssignments
 
 foreach ($roleAssignment in $configRoleAssignments) {
   # Prepend parent scope to configured scope
-  $roleAssignment.scope = $parentScope + $roleAssignment.childScope
+  $childScope = $roleAssignment.childScope
+  $roleAssignment | Add-Member -NotePropertyName scope -NotePropertyValue ($parentScope + $childScope)
 }
 
 # Get existing role assignments in Azure
@@ -42,16 +43,6 @@ $inConfig = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
 $inAzure = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
 $inBoth = $comparison | Where-Object { $_.SideIndicator -eq "==" }
 
-foreach ($i in $inConfig) {
-  Write-Host "In config: $($i | Out-String)"
-}
+$newConfig = $configRoleAssignments + $inAzure
 
-foreach ($i in $inAzure) {
-  Write-Host "In Azure: $($i | Out-String)"
-}
-
-foreach ($i in $inBoth) {
-  Write-Host "In both: $($i | Out-String)"
-}
-
-# TODO: prevent removal of Omnia assignments
+$newConfig | Select-Object -Property objectId, roleDefinitionId, scope | ConvertTo-Json -Depth 100 | Set-Content -Path $configFile
