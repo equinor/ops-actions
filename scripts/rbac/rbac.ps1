@@ -39,9 +39,9 @@ $azRoleAssignments = Get-AzRoleAssignment -Scope $parentScope | Where-Object { $
 # Compare configuration to Azure
 $comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property objectId, roleDefinitionId, scope -IncludeEqual
 
-$inConfig = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
+# $inConfig = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
 $inAzure = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
-$inBoth = $comparison | Where-Object { $_.SideIndicator -eq "==" }
+# $inBoth = $comparison | Where-Object { $_.SideIndicator -eq "==" }
 
 $newConfig = $configRoleAssignments + $inAzure
 
