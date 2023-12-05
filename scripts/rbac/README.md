@@ -1,6 +1,6 @@
 # RBAC
 
-PowerShell script which manages RBAC assignments at a given parent scope and all of its child scopes.
+PowerShell script which checks RBAC assignments for a given subscription.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ PowerShell script which manages RBAC assignments at a given parent scope and all
 1. Set active Azure subscription:
 
     ```powershell
-    $context = Set-AzContext -Subscription "<SUBSCRIPTION_NAME_OR_ID>"
+    Set-AzContext -Subscription "<SUBSCRIPTION_NAME_OR_ID>"
     ```
 
 1. Configure role assignments in a file `rbac.json`.
@@ -27,7 +27,7 @@ PowerShell script which manages RBAC assignments at a given parent scope and all
 1. Run script `rbac.ps1`:
 
     ```powershell
-    ./rbac.ps1 -configFile "rbac.json" -parentScope "/subscriptions/$($context.Subscription.Id)"
+    ./rbac.ps1 -configFile "rbac.json"
     ```
 
 ## Config spec
@@ -47,13 +47,7 @@ As defined in `rbac.schema.json`:
 }
 ```
 
-The scope of a configured role assignment is constructed based on the input `parentScope` and the configured `childScope`:
-
-```text
-scope = parentScope + childScope
-```
-
-Example config where `parentScope` is `/subscriptions/00000000-0000-0000-0000-000000000000`:
+Example config:
 
 ```json
 {
@@ -61,12 +55,13 @@ Example config where `parentScope` is `/subscriptions/00000000-0000-0000-0000-00
     {
       "objectId": "00000000-0000-0000-0000-000000000000",
       "roleDefinitionId": "00000000-0000-0000-0000-000000000000",
-      "description": "An example role assignment at the subscription scope."
+      "description": "An example role assignment at the subscription scope.",
+      "scope": "/subscriptions/<SUBSCRIPTION_ID>"
     },
     {
       "objectId": "00000000-0000-0000-0000-000000000000",
       "roleDefinitionId": "00000000-0000-0000-0000-000000000000",
-      "childScope": "/resourceGroups/example-rg",
+      "scope": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/example-rg",
       "description": "An example role assignment at the resource group scope."
     }
   ]

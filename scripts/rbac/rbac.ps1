@@ -1,9 +1,6 @@
 param (
   [Parameter(Mandatory = $true)]
-  [string]$configFile,
-
-  [Parameter(Mandatory = $true)]
-  [string]$parentScope
+  [string]$configFile
 )
 
 if (Test-Path -Path $configFile -PathType Leaf) {
@@ -25,13 +22,10 @@ else {
   throw "Configuration JSON is invalid: $($JsonError[0].ToString())"
 }
 
-$configRoleAssignments = $config.roleAssignments
+$subscriptionId = (Get-AzContext).Subscription.Id
+$parentScope = "/subscriptions/$subscriptionId"
 
-foreach ($roleAssignment in $configRoleAssignments) {
-  # Prepend parent scope to configured scope
-  $childScope = $roleAssignment.childScope
-  $roleAssignment | Add-Member -NotePropertyName scope -NotePropertyValue ($parentScope + $childScope)
-}
+$configRoleAssignments = $config.roleAssignments
 
 # Get existing role assignments in Azure
 $azRoleAssignments = Get-AzRoleAssignment -Scope $parentScope | Where-Object { $_.scope -match "^$parentScope/*" }
