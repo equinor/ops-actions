@@ -10,7 +10,15 @@
       "items": {
         "type": "object",
         "properties": {
+          "displayName": {
+            "description": "",
+            "type": "string"
+          },
           "objectId": {
+            "description": "",
+            "type": "string"
+          },
+          "roleDefinitionName": {
             "description": "",
             "type": "string"
           },
@@ -27,7 +35,7 @@
             "type": "string"
           }
         },
-        "required": ["objectId", "roleDefinitionId", "scope"]
+        "required": ["displayName", "objectId", "roleDefinitionName", "roleDefinitionId", "scope"]
       },
       "uniqueItems": true
     }

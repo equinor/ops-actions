@@ -31,7 +31,8 @@ $configRoleAssignments = $config.roleAssignments
 $azRoleAssignments = Get-AzRoleAssignment -Scope $parentScope | Where-Object { $_.scope -match "^$parentScope/*" }
 
 # Compare configuration to Azure
-$comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property objectId, roleDefinitionId, scope -IncludeEqual
+$Properties = "displayName", "objectId", "roleDefinitionName", "roleDefinitionId", "scope"
+$comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property $properties -IncludeEqual
 
 # $inConfig = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
 $inAzure = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
@@ -40,5 +41,5 @@ $inAzure = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
 $newConfig = $configRoleAssignments + $inAzure
 
 @{
-  "roleAssignments" = $newConfig | Select-Object -Property objectId, roleDefinitionId, scope
+  "roleAssignments" = $newConfig | Select-Object -Property $properties
 } | ConvertTo-Json -Depth 100 | Set-Content -Path $configFile
