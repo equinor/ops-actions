@@ -1,14 +1,11 @@
 {
   "roleAssignments": [
     {
+      "displayName": "Nemanja Drobac (Bouvet ASA)",
       "objectId": "1ef37233-2afe-4a7c-a85b-d7d476c6f05a",
+      "roleDefinitionName": "Storage Blob Data Reader",
       "roleDefinitionId": "2a2b9908-6ea1-4ae2-8e65-a410df84e7d1",
       "scope": "/subscriptions/ce8c6461-a20d-47a3-884c-6659cb74e53f/resourceGroups/rg-test-nd/providers/Microsoft.Storage/storageAccounts/sttestnd"
-    },
-    {
-      "objectId": "a16e6d69-4bed-4c9f-ab16-2f837e3aca33",
-      "roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
-      "scope": "/subscriptions/ce8c6461-a20d-47a3-884c-6659cb74e53f"
     }
   ]
 }
