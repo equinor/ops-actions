@@ -1,0 +1,32 @@
+name: Role Assignment script
+
+on:
+ # schedule:
+ #   - cron: "0 0 * * *"
+
+  workflow_dispatch: {}
+
+jobs:
+  run_workflow:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    - name: Login via Az module
+      uses: azure/login@v1
+      # with:
+      #   creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        enable-AzPSSession: true
+
+    - name: Run Powershell script
+      uses: azure/powershell@v1
+      # env:
+      #   slackUri: ${{ secrets.WEBHOOK_URI }}
+
+      with:
+        inlineScript: |
+          Get-AzResourceGroup
+          scripts/rbac/rbac.ps1 -configFile "scripts/rbac/rbac.json"
+        azPSVersion: "latest"
