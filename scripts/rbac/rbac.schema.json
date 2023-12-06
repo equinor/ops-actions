@@ -31,7 +31,8 @@
           },
           "scope": {
             "description": "",
-            "type": "string"
+            "type": "string",
+            "scope": "/subscriptions/${{ SUBSCRIPTION_ID }}"
           },
           "description": {
             "description": "",
