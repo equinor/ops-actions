@@ -34,7 +34,7 @@ $azRoleAssignments = Get-AzRoleAssignment -Scope $parentScope | Where-Object { $
 $Properties = "displayName", "objectId", "roleDefinitionName", "roleDefinitionId", "scope"
 $comparison = Compare-Object -ReferenceObject $configRoleAssignments -DifferenceObject $azRoleAssignments -Property $properties -IncludeEqual
 
-# $inConfig = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
+$inConfig = $comparison | Where-Object { $_.SideIndicator -eq "<=" }
 $inAzure = $comparison | Where-Object { $_.SideIndicator -eq "=>" }
 # $inBoth = $comparison | Where-Object { $_.SideIndicator -eq "==" }
 
@@ -43,3 +43,21 @@ $newConfig = $configRoleAssignments + $inAzure
 @{
   "roleAssignments" = $newConfig | Select-Object -Property $properties
 } | ConvertTo-Json -Depth 100 | Set-Content -Path $configFile
+
+"$`{{ SUBSCRIPTION_ID }}" -replace "$subscriptionId"
+
+
+# Remove role assignments from config that are not in Azure
+$currentConfig = (Get-Content .\rbac.json  | ConvertFrom-Json)
+$newConfig = @{ roleAssignments = @() }
+
+Foreach ($c in $currentConfig.roleAssignments) {
+    if ($inConfig.objectId -contains $c.objectId) {
+        Write-Output "Removing item: $($c.objectId)"
+    }
+    else {
+        # Write-Output "Keeping item: $($c.objectId)"
+        $newConfig.roleAssignments += $c
+    }
+}
+$newConfig | ConvertTo-Json | Set-Content -Path .\rbac.json -Force
