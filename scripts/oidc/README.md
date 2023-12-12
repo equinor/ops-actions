@@ -50,19 +50,21 @@ Example configuration:
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) (latest version as of writing: `2.49.0`) - to create Azure AD application, federated credentials, service principal and Azure role assignments
 - [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to set GitHub secrets
 - [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
+  > **Note:** If using BASH: `curl -L -o /usr/bin/jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe`
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
   > **Note:** Not necessary when updating the existing config.
 - Activate Azure role `Owner` - to create Azure role assignments
   > **Note:** Minimum scope required is what's defined for role assignment in the `oidc.json` config.
 - GitHub repository role `Admin` - to set GitHub environment secrets
 - If a federated credential is configured with subject `repo:${REPO}:environment:<environment>`, create GitHub environment `<environment>` and set appropriate deployment protection rules.
+- If you meet error message that contains: `InvalidSchema: No connection adapters were found` when running in `BASH` use following fix `export MSYS_NO_PATHCONV=1`. [Read more about this here](https://github.com/Azure/azure-cli/issues/16317).
 
 ## Usage
 
 > **Note**
 > The script must be run from the GitHub repository to configure OIDC for.
 
-1. Open Bash.
+1. Open Bash as admin.
 
 1. Login to Azure:
 
