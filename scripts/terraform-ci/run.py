@@ -33,7 +33,7 @@ for module in modules:
     pullRequestPaths = []
     jobs = {}
 
-    environments = modules["core"]["environments"]
+    environments = modules[module]["environments"]
     for env in environments:
         workingDir = "terraform/{module}/{environment}".format(
             module=module, environment=env
