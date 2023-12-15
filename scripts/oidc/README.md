@@ -63,7 +63,7 @@ Example configuration:
 > **Note**
 > The script must be run from the GitHub repository to configure OIDC for.
 
-1. Open Bash as admin.
+1. Open Bash.
 
 1. Login to Azure:
 
