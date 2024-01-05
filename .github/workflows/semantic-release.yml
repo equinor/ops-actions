@@ -48,6 +48,7 @@ on:
 
 jobs:
   semantic-release:
+    name: semantic-release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

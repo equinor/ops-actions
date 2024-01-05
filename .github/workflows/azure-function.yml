@@ -38,6 +38,7 @@ on:
 
 jobs:
   azure-function:
+    name: Function
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 

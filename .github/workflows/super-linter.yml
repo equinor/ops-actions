@@ -12,6 +12,7 @@ on:
 
 jobs:
   super-linter:
+    name: Super-linter
     runs-on: ubuntu-latest
     env:
       FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}

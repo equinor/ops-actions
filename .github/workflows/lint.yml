@@ -7,6 +7,7 @@ on:
 
 jobs:
   lint:
+    name: Lint
     uses: ./.github/workflows/super-linter.yml
     with:
       filter_regex_exclude: docs/workflows/.*
