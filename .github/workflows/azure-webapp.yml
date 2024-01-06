@@ -44,7 +44,7 @@ on:
 
 jobs:
   azure-webapp:
-    name: Azure Web App
+    name: Azure Webapp
     # The steps for this job assume that OS is Ubuntu.
     runs-on: ubuntu-latest
     environment:
