@@ -45,6 +45,7 @@ on:
 
 jobs:
   commitlint:
+    name: commitlint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -27,6 +27,7 @@ on:
 
 jobs:
   mkdocs:
+    name: MkDocs
     runs-on: ubuntu-latest
 
     permissions:

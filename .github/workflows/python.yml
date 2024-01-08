@@ -38,6 +38,7 @@ on:
 
 jobs:
   python:
+    name: Python
     runs-on: ubuntu-latest
 
     defaults:
