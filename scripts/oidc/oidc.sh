@@ -26,9 +26,6 @@ case $response in
     ;;
 esac
 
-export REPO
-export SUBSCRIPTION_ID
-
 ################################################################################
 # Read OIDC configuration
 ################################################################################
@@ -40,6 +37,9 @@ else
   echo "Config file '$CONFIG_FILE' does not exist."
   exit 1
 fi
+
+export REPO
+export SUBSCRIPTION_ID
 
 config=$(envsubst < "$CONFIG_FILE")
 
