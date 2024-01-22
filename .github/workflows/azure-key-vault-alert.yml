@@ -1,0 +1,110 @@
+name: azure-key-vault-alert
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: The environment that the job references.
+        type: string
+        required: true
+
+      vaults:
+        description: List of vaults to check, space separated.
+        type: string
+        required: true
+
+      arguments:
+        description: List of supported arguments, space separated.
+        type: string
+        required: false
+
+      list_vaults:
+        description: Print list of available key vaults to stdout
+        type: string
+        required: false
+
+      handle_firewall:
+        description: Add fw rule to allow access and then delete the rule when done
+        type: string
+        required: false
+
+    secrets:
+      AZURE_CLIENT_ID:
+        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: The ID of the Azure subscription to create the resources in.
+        required: true
+
+      AZURE_TENANT_ID:
+        description: The ID of the Azure tenant to create the resources in.
+        required: true
+
+      WEBHOOK_REPORT:
+        description: The webhook to where the report will be posted
+        required: false
+
+      WEBHOOK_NOTIFY:
+        description: The webhook to where an empty post will be posted when all done.
+        required: false
+
+jobs:
+  azure_key_vault_alert:
+    name: azure-key-vault-alert
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      WEBHOOK_REPORT: ${{ secrets.WEBHOOK_REPORT }}
+      WEBHOOK_NOTIFY: ${{ secrets.WEBHOOK_NOTIFY }}
+
+    steps:
+      - name: "Azure login"
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          enable-AzPSSession: true
+
+      - name: Enable firewall access
+        if: ${{ inputs.handle_firewall == 'true' }}
+        run: |
+          WAN_IP=$(curl -k -s https://ifconfig.me)
+          for VAULT in ${{ inputs.vaults }}
+          do
+            az keyvault network-rule add --name $VAULT --ip-address $WAN_IP
+          done
+
+      - name: List all Key Vaults in Subscription
+        if: ${{ inputs.list_vaults == 'true' }}
+        run: az keyvault list --output tsv --query '[].[name]'
+
+      # Ensure python version 3.11 - confirmed compatibility.
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install pip packages ops-py-azure-key-vault-alert from pypi.org
+        run: pip install ops-py-azure-key-vault-alert==1.0.14
+
+      - name: azure_key_vault_alert
+        run: python3 -m azure_key_vault_alert.azure_key_vault_alert -v ${{ inputs.vaults }} ${{ inputs.arguments }}
+
+      - name: Remove firewall access
+        if: ${{ inputs.handle_firewall == 'true' && always() }}
+        run: |
+          WAN_IP=$(curl -k -s https://ifconfig.me)
+          for VAULT in ${{ inputs.vaults }}
+          do
+            az keyvault network-rule remove --name $VAULT --ip-address $WAN_IP
+          done
