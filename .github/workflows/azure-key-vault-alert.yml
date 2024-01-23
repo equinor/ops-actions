@@ -78,8 +78,9 @@ jobs:
       - name: Enable firewall access
         if: ${{ inputs.handle_firewall == 'true' }}
         run: |
+          VAULTS="${{ inputs.vaults }}"
           WAN_IP=$(curl -k -s https://ifconfig.me)
-          for VAULT in ${{ inputs.vaults }}
+          for VAULT in $VAULTS
           do
             az keyvault network-rule add --name "$VAULT" --ip-address "$WAN_IP"
           done
@@ -103,8 +104,9 @@ jobs:
       - name: Remove firewall access
         if: ${{ inputs.handle_firewall == 'true' && always() }}
         run: |
+          VAULTS="${{ inputs.vaults }}"
           WAN_IP=$(curl -k -s https://ifconfig.me)
-          for VAULT in ${{ inputs.vaults }}
+          for VAULT in $VAULTS
           do
             az keyvault network-rule remove --name "$VAULT" --ip-address "$WAN_IP"
           done
