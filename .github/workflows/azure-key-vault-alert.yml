@@ -81,7 +81,7 @@ jobs:
           WAN_IP=$(curl -k -s https://ifconfig.me)
           for VAULT in ${{ inputs.vaults }}
           do
-            az keyvault network-rule add --name $VAULT --ip-address $WAN_IP
+            az keyvault network-rule add --name "$VAULT" --ip-address "$WAN_IP"
           done
 
       - name: List all Key Vaults in Subscription
@@ -106,5 +106,5 @@ jobs:
           WAN_IP=$(curl -k -s https://ifconfig.me)
           for VAULT in ${{ inputs.vaults }}
           do
-            az keyvault network-rule remove --name $VAULT --ip-address $WAN_IP
+            az keyvault network-rule remove --name "$VAULT" --ip-address "$WAN_IP"
           done
