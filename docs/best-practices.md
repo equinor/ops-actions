@@ -5,6 +5,11 @@
 - Don't create reusable workflows containing a single step.
   This adds unnecessary complexity to the workflow chain.
 
+- Workflows should be dependent on source code, e.g. using the `actions/checkout` or `actions/download-artifact` actions.
+
+  For workflows that don't depend on source code, consider using another automation system instead,
+  for example [Azure Automation](https://learn.microsoft.com/en-us/azure/automation/overview) for automating tasks in Azure.
+
 - Don't create conditionals based on the event that triggered the workflow, for example:
 
   ```yaml
