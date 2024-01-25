@@ -1,4 +1,4 @@
-name: 🧹 Lint codebase
+name: 🧹 Lint
 
 on:
   pull_request:
@@ -6,7 +6,14 @@ on:
       - main
 
 jobs:
-  lint:
+  lint-codebase:
+    name: Lint codebase
     uses: ./.github/workflows/super-linter.yml
     with:
       filter_regex_exclude: docs/workflows/.*
+
+  lint-pr:
+    name: Lint PR
+    uses: ./.github/workflows/commitlint.yml
+    with:
+      message: ${{ github.event.pull_request.title }}
