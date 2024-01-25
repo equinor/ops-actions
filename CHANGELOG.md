@@ -1,5 +1,16 @@
 # Changelog
 
+## [9.0.0](https://github.com/equinor/ops-actions/compare/v8.13.0...v9.0.0) (2024-01-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove Azure SQL DB restore workflow ([#349](https://github.com/equinor/ops-actions/issues/349))
+
+### Features
+
+* remove Azure SQL DB restore workflow ([#349](https://github.com/equinor/ops-actions/issues/349)) ([41d734d](https://github.com/equinor/ops-actions/commit/41d734dd372904ff02a42506b7c21bcb481d828c)), closes [#339](https://github.com/equinor/ops-actions/issues/339)
+
 ## [8.13.0](https://github.com/equinor/ops-actions/compare/v8.12.0...v8.13.0) (2024-01-25)
 
 
