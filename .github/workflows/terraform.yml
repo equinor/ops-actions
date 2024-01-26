@@ -18,7 +18,7 @@ on:
         description: The version of Terraform to install.
         type: string
         required: false
-        default: ~1.5.0
+        default: latest
 
       backend_config:
         description: The path, relative to the working directory, of a configuration file containing the remaining arguments for a partial backend configuration.
@@ -61,10 +61,6 @@ permissions:
   contents: read
 
 env:
-  # Ensure use of open-source Terraform versions.
-  # (versions 1.6.0 and above are source-available)
-  TERRAFORM_VERSION: "${{ inputs.terraform_version }} <1.6.0"
-
   # Configure Terraform to run in automation.
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
   TF_IN_AUTOMATION: true
@@ -100,7 +96,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_version: ${{ inputs.terraform_version }}
           terraform_wrapper: false
           # Wraps Terraform commands, exposing their stdout, stderr and exitcode.
           # It also wraps Terraform command outputs with debug logs, including the output of the "terraform show" command.
@@ -215,7 +211,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_version: ${{ inputs.terraform_version }}
 
       - name: Extract Terraform config
         run: |
