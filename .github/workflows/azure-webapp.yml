@@ -80,7 +80,7 @@ jobs:
 
       - name: Deploy
         id: deploy
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
