@@ -42,6 +42,19 @@ STORAGE_ACCOUNT_NAME=$(echo "$CONFIG" | jq -r .storage_account_name)
 CONTAINER_NAME=$(echo "$CONFIG" | jq -r .container_name)
 
 ################################################################################
+# Check Azure Storage account name
+################################################################################
+
+check_name=$(az storage account check-name --name "$STORAGE_ACCOUNT_NAME" --output json)
+name_available=$(echo "$check_name" | jq -r .nameAvailable)
+
+if [[ "$name_available" == false ]]; then
+  message=$(echo "$check_name" | jq -r .message)
+  echo "$message"
+  exit 1
+fi
+
+################################################################################
 # Create Azure resource group
 ################################################################################
 
