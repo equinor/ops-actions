@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/super-linter.yml@v8.10.1
+    uses: equinor/ops-actions/.github/workflows/super-linter.yml@v9.1.3
 
 ```
 
