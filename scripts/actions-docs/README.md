@@ -10,13 +10,10 @@ This directory contains a Python script `actions-docs.sh` that will automaticall
 
 ## Arguments
 
+- `-p`, `--path`: the path containing the reusable GitHub Actions workflows to generate documentation for. Default is `.github/workflows`.
 - `-o`, `--output`: the output path to store the generated Markdown files in. Default is `docs/workflows`.
 
 ## Usage
-
-> **Note**
->
-> Must be run from the root of the repository.
 
 1. Login to GitHub:
 
@@ -28,17 +25,11 @@ This directory contains a Python script `actions-docs.sh` that will automaticall
 
     ```console
     python -m pip install --upgrade pip
-    pip install -r scripts/actions-docs/requirements.txt
+    pip install -r requirements.txt
     ```
 
 1. Run the script:
 
     ```console
-    ./scripts/actions-docs/actions-docs.py
-    ```
-
-    Specify output path:
-
-    ```console
-    ./scripts/actions-docs/actions-docs.py -o docs/workflows
+    ./actions-docs.py -p ../../.github/workflows -o ../../docs/workflows
     ```
