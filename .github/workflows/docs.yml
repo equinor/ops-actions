@@ -8,7 +8,7 @@ env:
   # Used by GitHub CLI inside script for authenticating to GitHub
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  WORKFLOWS_PATH: ${{ github.workspace }}.github/workflows
+  WORKFLOWS_PATH: ${{ github.workspace }}/.github/workflows
   OUTPUT_PATH: ${{ github.workspace }}/docs/workflows
 
 jobs:
