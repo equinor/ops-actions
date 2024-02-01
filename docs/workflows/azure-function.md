@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/azure-function.yml@v8.10.1
+    uses: equinor/ops-actions/.github/workflows/azure-function.yml@v9.1.3
     with:
       artifact_name: <string>
       app_name: <string>

@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v8.10.1
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v9.1.3
     with:
       app_name: <string>
     secrets:
