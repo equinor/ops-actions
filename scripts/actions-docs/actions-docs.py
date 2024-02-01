@@ -159,10 +159,16 @@ for workflow_file in workflow_files:
     # CREATE USAGE EXAMPLE
     ############################################################################
 
+    workflow_file = Path(workflow_path).name
+
     usage_example: Dict[str, Any] = {
         "on": {"push": {"branches": ["main"]}},
         "jobs": {
-            "main": {"uses": "{0}/{1}@{2}".format(repo, workflow_path, latest_tag)}
+            "main": {
+                "uses": "{0}/.github/workflows/{1}@{2}".format(
+                    repo, workflow_file, latest_tag
+                )
+            }
         },
     }
 
