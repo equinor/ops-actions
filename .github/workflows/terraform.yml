@@ -33,7 +33,7 @@ on:
         required: false
         default: terraform
 
-      runner:
+      runs_on:
         description: The runner handling the workflow.
         type: string
         required: false
@@ -85,7 +85,7 @@ env:
 jobs:
   terraform-plan:
     name: Terraform Plan
-    runs-on: ${{ inputs.runner }}
+    runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     defaults:
       run:
