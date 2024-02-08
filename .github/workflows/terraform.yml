@@ -38,7 +38,6 @@ on:
         type: string
         required: false
         default: ubuntu-latest
-        # Possible inputs for runs_on are: ubuntu-latest (default), and dbbridge-infra (large runner)
 
     secrets:
       AZURE_CLIENT_ID:
