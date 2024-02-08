@@ -42,21 +42,10 @@ STORAGE_ACCOUNT_NAME=$(echo "$CONFIG" | jq -r .storage_account_name)
 CONTAINER_NAME=$(echo "$CONFIG" | jq -r .container_name)
 
 ################################################################################
-# Check Azure Storage account name
-################################################################################
-
-check_name=$(az storage account check-name --name "$STORAGE_ACCOUNT_NAME" --output json)
-name_available=$(echo "$check_name" | jq -r .nameAvailable)
-
-if [[ "$name_available" == false ]]; then
-  message=$(echo "$check_name" | jq -r .message)
-  echo "$message"
-  exit 1
-fi
-
-################################################################################
 # Create Azure resource group
 ################################################################################
+
+echo "Creating resource group..."
 
 az group create \
   --name "${RESOURCE_GROUP_NAME}" \
@@ -66,6 +55,8 @@ az group create \
 ################################################################################
 # Create Azure Storage account
 ################################################################################
+
+echo "Creating storage account..."
 
 storage_account_id="$(az storage account create \
   --name "${STORAGE_ACCOUNT_NAME}" \
@@ -81,8 +72,6 @@ storage_account_id="$(az storage account create \
   --allow-cross-tenant-replication false \
   --query id \
   --output tsv)"
-
-echo "Storage account ID: $storage_account_id"
 
 az storage account blob-service-properties update \
   --account-name "${STORAGE_ACCOUNT_NAME}" \
@@ -105,6 +94,8 @@ az security atp storage update \
 # Create Azure Storage container
 ################################################################################
 
+echo "Creating storage container..."
+
 az storage container create \
   --name "${CONTAINER_NAME}" \
   --account-name "${STORAGE_ACCOUNT_NAME}" \
@@ -114,6 +105,8 @@ az storage container create \
 ################################################################################
 # Create Azure Storage lifecycle policy
 ################################################################################
+
+echo "Creating lifecycle policy..."
 
 management_policy=$(echo "$CONFIG" | jq '{
   rules: [
@@ -152,19 +145,27 @@ az storage account management-policy create \
 # Create Azure role assignment
 ################################################################################
 
+echo "Creating role assignment..."
+
 az role assignment create \
   --assignee "${OBJECT_ID}" \
   --role 'Storage Blob Data Owner' \
-  --scope "${storage_account_id}" \
+  --scope "/${storage_account_id}" \
   --output none
+  # Prepend "/" to --scope to prevent error on Windows where
+  # first "/" of $storage_account_id is ignored
 
 ################################################################################
 # Create Azure resource lock
 ################################################################################
 
+echo "Creating resource lock..."
+
 az resource lock create \
   --name 'Terraform' \
   --lock-type ReadOnly \
-  --resource "${storage_account_id}" \
+  --resource-group "${RESOURCE_GROUP_NAME}" \
+  --resource-type "Microsoft.Storage/storageAccounts" \
+  --resource-name "${STORAGE_ACCOUNT_NAME}" \
   --notes "Prevent changes to Terraform backend configuration" \
   --output none
