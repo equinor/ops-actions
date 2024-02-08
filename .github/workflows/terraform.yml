@@ -33,6 +33,12 @@ on:
         required: false
         default: terraform
 
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
+        type: string
+        required: false
+        default: ubuntu-latest
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -79,7 +85,7 @@ env:
 jobs:
   terraform-plan:
     name: Terraform Plan
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     defaults:
       run:
