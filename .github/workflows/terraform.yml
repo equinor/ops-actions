@@ -34,7 +34,7 @@ on:
         default: terraform
 
       runs_on:
-        description: The runner handling the workflow.
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
         type: string
         required: false
         default: ubuntu-latest
