@@ -31,7 +31,7 @@ on:
         description: The name of the artifact to upload.
         type: string
         required: false
-        default: terraform
+        default: terraform-${{ inputs.environment }}
 
       runs_on:
         description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
