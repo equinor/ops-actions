@@ -61,10 +61,13 @@ concurrency:
   group: terraform @ ${{ inputs.working_directory }}
   cancel-in-progress: false
 
-# Set permissions required to login to Azure using OIDC.
 permissions:
+  # Set permissions required to login to Azure using OIDC.
   id-token: write
   contents: read
+
+  # Set permission required to delete artifacts.
+  actions: write
 
 env:
   # Configure Terraform to run in automation.
@@ -230,6 +233,6 @@ jobs:
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
       - name: Delete artifact
-        uses: GeekyEggo/delete-artifact@54ab544f12cdb7b71613a16a2b5a37a9ade990af
+        uses: GeekyEggo/delete-artifact@65041433121f7239077fa20be14c0690f70569de
         with:
           name: ${{ inputs.artifact_name }}
