@@ -83,7 +83,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  ARTIFACT_NAME: ${{ inputs.artifact_name || concat(["terraform", inputs.environment], "-")
+  ARTIFACT_NAME: ${{ inputs.artifact_name || concat(["terraform", inputs.environment], "-") }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
