@@ -230,6 +230,6 @@ jobs:
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
       - name: Delete artifact
-        uses: GeekyEggo/delete-artifact@65041433121f7239077fa20be14c0690f70569de
+        uses: GeekyEggo/delete-artifact@54ab544f12cdb7b71613a16a2b5a37a9ade990af
         with:
           name: ${{ inputs.artifact_name }}
