@@ -28,10 +28,10 @@ on:
         # Ref: https://developer.hashicorp.com/terraform/language/settings/backends/configuration#partial-configuration
 
       artifact_name:
-        description: The name of the artifact to upload.
+        description: The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name.
         type: string
         required: false
-        default: terraform-${{ inputs.environment }}
+        default: ""
 
       runs_on:
         description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
@@ -83,6 +83,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+  ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
@@ -188,7 +189,7 @@ jobs:
         if: steps.archive.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.artifact_name }}
+          name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working_directory }}/terraform.tar.7z
           if-no-files-found: error
           # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
@@ -214,7 +215,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.artifact_name }}
+          name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working_directory }}
 
       - name: Setup Terraform
@@ -235,4 +236,4 @@ jobs:
       - name: Delete artifact
         uses: GeekyEggo/delete-artifact@65041433121f7239077fa20be14c0690f70569de
         with:
-          name: ${{ inputs.artifact_name }}
+          name: ${{ env.ARTIFACT_NAME }}
