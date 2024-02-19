@@ -1,7 +1,7 @@
 name: 📚 Generate docs
 
 on:
-  release: 
+  release:
     types: released
   workflow_dispatch: {}
 
