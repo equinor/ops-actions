@@ -113,6 +113,10 @@ For example:
 - When adding, updating or removing federated credentials in the configuration file, you'll need to manually delete old federated credentials from the App Registration.
 - When adding, updating or removing role assignments in the configuration file, you'll need to manually delete old role assignments.
 
+## Troubleshooting
+
+- If running the script in Git Bash, you might encounter the following error message: `InvalidSchema: No connection adapters were found`. To fix this error, set the following environment variable: `export MSYS_NO_PATHCONV=1`.
+
 ## References
 
 - [Microsoft Docs](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure)
