@@ -149,11 +149,9 @@ echo "Creating role assignment..."
 
 az role assignment create \
   --assignee "${OBJECT_ID}" \
-  --role 'Storage Blob Data Owner' \
-  --scope "/${storage_account_id}" \
+  --role "Storage Blob Data Owner" \
+  --scope "${storage_account_id}" \
   --output none
-  # Prepend "/" to --scope to prevent error on Windows where
-  # first "/" of $storage_account_id is ignored
 
 ################################################################################
 # Create Azure resource lock
