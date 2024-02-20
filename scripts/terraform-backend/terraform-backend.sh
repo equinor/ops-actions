@@ -149,11 +149,9 @@ echo "Creating role assignment..."
 
 az role assignment create \
   --assignee "${OBJECT_ID}" \
-  --role 'Storage Blob Data Owner' \
-  --scope "/${storage_account_id}" \
+  --role "Storage Blob Data Owner" \
+  --scope "${storage_account_id}" \
   --output none
-  # Prepend "/" to --scope to prevent error on Windows where
-  # first "/" of $storage_account_id is ignored
 
 ################################################################################
 # Create Azure resource lock
@@ -164,8 +162,6 @@ echo "Creating resource lock..."
 az resource lock create \
   --name 'Terraform' \
   --lock-type ReadOnly \
-  --resource-group "${RESOURCE_GROUP_NAME}" \
-  --resource-type "Microsoft.Storage/storageAccounts" \
-  --resource-name "${STORAGE_ACCOUNT_NAME}" \
+  --resource "${storage_account_id}" \
   --notes "Prevent changes to Terraform backend configuration" \
   --output none
