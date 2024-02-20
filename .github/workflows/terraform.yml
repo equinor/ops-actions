@@ -116,8 +116,9 @@ jobs:
 
       - name: Config Terraform plugin cache
         run: |
-          # shellcheck disable=SC2016
-          echo 'plugin_cache_dir="$HOME/.terraform.d/plugin-cache"' >~/.terraformrc
+          cat <<- EOF > ~/.terraformrc
+          plugin_cache_dir="$HOME/.terraform.d/plugin-cache"
+          EOF
           mkdir --parents ~/.terraform.d/plugin-cache
 
       - name: Cache Terraform
