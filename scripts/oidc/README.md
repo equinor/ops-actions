@@ -56,7 +56,6 @@ Example configuration:
   > **Note:** Minimum scope required is what's defined for role assignment in the `oidc.json` config.
 - GitHub repository role `Admin` - to set GitHub environment secrets
 - If a federated credential is configured with subject `repo:${REPO}:environment:<environment>`, create GitHub environment `<environment>` and set appropriate deployment protection rules.
-- If you meet error message that contains: `InvalidSchema: No connection adapters were found` when running in `BASH` use following fix `export MSYS_NO_PATHCONV=1`. [Read more about this here](https://github.com/Azure/azure-cli/issues/16317).
 
 ## Usage
 
@@ -113,6 +112,10 @@ For example:
 - When updating the App Registration name, a new App Registration will be created, and you'll need to manually delete the old one.
 - When adding, updating or removing federated credentials in the configuration file, you'll need to manually delete old federated credentials from the App Registration.
 - When adding, updating or removing role assignments in the configuration file, you'll need to manually delete old role assignments.
+
+## Troubleshooting
+
+- If running the script in Git Bash, you might encounter the following error message: `InvalidSchema: No connection adapters were found`. To fix this error, set the following environment variable: `export MSYS_NO_PATHCONV=1`.
 
 ## References
 

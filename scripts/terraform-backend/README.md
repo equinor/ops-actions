@@ -70,6 +70,10 @@ Example configuration:
     ./terraform-backend.sh dev.azurerm.tfbackend.json northeurope 42a1284c-b0b1-4a64-afab-1a89ec7d0ac9
     ```
 
+## Troubleshooting
+
+- If running the script in Git Bash, you might encounter the following error message: `The request did not have a subscription or a valid tenant level resource provider.`. To fix this error, set the following environment variable: `export MSYS_NO_PATHCONV=1`.
+
 ## References
 
 - [Store Terraform state in Azure Storage](https://learn.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage?tabs=azure-cli)
