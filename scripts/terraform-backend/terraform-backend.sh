@@ -162,8 +162,6 @@ echo "Creating resource lock..."
 az resource lock create \
   --name 'Terraform' \
   --lock-type ReadOnly \
-  --resource-group "${RESOURCE_GROUP_NAME}" \
-  --resource-type "Microsoft.Storage/storageAccounts" \
-  --resource-name "${STORAGE_ACCOUNT_NAME}" \
+  --resource "${storage_account_id}" \
   --notes "Prevent changes to Terraform backend configuration" \
   --output none
