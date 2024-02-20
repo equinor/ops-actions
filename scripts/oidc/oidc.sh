@@ -35,8 +35,8 @@ SUBSCRIPTION_ID=$(echo "$SUBSCRIPTION" | jq -r .id)
 TENANT_ID=$(echo "$SUBSCRIPTION" | jq -r .tenantId)
 
 while true; do
-  read -r -p "Configure OIDC from GitHub repository '$REPO' to Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " response
-  case $response in
+  read -r -p "Configure OIDC from GitHub repository '$REPO' to Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " RESPONSE
+  case $RESPONSE in
   [yY][eE][sS] | [yY])
     echo "Proceeding with configuration..."
     break
