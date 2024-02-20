@@ -70,8 +70,10 @@ md_template = """# {workflow_name}
 ###############################################################################
 
 parser = ArgumentParser()
+parser.add_argument("-p", "--path", type=str, default=".github/workflows")
 parser.add_argument("-o", "--output", type=str, default="docs/workflows")
 args = parser.parse_args()
+workflows_path = args.path
 output_path = args.output
 
 ###############################################################################
@@ -104,7 +106,6 @@ latest_tag = subprocess.run(
 # GET ALL REUSABLE WORKFLOW FILES AT GIVEN PATH
 ###############################################################################
 
-workflows_path = ".github/workflows"
 workflow_files = os.listdir(workflows_path)
 
 for workflow_file in workflow_files:
@@ -158,10 +159,16 @@ for workflow_file in workflow_files:
     # CREATE USAGE EXAMPLE
     ############################################################################
 
+    workflow_file = Path(workflow_path).name
+
     usage_example: Dict[str, Any] = {
         "on": {"push": {"branches": ["main"]}},
         "jobs": {
-            "main": {"uses": "{0}/{1}@{2}".format(repo, workflow_path, latest_tag)}
+            "main": {
+                "uses": "{0}/.github/workflows/{1}@{2}".format(
+                    repo, workflow_file, latest_tag
+                )
+            }
         },
     }
 

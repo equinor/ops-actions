@@ -32,28 +32,28 @@ on:
           @commitlint/config-conventional
 
       message:
-        description: Commit message to lint.
+        description: Commit message to lint. Default is latest commit message.
         type: string
-        required: true
+        required: false
+        default: ${{ github.event.head_commit.message }}
 
       help_url:
         description: Custom help URL for error messages.
         type: string
         required: false
 
-      # TODO: Allow options other than explicitly specifying a commit message.
-
 jobs:
   commitlint:
+    name: commitlint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node_version }}
 

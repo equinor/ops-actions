@@ -38,6 +38,7 @@ on:
 
 jobs:
   azure-function:
+    name: Azure Function
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
@@ -48,7 +49,7 @@ jobs:
 
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
 

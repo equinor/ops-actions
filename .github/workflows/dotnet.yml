@@ -66,6 +66,7 @@ on:
 
 jobs:
   dotnet:
+    name: .NET
     # The steps for this job assume that OS is Ubuntu.
     # Use the "runtime" input to specify target OS and architecture instead.
     runs-on: ubuntu-latest
@@ -78,10 +79,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
@@ -132,7 +133,7 @@ jobs:
 
       # Upload an artifact containing the application.
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ steps.zip.outputs.zip_file }}

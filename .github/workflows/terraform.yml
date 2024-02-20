@@ -18,7 +18,7 @@ on:
         description: The version of Terraform to install.
         type: string
         required: false
-        default: ~1.5.0
+        default: latest
 
       backend_config:
         description: The path, relative to the working directory, of a configuration file containing the remaining arguments for a partial backend configuration.
@@ -28,10 +28,16 @@ on:
         # Ref: https://developer.hashicorp.com/terraform/language/settings/backends/configuration#partial-configuration
 
       artifact_name:
-        description: The name of the artifact to upload.
+        description: The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name.
         type: string
         required: false
-        default: terraform
+        default: ""
+
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
+        type: string
+        required: false
+        default: ubuntu-latest
 
     secrets:
       AZURE_CLIENT_ID:
@@ -55,16 +61,15 @@ concurrency:
   group: terraform @ ${{ inputs.working_directory }}
   cancel-in-progress: false
 
-# Set permissions required to login to Azure using OIDC.
 permissions:
+  # Set permissions required to login to Azure using OIDC.
   id-token: write
   contents: read
 
-env:
-  # Ensure use of open-source Terraform versions.
-  # (versions 1.6.0 and above are source-available)
-  TERRAFORM_VERSION: "${{ inputs.terraform_version }} <1.6.0"
+  # Set permission required to delete artifacts.
+  actions: write
 
+env:
   # Configure Terraform to run in automation.
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
   TF_IN_AUTOMATION: true
@@ -78,12 +83,13 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+  ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
   terraform-plan:
     name: Terraform Plan
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     defaults:
       run:
@@ -95,12 +101,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_version: ${{ inputs.terraform_version }}
           terraform_wrapper: false
           # Wraps Terraform commands, exposing their stdout, stderr and exitcode.
           # It also wraps Terraform command outputs with debug logs, including the output of the "terraform show" command.
@@ -181,9 +187,9 @@ jobs:
       - name: Upload artifact
         id: upload
         if: steps.archive.outcome == 'success'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.artifact_name }}
+          name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working_directory }}/terraform.tar.7z
           if-no-files-found: error
           # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
@@ -204,18 +210,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.artifact_name }}
+          name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working_directory }}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_version: ${{ inputs.terraform_version }}
 
       - name: Extract Terraform config
         run: |
@@ -228,6 +234,6 @@ jobs:
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
       - name: Delete artifact
-        uses: GeekyEggo/delete-artifact@54ab544f12cdb7b71613a16a2b5a37a9ade990af
+        uses: GeekyEggo/delete-artifact@65041433121f7239077fa20be14c0690f70569de
         with:
-          name: ${{ inputs.artifact_name }}
+          name: ${{ env.ARTIFACT_NAME }}

@@ -1,5 +1,108 @@
 # Changelog
 
+## [9.3.1](https://github.com/equinor/ops-actions/compare/v9.3.0...v9.3.1) (2024-02-09)
+
+
+### Bug Fixes
+
+* **terraform:** artifact already exists ([#392](https://github.com/equinor/ops-actions/issues/392)) ([315ba0f](https://github.com/equinor/ops-actions/commit/315ba0f95f218c7a6845a61e08e83337e48e4849))
+
+## [9.3.0](https://github.com/equinor/ops-actions/compare/v9.2.1...v9.3.0) (2024-02-09)
+
+
+### Features
+
+* **terraform:** set environment-specific artifact name by default ([#389](https://github.com/equinor/ops-actions/issues/389)) ([06ce89a](https://github.com/equinor/ops-actions/commit/06ce89a91ce980bde7e20578f86df08b09300a59))
+
+
+### Bug Fixes
+
+* **terraform:** unable to delete artifact ([#391](https://github.com/equinor/ops-actions/issues/391)) ([9848dc4](https://github.com/equinor/ops-actions/commit/9848dc4522b0171cb9338b260e84d4d491258885))
+
+## [9.2.1](https://github.com/equinor/ops-actions/compare/v9.2.0...v9.2.1) (2024-02-09)
+
+
+### Bug Fixes
+
+* **terraform:** downgrade GeekyEggo/delete-artifact from 4.1.0 to 2.0.0 ([#387](https://github.com/equinor/ops-actions/issues/387)) ([ad0fab3](https://github.com/equinor/ops-actions/commit/ad0fab33d1445f233441b7e42a83b89c5cdd3cbd))
+
+## [9.2.0](https://github.com/equinor/ops-actions/compare/v9.1.3...v9.2.0) (2024-02-08)
+
+
+### Features
+
+* **terraform:** add option to send runner type as parameter ([#383](https://github.com/equinor/ops-actions/issues/383)) ([3560f76](https://github.com/equinor/ops-actions/commit/3560f76979055ee86b7bf00b6f8ed25d3ab96563))
+
+## [9.1.3](https://github.com/equinor/ops-actions/compare/v9.1.2...v9.1.3) (2024-01-30)
+
+
+### Bug Fixes
+
+* bump actions/setup-dotnet from 2 to 4 ([#375](https://github.com/equinor/ops-actions/issues/375)) ([e545362](https://github.com/equinor/ops-actions/commit/e54536215e0c5ed472119c77965a83cd1e5ae7f1))
+* bump azure/webapps-deploy from 2 to 3 ([#376](https://github.com/equinor/ops-actions/issues/376)) ([ed49dc7](https://github.com/equinor/ops-actions/commit/ed49dc766764ce7441e8b000f3a7c2cbcad5fcd3))
+* bump docker/build-push-action from 3 to 5 ([#374](https://github.com/equinor/ops-actions/issues/374)) ([6311824](https://github.com/equinor/ops-actions/commit/631182404f245373feae63a723ab030a6a678ebc))
+* **docker:** bump docker/login-action from 2 to 3 ([#377](https://github.com/equinor/ops-actions/issues/377)) ([998c428](https://github.com/equinor/ops-actions/commit/998c428fae7ed20cc5b22b76244cafc55d874204))
+
+## [9.1.2](https://github.com/equinor/ops-actions/compare/v9.1.1...v9.1.2) (2024-01-30)
+
+
+### Bug Fixes
+
+* bump actions/setup-python from 4 to 5 ([#367](https://github.com/equinor/ops-actions/issues/367)) ([a76c0eb](https://github.com/equinor/ops-actions/commit/a76c0eb912cd5f88494ba616f091786bdefe3672))
+* bump docker/setup-buildx-action from 2 to 3 ([#370](https://github.com/equinor/ops-actions/issues/370)) ([cfd58de](https://github.com/equinor/ops-actions/commit/cfd58de0b2009aaf2ec41e63cad713bc3881135d))
+* **semantic-release:** bump actions/setup-node from 3 to 4 ([#368](https://github.com/equinor/ops-actions/issues/368)) ([12fa565](https://github.com/equinor/ops-actions/commit/12fa5653e7bcdf7fe51463ca10b97e9af18b8756))
+* **terraform:** bump GeekyEggo/delete-artifact from 2.0.0 to 4.1.0 ([#369](https://github.com/equinor/ops-actions/issues/369)) ([a023f14](https://github.com/equinor/ops-actions/commit/a023f14b3bc7db9958b0bc67902167fd612225c1))
+
+## [9.1.1](https://github.com/equinor/ops-actions/compare/v9.1.0...v9.1.1) (2024-01-29)
+
+
+### Bug Fixes
+
+* upgrade action versions ([#362](https://github.com/equinor/ops-actions/issues/362)) ([ad05797](https://github.com/equinor/ops-actions/commit/ad05797edb3adade15b5e4df29daabfa06deb193))
+
+## [9.1.0](https://github.com/equinor/ops-actions/compare/v9.0.1...v9.1.0) (2024-01-26)
+
+
+### Features
+
+* **terraform:** use BSL releases ([#358](https://github.com/equinor/ops-actions/issues/358)) ([ef822fd](https://github.com/equinor/ops-actions/commit/ef822fdb5bfb2dd8fc8b7124a672804700d4ddfb))
+
+
+### Bug Fixes
+
+* upgrade action versions ([#359](https://github.com/equinor/ops-actions/issues/359)) ([43e2559](https://github.com/equinor/ops-actions/commit/43e2559744413ea6130ff29b1d6349bda2c12201))
+
+## [9.0.1](https://github.com/equinor/ops-actions/compare/v9.0.0...v9.0.1) (2024-01-25)
+
+
+### Bug Fixes
+
+* **terraform:** upgrade action versions ([#356](https://github.com/equinor/ops-actions/issues/356)) ([b7f0f24](https://github.com/equinor/ops-actions/commit/b7f0f24e0216d57630141d7da2952cf7a592ea5a))
+
+## [9.0.0](https://github.com/equinor/ops-actions/compare/v8.13.0...v9.0.0) (2024-01-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove Azure SQL DB restore workflow ([#349](https://github.com/equinor/ops-actions/issues/349))
+
+### Features
+
+* remove Azure SQL DB restore workflow ([#349](https://github.com/equinor/ops-actions/issues/349)) ([41d734d](https://github.com/equinor/ops-actions/commit/41d734dd372904ff02a42506b7c21bcb481d828c)), closes [#339](https://github.com/equinor/ops-actions/issues/339)
+
+## [8.13.0](https://github.com/equinor/ops-actions/compare/v8.12.0...v8.13.0) (2024-01-25)
+
+
+### Features
+
+* **commitlint:** lint latest commit message by default ([#350](https://github.com/equinor/ops-actions/issues/350)) ([9971f51](https://github.com/equinor/ops-actions/commit/9971f51ba23cb1b47b8da219a332a2b976c1c9f0))
+
+
+### Bug Fixes
+
+* **commitlint:** upgrade  action version ([#353](https://github.com/equinor/ops-actions/issues/353)) ([431fe13](https://github.com/equinor/ops-actions/commit/431fe135c00acf8e4523d56c74c5e229c9c059a1))
+* **super-linter:** upgrade  action version ([#352](https://github.com/equinor/ops-actions/issues/352)) ([31b007f](https://github.com/equinor/ops-actions/commit/31b007f610475d4b047ceaa0d42736c0d79b0eb0))
+
 ## [8.12.0](https://github.com/equinor/ops-actions/compare/v8.11.0...v8.12.0) (2023-11-22)
 
 
