@@ -5,6 +5,7 @@ set -eu
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 LOCATION=${2:?"LOCATION is unset or null"}
 OBJECT_ID=${3:?"OBJECT_ID is unset or null"}
+IP_ADDRESSES=${4:-""}
 
 ################################################################################
 # Verify target Azure subscription
@@ -84,6 +85,11 @@ az group create \
 
 echo "Creating storage account..."
 
+default_action="Deny"
+if [[ -z "$IP_ADDRESSES" ]]; then
+  default_action="Allow"
+fi
+
 storage_account_id="$(az storage account create \
   --name "${STORAGE_ACCOUNT_NAME}" \
   --resource-group "${RESOURCE_GROUP_NAME}" \
@@ -96,8 +102,17 @@ storage_account_id="$(az storage account create \
   --allow-blob-public-access false \
   --allow-shared-key-access false \
   --allow-cross-tenant-replication false \
+  --default-action "$default_action" \
   --query id \
   --output tsv)"
+
+for ip_address in $IP_ADDRESSES; do
+  az storage account network-rule add \
+    --account-name "${STORAGE_ACCOUNT_NAME}" \
+    --resource-group "${RESOURCE_GROUP_NAME}" \
+    --ip-address "${ip_address}" \
+    --output none
+done
 
 az storage account blob-service-properties update \
   --account-name "${STORAGE_ACCOUNT_NAME}" \
