@@ -42,6 +42,32 @@ STORAGE_ACCOUNT_NAME=$(echo "$CONFIG" | jq -r .storage_account_name)
 CONTAINER_NAME=$(echo "$CONFIG" | jq -r .container_name)
 
 ################################################################################
+# Check if Azure Storage account is locked
+################################################################################
+
+storage_account_id=$(az storage account list \
+  --resource-group "$RESOURCE_GROUP_NAME" \
+  --query "[?name == '$STORAGE_ACCOUNT_NAME'].id" \
+  --output tsv)
+
+lock_name="Terraform"
+lock_id=""
+
+if [[ -n "$storage_account_id" ]]; then
+  lock_id=$(az resource lock list \
+    --resource "$storage_account_id" \
+    --query "[?name == '$lock_name'].id" \
+    --output tsv)
+fi
+
+if [[ -n "$lock_id" ]]; then
+  echo -e "\n\033[0;33mStorage account is locked."
+  echo -e "Please remove the lock by running the following command:"
+  echo -e "\n\033[0;36maz resource lock delete --ids $lock_id\033[0m\n"
+  exit 1
+fi
+
+################################################################################
 # Create Azure resource group
 ################################################################################
 
@@ -160,7 +186,7 @@ az role assignment create \
 echo "Creating resource lock..."
 
 az resource lock create \
-  --name 'Terraform' \
+  --name "$lock_name" \
   --lock-type ReadOnly \
   --resource "${storage_account_id}" \
   --notes "Prevent changes to Terraform backend configuration" \
