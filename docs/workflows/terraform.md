@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/terraform.yml@v9.1.3
+    uses: equinor/ops-actions/.github/workflows/terraform.yml@v9.3.1
     with:
       environment: <string>
     secrets:
@@ -26,7 +26,8 @@ environment | string | True | N/A | The environment that the job references.
 working_directory | string | False | . | The working directory to run the Terraform commands in.
 terraform_version | string | False | latest | The version of Terraform to install.
 backend_config | string | False |  | The path, relative to the working directory, of a configuration file containing the remaining arguments for a partial backend configuration.
-artifact_name | string | False | terraform | The name of the artifact to upload.
+artifact_name | string | False |  | The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name.
+runs_on | string | False | ubuntu-latest | The label of the runner (GitHub- or self-hosted) to run this workflow on.
 
 ## Secrets
 

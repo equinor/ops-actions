@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/mkdocs-gh-pages.yml@v9.1.3
+    uses: equinor/ops-actions/.github/workflows/mkdocs-gh-pages.yml@v9.3.1
 
 ```
 
