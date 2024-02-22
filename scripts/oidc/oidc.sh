@@ -184,7 +184,7 @@ for ROLE_ASSIGNMENT in "${ROLE_ASSIGNMENTS[@]}"; do
 done
 
 ################################################################################
-# Set GitHub repository variables
+# Set GitHub configuration variables at the repository level
 ################################################################################
 
 if [[ "${REPO_LEVEL}" == true ]]; then
@@ -201,7 +201,7 @@ if [[ "${REPO_LEVEL}" == true ]]; then
 fi
 
 ################################################################################
-# Set GitHub environment variables
+# Set GitHub configuration variables at the environment level
 ################################################################################
 
 for ENV in "${!ENVIRONMENTS[@]}"; do
