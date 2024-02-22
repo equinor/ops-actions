@@ -23,10 +23,10 @@ jobs:
       environment: development
       working_directory: terraform
       terraform_version: 1.5.7
+      client_id: ${{ vars.AZURE_CLIENT_ID }}
+      subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      tenant_id: ${{ vars.AZURE_TENANT_ID }}
     secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 ```
 
@@ -59,10 +59,9 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/docker-acr@<release>
     with:
       registry_name: crfoobardev
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      client_id: ${{ vars.AZURE_CLIENT_ID }}
+      subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      tenant_id: ${{ vars.AZURE_TENANT_ID }}
 
   deploy:
     needs: build
@@ -71,10 +70,9 @@ jobs:
       environment: development
       image: ${{ needs.build.outputs.image }}
       app_name: app-foobar-dev
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      client_id: ${{ vars.AZURE_CLIENT_ID }}
+      subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      tenant_id: ${{ vars.AZURE_TENANT_ID }}
 ```
 
 Prerequisites:
@@ -106,10 +104,9 @@ jobs:
       environment: development
       image: ${{ needs.build.outputs.image }}
       app_name: app-foobar-dev
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      client_id: ${{ vars.AZURE_CLIENT_ID }}
+      subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      tenant_id: ${{ vars.AZURE_TENANT_ID }}
 ```
 
 ## Deploy Python application to Azure Function App
@@ -138,10 +135,9 @@ jobs:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
       app_name: func-foobar-dev
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      client_id: ${{ vars.AZURE_CLIENT_ID }}
+      subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      tenant_id: ${{ vars.AZURE_TENANT_ID }}
 ```
 
 Prerequisites:
@@ -175,10 +171,9 @@ jobs:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
       app_name: app-foobar-dev
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      client_id: ${{ vars.AZURE_CLIENT_ID }}
+      subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      tenant_id: ${{ vars.AZURE_TENANT_ID }}
 ```
 
 Prerequisites:
@@ -213,10 +208,9 @@ jobs:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
       app_name: app-foobar-dev
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      client_id: ${{ vars.AZURE_CLIENT_ID }}
+      subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      tenant_id: ${{ vars.AZURE_TENANT_ID }}
 ```
 
 Prerequisites:
