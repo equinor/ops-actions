@@ -1,5 +1,22 @@
 # Changelog
 
+## [10.0.0](https://github.com/equinor/ops-actions/compare/v9.3.1...v10.0.0) (2024-02-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **terraform:** remove secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`. To migrate your project, run the latest version of the `oidc.sh` script and delete GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`.
+* **docker-acr:** remove secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`. To migrate your project, run the latest version of the `oidc.sh` script and delete GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`.
+* **azure-webapp:** remove secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`. To migrate your project, run the latest version of the `oidc.sh` script and delete GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`.
+* **azure-function:** remove secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`. To migrate your project, run the latest version of the `oidc.sh` script and delete GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`.
+
+### Code Refactoring
+
+* **azure-function:** get Azure credentials from inputs ([#408](https://github.com/equinor/ops-actions/issues/408)) ([12914b1](https://github.com/equinor/ops-actions/commit/12914b16b521ad80440467a5fa282848f7565ccd))
+* **azure-webapp:** get Azure credentials from inputs ([#410](https://github.com/equinor/ops-actions/issues/410)) ([8604b1a](https://github.com/equinor/ops-actions/commit/8604b1ae4402f496e39a873f3b41277adf184da7))
+* **docker-acr:** get Azure credentials from inputs ([#406](https://github.com/equinor/ops-actions/issues/406)) ([2cd15a9](https://github.com/equinor/ops-actions/commit/2cd15a9abfb7d6bbdf7663ebee9fb7e0bebcbd9b))
+* **terraform:** get Azure credentials from inputs ([#405](https://github.com/equinor/ops-actions/issues/405)) ([6b8647a](https://github.com/equinor/ops-actions/commit/6b8647aabd104272ccc1ecd71202cd2a0f4d4084))
+
 ## [9.3.1](https://github.com/equinor/ops-actions/compare/v9.3.0...v9.3.1) (2024-02-09)
 
 
