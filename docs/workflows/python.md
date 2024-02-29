@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/python.yml@v9.3.1
+    uses: equinor/ops-actions/.github/workflows/python.yml@v10.0.0
 
 ```
 

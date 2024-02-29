@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/docker.yml@v9.3.1
+    uses: equinor/ops-actions/.github/workflows/docker.yml@v10.0.0
     with:
       registry: <string>
       username: <string>

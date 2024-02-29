@@ -7,13 +7,12 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v9.3.1
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v10.0.0
     with:
       app_name: <string>
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      client_id: <string>
+      subscription_id: <string>
+      tenant_id: <string>
 
 ```
 
@@ -26,14 +25,14 @@ image | string | False | N/A | The Docker image to deploy. Required if "artifact
 artifact_name | string | False | N/A | The name of the artifact containing the package to deploy. Required if "image" is not set.
 app_name | string | True | N/A | The name of the Azure Web App to deploy the Docker image to.
 app_settings | string | False | N/A | App settings to configure for the Azure Web App. Inline JSON.
+client_id | string | True | N/A | The client ID of the Azure AD service principal to use for authenticating to Azure.
+subscription_id | string | True | N/A | The ID of the Azure subscription containing the Azure Web App.
+tenant_id | string | True | N/A | The ID of the Azure tenant containing the Azure Web App.
 
 ## Secrets
 
 key | required | description
 --- | --- | ---
-AZURE_CLIENT_ID | True | The client ID of the Azure AD service principal to use for authenticating to Azure.
-AZURE_SUBSCRIPTION_ID | True | The ID of the Azure subscription containing the Azure Web App.
-AZURE_TENANT_ID | True | The ID of the Azure tenant containing the Azure Web App.
 
 ## Outputs
 
