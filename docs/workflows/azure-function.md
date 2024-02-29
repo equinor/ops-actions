@@ -7,14 +7,13 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/azure-function.yml@v9.3.1
+    uses: equinor/ops-actions/.github/workflows/azure-function.yml@v10.0.0
     with:
       artifact_name: <string>
       app_name: <string>
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      client_id: <string>
+      subscription_id: <string>
+      tenant_id: <string>
 
 ```
 
@@ -26,14 +25,14 @@ environment | string | False | N/A | The name of the GitHub environment that thi
 artifact_name | string | True | N/A | The name of the artifact containing the package to deploy.
 app_name | string | True | N/A | The name of the Azure Function App to deploy the package to.
 app_settings | string | False | N/A | App settings to configure for the Azure Function App. Inline JSON.
+client_id | string | True | N/A | The client ID of the Azure AD service principal to use for authenticating to Azure.
+subscription_id | string | True | N/A | The ID of the Azure subscription to deploy the package to.
+tenant_id | string | True | N/A | The ID of the Azure tenant to deploy the package to.
 
 ## Secrets
 
 key | required | description
 --- | --- | ---
-AZURE_CLIENT_ID | True | The client ID of the Azure AD service principal to use for authenticating to Azure.
-AZURE_SUBSCRIPTION_ID | True | The ID of the Azure subscription to deploy the package to.
-AZURE_TENANT_ID | True | The ID of the Azure tenant to deploy the package to.
 
 ## Outputs
 
