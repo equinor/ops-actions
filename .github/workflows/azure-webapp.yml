@@ -74,7 +74,7 @@ jobs:
           rm "$ZIP_FILE"
 
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           client-id: ${{ inputs.client_id }}
           subscription-id: ${{ inputs.subscription_id }}
