@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.0.1](https://github.com/equinor/ops-actions/compare/v10.0.0...v10.0.1) (2024-03-05)
+
+
+### Bug Fixes
+
+* **deps:** bump azure/login from 1 to 2 ([#414](https://github.com/equinor/ops-actions/issues/414)) ([2a8a7d4](https://github.com/equinor/ops-actions/commit/2a8a7d4ab2a75387028ccbe58bfbada86e4a516a))
+
 ## [10.0.0](https://github.com/equinor/ops-actions/compare/v9.3.1...v10.0.0) (2024-02-28)
 
 
