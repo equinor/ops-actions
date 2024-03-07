@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v10.0.0
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v10.0.1
     with:
       app_name: <string>
       client_id: <string>

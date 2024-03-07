@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/semantic-release.yml@v10.0.0
+    uses: equinor/ops-actions/.github/workflows/semantic-release.yml@v10.0.1
 
 ```
 

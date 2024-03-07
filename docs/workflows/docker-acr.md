@@ -7,7 +7,7 @@
     - main
 jobs:
   main:
-    uses: equinor/ops-actions/.github/workflows/docker-acr.yml@v10.0.0
+    uses: equinor/ops-actions/.github/workflows/docker-acr.yml@v10.0.1
     with:
       registry_name: <string>
       client_id: <string>
