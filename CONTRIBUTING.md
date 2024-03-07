@@ -28,3 +28,7 @@
     ```
 
 1. Create a pull request to merge your changes into the `main` branch.
+
+1. Request a review.
+
+1. Once approved, **squash merge**.
