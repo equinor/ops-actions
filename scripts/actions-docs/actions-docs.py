@@ -201,7 +201,9 @@ for workflow_file in workflow_files:
     # CREATE OUTPUT MARKDOWN FILE
     ############################################################################
 
-    output_file = os.path.join(output_path, Path(workflow_path).stem + ".md")
+    base_name = os.path.basename(workflow_path)
+    base_name_without_extension = os.path.splitext(base_name)[0]
+    output_file = os.path.join(output_path, base_name_without_extension + ".md")
 
     with open(output_file, "w") as f:
         f.write(
