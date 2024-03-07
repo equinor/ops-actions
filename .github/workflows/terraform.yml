@@ -204,7 +204,7 @@ jobs:
     name: Terraform Apply
     needs: terraform-plan
     if: needs.terraform-plan.outputs.upload-outcome == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     defaults:
       run:
