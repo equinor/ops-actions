@@ -4,6 +4,16 @@ set -eu
 
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 
+if [[ -f "$CONFIG_FILE" ]]
+then
+  echo "Using config file '$CONFIG_FILE'."
+else
+  echo "Config file '$CONFIG_FILE' does not exist."
+  exit 1
+fi
+
+cd "$(dirname "$CONFIG_FILE")"
+
 ################################################################################
 # Verify installation of necessary software components
 ################################################################################
@@ -54,13 +64,6 @@ done
 ################################################################################
 # Read OIDC configuration
 ################################################################################
-
-if [[ -f "${CONFIG_FILE}" ]]; then
-  echo "Using config file '${CONFIG_FILE}'."
-else
-  echo "Config file '${CONFIG_FILE}' does not exist."
-  exit 1
-fi
 
 export REPO
 export SUBSCRIPTION_ID
