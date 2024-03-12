@@ -12,7 +12,6 @@ else
   exit 1
 fi
 
-# Run in context of the repository containing the configuration file
 cd "$(dirname "$CONFIG_FILE")"
 
 ################################################################################
