@@ -4,6 +4,17 @@ set -eu
 
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 
+if [[ -f "$CONFIG_FILE" ]]
+then
+  echo "Using config file '$CONFIG_FILE'."
+else
+  echo "Config file '$CONFIG_FILE' does not exist."
+  exit 1
+fi
+
+# Run in context of the repository containing the configuration file
+cd "$(dirname "$CONFIG_FILE")"
+
 ################################################################################
 # Verify target GitHub repository and Azure subscription
 ################################################################################
@@ -29,14 +40,6 @@ esac
 ################################################################################
 # Read OIDC configuration
 ################################################################################
-
-if [[ -f "$CONFIG_FILE" ]]
-then
-  echo "Using config file '$CONFIG_FILE'."
-else
-  echo "Config file '$CONFIG_FILE' does not exist."
-  exit 1
-fi
 
 export REPO
 export SUBSCRIPTION_ID
