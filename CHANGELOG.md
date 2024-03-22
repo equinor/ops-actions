@@ -1,12 +1,18 @@
 # Changelog
 
+## [9.3.3](https://github.com/equinor/ops-actions/compare/v9.3.2...v9.3.3) (2024-03-22)
+
+
+### Code Refactoring
+
+* **terraform:** remove dependency on third-party action ([#432](https://github.com/equinor/ops-actions/issues/432)) ([4d1600d](https://github.com/equinor/ops-actions/commit/4d1600de060929f2bde0b0eb960b589b7c6b4cb4))
+
 ## [10.0.2](https://github.com/equinor/ops-actions/compare/v10.0.1...v10.0.2) (2024-03-07)
 
 
 ### Bug Fixes
 
 * **terraform:** run Apply job on same runner as Plan job ([716baf5](https://github.com/equinor/ops-actions/commit/716baf59bcb6045b5523804deeeb3338d16dd249))
-
 
 ## [9.3.2](https://github.com/equinor/ops-actions/compare/v9.3.1...v9.3.2) (2024-03-07)
 
