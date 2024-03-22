@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.0.3](https://github.com/equinor/ops-actions/compare/v9.3.3...v10.0.3) (2024-03-22)
+
+
+### Miscellaneous Chores
+
+* **main:** release 10.0.3 ([#435](https://github.com/equinor/ops-actions/issues/435)) ([34d3997](https://github.com/equinor/ops-actions/commit/34d39974b94e61d3ad193ef5a4d5de0e3e6b6739))
+
 ## [9.3.3](https://github.com/equinor/ops-actions/compare/v9.3.2...v9.3.3) (2024-03-22)
 
 
