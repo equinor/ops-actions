@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.0.4](https://github.com/equinor/ops-actions/compare/v9.3.4...v10.0.4) (2024-04-10)
+
+
+### Reverts
+
+* **dotnet:** disable CI mode ([#439](https://github.com/equinor/ops-actions/issues/439)) ([98d539e](https://github.com/equinor/ops-actions/commit/98d539ee5ac29dcdbbf004c034bf763bc8dfab7d))
+
 ## [9.3.4](https://github.com/equinor/ops-actions/compare/v9.3.3...v9.3.4) (2024-04-10)
 
 
