@@ -62,7 +62,6 @@ jobs:
     # Use the "runtime" input to specify target OS and architecture instead.
     runs-on: ubuntu-latest
     env:
-      CI: ${{ inputs.ci }}
       PROJECT: ${{ inputs.project }}
       CONFIGURATION: Release
       RUNTIME: ${{ inputs.runtime }}
