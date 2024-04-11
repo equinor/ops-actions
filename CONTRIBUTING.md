@@ -29,4 +29,4 @@
 
 1. Create a pull request to merge your changes into the `main` branch.
 
-    Use the Contentional Commits specification for semantic pull request titles.
+    Use the Conventional Commits specification for semantic pull request titles.
