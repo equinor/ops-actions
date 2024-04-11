@@ -53,6 +53,11 @@ on:
         type: string
         required: false
 
+      node_version:
+        description: A specific version of Node to install.
+        type: string
+        required: false
+
       artifact_name:
         description: The name of the build artifact to upload.
         type: string
@@ -89,7 +94,7 @@ jobs:
       - name: Setup Node action
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: ${{ inputs.node_version }}
       - run: npm test
 
       - name: Update npm
