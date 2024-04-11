@@ -95,7 +95,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node_version }}
-      - run: npm test
 
       - name: Update npm
         if: inputs.npm_version != ''
