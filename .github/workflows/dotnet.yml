@@ -9,15 +9,6 @@ on:
         type: string
         required: true
 
-      ci:
-        description: Configure workflow to run in CI mode.
-        type: boolean
-        required: false
-        default: true
-        # Should be set to true in most cases.
-        # Known exceptions:
-        # - When set to true, NPM warnings are treated as errors. Set to false to prevent this behaviour.
-
       project:
         description: Specify the path of the project or solution file, or the path of the directory containing the project or solution file.
         type: string
@@ -76,7 +67,6 @@ jobs:
     # Use the "runtime" input to specify target OS and architecture instead.
     runs-on: ubuntu-latest
     env:
-      CI: ${{ inputs.ci }}
       PROJECT: ${{ inputs.project }}
       CONFIGURATION: Release
       RUNTIME: ${{ inputs.runtime }}
