@@ -86,13 +86,13 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
-      - name: add setup-node
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 18
       - run: npm ci
       - run: npm test
-      
+
       - name: Update npm
         if: inputs.npm_version != ''
         env:
