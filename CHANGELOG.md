@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.3.5](https://github.com/equinor/ops-actions/compare/v9.3.4...v9.3.5) (2024-04-12)
+
+
+### Bug Fixes
+
+* **dotnet:** unable to update NPM on latest GitHub runner ([#445](https://github.com/equinor/ops-actions/issues/445)) ([b889206](https://github.com/equinor/ops-actions/commit/b88920610bc597d206fb92da05a3e2814d39d491))
+
 ## [9.3.4](https://github.com/equinor/ops-actions/compare/v9.3.3...v9.3.4) (2024-04-10)
 
 
