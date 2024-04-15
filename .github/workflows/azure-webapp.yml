@@ -29,6 +29,11 @@ on:
         type: string
         required: false
 
+      app_config_endpoint:
+        description: App Configuration Store endpoint
+        type: string
+        required: true
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -93,3 +98,13 @@ jobs:
         run: |
           APP_ID=$(az webapp list --query "[?name=='$APP_NAME'].id" --output tsv)
           az webapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" --output json
+
+      - name: Set build specific properties
+        env:
+          BUILD: ${{ github.run_number }}
+          BUILD_NUMBER: ${{ github.run_number }}
+          ENDPOINT: ${{ inputs.app_config_endpoint }}
+        run: |
+          # az appconfig kv set --key build --value "$BUILD" --auth-mode login --endpoint "$ENDPOINT" --yes
+          # az appconfig kv set --key BuildNumber --value "$BUILD_NUMBER" --auth-mode login --endpoint "$ENDPOINT" --yes
+          az appconfig kv set  --auth-mode login --endpoint "$ENDPOINT" --yes
