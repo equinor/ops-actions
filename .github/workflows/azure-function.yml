@@ -67,13 +67,13 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Deploy Azure Function
+      - name: Deploy Function App
         id: deploy
         uses: azure/functions-action@v1
         with:
           app-name: ${{ inputs.app_name }}
 
-      - name: Configure app settings
+      - name: Set Function App settings
         if: inputs.app_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}
