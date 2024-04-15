@@ -24,15 +24,21 @@ on:
         type: string
         required: true
 
+      slot_name:
+        description: The name of the Azure Web App slot to deploy the package or image to.
+        type: string
+        required: false
+        default: production
+
       app_settings:
         description: App settings to configure for the Azure Web App. Inline JSON.
         type: string
         required: false
 
-      app_config_endpoint:
-        description: App Configuration Store endpoint
+      slot_settings:
+        description: Slot-specific app settings to configure for the Azure Web App. Inline JSON.
         type: string
-        required: true
+        required: false
 
     secrets:
       AZURE_CLIENT_ID:
@@ -91,19 +97,12 @@ jobs:
           images: ${{ inputs.image }}
 
       - name: Set Web App settings
-        if: inputs.app_settings != ''
+        if: inputs.app_settings != '' || inputs.slot_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}
+          SLOT_NAME: ${{ inputs.slot_name }}
           APP_SETTINGS: ${{ inputs.app_settings }}
+          SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
           APP_ID=$(az webapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          az webapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" --output json
-
-      - name: Set build specific properties
-        env:
-          APP_SETTINGS: ${{ inputs.app_settings }}
-          TEMP_FILE: ${{ runner.temp }}/appsettings.json
-          APP_CONFIG_ENDPOINT: ${{ inputs.app_config_endpoint }}
-        run: |
-          echo "$APP_SETTINGS" > "$TEMP_FILE"
-          az appconfig kv import --name "$APP_CONFIG_ENDPOINT" --auth-mode login --source file --path "$TEMP_FILE" --format json --yes --output json
+          az webapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" --slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS" --output json
