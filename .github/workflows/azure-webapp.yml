@@ -101,10 +101,9 @@ jobs:
 
       - name: Set build specific properties
         env:
-          BUILD: ${{ github.run_number }}
-          BUILD_NUMBER: ${{ github.run_number }}
+          APP_SETTINGS: ${{ inputs.app_settings }}
+          TEMP_FILE: ${{ runner.temp }}/appsettings.json
           ENDPOINT: ${{ inputs.app_config_endpoint }}
         run: |
-          # az appconfig kv set --key build --value "$BUILD" --auth-mode login --endpoint "$ENDPOINT" --yes
-          # az appconfig kv set --key BuildNumber --value "$BUILD_NUMBER" --auth-mode login --endpoint "$ENDPOINT" --yes
-          az appconfig kv set  --auth-mode login --endpoint "$ENDPOINT" --yes
+          echo "$APP_SETTINGS" > "$TEMP_FILE"
+          az appconfig kv import --endpoint "$ENDPOINT" --auth-mode login --source file --path "$TEMP_FILE" --format json --yes --output json
