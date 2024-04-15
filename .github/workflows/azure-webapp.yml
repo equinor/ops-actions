@@ -29,8 +29,8 @@ on:
         type: string
         required: false
 
-      app_config_endpoint:
-        description: App Configuration Store endpoint
+      app_config_name:
+        description: App Configuration Store name
         type: string
         required: true
 
@@ -103,7 +103,7 @@ jobs:
         env:
           APP_SETTINGS: ${{ inputs.app_settings }}
           TEMP_FILE: ${{ runner.temp }}/appsettings.json
-          ENDPOINT: ${{ inputs.app_config_endpoint }}
+          APP_CONFIG_NAME: ${{ inputs.app_config_name }}
         run: |
           echo "$APP_SETTINGS" > "$TEMP_FILE"
-          az appconfig kv import --endpoint "$ENDPOINT" --auth-mode login --source file --path "$TEMP_FILE" --format json --yes --output json
+          az appconfig kv import --name "$APP_CONFIG_NAME" --auth-mode login --source file --path "$TEMP_FILE" --format json --yes --output json
