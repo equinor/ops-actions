@@ -94,6 +94,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ inputs.app_name }}
+          slot-name: ${{ inputs.slot_name }}
           images: ${{ inputs.image }}
 
       - name: Set Web App settings
