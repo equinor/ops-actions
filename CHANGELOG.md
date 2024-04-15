@@ -1,5 +1,7 @@
 # Changelog
 
+test
+
 ## [10.0.4](https://github.com/equinor/ops-actions/compare/v9.3.4...v10.0.4) (2024-04-10)
 
 
