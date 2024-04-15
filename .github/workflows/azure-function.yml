@@ -73,7 +73,7 @@ jobs:
         with:
           app-name: ${{ inputs.app_name }}
 
-      - name: Configure app settings
+      - name: Set Function App settings
         if: inputs.app_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}
