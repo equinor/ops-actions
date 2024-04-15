@@ -31,7 +31,7 @@ on:
         default: production
 
       app_settings:
-        description: An inline JSON object of App settings to configure for the Azure Web App.
+        description: An inline JSON object of app settings to configure for the Azure Web App.
         type: string
         required: false
 
@@ -55,7 +55,7 @@ on:
 
 jobs:
   azure-webapp:
-    name: Azure Webapp
+    name: Azure Web App
     # The steps for this job assume that OS is Ubuntu.
     runs-on: ubuntu-latest
     environment:
@@ -97,7 +97,7 @@ jobs:
           slot-name: ${{ inputs.slot_name }}
           images: ${{ inputs.image }}
 
-      - name: Set Web App settings
+      - name: Configure Web App
         if: inputs.app_settings != '' || inputs.slot_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}
