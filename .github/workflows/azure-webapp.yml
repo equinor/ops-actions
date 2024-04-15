@@ -28,7 +28,6 @@ on:
         description: The name of the Azure Web App slot to deploy the package or image to.
         type: string
         required: false
-        default: production
 
       app_settings:
         description: An inline JSON object of app settings to configure for the Azure Web App.
