@@ -20,7 +20,7 @@ on:
         required: false
 
       app_name:
-        description: The name of the Azure Web App to deploy the Docker image to.
+        description: The name of the Azure Web App to deploy the package or image to.
         type: string
         required: true
 
@@ -31,12 +31,12 @@ on:
         default: production
 
       app_settings:
-        description: App settings to configure for the Azure Web App. Inline JSON.
+        description: An inline JSON object of App settings to configure for the Azure Web App.
         type: string
         required: false
 
       slot_settings:
-        description: Slot-specific app settings to configure for the Azure Web App. Inline JSON.
+        description: An inline JSON object of slot-specific app settings to configure for the Azure Web App.
         type: string
         required: false
 
