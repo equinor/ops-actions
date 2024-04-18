@@ -18,8 +18,18 @@ on:
         type: string
         required: true
 
+      slot_name:
+        description: The name of the Azure Function App slot to deploy the package or image to.
+        type: string
+        required: false
+
       app_settings:
-        description: App settings to configure for the Azure Function App. Inline JSON.
+        description: An inline JSON object of app settings to configure for the Azure Function App.
+        type: string
+        required: false
+
+      slot_settings:
+        description: An inline JSON object of slot-specific app settings to configure for the Azure Function App.
         type: string
         required: false
 
@@ -72,12 +82,19 @@ jobs:
         uses: azure/functions-action@v1
         with:
           app-name: ${{ inputs.app_name }}
+          slot-name: ${{ inputs.slot_name }}
 
-      - name: Set Function App settings
-        if: inputs.app_settings != ''
+      - name: Configure Function App
+        if: inputs.app_settings != '' || inputs.slot_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}
+          SLOT_NAME: ${{ inputs.slot_name }}
           APP_SETTINGS: ${{ inputs.app_settings }}
+          SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
           APP_ID=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          az functionapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" --output json
+          ARGS=(--settings "$APP_SETTINGS")
+          if [[ -n "$SLOT_NAME" ]]; then
+            ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
+          fi
+          az functionapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output json
