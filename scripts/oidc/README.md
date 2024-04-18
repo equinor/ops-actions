@@ -8,7 +8,7 @@ It will:
 1. Create a service principal for the Azure AD application
 1. Create federated credentials for the Azure AD application
 1. Create Azure role assignments for the service principal
-1. Set GitHub configuration variables `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
+1. Set GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 
 The script accepts the following arguments:
 
@@ -48,13 +48,13 @@ Example configuration:
 ## Prerequisites
 
 - [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) (latest version as of writing: `2.49.0`) - to create Azure AD application, federated credentials, service principal and Azure role assignments
-- [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to set GitHub configuration variables
+- [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to set GitHub secrets
 - [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
 - Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
   > **Note:** Not necessary when updating the existing config.
 - Activate Azure role `Owner` - to create Azure role assignments
   > **Note:** Minimum scope required is what's defined for role assignment in the `oidc.json` config.
-- GitHub repository role `Admin` - to set GitHub configuration variables
+- GitHub repository role `Admin` - to set GitHub environment secrets
 - If a federated credential is configured with subject `repo:${REPO}:environment:<environment>`, create GitHub environment `<environment>` and set appropriate deployment protection rules.
 
 ## Usage

@@ -187,38 +187,38 @@ for ROLE_ASSIGNMENT in "${ROLE_ASSIGNMENTS[@]}"; do
 done
 
 ################################################################################
-# Set GitHub configuration variables at the repository level
+# Set GitHub repository secrets
 ################################################################################
 
 if [[ "${REPO_LEVEL}" == true ]]; then
-  echo "Setting GitHub repository variables..."
+  echo "Setting GitHub repository secrets..."
 
-  gh variable set "AZURE_CLIENT_ID" \
+  gh secret set "AZURE_CLIENT_ID" \
     --body "${APP_ID}"
 
-  gh variable set "AZURE_SUBSCRIPTION_ID" \
+  gh secret set "AZURE_SUBSCRIPTION_ID" \
     --body "${SUBSCRIPTION_ID}"
 
-  gh variable set "AZURE_TENANT_ID" \
+  gh secret set "AZURE_TENANT_ID" \
     --body "${TENANT_ID}"
 fi
 
 ################################################################################
-# Set GitHub configuration variables at the environment level
+# Set GitHub environment secrets
 ################################################################################
 
 for ENV in "${!ENVIRONMENTS[@]}"; do
-  echo "Setting GitHub environment variables for environment '${ENV}'..."
+  echo "Setting GitHub environment secrets for environment '${ENV}'..."
 
-  gh variable set "AZURE_CLIENT_ID" \
+  gh secret set "AZURE_CLIENT_ID" \
     --env "${ENV}" \
     --body "${APP_ID}"
 
-  gh variable set "AZURE_SUBSCRIPTION_ID" \
+  gh secret set "AZURE_SUBSCRIPTION_ID" \
     --env "${ENV}" \
     --body "${SUBSCRIPTION_ID}"
 
-  gh variable set "AZURE_TENANT_ID" \
+  gh secret set "AZURE_TENANT_ID" \
     --env "${ENV}" \
     --body "${TENANT_ID}"
 done
