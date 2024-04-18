@@ -98,6 +98,7 @@ jobs:
 
     outputs:
       upload-outcome: ${{ steps.upload.outcome }}
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
 
     steps:
       - name: Checkout
@@ -237,7 +238,7 @@ jobs:
       - name: Delete artifact
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFACT_ID: ${{ needs.terraform-plan.outputs.artifact-id }}
         run: |
-          artifact_id=$(gh api --method GET "/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" | jq -r --arg name "$ARTIFACT_NAME" '.artifacts[] | select(.name==$name) | .id')
-          gh api --method DELETE "/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id" 1>/dev/null
-          echo "Deleted artifact $ARTIFACT_NAME ($artifact_id)"
+          gh api --method DELETE "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID" 1>/dev/null
+          echo "Deleted artifact $ARTIFACT_NAME ($ARTIFACT_ID)"

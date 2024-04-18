@@ -78,14 +78,14 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Deploy
+      - name: Deploy Web App
         id: deploy
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ inputs.app_name }}
           images: ${{ inputs.image }}
 
-      - name: Configure app settings
+      - name: Set Web App settings
         if: inputs.app_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}

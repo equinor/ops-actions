@@ -9,6 +9,17 @@ on:
         type: string
         required: true
 
+      node_version:
+        description: The version of Node.js to install.
+        type: string
+        required: false
+        default: latest
+
+      npm_version:
+        description: A specific version of npm to install. Use to override pre-installed version on GitHub-hosted runners.
+        type: string
+        required: false
+
       project:
         description: Specify the path of the project or solution file, or the path of the directory containing the project or solution file.
         type: string
@@ -39,11 +50,6 @@ on:
         required: false
         default: ""
 
-      npm_version:
-        description: A specific version of npm to install. Use to override pre-installed version on GitHub-hosted runners.
-        type: string
-        required: false
-
       artifact_name:
         description: The name of the build artifact to upload.
         type: string
@@ -71,10 +77,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup dotnet
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
 
       - name: Update npm
         if: inputs.npm_version != ''
