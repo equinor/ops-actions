@@ -23,19 +23,17 @@ on:
         type: string
         required: false
 
-      client_id:
+    secrets:
+      AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
-        type: string
         required: true
 
-      subscription_id:
+      AZURE_SUBSCRIPTION_ID:
         description: The ID of the Azure subscription to deploy the package to.
-        type: string
         required: true
 
-      tenant_id:
+      AZURE_TENANT_ID:
         description: The ID of the Azure tenant to deploy the package to.
-        type: string
         required: true
 
 jobs:
@@ -65,9 +63,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ inputs.client_id }}
-          subscription-id: ${{ inputs.subscription_id }}
-          tenant-id: ${{ inputs.tenant_id }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Deploy Azure Function
         id: deploy
