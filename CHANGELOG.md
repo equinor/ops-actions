@@ -1,11 +1,18 @@
 # Changelog
 
-## [10.0.3](https://github.com/equinor/ops-actions/compare/v9.3.3...v10.0.3) (2024-03-22)
+## [9.3.5](https://github.com/equinor/ops-actions/compare/v9.3.4...v9.3.5) (2024-04-12)
 
 
-### Code Refactoring
+### Bug Fixes
 
-* **terraform:** remove dependency on third-party action ([#432](https://github.com/equinor/ops-actions/issues/432)) ([4d1600d](https://github.com/equinor/ops-actions/commit/4d1600de060929f2bde0b0eb960b589b7c6b4cb4))
+* **dotnet:** unable to update NPM on latest GitHub runner ([#445](https://github.com/equinor/ops-actions/issues/445)) ([b889206](https://github.com/equinor/ops-actions/commit/b88920610bc597d206fb92da05a3e2814d39d491))
+
+## [9.3.4](https://github.com/equinor/ops-actions/compare/v9.3.3...v9.3.4) (2024-04-10)
+
+
+### Reverts
+
+* **dotnet:** disable CI mode ([#439](https://github.com/equinor/ops-actions/issues/439)) ([4904824](https://github.com/equinor/ops-actions/commit/49048242acc3d13156512f9f1c0d179f7cb414c6))
 
 ## [9.3.3](https://github.com/equinor/ops-actions/compare/v9.3.2...v9.3.3) (2024-03-22)
 
@@ -14,43 +21,12 @@
 
 * **terraform:** remove dependency on third-party action ([#432](https://github.com/equinor/ops-actions/issues/432)) ([4d1600d](https://github.com/equinor/ops-actions/commit/4d1600de060929f2bde0b0eb960b589b7c6b4cb4))
 
-## [10.0.2](https://github.com/equinor/ops-actions/compare/v10.0.1...v10.0.2) (2024-03-07)
-
-
-### Bug Fixes
-
-* **terraform:** run Apply job on same runner as Plan job ([716baf5](https://github.com/equinor/ops-actions/commit/716baf59bcb6045b5523804deeeb3338d16dd249))
-
 ## [9.3.2](https://github.com/equinor/ops-actions/compare/v9.3.1...v9.3.2) (2024-03-07)
 
 
 ### Bug Fixes
 
 * **terraform:** run Apply job on same runner as Plan job ([716baf5](https://github.com/equinor/ops-actions/commit/716baf59bcb6045b5523804deeeb3338d16dd249))
-
-## [10.0.1](https://github.com/equinor/ops-actions/compare/v10.0.0...v10.0.1) (2024-03-05)
-
-
-### Bug Fixes
-
-* **deps:** bump azure/login from 1 to 2 ([#414](https://github.com/equinor/ops-actions/issues/414)) ([2a8a7d4](https://github.com/equinor/ops-actions/commit/2a8a7d4ab2a75387028ccbe58bfbada86e4a516a))
-
-## [10.0.0](https://github.com/equinor/ops-actions/compare/v9.3.1...v10.0.0) (2024-02-28)
-
-
-### ⚠ BREAKING CHANGES
-
-* **terraform:** remove secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`. To migrate your project, run the latest version of the `oidc.sh` script and delete GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`.
-* **docker-acr:** remove secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`. To migrate your project, run the latest version of the `oidc.sh` script and delete GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`.
-* **azure-webapp:** remove secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`. To migrate your project, run the latest version of the `oidc.sh` script and delete GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`.
-* **azure-function:** remove secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`. To migrate your project, run the latest version of the `oidc.sh` script and delete GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`.
-
-### Code Refactoring
-
-* **azure-function:** get Azure credentials from inputs ([#408](https://github.com/equinor/ops-actions/issues/408)) ([12914b1](https://github.com/equinor/ops-actions/commit/12914b16b521ad80440467a5fa282848f7565ccd))
-* **azure-webapp:** get Azure credentials from inputs ([#410](https://github.com/equinor/ops-actions/issues/410)) ([8604b1a](https://github.com/equinor/ops-actions/commit/8604b1ae4402f496e39a873f3b41277adf184da7))
-* **docker-acr:** get Azure credentials from inputs ([#406](https://github.com/equinor/ops-actions/issues/406)) ([2cd15a9](https://github.com/equinor/ops-actions/commit/2cd15a9abfb7d6bbdf7663ebee9fb7e0bebcbd9b))
-* **terraform:** get Azure credentials from inputs ([#405](https://github.com/equinor/ops-actions/issues/405)) ([6b8647a](https://github.com/equinor/ops-actions/commit/6b8647aabd104272ccc1ecd71202cd2a0f4d4084))
 
 ## [9.3.1](https://github.com/equinor/ops-actions/compare/v9.3.0...v9.3.1) (2024-02-09)
 

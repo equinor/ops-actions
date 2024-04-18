@@ -4,13 +4,18 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
 
 jobs:
   lint-codebase:
     name: Lint codebase
     uses: ./.github/workflows/super-linter.yml
     with:
-      filter_regex_exclude: docs/workflows/.*
+      filter_regex_exclude: (.*CHANGELOG\.md$|docs/workflows/.*)
 
   lint-pr:
     name: Lint PR
