@@ -97,4 +97,4 @@ jobs:
           if [[ -n "$SLOT_NAME" ]]; then
             ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
           fi
-          az functionapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output json
+          az functionapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none
