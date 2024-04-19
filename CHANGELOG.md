@@ -1,5 +1,20 @@
 # Changelog
 
+## [9.4.0](https://github.com/equinor/ops-actions/compare/v9.3.5...v9.4.0) (2024-04-19)
+
+
+### Features
+
+* **azure-function:** set slot-specific settings ([#456](https://github.com/equinor/ops-actions/issues/456)) ([6a59426](https://github.com/equinor/ops-actions/commit/6a59426339ccd1a64b8264bb9b26b1110d125045))
+* **azure-webapp:** set slot-specific settings ([#453](https://github.com/equinor/ops-actions/issues/453)) ([278789c](https://github.com/equinor/ops-actions/commit/278789c338d3652c14e3921c852dad0b651c2b6f))
+* **github-pages:** deploy to GitHub Pages ([#438](https://github.com/equinor/ops-actions/issues/438)) ([dd10f1e](https://github.com/equinor/ops-actions/commit/dd10f1e19e2a882b5a922cd3e0221fdce25f28b3))
+* **mkdocs:** build MkDocs static site ([#437](https://github.com/equinor/ops-actions/issues/437)) ([9d5bb6b](https://github.com/equinor/ops-actions/commit/9d5bb6bc4ec0c60fbb8a2ff5bea86de521031a13))
+
+
+### Bug Fixes
+
+* suppress Azure Web App and Azure Function App settings output ([#462](https://github.com/equinor/ops-actions/issues/462)) ([93251d7](https://github.com/equinor/ops-actions/commit/93251d760ce5487f7035e60bc145bd2b0755bc70))
+
 ## [9.3.5](https://github.com/equinor/ops-actions/compare/v9.3.4...v9.3.5) (2024-04-12)
 
 
