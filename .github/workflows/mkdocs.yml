@@ -38,6 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SITE_DIR: site
+      ARTIFACT_NAME: ${{ inputs.artifact_name }}
 
     steps:
       - name: Checkout
@@ -64,17 +65,16 @@ jobs:
       - name: MkDocs Build
         run: mkdocs build --site-dir "$SITE_DIR"
 
-      - name: Zip
-        id: zip
+      - name: Create tarball
+        id: tar
         working-directory: ${{ env.SITE_DIR }}
-        env:
-          ZIP_FILE: ${{ runner.temp }}/${{ inputs.artifact_name }}.zip
         run: |
-          zip -r "$ZIP_FILE" .
-          echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
+          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
+          tar -cvf "$tarball" .
+          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ steps.zip.outputs.zip_file }}
+          path: ${{ steps.tar.outputs.tarball }}
