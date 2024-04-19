@@ -69,8 +69,8 @@ jobs:
         id: tar
         working-directory: ${{ env.SITE_DIR }}
         run: |
-          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar -cvf "$tarball" .
+          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gz"
+          tar -cvzf "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
