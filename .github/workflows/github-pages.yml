@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       artifact_name:
-        description: The name of the artifact containing the site to deploy.
+        description: The name of the artifact containing the site to deploy. Must contain a tarball.
         type: string
         required: true
 
@@ -18,26 +18,18 @@ jobs:
       cancel-in-progress: false
 
     permissions:
+      # Set permissions required to deploy to GitHub Pages.
       pages: write
       id-token: write
 
     environment:
+      # Setting a different environment name is possible, but not recommended by GitHub.
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ inputs.artifact_name }}
-
-      - name: Unzip
-        env:
-          ZIP_FILE: ${{ inputs.artifact_name }}.zip
-        run: |
-          unzip "$ZIP_FILE"
-          rm "$ZIP_FILE"
-
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ inputs.artifact_name }}
