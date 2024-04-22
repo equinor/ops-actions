@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.4.1](https://github.com/equinor/ops-actions/compare/v9.4.0...v9.4.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* **mkdocs:** unable to deploy artifact to GitHub Pages ([#465](https://github.com/equinor/ops-actions/issues/465)) ([b7980ac](https://github.com/equinor/ops-actions/commit/b7980ac00775b6a55bb1544f00ba94249c9cd528))
+
 ## [9.4.0](https://github.com/equinor/ops-actions/compare/v9.3.5...v9.4.0) (2024-04-19)
 
 
