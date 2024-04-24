@@ -1,8 +1,10 @@
-# Deploy MkDocs to GitHub Pages
-name: ♻ mkdocs-gh-pages
+# Build and deploy your MkDocs site to GitHub Pages from branch "gh-pages".
+# Ref: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-from-a-branch
 
-# Make sure your GitHub pages site is currently being built from the "gh-pages" branch.
-# Ref: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+# You should consider using "mkdocs.yml" to build your MkDocs site and "github-pages.yml" to deploy to GitHub Pages instead.
+# Ref: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow
+
+name: ♻ mkdocs-gh-pages
 
 on:
   workflow_call:
