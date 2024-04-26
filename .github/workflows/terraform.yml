@@ -174,16 +174,26 @@ jobs:
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Archive Terraform config
-        id: archive
+      # - name: Archive Terraform config
+      #   id: archive
+      #   # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+      #   # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
+      #   if: steps.plan.outputs.exitcode == 2
+      #   run: |
+      #     tar -cf terraform.tar .
+      #     7z a -mx=1 -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
+      #   # When running 7-Zip, set "-mx=1" for fastest level of compression, to ensure that this step runs as fast as possible.
+      #   # Could set "-mx=0" for no compression, but that would result in a much larger file size for the created archive file.
+
+      - name: Create tarball
+        id: tar
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
         # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
         if: steps.plan.outputs.exitcode == 2
         run: |
-          tar -cf terraform.tar .
-          7z a -mx=1 -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
-        # When running 7-Zip, set "-mx=1" for fastest level of compression, to ensure that this step runs as fast as possible.
-        # Could set "-mx=0" for no compression, but that would result in a much larger file size for the created archive file.
+          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gpg"
+          tar -cv . | gpg -c --batch --passphrase "$ENCRYPTION_PASSWORD" -o "$tarball"
+          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
         id: upload
