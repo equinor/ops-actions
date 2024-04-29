@@ -83,4 +83,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ steps.zip.outputs.zip_file }}
+          path: ${{ steps.tar.outputs.zip_file }}
