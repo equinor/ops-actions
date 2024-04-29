@@ -226,7 +226,7 @@ jobs:
       - name: Extract tarball
         run: |
           tarball="$ARTIFACT_NAME.tar.gpg"
-          gpg -d --batch --passphrase "$ENCRYPTION_PASSPHRASE" "$tarball" | tar -xv
+          gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$tarball" | tar -xv
           rm "$tarball"
 
       - name: Terraform Apply
