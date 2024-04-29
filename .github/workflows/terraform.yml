@@ -174,17 +174,6 @@ jobs:
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
-      # - name: Archive Terraform config
-      #   id: archive
-      #   # Only run if Terraform Plan succeeded with non-empty diff (changes present).
-      #   # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
-      #   if: steps.plan.outputs.exitcode == 2
-      #   run: |
-      #     tar -cf terraform.tar .
-      #     7z a -mx=1 -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
-      #   # When running 7-Zip, set "-mx=1" for fastest level of compression, to ensure that this step runs as fast as possible.
-      #   # Could set "-mx=0" for no compression, but that would result in a much larger file size for the created archive file.
-
       - name: Create tarball
         id: tar
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
@@ -194,14 +183,18 @@ jobs:
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gpg"
           tar -cv . | gpg -c --batch --passphrase "$ENCRYPTION_PASSWORD" -o "$tarball"
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
+        #   tar -cf terraform.tar .
+        #   7z a -mx=1 -p"$ENCRYPTION_PASSWORD" terraform.tar.7z terraform.tar
+        # # When running 7-Zip, set "-mx=1" for fastest level of compression, to ensure that this step runs as fast as possible.
+        # # Could set "-mx=0" for no compression, but that would result in a much larger file size for the created archive file.
 
       - name: Upload artifact
         id: upload
-        if: steps.archive.outcome == 'success'
+        if: steps.tar.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ inputs.working_directory }}/terraform.tar.7z
+          path: ${{ steps.tar.outputs.tarball }}
           if-no-files-found: error
           # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
           # If a workflow reaches this limit, it will be cancelled and the artifact will no longer be needed.
@@ -234,10 +227,13 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Extract Terraform config
+      - name: Extract tarball
         run: |
-          7z x -p"$ENCRYPTION_PASSWORD" terraform.tar.7z
-          tar -xf terraform.tar
+          tarball="$ARTIFACT_NAME.tar.gpg"
+          gpg -d --batch --passphrase "$ENCRYPTION_PASSPHRASE" "$tarball" | tar -xv
+          rm "$tarball"
+        # 7z x -p"$ENCRYPTION_PASSWORD" terraform.tar.7z
+        # tar -xf terraform.tar
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false tfplan
