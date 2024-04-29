@@ -63,13 +63,6 @@ jobs:
         with:
           name: ${{ inputs.artifact_name }}
 
-      # - name: Unzip
-      #   env:
-      #     ZIP_FILE: ${{ inputs.artifact_name }}.zip
-      #   run: |
-      #     unzip "$ZIP_FILE"
-      #     rm "$ZIP_FILE"
-
       - name: Extract tarball
         run: |
           tarball="$ARTIFACT_NAME.tar"
