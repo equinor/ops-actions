@@ -70,16 +70,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt --target "$TARGET"
 
-      - name: Zip
-        id: zip
-        env:
-          ZIP_FILE: ${{ runner.temp }}/${{ inputs.artifact_name }}.zip
+      - name: Create tarball
+        id: tar
         run: |
-          zip -r "$ZIP_FILE" .
-          echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
+          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
+          tar -cvf "$tarball" .
+          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ steps.zip.outputs.zip_file }}
+          path: ${{ steps.tar.outputs.tarball }}
