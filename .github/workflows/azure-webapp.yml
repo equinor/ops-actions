@@ -73,13 +73,12 @@ jobs:
         with:
           name: ${{ inputs.artifact_name }}
 
-      - name: Unzip
+      - name: Extract tarball
         if: inputs.artifact_name != ''
-        env:
-          ZIP_FILE: ${{ inputs.artifact_name }}.zip
         run: |
-          unzip "$ZIP_FILE"
-          rm "$ZIP_FILE"
+          tarball="$ARTIFACT_NAME.tar"
+          tar -xvf "$tarball"
+          rm "$tarball"
 
       - name: Login to Azure
         uses: azure/login@v2

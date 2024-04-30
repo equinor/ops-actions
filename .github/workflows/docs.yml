@@ -37,7 +37,7 @@ jobs:
         run: ./actions-docs.py -p "$WORKFLOWS_PATH" -o "$OUTPUT_PATH"
 
       - name: Create PR
-        uses: peter-evans/create-pull-request@9153d834b60caba6d51c9b9510b087acf9f33f83
+        uses: peter-evans/create-pull-request@6d6857d36972b65feb161a90e484f2984215f83e
         with:
           branch: actions-docs--branches--main
           add-paths: ${{ env.OUTPUT_PATH }}
