@@ -10,9 +10,7 @@ Examples:
 
 ## Usage
 
-For specific usage examples, see [Usage examples](docs/usage-examples.md).
-
-For workflow documentations, see [docs/workflows](docs/workflows/).
+See [Usage examples](docs/usage-examples.md).
 
 ## Contributing
 
