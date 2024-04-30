@@ -20,6 +20,8 @@
 
   This reduces the flexibility of the reusable workflow.
 
+- Tar Dotnet publish output will drastically improve artifact upload performance over Zip.
+
 ## Naming conventions
 
 - Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow and job names.
