@@ -51,3 +51,45 @@
     with:
       name: my-artifact
   ```
+
+## Artifacts
+
+- Workflows that upload or download an artifact must have an input `artifact_name` that specifies the name of the artifact to be uploaded or downloaded.
+
+- Don't upload multiple files to an artifact. Collect the files in a tarball and upload that instead:
+
+  ```yaml
+  - name: Create tarball
+    id: tar
+    env:
+      ARTIFACT_NAME: ${{ inputs.artifact_name }}
+    run: |
+      tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
+      tar -cvf "$tarball" .
+      echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
+
+  - name: Upload artifact
+    uses: actions/upload-artifact@v4
+    with:
+      name: ${{ inputs.artifact_name }}
+      path: ${{ steps.tar.outputs.tarball }}
+  ```
+
+  This will drastically improve upload performance, as the `actions/upload-artifact` action will only need to make a single request to the GitHub API to upload the tarball, instead of multiple requests to upload each individual file.
+
+- Workflows that download an artifact must extract the tarball:
+
+  ```yaml
+  - name: Download artifact
+    uses: actions/download-artifact@v4
+    with:
+      name: ${{ inputs.artifact_name }}
+
+  - name: Extract tarball
+    env:
+      ARTIFACT_NAME: ${{ inputs.artifact_name }}
+    run: |
+      tarball="$ARTIFACT_NAME.tar"
+      tar -xvf "$tarball"
+      rm "$tarball"
+  ```

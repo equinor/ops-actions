@@ -122,7 +122,6 @@ jobs:
           dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
           echo "publish_path=$OUTPUT" >> "$GITHUB_OUTPUT"
 
-      # Tar Dotnet publish output in order to drastically improve artifact upload performance.
       - name: Create tarball
         id: tar
         working-directory: ${{ steps.publish.outputs.publish_path }}
