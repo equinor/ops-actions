@@ -20,7 +20,42 @@
 
   This reduces the flexibility of the reusable workflow.
 
-- Tar Dotnet publish output will drastically improve artifact upload performance over Zip.
+- Using Tar instead of Zip for published output will drastically improve artifact upload performance, for example:
+
+```yaml
+  jobs:
+    example-job:
+    steps:
+      - name: Create tarball example
+        id: tar
+        working-directory: ${{ steps.publish.outputs.publish_path }}
+        run: |
+          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
+          tar -cvf "$tarball" .
+          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
+
+        - name: Upload artifact example
+          uses: actions/upload-artifact@v4
+          with:
+            name: ${{ inputs.artifact_name }}
+            path: ${{ steps.tar.outputs.tarball }}
+
+  jobs:
+    example-job:
+    steps:
+      - name: Download artifact example
+        if: inputs.artifact_name != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+
+      - name: Extract tarball example
+        if: inputs.artifact_name != ''
+        run: |
+          tarball="$ARTIFACT_NAME.tar"
+          tar -xvf "$tarball"
+          rm "$tarball"
+```
 
 ## Naming conventions
 
