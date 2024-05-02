@@ -20,7 +20,7 @@
 
   This reduces the flexibility of the reusable workflow.
 
-- Using Tar instead of Zip for published output will drastically improve artifact upload performance, for example:
+- Using Tar instead of Zip for publishing output will drastically improve artifact upload performance, for example:
 
 ```yaml
   jobs:
