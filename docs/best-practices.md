@@ -77,7 +77,7 @@
 
   This will drastically improve upload performance, as the `actions/upload-artifact` action will only need to make a single request to the GitHub API to upload the tarball, instead of multiple requests to upload each individual file.
 
-  Workflows that download an artifact must extract the tarball:
+- Workflows that download an artifact must extract the tarball:
 
   ```yaml
   - name: Download artifact
