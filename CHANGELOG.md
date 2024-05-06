@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.5.0](https://github.com/equinor/ops-actions/compare/v9.4.1...v9.5.0) (2024-05-06)
+
+
+### Features
+
+* add filter_regex_include parameter to super-linter ([#480](https://github.com/equinor/ops-actions/issues/480)) ([5fb8787](https://github.com/equinor/ops-actions/commit/5fb87870a430b0b298e7c3ee16d323890c1b62bd))
+
 ## [9.4.1](https://github.com/equinor/ops-actions/compare/v9.4.0...v9.4.1) (2024-04-22)
 
 
