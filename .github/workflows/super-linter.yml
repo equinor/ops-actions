@@ -9,6 +9,11 @@ on:
         type: string
         required: false
         default: ""
+      filter_regex_include:
+        description: Include files in linting using a regex pattern.
+        type: string
+        required: false
+        default: ""
 
 jobs:
   super-linter:
@@ -16,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
+      FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}
 
     steps:
       - name: Checkout
