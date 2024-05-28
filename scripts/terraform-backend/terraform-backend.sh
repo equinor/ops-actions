@@ -4,7 +4,7 @@ set -eu
 
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 LOCATION=${2:?"LOCATION is unset or null"}
-OBJECT_ID=${3:-""}
+OBJECT_ID=${3:?"OBJECT_ID is unset or null"}
 IP_ADDRESSES=${4:-""}
 
 ################################################################################
@@ -106,8 +106,10 @@ az group create \
 echo "Creating storage account..."
 
 ALLOW_SHARED_KEY_ACCESS="false"
+ROLE="Storage Blob Data Owner"
 if [[ "${USE_AZUREAD_AUTH}" != "true" ]]; then
   ALLOW_SHARED_KEY_ACCESS="true"
+  ROLE="Reader and Data Access"
 fi
 
 DEFAULT_ACTION="Deny"
@@ -211,15 +213,13 @@ az storage account management-policy create \
 # Create Azure role assignment
 ################################################################################
 
-if [[ -n "${OBJECT_ID}" ]]; then
-  echo "Creating role assignment..."
+echo "Creating role assignment..."
 
-  az role assignment create \
-    --assignee "${OBJECT_ID}" \
-    --role "Storage Blob Data Owner" \
-    --scope "${STORAGE_ACCOUNT_ID}" \
-    --output none
-fi
+az role assignment create \
+  --assignee "${OBJECT_ID}" \
+  --role "${ROLE}" \
+  --scope "${STORAGE_ACCOUNT_ID}" \
+  --output none
 
 ################################################################################
 # Create Azure resource lock

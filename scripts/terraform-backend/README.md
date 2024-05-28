@@ -58,7 +58,7 @@ Example configuration:
 1. Run the script:
 
     ```console
-    ./terraform-backend.sh <CONFIG_FILE> <LOCATION> [<OBJECT_ID>] [<IP_ADDRESSES>]
+    ./terraform-backend.sh <CONFIG_FILE> <LOCATION> <OBJECT_ID> [<IP_ADDRESSES>]
     ```
 
     For example:
