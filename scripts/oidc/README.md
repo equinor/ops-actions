@@ -39,8 +39,6 @@ Example configuration:
 
 > **Note**
 >
-> `appName:` should follow the [App Registration naming convention](https://urban-waffle-59ea765a.pages.github.io/azure/active-directory/app-registrations/).
->
 > `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
 >
 > `.roleAssignments[].scope` must start with `/subscriptions/${SUBSCRIPTION_ID}`.
