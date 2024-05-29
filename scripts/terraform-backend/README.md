@@ -38,10 +38,6 @@ Example configuration:
 }
 ```
 
-> **Note**
->
-> `.use_azuread_auth` should be `true`.
-
 ## Usage
 
 1. Login to Azure:

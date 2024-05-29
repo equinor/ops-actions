@@ -60,6 +60,7 @@ CONFIG=$(cat "${CONFIG_FILE}")
 RESOURCE_GROUP_NAME=$(echo "${CONFIG}" | jq -r .resource_group_name)
 STORAGE_ACCOUNT_NAME=$(echo "${CONFIG}" | jq -r .storage_account_name)
 CONTAINER_NAME=$(echo "${CONFIG}" | jq -r .container_name)
+USE_AZUREAD_AUTH=$(echo "${CONFIG}" | jq -r .use_azuread_auth)
 
 ################################################################################
 # Check if Azure Storage account is locked
@@ -104,8 +105,15 @@ az group create \
 
 echo "Creating storage account..."
 
+ALLOW_SHARED_KEY_ACCESS="false"
+ROLE="Storage Blob Data Owner"
+if [[ "${USE_AZUREAD_AUTH}" != "true" ]]; then
+  ALLOW_SHARED_KEY_ACCESS="true"
+  ROLE="Reader and Data Access"
+fi
+
 DEFAULT_ACTION="Deny"
-if [[ -z "$IP_ADDRESSES" ]]; then
+if [[ -z "${IP_ADDRESSES}" ]]; then
   DEFAULT_ACTION="Allow"
 fi
 
@@ -119,9 +127,9 @@ STORAGE_ACCOUNT_ID="$(az storage account create \
   --https-only true \
   --min-tls-version TLS1_2 \
   --allow-blob-public-access false \
-  --allow-shared-key-access false \
+  --allow-shared-key-access "${ALLOW_SHARED_KEY_ACCESS}" \
   --allow-cross-tenant-replication false \
-  --default-action "$DEFAULT_ACTION" \
+  --default-action "${DEFAULT_ACTION}" \
   --query id \
   --output tsv)"
 
@@ -209,7 +217,7 @@ echo "Creating role assignment..."
 
 az role assignment create \
   --assignee "${OBJECT_ID}" \
-  --role "Storage Blob Data Owner" \
+  --role "${ROLE}" \
   --scope "${STORAGE_ACCOUNT_ID}" \
   --output none
 
