@@ -127,7 +127,7 @@ jobs:
         with:
           path: |
             ${{ env.TF_PLUGIN_CACHE_DIR }}
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/.terraform.lock.hcl', inputs.working_directory)) }}
           restore-keys: |
             ${{ runner.os }}-terraform-
 
