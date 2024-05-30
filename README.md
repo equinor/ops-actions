@@ -16,6 +16,7 @@ Examples:
 Call a reusable workflow by using the following syntax:
 
 ```yaml
+on: [push]
 jobs:
   example:
     uses: equinor/ops-actions/.github/workflows/{filename}@{ref}
