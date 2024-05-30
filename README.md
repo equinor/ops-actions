@@ -13,7 +13,20 @@ Examples:
 
 ## Usage
 
-See [Usage examples](docs/usage-examples.md).
+Call a reusable workflow by using the following syntax:
+
+```yaml
+on: [push]
+jobs:
+  example:
+    uses: equinor/ops-actions/.github/workflows/{filename}@{ref}
+    with: {}
+    secrets: {}
+```
+
+`{filename}` is the name of a workflow file in the [workflows directory](.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
+
+For specific usage examples, see [this document](docs/usage-examples.md).
 
 ### Version updates
 
