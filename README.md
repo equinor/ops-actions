@@ -19,8 +19,8 @@ Call a reusable workflow by using the following syntax:
 jobs:
   example:
     uses: equinor/ops-actions/.github/workflows/{filename}@{ref}
-    with: {} # inputs
-    secrets: {} # secrets
+    with: {}
+    secrets: {}
 ```
 
 `{filename}` is the name of a workflow file in the [workflows directory](.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
