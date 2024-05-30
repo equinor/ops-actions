@@ -22,7 +22,9 @@
 
 ## Naming conventions
 
-- Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow and job names.
+- Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow file names, job identifiers and step identifiers.
+
+- Use [snake case](https://en.wiktionary.org/wiki/snake_case) for input and output identifiers.
 
 - A reusable workflow and its main job should be named after the main tool/service that is used, for example:
 
@@ -35,6 +37,56 @@
   - If a caller workflow has a job `provision` that calls the reusable workflow `terraform`, the final job will be named `provision / terraform`.
   - If a caller workflow has a job `build` that calls the reusable workflow `docker`, the final job will be named `build / docker`.
   - If a caller workflow has a job `deploy` that calls the reusable workflow `azure-webapp`, the final job will be named `deploy / azure-webapp`.
+
+- An input that is passed to a workflow property should inherit the name of that property.
+
+  An input that is passed to an action input should follow the common naming convention `[<action>]_<input>`, where `<action>` can be omitted if the name of the action is similar to the name of the workflow.
+
+  An input that is passed to a CLI command option should follow the common naming convention `[<command>]_<option>`.
+
+  For example:
+
+  ```yaml
+  # python.yml
+
+  on:
+    workflow_call:
+      inputs:
+        runs_on:
+          description: The type of machine to run the job on.
+          type: string
+          required: false
+          default: ubuntu-latest
+
+        python_version:
+          description: The version of Python to use.
+          type: string
+          required: false
+          default: latest
+
+        pip_install_target:
+          description: The target directory that pip should install packages into.
+          type: string
+          required: false
+          default: ""
+
+  jobs:
+    python:
+      runs-on: ${{ inputs.runs_on }}
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Setup Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: ${{ inputs.python_version }}
+
+        - name: Install requirements
+          env:
+            PIP_INSTALL_TARGET: ${{ inputs.pip_install_target }}
+          run: pip install -r requirements.txt --target "$PIP_INSTALL_TARGET"
+  ```
 
 ## Actions
 
