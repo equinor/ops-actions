@@ -1,1 +1,3 @@
-* @equinor/ops-coredev
+* @equinor/ops-actions-maintainers
+
+**/CODEOWNERS @equinor/ops-actions-admins
