@@ -61,7 +61,7 @@ A contributor must:
 A contributor should:
 
 - Have basic understanding of GitHub Actions.
-- Have basic understanding of our [best practices](docs/best-practices.md).
+- Have basic understanding of our best practices.
 
 ### 👷‍♀️ Maintainers
 
