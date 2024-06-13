@@ -75,6 +75,7 @@ env:
   TF_IN_AUTOMATION: true
 
   TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }}
+  TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/${{ inputs.working_directory }}/.terraform.d/plugin-cache
 
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
@@ -114,6 +115,22 @@ jobs:
           # The "show" command is used to create a GitHub job summary containing the generated plan in a human-readable format.
           # If the wrapper is enabled, the debug logs will be visible in the job summary.
           # The wrapper must be disabled to prevent this.
+
+      - name: Config Terraform plugin cache
+        run: |
+          cat <<- EOF > ~/.terraformrc
+          plugin_cache_dir="${{ env.TF_PLUGIN_CACHE_DIR }}"
+          EOF
+          mkdir --parents ${{ env.TF_PLUGIN_CACHE_DIR }}
+
+      - name: Cache Terraform
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.TF_PLUGIN_CACHE_DIR }}
+          key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/.terraform.lock.hcl', inputs.working_directory)) }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
 
       - name: Terraform Format
         id: fmt
