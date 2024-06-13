@@ -73,8 +73,8 @@ A maintainer must:
 
 A maintainer should:
 
-- Have complete understanding of GitHub Actions.
-- Have complete understanding of our best practices.
+- Have advanced understanding of GitHub Actions.
+- Have advanced understanding of our best practices.
 - Communicate and share with other maintainers.
 
 ### 👮‍♂️ Administrators
