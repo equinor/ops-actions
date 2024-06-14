@@ -36,7 +36,7 @@ Supported Terraform providers:
 | Azure | `hashicorp/azurerm` | `>= v3.20.0` |
 | AzAPI | `azure/azapi`       | `>= v1.3.0`  |
 
-## Deploy Docker container to Azure Web App
+## Deploy Docker image to Azure Web App
 
 Example workflow:
 
@@ -169,7 +169,7 @@ Prerequisites:
 
 - [Configure Azure credentials](../scripts/oidc/README.md)
 
-## Deploy MkDocs to GitHub Pages
+## Deploy MkDocs site to GitHub Pages
 
 Example workflow:
 
