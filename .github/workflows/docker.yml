@@ -76,7 +76,7 @@ jobs:
           password: ${{ secrets.password }}
 
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ${{ inputs.working_directory }}
           tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
