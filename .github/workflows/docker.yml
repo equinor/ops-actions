@@ -77,6 +77,8 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v6
+        env:
+          DOCKER_BUILD_NO_SUMMARY: false
         with:
           context: ${{ inputs.working_directory }}
           tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
