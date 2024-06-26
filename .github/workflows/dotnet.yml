@@ -61,6 +61,8 @@ on:
         description: The name of the uploaded artifact containing the application.
         value: ${{ inputs.artifact_name }}
 
+permissions: {}
+
 jobs:
   dotnet:
     name: .NET
