@@ -69,6 +69,10 @@ jobs:
     # The steps for this job assume that OS is Ubuntu.
     # Use the "runtime" input to specify target OS and architecture instead.
     runs-on: ubuntu-latest
+    permissions:
+      # Set permissions required to checkout the repository
+      contents: read
+
     env:
       PROJECT: ${{ inputs.project }}
       CONFIGURATION: Release
