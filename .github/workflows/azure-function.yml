@@ -53,11 +53,9 @@ jobs:
     name: Azure Function
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-
-    # Set permissions required to login to Azure using OIDC.
     permissions:
-      id-token: write
-      contents: read
+      contents: read  # Required to checkout the repository
+      id-token: write # Required to login to Azure using OIDC
 
     steps:
       - name: Download artifact
