@@ -52,6 +52,8 @@ on:
         description: The ID of the Azure tenant containing the Azure Web App.
         required: true
 
+permissions: {}
+
 jobs:
   azure-webapp:
     name: Azure Web App
