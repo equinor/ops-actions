@@ -70,8 +70,7 @@ jobs:
     # Use the "runtime" input to specify target OS and architecture instead.
     runs-on: ubuntu-latest
     permissions:
-      # Set permissions required to checkout the repository
-      contents: read
+      contents: read # Required to checkout the repository
 
     env:
       PROJECT: ${{ inputs.project }}
