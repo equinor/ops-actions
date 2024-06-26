@@ -46,6 +46,8 @@ on:
         description: The ID of the Azure tenant to deploy the package to.
         required: true
 
+permissions: {}
+
 jobs:
   azure-function:
     name: Azure Function
