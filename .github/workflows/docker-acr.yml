@@ -50,16 +50,16 @@ on:
         description: The Docker image that was built.
         value: ${{ jobs.docker.outputs.image }}
 
+permissions: {}
+
 jobs:
   docker:
     name: Docker
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-
-    # Set permissions required to login to Azure using OIDC.
     permissions:
-      id-token: write
-      contents: read
+      contents: read  # Required to checkout the repository
+      id-token: write # Required to login to Azure using OIDC
 
     env:
       IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
