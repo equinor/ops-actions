@@ -146,7 +146,9 @@ jobs:
       # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
       # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
       - name: Create job summary
-        if: success() || failure()
+        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
+        if: steps.plan.outputs.exitcode == 2
         shell: bash {0}
         env:
           TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
@@ -175,7 +177,6 @@ jobs:
       - name: Create tarball
         id: tar
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
-        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
         if: steps.plan.outputs.exitcode == 2
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gpg"
