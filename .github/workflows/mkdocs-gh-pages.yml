@@ -27,13 +27,14 @@ on:
         required: false
         default: ""
 
+permissions: {}
+
 jobs:
   mkdocs:
     name: MkDocs
     runs-on: ubuntu-latest
-
     permissions:
-      contents: write
+      contents: write # Required to checkout the repository push to the "gh-pages" branch
 
     steps:
       - name: Checkout
