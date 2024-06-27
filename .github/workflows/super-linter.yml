@@ -15,10 +15,15 @@ on:
         required: false
         default: ""
 
+permissions: {}
+
 jobs:
   super-linter:
     name: Super-linter
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # Required to checkout the repository
+
     env:
       FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
       FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}

@@ -61,13 +61,7 @@ concurrency:
   group: terraform @ ${{ inputs.working_directory }}
   cancel-in-progress: false
 
-permissions:
-  # Set permissions required to login to Azure using OIDC.
-  id-token: write
-  contents: read
-
-  # Set permission required to delete artifacts.
-  actions: write
+permissions: {}
 
 env:
   # Configure Terraform to run in automation.
@@ -91,6 +85,10 @@ jobs:
     name: Terraform Plan
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
+    permissions:
+      contents: read  # Required to checkout the repository
+      id-token: write # Required to login to Azure using OIDC
+
     defaults:
       run:
         shell: bash
@@ -204,6 +202,11 @@ jobs:
     if: needs.terraform-plan.outputs.upload-outcome == 'success'
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
+    permissions:
+      contents: read  # Required to checkout the repository
+      id-token: write # Required to login to Azure using OIDC
+      actions: write  # Required to delete the artifact
+
     defaults:
       run:
         shell: bash

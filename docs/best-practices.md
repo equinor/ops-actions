@@ -20,6 +20,25 @@
 
   This reduces the flexibility of the reusable workflow.
 
+## Security
+
+- Disable top level GitHub token permissions, then enable required permissions at the job level instead:
+
+    ```yaml
+    permissions: {}
+
+    jobs:
+      example-job:
+        runs-on: ubuntu-latest
+        permissions:
+          contents: read # Required to checkout the repository
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+    ```
+
+    This ensures that workflows follow the principle of least privilege.
+
 ## Naming conventions
 
 - Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow file names, job identifiers and step identifiers.
