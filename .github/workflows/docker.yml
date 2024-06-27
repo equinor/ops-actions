@@ -47,11 +47,15 @@ on:
         description: The Docker image that was built.
         value: ${{ jobs.docker.outputs.image }}
 
+permissions: {}
+
 jobs:
   docker:
     name: Docker
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    permissions:
+      contents: read # Required to checkout the repository
 
     env:
       IMAGE: ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.tag }}
