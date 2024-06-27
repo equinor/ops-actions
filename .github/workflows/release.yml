@@ -11,6 +11,9 @@ jobs:
   release-please:
     name: Release Please
     runs-on: ubuntu-latest
+    permissions:
+      contents: write      # Required to update changelog file
+      pull-requests: write # Required to create release PRs
     steps:
       - uses: googleapis/release-please-action@v4
         with:
