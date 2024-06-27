@@ -36,10 +36,14 @@ on:
         description: The name of the uploaded artifact containing the application.
         value: ${{ inputs.artifact_name }}
 
+permissions: {}
+
 jobs:
   python:
     name: Python
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # Required to checkout the repository
 
     defaults:
       run:
