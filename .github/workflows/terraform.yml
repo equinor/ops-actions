@@ -204,7 +204,7 @@ jobs:
     permissions:
       contents: read  # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
-      actions: write # Required to delete the artifact
+      actions: write  # Required to delete the artifact
 
     defaults:
       run:
