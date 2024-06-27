@@ -8,6 +8,8 @@ on:
         type: string
         required: true
 
+permissions: {}
+
 jobs:
   github-pages:
     name: GitHub Pages
@@ -18,9 +20,8 @@ jobs:
       cancel-in-progress: false
 
     permissions:
-      # Set permissions required to deploy to GitHub Pages.
-      pages: write
-      id-token: write
+      pages: write    # Required to deploy to GitHub Pages
+      id-token: write # Required to verify that GitHub Pages deployment originates from appropriate source
 
     environment:
       # Setting a different environment name is possible, but not recommended by GitHub.
