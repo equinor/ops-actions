@@ -46,10 +46,15 @@ on:
         required: false
         default: latest
 
+permissions: {}
+
 jobs:
   semantic-release:
     name: semantic-release
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # Required to checkout the repository
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
