@@ -1,5 +1,24 @@
 # Changelog
 
+## [9.6.0](https://github.com/equinor/ops-actions/compare/v9.5.0...v9.6.0) (2024-06-27)
+
+
+### Features
+
+* **azure-function:** disable top level GitHub token permissions ([#501](https://github.com/equinor/ops-actions/issues/501)) ([059fd22](https://github.com/equinor/ops-actions/commit/059fd2228943db71bd5ba65668b3d40592427f99))
+* **azure-webapp:** disable top level GitHub token permissions ([#502](https://github.com/equinor/ops-actions/issues/502)) ([34059eb](https://github.com/equinor/ops-actions/commit/34059eba6cfd347dc549ef2525c5d79668dc7da0))
+* **commitlint:** disable top level GitHub token permissions ([#510](https://github.com/equinor/ops-actions/issues/510)) ([5560a8c](https://github.com/equinor/ops-actions/commit/5560a8c4823e53ef05aebb784f5fa9a42e4af63b))
+* **docker:** disable top level GitHub token permissions ([#504](https://github.com/equinor/ops-actions/issues/504)) ([cad838b](https://github.com/equinor/ops-actions/commit/cad838b8fbf54d135c62f65b7d7720b91237d411))
+* **docker:** generate job summary ([#499](https://github.com/equinor/ops-actions/issues/499)) ([a82fa9b](https://github.com/equinor/ops-actions/commit/a82fa9ba519853cbc2442ea7d7f101c8ea781863))
+* **dotnet:** disable top level GitHub token permissions ([#503](https://github.com/equinor/ops-actions/issues/503)) ([1683671](https://github.com/equinor/ops-actions/commit/16836715e1ea0453affc25151138f79d04c6182a))
+* **github-pages:** disable top level GitHub token permissions ([#507](https://github.com/equinor/ops-actions/issues/507)) ([a2dc9c4](https://github.com/equinor/ops-actions/commit/a2dc9c459eb0370ee4ca6d9ff85bb3cdb6fbddd7))
+* **mkdocs:** disable top level GitHub token permissions ([#506](https://github.com/equinor/ops-actions/issues/506)) ([1405479](https://github.com/equinor/ops-actions/commit/1405479f148010abe5cfc82c446266cb838620b5))
+* **python:** disable top level GitHub token permissions ([#508](https://github.com/equinor/ops-actions/issues/508)) ([da69b2d](https://github.com/equinor/ops-actions/commit/da69b2dc7594c8f853998a170b6461e0cece6998))
+* **semantic-release:** disable top level GitHub token permissions ([#509](https://github.com/equinor/ops-actions/issues/509)) ([111f38d](https://github.com/equinor/ops-actions/commit/111f38d878757da118e8df7d11402419c6dd0b5d))
+* **super-linter:** disable top level GitHub token permissions ([#511](https://github.com/equinor/ops-actions/issues/511)) ([95ca4b5](https://github.com/equinor/ops-actions/commit/95ca4b5768931b1ae506cc8fab7e27d569c7179a))
+* **terraform:** disable top level GitHub token permissions ([#505](https://github.com/equinor/ops-actions/issues/505)) ([a1852e8](https://github.com/equinor/ops-actions/commit/a1852e8965f62c98e3389806a0ad63779696b021))
+* **terraform:** skip job summary generation on empty plan ([#513](https://github.com/equinor/ops-actions/issues/513)) ([f73b3f5](https://github.com/equinor/ops-actions/commit/f73b3f5fbe2a3a0829801eb8e5153db63ca6dcaa))
+
 ## [9.5.0](https://github.com/equinor/ops-actions/compare/v9.4.1...v9.5.0) (2024-05-06)
 
 
