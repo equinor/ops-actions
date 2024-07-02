@@ -84,6 +84,7 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ${{ inputs.runs_on }}
+    if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
       contents: read  # Required to checkout the repository
@@ -199,7 +200,7 @@ jobs:
   terraform-apply:
     name: Terraform Apply
     needs: terraform-plan
-    if: needs.terraform-plan.outputs.upload-outcome == 'success'
+    if: github.actor != 'dependabot[bot]' && needs.terraform-plan.outputs.upload-outcome == 'success'
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     permissions:
