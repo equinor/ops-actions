@@ -56,6 +56,7 @@ jobs:
   docker:
     name: Docker
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
       contents: read  # Required to checkout the repository

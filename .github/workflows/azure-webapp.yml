@@ -57,8 +57,8 @@ permissions: {}
 jobs:
   azure-webapp:
     name: Azure Web App
-    # The steps for this job assume that OS is Ubuntu.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # The steps for this job assume that OS is Ubuntu.
+    if: github.actor != 'dependabot[bot]'
     environment:
       name: ${{ inputs.environment }}
       url: ${{ steps.deploy.outputs.webapp-url }}

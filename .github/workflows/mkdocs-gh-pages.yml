@@ -33,6 +33,7 @@ jobs:
   mkdocs:
     name: MkDocs
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
     permissions:
       contents: write # Required to checkout the repository push to the "gh-pages" branch
 

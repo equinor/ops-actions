@@ -11,6 +11,7 @@ jobs:
   release-please:
     name: Release Please
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
     permissions:
       contents: write      # Required to update changelog file
       pull-requests: write # Required to create release PRs
