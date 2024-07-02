@@ -14,7 +14,6 @@ jobs:
   github-pages:
     name: GitHub Pages
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
 
     concurrency:
       group: pages
