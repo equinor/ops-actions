@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.6.1](https://github.com/equinor/ops-actions/compare/v9.6.0...v9.6.1) (2024-07-02)
+
+
+### Bug Fixes
+
+* skip jobs that access privileged secrets if triggered by Dependabot ([#515](https://github.com/equinor/ops-actions/issues/515)) ([44c1d51](https://github.com/equinor/ops-actions/commit/44c1d5192bae0fca79ceeca7923e0d1732be6c47))
+
 ## [9.6.0](https://github.com/equinor/ops-actions/compare/v9.5.0...v9.6.0) (2024-06-27)
 
 
