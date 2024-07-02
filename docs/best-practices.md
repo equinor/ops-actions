@@ -39,6 +39,26 @@
 
     This ensures that workflows follow the principle of least privilege.
 
+- Jobs that access secrets that grant privileged access (for example `Write` access in a GitHub repository, or `Contributor` access in an Azure subscription) should be skipped if the workflow was triggered by Dependabot:
+
+    ```yaml
+    jobs:
+      example-job:
+        runs-on: ubuntu-latest
+        if: github.actor != 'dependabot[bot]'
+      steps:
+        - name: Login to Azure
+          uses: azure/login@v2
+          with:
+            client-id: ${{ secrets.AZURE_CLIENT_ID }}
+            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+    ```
+
+    This is to prevent Dependabot from updating a dependency to a version containing malicious code, then automatically running that code in our workflow, allowing it to steal your secrets.
+
+    Jobs that access secrets that grant non-privileged access (for example `Read` access in a GitHub repository, or `Reader` access in an Azure subscription) should **not** be skipped if the workflow was triggered by Dependabot. In this scenario, separate Dependabot secrets must be created in the repository containing the caller workflow (see [official documentation](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#accessing-secrets)).
+
 ## Naming conventions
 
 - Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow file names, job identifiers and step identifiers.
