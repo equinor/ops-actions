@@ -39,7 +39,7 @@
 
     This ensures that workflows follow the principle of least privilege.
 
-- Jobs that access secrets that grant privileged access (for example `Write` access in a GitHub repository, or `Contributor` access in an Azure subscription) should be skipped if the workflow was triggered by Dependabot:
+- Jobs that access secrets that grant privileged access (for example `Contributor` access in an Azure subscription) should be skipped if the workflow was triggered by Dependabot:
 
     ```yaml
     jobs:
@@ -57,7 +57,7 @@
 
     This is to prevent Dependabot from updating a dependency to a version containing malicious code, then automatically running that code in our workflow, allowing it to steal your secrets.
 
-    Jobs that access secrets that grant non-privileged access (for example `Read` access in a GitHub repository, or `Reader` access in an Azure subscription) should **not** be skipped if the workflow was triggered by Dependabot. In this scenario, separate Dependabot secrets must be created in the repository containing the caller workflow (see [official documentation](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#accessing-secrets)).
+    Jobs that access secrets that grant non-privileged access (for example `Reader` access in an Azure subscription) should **not** be skipped if the workflow was triggered by Dependabot. In this scenario, separate Dependabot secrets must be created in the repository containing the caller workflow (see [official documentation](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#accessing-secrets)).
 
 ## Naming conventions
 
