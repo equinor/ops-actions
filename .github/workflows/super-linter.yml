@@ -30,12 +30,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
         with:
           fetch-depth: 0
 
       - name: Lint Codebase
-        uses: super-linter/super-linter@v6
+        uses: super-linter/super-linter@3fe03abab2eafb293ace16d4a3b07aeabcb3f1a0
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
