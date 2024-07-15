@@ -1,5 +1,9 @@
 # Best practices
 
+This document contains best practices for creating secure, reusable workflows.
+
+Written as an extension of [Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions). You should know the contents of that document.
+
 ## General
 
 - Don't create reusable workflows containing a single step.
