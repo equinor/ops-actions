@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.6.2](https://github.com/equinor/ops-actions/compare/v9.6.1...v9.6.2) (2024-07-15)
+
+
+### Code Refactoring
+
+* pin actions to commit SHA ([#522](https://github.com/equinor/ops-actions/issues/522)) ([078a21b](https://github.com/equinor/ops-actions/commit/078a21b58157f85d49d56ca9dd4a0e5082968320))
+
 ## [9.6.1](https://github.com/equinor/ops-actions/compare/v9.6.0...v9.6.1) (2024-07-02)
 
 
