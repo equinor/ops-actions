@@ -39,6 +39,12 @@
 
     This ensures that workflows follow the principle of least privilege.
 
+- When using a third-party action, pin it to a specific commit SHA, for example:
+
+  ```yaml
+  - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
+  ```
+
 - Jobs that access secrets that grant privileged access (for example `Contributor` access in an Azure subscription) should be skipped if the workflow was triggered by Dependabot:
 
     ```yaml
@@ -125,22 +131,6 @@
           env:
             PIP_INSTALL_TARGET: ${{ inputs.pip_install_target }}
           run: pip install -r requirements.txt --target "$PIP_INSTALL_TARGET"
-  ```
-
-## Actions
-
-- When using an action from a trusted GitHub organization (for example `actions`, `hashicorp`, `docker` or `Azure`), pin it to a specific release tag, for example:
-
-  ```yaml
-  - uses: actions/checkout@v3
-  ```
-
-  When using an action from an untrusted GitHub organization or a user, pin it to a specific commit SHA, for example:
-
-  ```yaml
-  - uses: GeekyEggo/delete-artifact@54ab544f12cdb7b71613a16a2b5a37a9ade990af
-    with:
-      name: my-artifact
   ```
 
 ## Artifacts
