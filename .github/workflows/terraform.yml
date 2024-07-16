@@ -115,21 +115,15 @@ jobs:
           # If the wrapper is enabled, the debug logs will be visible in the job summary.
           # The wrapper must be disabled to prevent this.
 
-      - name: Config Terraform plugin cache
-        run: |
-          cat <<- EOF > ~/.terraformrc
-          plugin_cache_dir="${{ env.TF_PLUGIN_CACHE_DIR }}"
-          EOF
-          mkdir --parents ${{ env.TF_PLUGIN_CACHE_DIR }}
+      - name: Create Terraform plugin cache
+        run: mkdir --parents "$TF_PLUGIN_CACHE_DIR"
 
-      - name: Cache Terraform
+      - name: Cache Terraform plugins
         uses: actions/cache@v4
         with:
-          path: |
-            ${{ env.TF_PLUGIN_CACHE_DIR }}
+          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
           key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/.terraform.lock.hcl', inputs.working_directory)) }}
-          restore-keys: |
-            ${{ runner.os }}-terraform-
+          restore-keys: ${{ runner.os }}-terraform-
 
       - name: Terraform Format
         id: fmt
