@@ -5,6 +5,21 @@ set -eu
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 LOCATION=${2:?"LOCATION is unset or null"}
 OBJECT_ID=${3:?"OBJECT_ID is unset or null"}
+IP_ADDRESSES=${4:-""}
+
+################################################################################
+# Verify installation of necessary software components
+################################################################################
+
+hash az 2>/dev/null || {
+  echo -e "\nERROR: Azure-CLI not found in PATH. Exiting... " >&2
+  exit 1
+}
+
+hash jq 2>/dev/null || {
+  echo -e "\nERROR: jq not found in PATH. Exiting... " >&2
+  exit 1
+}
 
 ################################################################################
 # Verify target Azure subscription
@@ -12,34 +27,66 @@ OBJECT_ID=${3:?"OBJECT_ID is unset or null"}
 
 SUBSCRIPTION_NAME=$(az account show --query name --output tsv)
 
-read -r -p "Create Terraform backend in Azure \
-subscription '$SUBSCRIPTION_NAME'? (y/N) " response
-
-case $response in
-  [yY][eE][sS]|[yY])
+while true; do
+  read -r -p "Create Terraform backend in Azure subscription '${SUBSCRIPTION_NAME}'? (y/N) " RESPONSE
+  case ${RESPONSE} in
+  [yY][eE][sS] | [yY])
+    echo "Proceeding with creation..."
+    break
     ;;
-  *)
+  [nN][oO] | [nN])
+    echo "Exiting without creating..."
     exit 0
     ;;
-esac
+  *)
+    echo "Invalid input, please type 'y' or 'n'."
+    ;;
+  esac
+done
 
 ################################################################################
 # Read Terraform backend configuration
 ################################################################################
 
-if [[ -f "$CONFIG_FILE" ]]
-then
-  echo "Using config file '$CONFIG_FILE'."
+if [[ -f "${CONFIG_FILE}" ]]; then
+  echo "Using config file '${CONFIG_FILE}'."
 else
-  echo "Config file '$CONFIG_FILE' does not exist."
+  echo "Config file '${CONFIG_FILE}' does not exist."
   exit 1
 fi
 
-CONFIG=$(cat "$CONFIG_FILE")
+CONFIG=$(cat "${CONFIG_FILE}")
 
-RESOURCE_GROUP_NAME=$(echo "$CONFIG" | jq -r .resource_group_name)
-STORAGE_ACCOUNT_NAME=$(echo "$CONFIG" | jq -r .storage_account_name)
-CONTAINER_NAME=$(echo "$CONFIG" | jq -r .container_name)
+RESOURCE_GROUP_NAME=$(echo "${CONFIG}" | jq -r .resource_group_name)
+STORAGE_ACCOUNT_NAME=$(echo "${CONFIG}" | jq -r .storage_account_name)
+CONTAINER_NAME=$(echo "${CONFIG}" | jq -r .container_name)
+USE_AZUREAD_AUTH=$(echo "${CONFIG}" | jq -r .use_azuread_auth)
+
+################################################################################
+# Check if Azure Storage account is locked
+################################################################################
+
+STORAGE_ACCOUNT_ID=$(az storage account list \
+  --resource-group "${RESOURCE_GROUP_NAME}" \
+  --query "[?name == '${STORAGE_ACCOUNT_NAME}'].id" \
+  --output tsv)
+
+LOCK_NAME="Terraform"
+LOCK_ID=""
+
+if [[ -n "$STORAGE_ACCOUNT_ID" ]]; then
+  LOCK_ID=$(az resource lock list \
+    --resource "${STORAGE_ACCOUNT_ID}" \
+    --query "[?name == '${LOCK_NAME}'].id" \
+    --output tsv)
+fi
+
+if [[ -n "${LOCK_ID}" ]]; then
+  echo -e "\n\033[0;33mStorage account is locked."
+  echo -e "Please remove the lock by running the following command:"
+  echo -e "\n\033[0;36maz resource lock delete --ids ${LOCK_ID}\033[0m\n"
+  exit 1
+fi
 
 ################################################################################
 # Create Azure resource group
@@ -58,7 +105,19 @@ az group create \
 
 echo "Creating storage account..."
 
-storage_account_id="$(az storage account create \
+ALLOW_SHARED_KEY_ACCESS="false"
+ROLE="Storage Blob Data Owner"
+if [[ "${USE_AZUREAD_AUTH}" != "true" ]]; then
+  ALLOW_SHARED_KEY_ACCESS="true"
+  ROLE="Reader and Data Access"
+fi
+
+DEFAULT_ACTION="Deny"
+if [[ -z "${IP_ADDRESSES}" ]]; then
+  DEFAULT_ACTION="Allow"
+fi
+
+STORAGE_ACCOUNT_ID="$(az storage account create \
   --name "${STORAGE_ACCOUNT_NAME}" \
   --resource-group "${RESOURCE_GROUP_NAME}" \
   --location "${LOCATION}" \
@@ -68,10 +127,19 @@ storage_account_id="$(az storage account create \
   --https-only true \
   --min-tls-version TLS1_2 \
   --allow-blob-public-access false \
-  --allow-shared-key-access false \
+  --allow-shared-key-access "${ALLOW_SHARED_KEY_ACCESS}" \
   --allow-cross-tenant-replication false \
+  --default-action "${DEFAULT_ACTION}" \
   --query id \
   --output tsv)"
+
+for ip_address in $IP_ADDRESSES; do
+  az storage account network-rule add \
+    --account-name "${STORAGE_ACCOUNT_NAME}" \
+    --resource-group "${RESOURCE_GROUP_NAME}" \
+    --ip-address "${ip_address}" \
+    --output none
+done
 
 az storage account blob-service-properties update \
   --account-name "${STORAGE_ACCOUNT_NAME}" \
@@ -108,7 +176,7 @@ az storage container create \
 
 echo "Creating lifecycle policy..."
 
-management_policy=$(echo "$CONFIG" | jq '{
+MANAGEMENT_POLICY=$(echo "${CONFIG}" | jq '{
   rules: [
     {
       name: "Delete old tfstate versions",
@@ -138,7 +206,7 @@ management_policy=$(echo "$CONFIG" | jq '{
 az storage account management-policy create \
   --account-name "${STORAGE_ACCOUNT_NAME}" \
   --resource-group "${RESOURCE_GROUP_NAME}" \
-  --policy "${management_policy}" \
+  --policy "${MANAGEMENT_POLICY}" \
   --output none
 
 ################################################################################
@@ -149,11 +217,9 @@ echo "Creating role assignment..."
 
 az role assignment create \
   --assignee "${OBJECT_ID}" \
-  --role 'Storage Blob Data Owner' \
-  --scope "/${storage_account_id}" \
+  --role "${ROLE}" \
+  --scope "${STORAGE_ACCOUNT_ID}" \
   --output none
-  # Prepend "/" to --scope to prevent error on Windows where
-  # first "/" of $storage_account_id is ignored
 
 ################################################################################
 # Create Azure resource lock
@@ -162,10 +228,8 @@ az role assignment create \
 echo "Creating resource lock..."
 
 az resource lock create \
-  --name 'Terraform' \
+  --name "${LOCK_NAME}" \
   --lock-type ReadOnly \
-  --resource-group "${RESOURCE_GROUP_NAME}" \
-  --resource-type "Microsoft.Storage/storageAccounts" \
-  --resource-name "${STORAGE_ACCOUNT_NAME}" \
+  --resource "${STORAGE_ACCOUNT_ID}" \
   --notes "Prevent changes to Terraform backend configuration" \
   --output none

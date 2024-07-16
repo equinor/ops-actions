@@ -9,14 +9,16 @@ on:
         type: string
         required: true
 
-      ci:
-        description: Configure workflow to run in CI mode.
-        type: boolean
+      node_version:
+        description: The version of Node.js to install.
+        type: string
         required: false
-        default: true
-        # Should be set to true in most cases.
-        # Known exceptions:
-        # - When set to true, NPM warnings are treated as errors. Set to false to prevent this behaviour.
+        default: latest
+
+      npm_version:
+        description: A specific version of npm to install. Use to override pre-installed version on GitHub-hosted runners.
+        type: string
+        required: false
 
       project:
         description: Specify the path of the project or solution file, or the path of the directory containing the project or solution file.
@@ -48,11 +50,6 @@ on:
         required: false
         default: ""
 
-      npm_version:
-        description: A specific version of npm to install. Use to override pre-installed version on GitHub-hosted runners.
-        type: string
-        required: false
-
       artifact_name:
         description: The name of the build artifact to upload.
         type: string
@@ -64,14 +61,18 @@ on:
         description: The name of the uploaded artifact containing the application.
         value: ${{ inputs.artifact_name }}
 
+permissions: {}
+
 jobs:
   dotnet:
     name: .NET
     # The steps for this job assume that OS is Ubuntu.
     # Use the "runtime" input to specify target OS and architecture instead.
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # Required to checkout the repository
+
     env:
-      CI: ${{ inputs.ci }}
       PROJECT: ${{ inputs.project }}
       CONFIGURATION: Release
       RUNTIME: ${{ inputs.runtime }}
@@ -79,12 +80,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+        with:
+          node-version: ${{ inputs.node_version }}
 
       - name: Update npm
         if: inputs.npm_version != ''
@@ -121,19 +127,16 @@ jobs:
           dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
           echo "publish_path=$OUTPUT" >> "$GITHUB_OUTPUT"
 
-      # Zip Dotnet publish output in order to drastically improve artifact upload performance.
-      - name: Zip
-        id: zip
+      - name: Create tarball
+        id: tar
         working-directory: ${{ steps.publish.outputs.publish_path }}
-        env:
-          ZIP_FILE: ${{ runner.temp }}/${{ inputs.artifact_name }}.zip
         run: |
-          zip -r "$ZIP_FILE" .
-          echo "zip_file=$ZIP_FILE" >> "$GITHUB_OUTPUT"
+          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
+          tar -cvf "$tarball" .
+          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
-      # Upload an artifact containing the application.
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ steps.zip.outputs.zip_file }}
+          path: ${{ steps.tar.outputs.tarball }}

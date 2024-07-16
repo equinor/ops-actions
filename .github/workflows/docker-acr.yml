@@ -50,16 +50,17 @@ on:
         description: The Docker image that was built.
         value: ${{ jobs.docker.outputs.image }}
 
+permissions: {}
+
 jobs:
   docker:
     name: Docker
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
-
-    # Set permissions required to login to Azure using OIDC.
     permissions:
-      id-token: write
-      contents: read
+      contents: read  # Required to checkout the repository
+      id-token: write # Required to login to Azure using OIDC
 
     env:
       IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
@@ -71,13 +72,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@6c251865b4e6290e7b78be643ea2d005bc51f69a
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -89,7 +90,9 @@ jobs:
         run: az acr login --name "$REGISTRY_NAME"
 
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@1a162644f9a7e87d8f4b053101d1d9a712edc18c
+        env:
+          DOCKER_BUILD_NO_SUMMARY: false
         with:
           context: ${{ inputs.working_directory }}
           tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}

@@ -42,18 +42,15 @@ on:
         type: string
         required: false
 
+permissions: {}
+
 jobs:
   commitlint:
     name: commitlint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
         with:
           node-version: ${{ inputs.node_version }}
 

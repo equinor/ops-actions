@@ -20,12 +20,22 @@ on:
         required: false
 
       app_name:
-        description: The name of the Azure Web App to deploy the Docker image to.
+        description: The name of the Azure Web App to deploy the package or image to.
         type: string
         required: true
 
+      slot_name:
+        description: The name of the Azure Web App slot to deploy the package or image to.
+        type: string
+        required: false
+
       app_settings:
-        description: App settings to configure for the Azure Web App. Inline JSON.
+        description: An inline JSON object of app settings to configure for the Azure Web App.
+        type: string
+        required: false
+
+      slot_settings:
+        description: An inline JSON object of slot-specific app settings to configure for the Azure Web App.
         type: string
         required: false
 
@@ -42,54 +52,61 @@ on:
         description: The ID of the Azure tenant containing the Azure Web App.
         required: true
 
+permissions: {}
+
 jobs:
   azure-webapp:
-    name: Azure Webapp
-    # The steps for this job assume that OS is Ubuntu.
-    runs-on: ubuntu-latest
+    name: Azure Web App
+    runs-on: ubuntu-latest # The steps for this job assume that OS is Ubuntu.
+    if: github.actor != 'dependabot[bot]'
     environment:
       name: ${{ inputs.environment }}
       url: ${{ steps.deploy.outputs.webapp-url }}
 
-    # Set permissions required to login to Azure using OIDC.
     permissions:
-      id-token: write
-      contents: read
+      contents: read  # Required to checkout the repository
+      id-token: write # Required to login to Azure using OIDC
 
     steps:
       - name: Download artifact
         if: inputs.artifact_name != ''
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: ${{ inputs.artifact_name }}
 
-      - name: Unzip
+      - name: Extract tarball
         if: inputs.artifact_name != ''
-        env:
-          ZIP_FILE: ${{ inputs.artifact_name }}.zip
         run: |
-          unzip "$ZIP_FILE"
-          rm "$ZIP_FILE"
+          tarball="$ARTIFACT_NAME.tar"
+          tar -xvf "$tarball"
+          rm "$tarball"
 
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@6c251865b4e6290e7b78be643ea2d005bc51f69a
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Deploy
+      - name: Deploy Web App
         id: deploy
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@de617f46172a906d0617bb0e50d81e9e3aec24c8
         with:
           app-name: ${{ inputs.app_name }}
+          slot-name: ${{ inputs.slot_name }}
           images: ${{ inputs.image }}
 
-      - name: Configure app settings
-        if: inputs.app_settings != ''
+      - name: Configure Web App
+        if: inputs.app_settings != '' || inputs.slot_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}
+          SLOT_NAME: ${{ inputs.slot_name }}
           APP_SETTINGS: ${{ inputs.app_settings }}
+          SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
           APP_ID=$(az webapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          az webapp config appsettings set --ids "$APP_ID" --settings "$APP_SETTINGS" --output json
+          ARGS=(--settings "$APP_SETTINGS")
+          if [[ -n "$SLOT_NAME" ]]; then
+            ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
+          fi
+          az webapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none
