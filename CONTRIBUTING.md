@@ -67,6 +67,8 @@ This document provides guidelines for contributing to the Ops Actions project.
       - Ensure commits are signed by trusted users (e.g. members of trusted organizations such as `actions`, `hashicorp`, `docker` or `Azure`).
       - Perform a static security test (e.g. using [StepSecurity Action Advisor](https://app.stepsecurity.io/action-advisor)).
 
+1. Ensure that the workflow has been tested to work as expected. GitHub Actions workflows can be hard (if not impossible) to test locally. At a bare minimum, a workflow should be explicitly tested in a separate repository.
+
 ## 🤝 Roles and responsibilities
 
 This section describes the various roles and responsibilities in the Ops Actions project.
