@@ -90,7 +90,7 @@ jobs:
 
       - name: Deploy Web App
         id: deploy
-        uses: azure/webapps-deploy@de617f46172a906d0617bb0e50d81e9e3aec24c8
+        uses: azure/webapps-deploy@2fdd5c3ebb4e540834e86ecc1f6fdcd5539023ee
         with:
           app-name: ${{ inputs.app_name }}
           slot-name: ${{ inputs.slot_name }}
