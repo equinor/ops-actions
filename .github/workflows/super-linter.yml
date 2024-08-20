@@ -24,10 +24,6 @@ jobs:
     permissions:
       contents: read # Required to checkout the repository
 
-    env:
-      FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
-      FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
@@ -40,3 +36,5 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
+          FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}
