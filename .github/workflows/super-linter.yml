@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read # Required to checkout the repository
+      statuses: write # Required to report GitHub Actions status checks
 
     env:
       FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
