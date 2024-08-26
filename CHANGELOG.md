@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.6.3](https://github.com/equinor/ops-actions/compare/v9.6.2...v9.6.3) (2024-08-26)
+
+
+### Bug Fixes
+
+* **super-linter:** unable to report status checks ([#539](https://github.com/equinor/ops-actions/issues/539)) ([66c21bf](https://github.com/equinor/ops-actions/commit/66c21bfb35dc2a93e5019253f78c41bd194b1230))
+
 ## [9.6.2](https://github.com/equinor/ops-actions/compare/v9.6.1...v9.6.2) (2024-07-15)
 
 
