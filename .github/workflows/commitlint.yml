@@ -4,9 +4,6 @@
 # - commitlint: https://commitlint.js.org
 # - Conventional Commits: https://www.conventionalcommits.org
 
-# Additional configuration can be set in `commitlint.config.js`.
-# Docs: https://commitlint.js.org/#/reference-configuration
-
 name: ♻ commitlint
 
 on:
@@ -25,7 +22,9 @@ on:
         default: latest
 
       extends:
-        description: Newline-separated string of shareable configurations to install.
+        description: |
+          Newline-separated string of shareable configurations to install.
+          Additional configuration can be set in a file `.commitlintrc` (https://commitlint.js.org/reference/configuration.html).
         type: string
         required: false
         default: |-
@@ -51,6 +50,11 @@ jobs:
     permissions:
       contents: read # Required to checkout the repository
 
+    env:
+      COMMITLINT_VERSION: ${{ inputs.commitlint_version }}
+      COMMITLINT_EXTENDS: ${{ inputs.extends }}
+      COMMITLINT_HELP_URL: ${{ inputs.help_url }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
@@ -63,18 +67,13 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Install dependencies
-        env:
-          EXTENDS: ${{ inputs.extends }}
         run: |
-          readarray -t extends_array <<< "$EXTENDS"
-          npm install "${extends_array[@]}"
+          readarray -t extends <<< "$COMMITLINT_EXTENDS"
+          npm install "${extends[@]}"
 
       - name: Lint
         env:
-          VERSION: ${{ inputs.commitlint_version }}
-          EXTENDS: ${{ inputs.extends }}
           MESSAGE: ${{ inputs.message }}
-          HELP_URL: ${{ inputs.help_url }}
         run: |
-          readarray -t extends_array <<< "$EXTENDS"
-          npx "commitlint@$VERSION" --extends "${extends_array[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"
+          readarray -t extends <<< "$COMMITLINT_EXTENDS"
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$COMMITLINT_HELP_URL" <<< "$MESSAGE"
