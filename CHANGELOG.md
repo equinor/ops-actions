@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.7.0](https://github.com/equinor/ops-actions/compare/v9.6.3...v9.7.0) (2024-09-05)
+
+
+### Features
+
+* **super-linter:** read configuration file ([#544](https://github.com/equinor/ops-actions/issues/544)) ([5ce8e1a](https://github.com/equinor/ops-actions/commit/5ce8e1aed8bcced8dab4ac786aef0e1cb5a150bb))
+
 ## [9.6.3](https://github.com/equinor/ops-actions/compare/v9.6.2...v9.6.3) (2024-08-26)
 
 
