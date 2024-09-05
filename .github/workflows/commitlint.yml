@@ -4,9 +4,6 @@
 # - commitlint: https://commitlint.js.org
 # - Conventional Commits: https://www.conventionalcommits.org
 
-# Additional configuration can be set in `commitlint.config.js`.
-# Docs: https://commitlint.js.org/#/reference-configuration
-
 name: ♻ commitlint
 
 on:
@@ -25,7 +22,10 @@ on:
         default: latest
 
       extends:
-        description: Newline-separated string of shareable configurations to install.
+        description: |
+          Newline-separated string of shareable configurations to install.
+
+          Additional configuration can be set in a file `.commitlintrc` (https://commitlint.js.org/reference/configuration.html).
         type: string
         required: false
         default: |-
