@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.7.1](https://github.com/equinor/ops-actions/compare/v9.7.0...v9.7.1) (2024-09-11)
+
+
+### Bug Fixes
+
+* **super-linter:** disable Checkov and JSCPD linters ([#547](https://github.com/equinor/ops-actions/issues/547)) ([9b3e0e9](https://github.com/equinor/ops-actions/commit/9b3e0e9bc1f9102aff8930016e00cedc0be2edcf))
+
 ## [9.7.0](https://github.com/equinor/ops-actions/compare/v9.6.3...v9.7.0) (2024-09-05)
 
 
