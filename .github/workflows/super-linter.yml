@@ -34,6 +34,7 @@ jobs:
       - name: Lint Codebase
         uses: super-linter/super-linter@b92721f792f381cedc002ecdbb9847a15ece5bb8
         env:
+          VALIDATE_ALL_CODEBASE: ${{ github.event_name != 'pull_request' }} # If PR, only validate changed files
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
           FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}
