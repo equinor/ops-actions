@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.7.2](https://github.com/equinor/ops-actions/compare/v9.7.1...v9.7.2) (2024-09-12)
+
+
+### Code Refactoring
+
+* **docker:** replace deprecated environment variable ([#549](https://github.com/equinor/ops-actions/issues/549)) ([24214a3](https://github.com/equinor/ops-actions/commit/24214a3df127b02f512f85ac69aa4760686a0a2a))
+
 ## [9.7.1](https://github.com/equinor/ops-actions/compare/v9.7.0...v9.7.1) (2024-09-11)
 
 
