@@ -159,10 +159,10 @@ jobs:
         run: |
           tfplan=$(tofu show tfplan -no-color)
 
-          echo "#### tofu Format and Style 🖌\`$TF_FMT_OUTCOME\`
-          #### tofu Initialization ⚙\`$TF_INIT_OUTCOME\`
-          #### tofu Validation 🤖\`$TF_VALIDATE_OUTCOME\`
-          #### tofu Plan 📖\`$TF_PLAN_OUTCOME\`
+          echo "#### OpenTofu Format and Style 🖌\`$TF_FMT_OUTCOME\`
+          #### OpenTofu Initialization ⚙\`$TF_INIT_OUTCOME\`
+          #### OpenTofu Validation 🤖\`$TF_VALIDATE_OUTCOME\`
+          #### OpenTofu Plan 📖\`$TF_PLAN_OUTCOME\`
 
           <details><summary>Show Plan</summary>
 
