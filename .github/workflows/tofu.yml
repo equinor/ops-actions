@@ -166,7 +166,7 @@ jobs:
 
           <details><summary>Show Plan</summary>
 
-          \`\`\`tofu
+          \`\`\`terraform
           $tfplan
           \`\`\`
 
