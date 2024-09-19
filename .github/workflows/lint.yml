@@ -10,12 +10,13 @@ on:
       - synchronize
       - reopened
 
-permissions: {}
-
 jobs:
   lint-codebase:
     name: Lint codebase
     uses: ./.github/workflows/super-linter.yml
+    permissions:
+      contents: read
+      statuses: write
     with:
       filter_regex_exclude: (.*CHANGELOG\.md$|docs/workflows/.*)
 
