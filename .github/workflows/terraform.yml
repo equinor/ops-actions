@@ -88,7 +88,7 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
-      contents: read  # Required to checkout the repository
+      contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
 
     defaults:
@@ -205,9 +205,9 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     permissions:
-      contents: read  # Required to checkout the repository
+      contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
-      actions: write  # Required to delete the artifact
+      actions: write # Required to delete the artifact
 
     defaults:
       run:
