@@ -39,6 +39,12 @@ on:
         required: false
         default: ubuntu-latest
 
+      region:
+        description: Azure region to deploy to
+        type: string
+        required: false
+        default: northeurope
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
