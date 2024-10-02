@@ -32,10 +32,22 @@ Example configuration:
     {
       "scope": "/subscriptions/${SUBSCRIPTION_ID}",
       "role": "Contributor"
+    },
+    {
+      "scope": "/subscriptions/${SUBSCRIPTION_ID}",
+      "role": "Role Based Access Control Administrator",
+      "condition": "((!(ActionMatches{'Microsoft.Authorization/roleAssignments/write'})) OR (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAllValues:GuidNotEquals {8e3af657-a8ff-443c-a75c-2fe8c4bcb635, 18d7d88d-d35e-4fb5-a5c3-7773c20a72d9, f58310d9-a9f6-439a-9e8d-f62e7b41a168})) AND ((!(ActionMatches{'Microsoft.Authorization/roleAssignments/delete'})) OR (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAllValues:GuidNotEquals {8e3af657-a8ff-443c-a75c-2fe8c4bcb635, 18d7d88d-d35e-4fb5-a5c3-7773c20a72d9, f58310d9-a9f6-439a-9e8d-f62e7b41a168}))"
     }
   ]
 }
 ```
+
+This configuration will instruct the script to create an Azure AD application and a service principal with name `my-app` and a federated credential with name `deploy-dev` that'll allow deployments from the `dev` environment in the GitHub repository.
+
+It'll also assign two Azure roles at the subscription scope to the service principal:
+
+1. `Contributor`
+1. `Role Based Access Control Administrator` (with a condition that prevents the service principal from assigning roles `Owner`, `User Access Administrator` and `Role Based Access Control Administrator` to other principals).
 
 > **Note**
 >
