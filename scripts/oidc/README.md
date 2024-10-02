@@ -42,6 +42,13 @@ Example configuration:
 }
 ```
 
+This configuration will instruct the script to create an Azure AD application and a service principal with name `my-app` and a federated credential with name `deploy-dev` that'll allow deployments from the `dev` environment in the GitHub repository.
+
+It'll also assign two Azure roles at the subscription scope to the service principal:
+
+1. `Contributor`
+1. `Role Based Access Control Administrator` (with a condition that prevents the service principal from assigning roles `Owner`, `User Access Administrator` and `Role Based Access Control Administrator` to other principals).
+
 > **Note**
 >
 > `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
