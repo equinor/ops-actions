@@ -175,6 +175,12 @@ readarray -t ROLE_ASSIGNMENTS <<<"$(echo "${CONFIG}" | jq -c .roleAssignments[])
 for ROLE_ASSIGNMENT in "${ROLE_ASSIGNMENTS[@]}"; do
   ROLE=$(echo "${ROLE_ASSIGNMENT}" | jq -r .role)
   SCOPE=$(echo "${ROLE_ASSIGNMENT}" | jq -r .scope)
+  CONDITION=$(echo "${ROLE_ASSIGNMENT}" | jq -r .condition)
+
+  OPTIONAL_ARGS=()
+  if [[ "$CONDITION" != "null" ]]; then
+    OPTIONAL_ARGS+=(--condition "${CONDITION}" --condition-version 2.0)
+  fi
 
   echo "Assigning role '${ROLE}' at scope '${SCOPE}'..."
 
@@ -183,7 +189,8 @@ for ROLE_ASSIGNMENT in "${ROLE_ASSIGNMENTS[@]}"; do
     --assignee-object-id "${SP_ID}" \
     --assignee-principal-type ServicePrincipal \
     --scope "${SCOPE}" \
-    --output none
+    --output none \
+    "${OPTIONAL_ARGS[@]}"
 done
 
 ################################################################################
