@@ -39,10 +39,11 @@ on:
         required: false
         default: ubuntu-latest
 
-      location:
-        description: The location to create the resources in.
+      var_file:
+        description: Optional variable definitions file
         type: string
         required: false
+        default: ""
 
     secrets:
       AZURE_CLIENT_ID:
@@ -73,7 +74,8 @@ env:
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
   TF_IN_AUTOMATION: true
 
-  TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }}
+  define with_var_file: &'-var=' ${{ inputs.var_file }}
+  TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }} *with_var_file
 
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
