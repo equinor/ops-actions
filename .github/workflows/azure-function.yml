@@ -55,7 +55,7 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
-      contents: read  # Required to checkout the repository
+      contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
 
     steps:

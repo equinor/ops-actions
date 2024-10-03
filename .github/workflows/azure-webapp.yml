@@ -64,7 +64,7 @@ jobs:
       url: ${{ steps.deploy.outputs.webapp-url }}
 
     permissions:
-      contents: read  # Required to checkout the repository
+      contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
 
     steps:
