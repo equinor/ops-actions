@@ -1,6 +1,6 @@
 # OpenID Connect
 
-This directory contains a Bash script `oidc.sh` that will configure OpenID Connect (OIDC) to connect from GitHub Actions to Azure, without the need to store the Azure credentials as long-lived GitHub secrets.
+This directory contains a Python script `github-azure-oidc.py` that will configure OpenID Connect (OIDC) to connect from GitHub Actions to Azure, without the need to store the Azure credentials as long-lived GitHub secrets.
 
 It will:
 
@@ -57,15 +57,24 @@ It'll also assign two Azure roles at the subscription scope to the service princ
 
 ## Prerequisites
 
-- [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) (latest version as of writing: `2.49.0`) - to create Azure AD application, federated credentials, service principal and Azure role assignments
-- [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to set GitHub secrets
-- [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
-- Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
-  > **Note:** Not necessary when updating the existing config.
-- Activate Azure role `Owner` - to create Azure role assignments
-  > **Note:** Minimum scope required is what's defined for role assignment in the `oidc.json` config.
-- GitHub repository role `Admin` - to set GitHub environment secrets
-- If a federated credential is configured with subject `repo:${REPO}:environment:<environment>`, create GitHub environment `<environment>` and set appropriate deployment protection rules.
+- [Python](https://www.python.org/downloads/) **version 3.12**
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+## Development
+
+- Create virtual environment:
+
+    ```console
+    python -m venv venv
+    . venv/Scripts/activate
+    ```
+
+- Install requirements:
+
+    ```console
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+    ```
 
 ## Usage
 
@@ -91,16 +100,16 @@ It'll also assign two Azure roles at the subscription scope to the service princ
 
 1. Configure application name, federated credentials and role assignments in a file `oidc.json`.
 
-1. Run the script `oidc.sh`:
+1. Run the script:
 
     ```console
-    ./oidc.sh {CONFIG_FILE}
+    python -m github-azure-oidc {CONFIG_FILE}
     ```
 
     For example:
 
     ```console
-    ./oidc.sh oidc.json
+    python -m github-azure-oidc oidc.json
     ```
 
 ### After running the `oidc.sh` script
