@@ -49,7 +49,7 @@ on:
         description: Region to deploy to
         type: string
         required: false
-        default: ""
+        default: "northeurope"
 
     secrets:
       AZURE_CLIENT_ID:
@@ -80,9 +80,8 @@ env:
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
   TF_IN_AUTOMATION: true
 
-  deploy_region: '-var="location="$inputs.deploy_region"'
   # with_var_file: "-var=${{ inputs.var_file }}"
-  TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }} ${deploy_region}
+  TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }} -var="location=${{ inputs.deploy_region }}"
 
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
