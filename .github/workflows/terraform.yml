@@ -111,6 +111,7 @@ jobs:
     outputs:
       upload-outcome: ${{ steps.upload.outcome }}
       artifact-id: ${{ steps.upload.outputs.artifact-id }}
+      deploy_region: ${{ inputs.deploy_region }}
 
     steps:
       - name: Checkout
