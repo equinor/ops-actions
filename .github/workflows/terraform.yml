@@ -39,12 +39,6 @@ on:
         required: false
         default: ubuntu-latest
 
-      # var_file:
-      #   description: Optional variable definitions file
-      #   type: string
-      #   required: false
-      #   default: ""
-
       deploy_region:
         description: Region to deploy to
         type: string
