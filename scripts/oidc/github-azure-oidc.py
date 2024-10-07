@@ -1,7 +1,7 @@
 import asyncio
+
 from azure.identity.aio import DefaultAzureCredential
 from msgraph import GraphServiceClient
-
 
 user_id = ""  # TODO: set user principal name here
 
