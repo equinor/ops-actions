@@ -150,7 +150,6 @@ jobs:
             OPTIONAL_ARGS+=(-var-file="${TFVARS_FILE}")
           fi
 
-          echo "OPTIONAL_ARGS: "${OPTIONAL_ARGS[@]}" "
           terraform plan -input=false -out=tfplan -detailed-exitcode "${OPTIONAL_ARGS[@]}"
 
           exitcode=$?
