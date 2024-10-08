@@ -43,7 +43,6 @@ on:
         description: Variable file with regional-specific values
         type: string
         required: false
-        default: "northeurope.tfvars"
 
     secrets:
       AZURE_CLIENT_ID:
@@ -75,7 +74,7 @@ env:
   TF_IN_AUTOMATION: true
 
   TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }}
-  TF_CLI_ARGS_plan: -var-file="${{ inputs.var_file }}"
+  # TF_CLI_ARGS_plan: -var-file="${{ inputs.var_file }}"
 
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
@@ -143,8 +142,14 @@ jobs:
         # Required in order to check exitcode.
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
         shell: bash {0}
+        env:
+          TFVARS_FILE: ${{ inputs.var_file }}
         run: |
-          terraform plan -input=false -out=tfplan -detailed-exitcode
+          OPTIONAL_ARGS()
+            if [[ "$TFVARS_FILE" != "null" ]]; then
+              OPTIONAL_ARGS+=(-var-file="${TFVARS_FILE}")
+            fi
+          terraform plan -input=false -out=tfplan -detailed-exitcode "${OPTIONAL_ARGS[@]}"
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
