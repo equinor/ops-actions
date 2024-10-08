@@ -108,6 +108,11 @@ jobs:
       location: ${{ inputs.deploy_region }}
 
     steps:
+      - name: Display location variable
+        run: |
+          echo "location: ${{ location }}"
+          echo "display_region: ${{ inputs.deploy_region }}"
+
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
