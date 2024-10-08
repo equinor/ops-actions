@@ -75,7 +75,7 @@ env:
   TF_IN_AUTOMATION: true
 
   TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }}
-  TF_CLI_ARGS_plan: -var="${{ inputs.var_file }}"
+  TF_CLI_ARGS_plan: -var-file="${{ inputs.var_file }}"
 
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
