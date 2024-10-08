@@ -149,7 +149,6 @@ jobs:
         if: steps.plan.outputs.exitcode == 2
         shell: bash {0}
         env:
-          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
           TF_INIT_OUTCOME: ${{ steps.init.outcome }}
           TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
@@ -157,8 +156,7 @@ jobs:
         run: |
           tfplan=$(terraform show "$TF_PLAN_FILE" -no-color)
 
-          echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
-          #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
+          echo "#### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
           #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
           #### Terraform Plan 📖\`$TF_PLAN_OUTCOME\`
 
