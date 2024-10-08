@@ -40,9 +40,9 @@ hash jq 2>/dev/null || {
 REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
 
 SUBSCRIPTION=$(az account show --output json)
-SUBSCRIPTION_NAME=$(echo "${SUBSCRIPTION}" | jq -r .name)
-SUBSCRIPTION_ID=$(echo "${SUBSCRIPTION}" | jq -r .id)
-TENANT_ID=$(echo "${SUBSCRIPTION}" | jq -r .tenantId)
+SUBSCRIPTION_NAME=$(echo "${SUBSCRIPTION}" | jq -j .name)
+SUBSCRIPTION_ID=$(echo "${SUBSCRIPTION}" | jq -j .id)
+TENANT_ID=$(echo "${SUBSCRIPTION}" | jq -j .tenantId)
 
 while true; do
   read -r -p "Configure OIDC from GitHub repository '${REPO}' to Azure subscription '${SUBSCRIPTION_NAME}'? (y/N) " RESPONSE
@@ -74,7 +74,7 @@ CONFIG=$(envsubst <"${CONFIG_FILE}")
 # Create Azure AD application
 ################################################################################
 
-APP_NAME=$(echo "${CONFIG}" | jq -r .appName)
+APP_NAME=$(echo "${CONFIG}" | jq -j .appName)
 
 APP_ID=$(az ad app list \
   --filter "displayName eq '${APP_NAME}'" \
@@ -123,7 +123,7 @@ REPO_LEVEL=false        # Should OIDC be configured at the repository level?
 declare -A ENVIRONMENTS # Environments to configure OIDC for.
 
 for FIC in "${fics[@]}"; do
-  FIC_NAME=$(echo "${FIC}" | jq -r .name)
+  FIC_NAME=$(echo "${FIC}" | jq -j .name)
 
   FIC_ID=$(az ad app federated-credential list \
     --id "${APP_ID}" \
@@ -155,7 +155,7 @@ for FIC in "${fics[@]}"; do
       --output none
   fi
 
-  SUBJECT=$(echo "${FIC}" | jq -r .subject)
+  SUBJECT=$(echo "${FIC}" | jq -j .subject)
   ENTITY_TYPE=$(echo "${SUBJECT}" | cut -d : -f 3)
 
   if [[ "${ENTITY_TYPE}" == "environment" ]]; then
@@ -173,9 +173,9 @@ done
 readarray -t ROLE_ASSIGNMENTS <<<"$(echo "${CONFIG}" | jq -c .roleAssignments[])"
 
 for ROLE_ASSIGNMENT in "${ROLE_ASSIGNMENTS[@]}"; do
-  ROLE=$(echo "${ROLE_ASSIGNMENT}" | jq -r .role)
-  SCOPE=$(echo "${ROLE_ASSIGNMENT}" | jq -r .scope)
-  CONDITION=$(echo "${ROLE_ASSIGNMENT}" | jq -r .condition)
+  ROLE=$(echo "${ROLE_ASSIGNMENT}" | jq -j .role)
+  SCOPE=$(echo "${ROLE_ASSIGNMENT}" | jq -j .scope)
+  CONDITION=$(echo "${ROLE_ASSIGNMENT}" | jq -j .condition)
 
   OPTIONAL_ARGS=()
   if [[ "$CONDITION" != "null" ]]; then
