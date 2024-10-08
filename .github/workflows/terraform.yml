@@ -39,11 +39,11 @@ on:
         required: false
         default: ubuntu-latest
 
-      deploy_region:
-        description: Region to deploy to
+      var_file:
+        description: Variable file with regional-specific values
         type: string
         required: false
-        default: "northeurope"
+        default: "northeurope.tfvars"
 
     secrets:
       AZURE_CLIENT_ID:
@@ -74,8 +74,8 @@ env:
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
   TF_IN_AUTOMATION: true
 
-  # with_var_file: "-var=${{ inputs.var_file }}"
-  TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }} -var="location=${{ inputs.deploy_region }}"
+  TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }}
+  TF_CLI_ARGS_plan: -var="${{ inputs.var_file }}"
 
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
@@ -105,14 +105,8 @@ jobs:
     outputs:
       upload-outcome: ${{ steps.upload.outcome }}
       artifact-id: ${{ steps.upload.outputs.artifact-id }}
-      location: ${{ inputs.deploy_region }}
 
     steps:
-      - name: Display location variable
-        run: |
-          echo "location: ${{ location }}"
-          echo "display_region: ${{ inputs.deploy_region }}"
-
       - name: Checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
