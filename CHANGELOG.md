@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.7.3](https://github.com/equinor/ops-actions/compare/v9.7.2...v9.7.3) (2024-10-08)
+
+
+### Bug Fixes
+
+* **terraform:** skip formatting check ([#568](https://github.com/equinor/ops-actions/issues/568)) ([7c84771](https://github.com/equinor/ops-actions/commit/7c8477122ea8334355a7757177413e18f013fe63))
+
 ## [9.7.2](https://github.com/equinor/ops-actions/compare/v9.7.1...v9.7.2) (2024-09-12)
 
 
