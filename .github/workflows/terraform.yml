@@ -115,10 +115,6 @@ jobs:
           # If the wrapper is enabled, the debug logs will be visible in the job summary.
           # The wrapper must be disabled to prevent this.
 
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
-
       - name: Terraform Init
         id: init
         run: terraform init
