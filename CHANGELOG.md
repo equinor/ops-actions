@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.8.0](https://github.com/equinor/ops-actions/compare/v9.7.3...v9.8.0) (2024-10-09)
+
+
+### Features
+
+* **terraform:** add input variable file for greater customization options ([#559](https://github.com/equinor/ops-actions/issues/559)) ([242f621](https://github.com/equinor/ops-actions/commit/242f621b9c2c76f8c415195c79cc8b2d41bb942c))
+
 ## [9.7.3](https://github.com/equinor/ops-actions/compare/v9.7.2...v9.7.3) (2024-10-08)
 
 
