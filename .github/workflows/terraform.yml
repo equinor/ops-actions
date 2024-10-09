@@ -146,7 +146,7 @@ jobs:
             optional_args+=(-var-file="$TFVARS_FILE")
           fi
 
-          terraform plan -input=false -out=tfplan -detailed-exitcode "${optional_args[@]}"
+          terraform plan -input=false -out="$TF_PLAN_FILE" -detailed-exitcode "${optional_args[@]}"
 
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
