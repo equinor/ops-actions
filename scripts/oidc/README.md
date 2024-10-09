@@ -103,13 +103,13 @@ It'll also assign two Azure roles at the subscription scope to the service princ
 1. Run the script:
 
     ```console
-    python -m github-azure-oidc {CONFIG_FILE}
+    python -m github_azure_oidc {CONFIG_FILE}
     ```
 
     For example:
 
     ```console
-    python -m github-azure-oidc oidc.json
+    python -m github_azure_oidc oidc.json
     ```
 
 ### After running the `oidc.sh` script
