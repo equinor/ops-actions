@@ -40,7 +40,7 @@ on:
         default: ubuntu-latest
 
       var_file:
-        description: Variable file with regional-specific values
+        description: The path, relative to the working directory, of a variable definitions file (`.tfvars`) containing values for variables declared in the root module.
         type: string
         required: false
 
@@ -74,7 +74,6 @@ env:
   TF_IN_AUTOMATION: true
 
   TF_CLI_ARGS_init: -backend-config=${{ inputs.backend_config }}
-  # TF_CLI_ARGS_plan: -var-file="${{ inputs.var_file }}"
 
   # Configure OIDC authentication to Azure using environment variables.
   # Required by the AzureRM backend and provider.
