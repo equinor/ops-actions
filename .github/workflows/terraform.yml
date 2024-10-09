@@ -152,7 +152,6 @@ jobs:
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
           fi
-
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
 
       # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
