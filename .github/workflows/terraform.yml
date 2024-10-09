@@ -39,6 +39,11 @@ on:
         required: false
         default: ubuntu-latest
 
+      var_file:
+        description: The path, relative to the working directory, of a variable definitions file (`.tfvars`) containing values for variables declared in the root module.
+        type: string
+        required: false
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the Azure AD service principal to use for authenticating to Azure.
@@ -133,8 +138,16 @@ jobs:
         # Required in order to check exitcode.
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
         shell: bash {0}
+        env:
+          TFVARS_FILE: ${{ inputs.var_file }}
         run: |
-          terraform plan -input=false -out="$TF_PLAN_FILE" -detailed-exitcode
+          optional_args=()
+          if [[ -n "$TFVARS_FILE" ]]; then
+            optional_args+=(-var-file="$TFVARS_FILE")
+          fi
+
+          terraform plan -input=false -out="$TF_PLAN_FILE" -detailed-exitcode "${optional_args[@]}"
+
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
