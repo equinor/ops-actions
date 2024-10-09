@@ -13,10 +13,15 @@ from github import Auth
 
 def get_github_auth():
     """
-    PyGithub does not have native support for getting access token from GitHub CLI.
+    PyGithub does not have a native method for getting access token from GitHub CLI.
     Write custom method for this.
     """
-    token = subprocess.run("gh auth token", check=True, stdout=subprocess.PIPE).stdout
+    token = (
+        subprocess.run("gh auth token", check=True, stdout=subprocess.PIPE)
+        .stdout.decode()
+        .strip()  # "gh auth token" includes a trailing newling. Strip it.
+    )
+
     auth = Auth.Token(token)
     return auth
 
