@@ -4,25 +4,45 @@ TODO(@hknutsen): write a module description.
 
 import asyncio
 import subprocess
+import requests
 
 from azure.identity.aio import DefaultAzureCredential
 from msgraph import GraphServiceClient
-from github import Github as GithubClient
-from github import Auth as GithubAuth
 
 
-def get_github_auth():
+GITHUB_API_URL = "https://api.github.com"
+
+
+def get_github_token():
     """
-    PyGithub does not have a native method for getting access token from GitHub CLI.
-    Write custom method for this.
+    Get GitHub token from GitHub CLI.
     """
     token = (
         subprocess.run("gh auth token", check=True, stdout=subprocess.PIPE)
         .stdout.decode()
         .strip()  # "gh auth token" includes a trailing newling. Strip it!
     )
-    auth = GithubAuth.Token(token)
-    return auth
+    return token
+
+
+def get_github_repo(owner, repo, token):
+    """
+    Get a given GitHub repository.
+    """
+    url = f"{GITHUB_API_URL}/repos/{owner}/{repo}"
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {token}",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+    params = {}
+    repos = requests.get(
+        url=url,
+        headers=headers,
+        params=params,
+        timeout=300,
+    )
+    return repos.json()
 
 
 async def get_azure_user():
@@ -34,22 +54,13 @@ async def get_azure_user():
         print("Microsoft Azure user display name: " + me.display_name)
 
 
-def get_github_user():
-    """
-    Get name of authenticated GitHub user.
-    """
-    g_user_name = github_client.get_user().name
-    print("GitHub user name: " + g_user_name)
-
-
 # Authenticate to Microsoft Azure and print display name of authenticated user.
 azure_credentials = DefaultAzureCredential()
 azure_scopes = ["https://graph.microsoft.com/.default"]
 azure_client = GraphServiceClient(credentials=azure_credentials, scopes=azure_scopes)
 asyncio.run(get_azure_user())
 
-# Authenticate to GitHub and print name of authenticated user.
-github_auth = get_github_auth()
-github_client = GithubClient(auth=github_auth)
-get_github_user()
-github_client.close()
+# Get a GitHub repository.
+github_token = get_github_token()
+github_repo = get_github_repo("equinor", "ops-actions", github_token)
+print(github_repo["name"])
