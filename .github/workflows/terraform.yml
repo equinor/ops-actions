@@ -141,12 +141,12 @@ jobs:
         env:
           TFVARS_FILE: ${{ inputs.var_file }}
         run: |
-          OPTIONAL_ARGS=()
-          if [[ "$TFVARS_FILE" != "null" ]]; then
-            OPTIONAL_ARGS+=(-var-file="${TFVARS_FILE}")
+          optional_args=()
+          if [[ -n "$TFVARS_FILE" ]]; then
+            optional_args+=(-var-file="$TFVARS_FILE")
           fi
 
-          terraform plan -input=false -out=tfplan -detailed-exitcode "${OPTIONAL_ARGS[@]}"
+          terraform plan -input=false -out=tfplan -detailed-exitcode "${optional_args[@]}"
 
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
