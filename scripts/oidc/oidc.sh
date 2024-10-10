@@ -19,12 +19,12 @@ cd "$(dirname "$CONFIG_FILE")"
 ################################################################################
 
 hash az 2>/dev/null || {
-  echo -e "\nERROR: Azure-CLI not found in PATH. Exiting... " >&2
+  echo -e "\nERROR: Azure CLI not found in PATH. Exiting... " >&2
   exit 1
 }
 
 hash gh 2>/dev/null || {
-  echo -e "\nERROR: Github-CLI not found in PATH. Exiting... " >&2
+  echo -e "\nERROR: GitHub CLI not found in PATH. Exiting... " >&2
   exit 1
 }
 
