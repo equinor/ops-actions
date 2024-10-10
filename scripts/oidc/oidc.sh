@@ -5,8 +5,7 @@ set -eu
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 readonly CONFIG_FILE
 
-if [[ -f "$CONFIG_FILE" ]]
-then
+if [[ -f "$CONFIG_FILE" ]]; then
   echo "Using config file '$CONFIG_FILE'."
 else
   echo "Config file '$CONFIG_FILE' does not exist."
