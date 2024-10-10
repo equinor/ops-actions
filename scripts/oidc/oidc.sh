@@ -77,7 +77,7 @@ done
 # Read OIDC configuration
 ################################################################################
 
-CONFIG=$(envsubst <"$CONFIG_FILE")
+CONFIG=$(envsubst < "$CONFIG_FILE")
 readonly CONFIG
 
 ################################################################################
@@ -132,7 +132,7 @@ readonly SP_ID
 # Create Azure AD application federated credentials
 ################################################################################
 
-readarray -t FICS <<<"$(echo "$CONFIG" | jq -c .federatedCredentials[])"
+readarray -t FICS <<< "$(echo "$CONFIG" | jq -c .federatedCredentials[])"
 readonly FICS
 
 repo_level=false        # Should OIDC be configured at the repository level?
@@ -186,7 +186,7 @@ done
 # Create Azure role assignments
 ################################################################################
 
-readarray -t ROLE_ASSIGNMENTS <<<"$(echo "$CONFIG" | jq -c .roleAssignments[])"
+readarray -t ROLE_ASSIGNMENTS <<< "$(echo "$CONFIG" | jq -c .roleAssignments[])"
 readonly ROLE_ASSIGNMENTS
 
 for role_assignment in "${ROLE_ASSIGNMENTS[@]}"; do
