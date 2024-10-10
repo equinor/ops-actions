@@ -36,7 +36,9 @@ SUBSCRIPTION_NAME=$(az account show --query name --output tsv)
 readonly SUBSCRIPTION_NAME
 
 while true; do
-  read -r -p "Create Terraform backend in Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " response
+  read -r -p "Create Terraform backend in \
+Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " response
+
   case "$response" in
   [yY][eE][sS] | [yY])
     echo "Proceeding with creation..."
