@@ -3,6 +3,7 @@
 set -eu
 
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
+readonly CONFIG_FILE
 
 if [[ -f "$CONFIG_FILE" ]]
 then
@@ -38,15 +39,25 @@ hash jq 2>/dev/null || {
 ################################################################################
 
 REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
+readonly REPO
+export REPO
 
-SUBSCRIPTION=$(az account show --output json)
-SUBSCRIPTION_NAME=$(echo "${SUBSCRIPTION}" | jq -j .name)
-SUBSCRIPTION_ID=$(echo "${SUBSCRIPTION}" | jq -j .id)
-TENANT_ID=$(echo "${SUBSCRIPTION}" | jq -j .tenantId)
+ACCOUNT=$(az account show --output json)
+readonly ACCOUNT
+
+SUBSCRIPTION_NAME=$(echo "${ACCOUNT}" | jq -j .name)
+readonly SUBSCRIPTION_NAME
+
+SUBSCRIPTION_ID=$(echo "${ACCOUNT}" | jq -j .id)
+readonly SUBSCRIPTION_ID
+export SUBSCRIPTION_ID
+
+TENANT_ID=$(echo "${ACCOUNT}" | jq -j .tenantId)
+readonly TENANT_ID
 
 while true; do
-  read -r -p "Configure OIDC from GitHub repository '${REPO}' to Azure subscription '${SUBSCRIPTION_NAME}'? (y/N) " RESPONSE
-  case ${RESPONSE} in
+  read -r -p "Configure OIDC from GitHub repository '${REPO}' to Azure subscription '${SUBSCRIPTION_NAME}'? (y/N) " response
+  case "${response}" in
   [yY][eE][sS] | [yY])
     echo "Proceeding with configuration..."
     break
@@ -65,16 +76,15 @@ done
 # Read OIDC configuration
 ################################################################################
 
-export REPO
-export SUBSCRIPTION_ID
-
 CONFIG=$(envsubst <"${CONFIG_FILE}")
+readonly CONFIG
 
 ################################################################################
 # Create Azure AD application
 ################################################################################
 
 APP_NAME=$(echo "${CONFIG}" | jq -j .appName)
+readonly APP_NAME
 
 APP_ID=$(az ad app list \
   --filter "displayName eq '${APP_NAME}'" \
@@ -92,6 +102,8 @@ if [[ -z "${APP_ID}" ]]; then
 else
   echo "Using existing application."
 fi
+
+readonly APP_ID
 
 ################################################################################
 # Create Azure AD service principal
@@ -113,24 +125,27 @@ else
   echo "Using existing service principal."
 fi
 
+readonly SP_ID
+
 ################################################################################
 # Create Azure AD application federated credentials
 ################################################################################
 
-readarray -t fics <<<"$(echo "${CONFIG}" | jq -c .federatedCredentials[])"
+readarray -t FICS <<<"$(echo "${CONFIG}" | jq -c .federatedCredentials[])"
+readonly FICS
 
-REPO_LEVEL=false        # Should OIDC be configured at the repository level?
-declare -A ENVIRONMENTS # Environments to configure OIDC for.
+repo_level=false        # Should OIDC be configured at the repository level?
+declare -A environments # Environments to configure OIDC for.
 
-for FIC in "${fics[@]}"; do
-  FIC_NAME=$(echo "${FIC}" | jq -j .name)
+for fic in "${FICS[@]}"; do
+  fic_name=$(echo "${fic}" | jq -j .name)
 
-  FIC_ID=$(az ad app federated-credential list \
+  fic_id=$(az ad app federated-credential list \
     --id "${APP_ID}" \
-    --query "[?name == '${FIC_NAME}'].id" \
+    --query "[?name == '${fic_name}'].id" \
     --output tsv)
 
-  PARAMETERS=$(echo "${FIC}" | jq '{
+  parameters=$(echo "${fic}" | jq '{
     "name": .name,
     "issuer": "https://token.actions.githubusercontent.com",
     "subject": .subject,
@@ -138,31 +153,31 @@ for FIC in "${fics[@]}"; do
     "audiences": ["api://AzureADTokenExchange"]
   }')
 
-  if [[ -z "${FIC_ID}" ]]; then
-    echo "Creating federated identity credential '${FIC_NAME}'..."
+  if [[ -z "${fic_id}" ]]; then
+    echo "Creating federated identity credential '${fic_name}'..."
 
     az ad app federated-credential create \
       --id "${APP_ID}" \
-      --parameters "${PARAMETERS}" \
+      --parameters "${parameters}" \
       --output none
   else
-    echo "Updating existing federated identity credential '${FIC_NAME}'..."
+    echo "Updating existing federated identity credential '${fic_name}'..."
 
     az ad app federated-credential update \
       --id "${APP_ID}" \
-      --federated-credential-id "${FIC_ID}" \
-      --parameters "${PARAMETERS}" \
+      --federated-credential-id "${fic_id}" \
+      --parameters "${parameters}" \
       --output none
   fi
 
-  SUBJECT=$(echo "${FIC}" | jq -j .subject)
-  ENTITY_TYPE=$(echo "${SUBJECT}" | cut -d : -f 3)
+  subject=$(echo "${fic}" | jq -j .subject)
+  entity_type=$(echo "${subject}" | cut -d : -f 3)
 
-  if [[ "${ENTITY_TYPE}" == "environment" ]]; then
-    ENV=$(echo "${SUBJECT}" | cut -d : -f 4)
-    ENVIRONMENTS[${ENV}]=true
+  if [[ "${entity_type}" == "environment" ]]; then
+    env=$(echo "${subject}" | cut -d : -f 4)
+    environments[${env}]=true
   else
-    REPO_LEVEL=true
+    repo_level=true
   fi
 done
 
@@ -171,33 +186,34 @@ done
 ################################################################################
 
 readarray -t ROLE_ASSIGNMENTS <<<"$(echo "${CONFIG}" | jq -c .roleAssignments[])"
+readonly ROLE_ASSIGNMENTS
 
-for ROLE_ASSIGNMENT in "${ROLE_ASSIGNMENTS[@]}"; do
-  ROLE=$(echo "${ROLE_ASSIGNMENT}" | jq -j .role)
-  SCOPE=$(echo "${ROLE_ASSIGNMENT}" | jq -j .scope)
-  CONDITION=$(echo "${ROLE_ASSIGNMENT}" | jq -j .condition)
+for role_assignment in "${ROLE_ASSIGNMENTS[@]}"; do
+  role=$(echo "${role_assignment}" | jq -j .role)
+  scope=$(echo "${role_assignment}" | jq -j .scope)
+  condition=$(echo "${role_assignment}" | jq -j .condition)
 
-  OPTIONAL_ARGS=()
-  if [[ "$CONDITION" != "null" ]]; then
-    OPTIONAL_ARGS+=(--condition "${CONDITION}" --condition-version 2.0)
+  optional_args=()
+  if [[ "$condition" != "null" ]]; then
+    optional_args+=(--condition "${condition}" --condition-version 2.0)
   fi
 
-  echo "Assigning role '${ROLE}' at scope '${SCOPE}'..."
+  echo "Assigning role '${role}' at scope '${scope}'..."
 
   az role assignment create \
-    --role "${ROLE}" \
+    --role "${role}" \
     --assignee-object-id "${SP_ID}" \
     --assignee-principal-type ServicePrincipal \
-    --scope "${SCOPE}" \
+    --scope "${scope}" \
     --output none \
-    "${OPTIONAL_ARGS[@]}"
+    "${optional_args[@]}"
 done
 
 ################################################################################
 # Set GitHub repository secrets
 ################################################################################
 
-if [[ "${REPO_LEVEL}" == true ]]; then
+if [[ "${repo_level}" == true ]]; then
   echo "Setting GitHub repository secrets..."
 
   gh secret set "AZURE_CLIENT_ID" \
@@ -214,18 +230,18 @@ fi
 # Set GitHub environment secrets
 ################################################################################
 
-for ENV in "${!ENVIRONMENTS[@]}"; do
-  echo "Setting GitHub environment secrets for environment '${ENV}'..."
+for env in "${!environments[@]}"; do
+  echo "Setting GitHub environment secrets for environment '${env}'..."
 
   gh secret set "AZURE_CLIENT_ID" \
-    --env "${ENV}" \
+    --env "${env}" \
     --body "${APP_ID}"
 
   gh secret set "AZURE_SUBSCRIPTION_ID" \
-    --env "${ENV}" \
+    --env "${env}" \
     --body "${SUBSCRIPTION_ID}"
 
   gh secret set "AZURE_TENANT_ID" \
-    --env "${ENV}" \
+    --env "${env}" \
     --body "${TENANT_ID}"
 done
