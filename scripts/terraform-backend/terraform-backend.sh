@@ -3,16 +3,23 @@
 set -eu
 
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
+readonly CONFIG_FILE
+
 LOCATION=${2:?"LOCATION is unset or null"}
+readonly CONFIG_FILE
+
 OBJECT_ID=${3:?"OBJECT_ID is unset or null"}
+readonly OBJECT_ID
+
 IP_ADDRESSES=${4:-""}
+readonly IP_ADDRESSES
 
 ################################################################################
 # Verify installation of necessary software components
 ################################################################################
 
 hash az 2>/dev/null || {
-  echo -e "\nERROR: Azure-CLI not found in PATH. Exiting... " >&2
+  echo -e "\nERROR: Azure CLI not found in PATH. Exiting... " >&2
   exit 1
 }
 
@@ -26,10 +33,11 @@ hash jq 2>/dev/null || {
 ################################################################################
 
 SUBSCRIPTION_NAME=$(az account show --query name --output tsv)
+readonly SUBSCRIPTION_NAME
 
 while true; do
-  read -r -p "Create Terraform backend in Azure subscription '${SUBSCRIPTION_NAME}'? (y/N) " RESPONSE
-  case ${RESPONSE} in
+  read -r -p "Create Terraform backend in Azure subscription '${SUBSCRIPTION_NAME}'? (y/N) " response
+  case "${response}" in
   [yY][eE][sS] | [yY])
     echo "Proceeding with creation..."
     break
@@ -56,11 +64,19 @@ else
 fi
 
 CONFIG=$(cat "${CONFIG_FILE}")
+readonly CONFIG
 
 RESOURCE_GROUP_NAME=$(echo "${CONFIG}" | jq -r .resource_group_name)
+readonly RESOURCE_GROUP_NAME
+
 STORAGE_ACCOUNT_NAME=$(echo "${CONFIG}" | jq -r .storage_account_name)
+readonly STORAGE_ACCOUNT_NAME
+
 CONTAINER_NAME=$(echo "${CONFIG}" | jq -r .container_name)
+readonly CONTAINER_NAME
+
 USE_AZUREAD_AUTH=$(echo "${CONFIG}" | jq -r .use_azuread_auth)
+readonly USE_AZUREAD_AUTH
 
 ################################################################################
 # Check if Azure Storage account is locked
@@ -72,14 +88,16 @@ STORAGE_ACCOUNT_ID=$(az storage account list \
   --output tsv)
 
 LOCK_NAME="Terraform"
-LOCK_ID=""
+readonly LOCK_NAME
 
+LOCK_ID=""
 if [[ -n "$STORAGE_ACCOUNT_ID" ]]; then
   LOCK_ID=$(az resource lock list \
     --resource "${STORAGE_ACCOUNT_ID}" \
     --query "[?name == '${LOCK_NAME}'].id" \
     --output tsv)
 fi
+readonly LOCK_ID
 
 if [[ -n "${LOCK_ID}" ]]; then
   echo -e "\n\033[0;33mStorage account is locked."
@@ -111,11 +129,14 @@ if [[ "${USE_AZUREAD_AUTH}" != "true" ]]; then
   ALLOW_SHARED_KEY_ACCESS="true"
   ROLE="Reader and Data Access"
 fi
+readonly ALLOW_SHARED_KEY_ACCESS
+readonly ROLE
 
 DEFAULT_ACTION="Deny"
 if [[ -z "${IP_ADDRESSES}" ]]; then
   DEFAULT_ACTION="Allow"
 fi
+readonly DEFAULT_ACTION
 
 STORAGE_ACCOUNT_ID="$(az storage account create \
   --name "${STORAGE_ACCOUNT_NAME}" \
@@ -202,6 +223,7 @@ MANAGEMENT_POLICY=$(echo "${CONFIG}" | jq '{
     }
   ]
 }')
+readonly MANAGEMENT_POLICY
 
 az storage account management-policy create \
   --account-name "${STORAGE_ACCOUNT_NAME}" \
