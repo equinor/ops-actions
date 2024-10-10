@@ -55,7 +55,7 @@ TENANT_ID=$(echo "$ACCOUNT" | jq -j .tenantId)
 readonly TENANT_ID
 
 while true; do
-  read -r -p "Configure OIDC from GitHub repository '$REPO' to
+  read -r -p "Configure OIDC from GitHub repository '$REPO' to \
 Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " response
 
   case "$response" in
