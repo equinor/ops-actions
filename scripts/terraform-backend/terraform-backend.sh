@@ -196,7 +196,7 @@ az storage container create \
 ################################################################################
 
 echo "Creating lifecycle policy..."
-MANAGEMENT_POLICY=$(echo "$CONFIG" | jq '{
+POLICY=$(echo "$CONFIG" | jq '{
   rules: [
     {
       name: "Delete old tfstate versions",
@@ -222,12 +222,12 @@ MANAGEMENT_POLICY=$(echo "$CONFIG" | jq '{
     }
   ]
 }')
-readonly MANAGEMENT_POLICY
+readonly POLICY
 
 az storage account management-policy create \
   --account-name "$STORAGE_ACCOUNT_NAME" \
   --resource-group "$RESOURCE_GROUP_NAME" \
-  --policy "$MANAGEMENT_POLICY" \
+  --policy "$POLICY" \
   --output none
 
 ################################################################################
