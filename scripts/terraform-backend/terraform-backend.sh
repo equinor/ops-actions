@@ -46,13 +46,13 @@ readonly SUBSCRIPTION_NAME
 read -r -p "Create Terraform backend in \
 Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " response
 case "$response" in
-  [yY][eE][sS] | [yY])
-    echo "Proceeding with creation..."
-    ;;
-  *)
-    echo "Exiting without creating..."
-    exit 0
-    ;;
+[yY][eE][sS] | [yY])
+  echo "Proceeding with creation..."
+  ;;
+*)
+  echo "Exiting without creating..."
+  exit 0
+  ;;
 esac
 
 ################################################################################
