@@ -106,7 +106,6 @@ fi
 ################################################################################
 
 echo "Creating resource group..."
-
 az group create \
   --name "$RESOURCE_GROUP_NAME" \
   --location "$LOCATION" \
@@ -117,7 +116,6 @@ az group create \
 ################################################################################
 
 echo "Creating storage account..."
-
 ALLOW_SHARED_KEY_ACCESS="false"
 ROLE="Storage Blob Data Owner"
 if [[ "$USE_AZUREAD_AUTH" != "true" ]]; then
@@ -179,7 +177,6 @@ az security atp storage update \
 ################################################################################
 
 echo "Creating storage container..."
-
 az storage container create \
   --name "$CONTAINER_NAME" \
   --account-name "$STORAGE_ACCOUNT_NAME" \
@@ -191,7 +188,6 @@ az storage container create \
 ################################################################################
 
 echo "Creating lifecycle policy..."
-
 MANAGEMENT_POLICY=$(echo "$CONFIG" | jq '{
   rules: [
     {
@@ -231,7 +227,6 @@ az storage account management-policy create \
 ################################################################################
 
 echo "Creating role assignment..."
-
 az role assignment create \
   --assignee "$OBJECT_ID" \
   --role "$ROLE" \
@@ -243,7 +238,6 @@ az role assignment create \
 ################################################################################
 
 echo "Creating resource lock..."
-
 az resource lock create \
   --name "$LOCK_NAME" \
   --lock-type ReadOnly \
