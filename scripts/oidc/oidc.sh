@@ -60,13 +60,13 @@ readonly TENANT_ID
 read -r -p "Configure OIDC from GitHub repository '$REPO' to \
 Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " response
 case "$response" in
-  [yY][eE][sS] | [yY])
-    echo "Proceeding with configuration..."
-    ;;
-  *)
-    echo "Exiting without configuring..."
-    exit 0
-    ;;
+[yY][eE][sS] | [yY])
+  echo "Proceeding with configuration..."
+  ;;
+*)
+  echo "Exiting without configuring..."
+  exit 0
+  ;;
 esac
 
 ################################################################################
