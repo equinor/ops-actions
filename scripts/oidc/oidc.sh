@@ -5,10 +5,14 @@ set -eu
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 readonly CONFIG_FILE
 
+error() {
+  echo -e "\033[0;31mERROR: $*\033[0;37m" >&2
+}
+
 if [[ -f "$CONFIG_FILE" ]]; then
   echo "Using config file '$CONFIG_FILE'."
 else
-  echo "Config file '$CONFIG_FILE' does not exist."
+  error "Config file '$CONFIG_FILE' does not exist."
   exit 1
 fi
 cd "$(dirname "$CONFIG_FILE")"
@@ -18,17 +22,17 @@ cd "$(dirname "$CONFIG_FILE")"
 ################################################################################
 
 hash az 2>/dev/null || {
-  echo -e "\nERROR: Azure CLI not found in PATH. Exiting... " >&2
+  error "Azure CLI not found in PATH."
   exit 1
 }
 
 hash gh 2>/dev/null || {
-  echo -e "\nERROR: GitHub CLI not found in PATH. Exiting... " >&2
+  error "GitHub CLI not found in PATH."
   exit 1
 }
 
 hash jq 2>/dev/null || {
-  echo -e "\nERROR: jq not found in PATH. Exiting... " >&2
+  error "jq not found in PATH."
   exit 1
 }
 
