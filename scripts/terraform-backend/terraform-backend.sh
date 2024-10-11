@@ -18,10 +18,6 @@ error() {
   echo -e "\033[0;31mERROR: $*\033[0;37m" >&2
 }
 
-info() {
-  echo -e "\033[0;33mINFO: $*\033[0;37m"
-}
-
 ################################################################################
 # Verify installation of necessary software components
 ################################################################################
@@ -103,8 +99,8 @@ fi
 readonly LOCK_ID
 
 if [[ -n "$LOCK_ID" ]]; then
-  info "Storage account is locked."
-  info "Please remove the lock by running the following command:"
+  error "Storage account is locked. \
+Please remove the lock by running the following command:"
   echo -e "\n\033[0;36maz resource lock delete --ids $LOCK_ID\033[0m\n"
   exit 1
 fi
