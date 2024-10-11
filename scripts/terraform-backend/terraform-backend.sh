@@ -119,7 +119,6 @@ az group create \
 # Create Azure Storage account
 ################################################################################
 
-echo "Creating storage account..."
 ALLOW_SHARED_KEY_ACCESS="false"
 ROLE="Storage Blob Data Owner"
 if [[ "$USE_AZUREAD_AUTH" != "true" ]]; then
@@ -135,6 +134,7 @@ if [[ -z "$IP_ADDRESSES" ]]; then
 fi
 readonly DEFAULT_ACTION
 
+echo "Creating storage account..."
 STORAGE_ACCOUNT_ID="$(az storage account create \
   --name "$STORAGE_ACCOUNT_NAME" \
   --resource-group "$RESOURCE_GROUP_NAME" \
