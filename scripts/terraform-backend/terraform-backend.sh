@@ -14,17 +14,25 @@ readonly OBJECT_ID
 IP_ADDRESSES=${4:-""}
 readonly IP_ADDRESSES
 
+error() {
+  echo -e "\033[0;31mERROR: $*\033[0;37m" >&2
+}
+
+info() {
+  echo -e "\033[0;33mINFO: $*\033[0;37m"
+}
+
 ################################################################################
 # Verify installation of necessary software components
 ################################################################################
 
 hash az 2>/dev/null || {
-  echo -e "\nERROR: Azure CLI not found in PATH. Exiting... " >&2
+  error "Azure CLI not found in PATH."
   exit 1
 }
 
 hash jq 2>/dev/null || {
-  echo -e "\nERROR: jq not found in PATH. Exiting... " >&2
+  error "jq not found in PATH."
   exit 1
 }
 
@@ -95,8 +103,8 @@ fi
 readonly LOCK_ID
 
 if [[ -n "$LOCK_ID" ]]; then
-  echo -e "\n\033[0;33mStorage account is locked."
-  echo -e "Please remove the lock by running the following command:"
+  info "Storage account is locked."
+  info "Please remove the lock by running the following command:"
   echo -e "\n\033[0;36maz resource lock delete --ids $LOCK_ID\033[0m\n"
   exit 1
 fi
