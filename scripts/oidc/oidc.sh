@@ -11,7 +11,6 @@ else
   echo "Config file '$CONFIG_FILE' does not exist."
   exit 1
 fi
-
 cd "$(dirname "$CONFIG_FILE")"
 
 ################################################################################
@@ -94,7 +93,6 @@ APP_ID=$(az ad app list \
 
 if [[ -z "$APP_ID" ]]; then
   echo "Creating application..."
-
   APP_ID=$(az ad app create \
     --display-name "$APP_NAME" \
     --sign-in-audience AzureADMyOrg \
@@ -103,7 +101,6 @@ if [[ -z "$APP_ID" ]]; then
 else
   echo "Using existing application."
 fi
-
 readonly APP_ID
 
 ################################################################################
@@ -117,7 +114,6 @@ SP_ID=$(az ad sp list \
 
 if [[ -z "$SP_ID" ]]; then
   echo "Creating service principal..."
-
   SP_ID=$(az ad sp create \
     --id "$APP_ID" \
     --query id \
@@ -125,7 +121,6 @@ if [[ -z "$SP_ID" ]]; then
 else
   echo "Using existing service principal."
 fi
-
 readonly SP_ID
 
 ################################################################################
@@ -156,14 +151,12 @@ for fic in "${FICS[@]}"; do
 
   if [[ -z "$fic_id" ]]; then
     echo "Creating federated identity credential '$fic_name'..."
-
     az ad app federated-credential create \
       --id "$APP_ID" \
       --parameters "$parameters" \
       --output none
   else
     echo "Updating existing federated identity credential '$fic_name'..."
-
     az ad app federated-credential update \
       --id "$APP_ID" \
       --federated-credential-id "$fic_id" \
@@ -200,7 +193,6 @@ for role_assignment in "${ROLE_ASSIGNMENTS[@]}"; do
   fi
 
   echo "Assigning role '$role' at scope '$scope'..."
-
   az role assignment create \
     --role "$role" \
     --assignee-object-id "$SP_ID" \
