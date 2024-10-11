@@ -57,24 +57,17 @@ export SUBSCRIPTION_ID
 TENANT_ID=$(echo "$ACCOUNT" | jq -j .tenantId)
 readonly TENANT_ID
 
-while true; do
-  read -r -p "Configure OIDC from GitHub repository '$REPO' to \
+read -r -p "Configure OIDC from GitHub repository '$REPO' to \
 Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " response
-
-  case "$response" in
+case "$response" in
   [yY][eE][sS] | [yY])
     echo "Proceeding with configuration..."
-    break
     ;;
-  [nN][oO] | [nN])
+  *)
     echo "Exiting without configuring..."
     exit 0
     ;;
-  *)
-    echo "Invalid input, please type 'y' or 'n'."
-    ;;
-  esac
-done
+esac
 
 ################################################################################
 # Read OIDC configuration
