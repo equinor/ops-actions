@@ -35,24 +35,17 @@ hash jq 2>/dev/null || {
 SUBSCRIPTION_NAME=$(az account show --query name --output tsv)
 readonly SUBSCRIPTION_NAME
 
-while true; do
-  read -r -p "Create Terraform backend in \
+read -r -p "Create Terraform backend in \
 Azure subscription '$SUBSCRIPTION_NAME'? (y/N) " response
-
-  case "$response" in
+case "$response" in
   [yY][eE][sS] | [yY])
     echo "Proceeding with creation..."
-    break
     ;;
-  [nN][oO] | [nN])
+  *)
     echo "Exiting without creating..."
     exit 0
     ;;
-  *)
-    echo "Invalid input, please type 'y' or 'n'."
-    ;;
-  esac
-done
+esac
 
 ################################################################################
 # Read Terraform backend configuration
