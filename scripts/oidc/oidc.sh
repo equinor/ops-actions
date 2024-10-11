@@ -135,7 +135,6 @@ declare -A environments # Environments to configure OIDC for.
 
 for fic in "${FICS[@]}"; do
   fic_name=$(echo "$fic" | jq -j .name)
-
   fic_id=$(az ad app federated-credential list \
     --id "$APP_ID" \
     --query "[?name == '$fic_name'].id" \
@@ -166,7 +165,6 @@ for fic in "${FICS[@]}"; do
 
   subject=$(echo "$fic" | jq -j .subject)
   entity_type=$(echo "$subject" | cut -d : -f 3)
-
   if [[ "$entity_type" == "environment" ]]; then
     env=$(echo "$subject" | cut -d : -f 4)
     environments[$env]=true
@@ -208,13 +206,10 @@ done
 
 if [[ "$repo_level" == true ]]; then
   echo "Setting GitHub repository secrets..."
-
   gh secret set "AZURE_CLIENT_ID" \
     --body "$APP_ID"
-
   gh secret set "AZURE_SUBSCRIPTION_ID" \
     --body "$SUBSCRIPTION_ID"
-
   gh secret set "AZURE_TENANT_ID" \
     --body "$TENANT_ID"
 fi
@@ -225,15 +220,12 @@ fi
 
 for env in "${!environments[@]}"; do
   echo "Setting GitHub environment secrets for environment '$env'..."
-
   gh secret set "AZURE_CLIENT_ID" \
     --env "$env" \
     --body "$APP_ID"
-
   gh secret set "AZURE_SUBSCRIPTION_ID" \
     --env "$env" \
     --body "$SUBSCRIPTION_ID"
-
   gh secret set "AZURE_TENANT_ID" \
     --env "$env" \
     --body "$TENANT_ID"
