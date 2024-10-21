@@ -3,16 +3,16 @@ name: ♻ terraform
 on:
   workflow_call:
     inputs:
-      environment:
-        description: The environment that the job references.
-        type: string
-        required: true
-
-      working_directory:
-        description: The working directory to run the Terraform commands in.
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
         type: string
         required: false
-        default: "."
+        default: ubuntu-latest
+
+      environment:
+        description: The environment that the jobs reference.
+        type: string
+        required: true
 
       terraform_version:
         description: The version of Terraform to install.
@@ -20,29 +20,28 @@ on:
         required: false
         default: latest
 
+      working_directory:
+        description: The working directory to run the Terraform commands in.
+        type: string
+        required: false
+        default: "."
+
       backend_config:
-        description: The path, relative to the working directory, of a configuration file containing the remaining arguments for a partial backend configuration.
+        description: The path, relative to the working directory, of a configuration file (`.tfbackend`) containing the remaining arguments for a partial backend configuration.
         type: string
         required: false
         default: ""
-        # Ref: https://developer.hashicorp.com/terraform/language/settings/backends/configuration#partial-configuration
+
+      var_file:
+        description: The path, relative to the working directory, of a variable definitions file (`.tfvars`) containing values for variables declared in the root module.
+        type: string
+        required: false
 
       artifact_name:
         description: The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name.
         type: string
         required: false
         default: ""
-
-      runs_on:
-        description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
-        type: string
-        required: false
-        default: ubuntu-latest
-
-      var_file:
-        description: The path, relative to the working directory, of a variable definitions file (`.tfvars`) containing values for variables declared in the root module.
-        type: string
-        required: false
 
     secrets:
       AZURE_CLIENT_ID:
