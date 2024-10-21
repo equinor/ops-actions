@@ -82,7 +82,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  TF_PLAN_FILE: tfplan
+  TFPLAN_FILE: tfplan
   ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
@@ -146,7 +146,7 @@ jobs:
             optional_args+=(-var-file="$TFVARS_FILE")
           fi
 
-          terraform plan -input=false -out="$TF_PLAN_FILE" -detailed-exitcode "${optional_args[@]}"
+          terraform plan -input=false -out="$TFPLAN_FILE" -detailed-exitcode "${optional_args[@]}"
 
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
@@ -167,7 +167,7 @@ jobs:
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         run: |
-          tfplan=$(terraform show "$TF_PLAN_FILE" -no-color)
+          tfplan=$(terraform show "$TFPLAN_FILE" -no-color)
 
           echo "#### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
           #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
@@ -243,7 +243,7 @@ jobs:
           rm "$tarball"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false "$TF_PLAN_FILE"
+        run: terraform apply -auto-approve -input=false "$TFPLAN_FILE"
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
