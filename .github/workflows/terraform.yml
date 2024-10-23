@@ -30,7 +30,6 @@ on:
         description: The path, relative to the working directory, of a configuration file (`.tfbackend`) containing the remaining arguments for a partial backend configuration.
         type: string
         required: false
-        default: ""
 
       var_file:
         description: The path, relative to the working directory, of a variable definitions file (`.tfvars`) containing values for variables declared in the root module.
@@ -41,7 +40,6 @@ on:
         description: The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name.
         type: string
         required: false
-        default: ""
 
     secrets:
       AZURE_CLIENT_ID:
