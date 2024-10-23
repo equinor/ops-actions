@@ -117,8 +117,14 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        run: terraform fmt -check
-        continue-on-error: true # Formatting errors should not prevent the job from running.
+        # Start Bash without fail-fast behavior.
+        # Required in order to check exitcode.
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
+        shell: bash {0}
+        run: |
+          terraform fmt -check
+          exitcode=$?
+          echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
 
       - name: Terraform Init
         id: init
@@ -153,7 +159,6 @@ jobs:
             optional_args+=(-var-file="$TFVARS_FILE")
           fi
           terraform plan -input=false -out="$TFPLAN_FILE" -detailed-exitcode "${optional_args[@]}"
-
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
@@ -165,7 +170,7 @@ jobs:
       - name: Create job summary
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
         # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
-        if: steps.plan.outputs.exitcode == 2
+        if: steps.fmt.outputs.exitcode != 0 || steps.plan.outputs.exitcode == 2
         shell: bash {0}
         env:
           TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
