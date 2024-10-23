@@ -115,6 +115,19 @@ jobs:
           # If the wrapper is enabled, the debug logs will be visible in the job summary.
           # The wrapper must be disabled to prevent this.
 
+      - name: Terraform Format
+        id: fmt
+        # Start Bash without fail-fast behavior.
+        # Required in order to check exitcode.
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
+        shell: bash {0}
+        continue-on-error: true # Formatting errors should not prevent the job from running.
+        run: |
+          terraform fmt -check
+          exitcode=$?
+          echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
+          exit "$exitcode"
+
       - name: Terraform Init
         id: init
         env:
@@ -148,7 +161,6 @@ jobs:
             optional_args+=(-var-file="$TFVARS_FILE")
           fi
           terraform plan -input=false -out="$TFPLAN_FILE" -detailed-exitcode "${optional_args[@]}"
-
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
@@ -160,9 +172,10 @@ jobs:
       - name: Create job summary
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
         # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
-        if: steps.plan.outputs.exitcode == 2
+        if: steps.fmt.outputs.exitcode != 0 || steps.plan.outputs.exitcode == 2
         shell: bash {0}
         env:
+          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
           TF_INIT_OUTCOME: ${{ steps.init.outcome }}
           TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
@@ -170,7 +183,8 @@ jobs:
         run: |
           tfplan=$(terraform show "$TFPLAN_FILE" -no-color)
 
-          echo "#### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
+          echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
+          #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
           #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
           #### Terraform Plan 📖\`$TF_PLAN_OUTCOME\`
 
