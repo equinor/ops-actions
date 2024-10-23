@@ -121,6 +121,7 @@ jobs:
         # Required in order to check exitcode.
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
         shell: bash {0}
+        continue-on-error: true # Formatting errors should not prevent the job from running.
         run: |
           terraform fmt -check
           exitcode=$?
