@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.8.1](https://github.com/equinor/ops-actions/compare/v9.8.0...v9.8.1) (2024-10-23)
+
+
+### Bug Fixes
+
+* **terraform:** formatting errors prevent job from running ([#575](https://github.com/equinor/ops-actions/issues/575)) ([45e610c](https://github.com/equinor/ops-actions/commit/45e610c8096145fc617f571d587578b01713334f))
+
 ## [9.8.0](https://github.com/equinor/ops-actions/compare/v9.7.3...v9.8.0) (2024-10-09)
 
 
