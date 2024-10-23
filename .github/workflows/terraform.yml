@@ -125,6 +125,7 @@ jobs:
           terraform fmt -check
           exitcode=$?
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
+          exit "$exitcode"
 
       - name: Terraform Init
         id: init
