@@ -8,9 +8,6 @@ readonly CONFIG_FILE
 LOCATION=${2:?"LOCATION is unset or null"}
 readonly CONFIG_FILE
 
-OBJECT_ID=${3:?"OBJECT_ID is unset or null"}
-readonly OBJECT_ID
-
 error() {
   echo -e "\033[0;31mERROR: $*\033[0;37m" >&2
 }
@@ -117,13 +114,10 @@ az group create \
 ################################################################################
 
 ALLOW_SHARED_KEY_ACCESS="false"
-ROLE="Storage Blob Data Owner"
 if [[ "$USE_AZUREAD_AUTH" != "true" ]]; then
   ALLOW_SHARED_KEY_ACCESS="true"
-  ROLE="Reader and Data Access"
 fi
 readonly ALLOW_SHARED_KEY_ACCESS
-readonly ROLE
 
 echo "Creating storage account..."
 STORAGE_ACCOUNT_ID="$(az storage account create \
@@ -207,17 +201,6 @@ az storage account management-policy create \
   --account-name "$STORAGE_ACCOUNT_NAME" \
   --resource-group "$RESOURCE_GROUP_NAME" \
   --policy "$POLICY" \
-  --output none
-
-################################################################################
-# Create Azure role assignment
-################################################################################
-
-echo "Creating role assignment..."
-az role assignment create \
-  --assignee "$OBJECT_ID" \
-  --role "$ROLE" \
-  --scope "$STORAGE_ACCOUNT_ID" \
   --output none
 
 ################################################################################
