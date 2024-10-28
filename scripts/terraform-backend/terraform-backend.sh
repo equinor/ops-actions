@@ -113,28 +113,53 @@ az group create \
 # Create Azure Storage account
 ################################################################################
 
+HTTPS_ONLY="true"
+readonly HTTPS_ONLY
+
+MIN_TLS_VERSION="TLS1_2"
+readonly MIN_TLS_VERSION
+
+ALLOW_BLOB_PUBLIC_ACCESS="false"
+readonly ALLOW_BLOB_PUBLIC_ACCESS
+
 ALLOW_SHARED_KEY_ACCESS="false"
 if [[ "$USE_AZUREAD_AUTH" != "true" ]]; then
   ALLOW_SHARED_KEY_ACCESS="true"
 fi
 readonly ALLOW_SHARED_KEY_ACCESS
 
-echo "Creating storage account..."
-STORAGE_ACCOUNT_ID="$(az storage account create \
-  --name "$STORAGE_ACCOUNT_NAME" \
-  --resource-group "$RESOURCE_GROUP_NAME" \
-  --location "$LOCATION" \
-  --sku Standard_GRS \
-  --access-tier Hot \
-  --kind StorageV2 \
-  --https-only true \
-  --min-tls-version TLS1_2 \
-  --allow-blob-public-access false \
-  --allow-shared-key-access "$ALLOW_SHARED_KEY_ACCESS" \
-  --allow-cross-tenant-replication false \
-  --default-action Allow \
-  --query id \
-  --output tsv)"
+ALLOW_CROSS_TENANT_REPLICATION="false"
+readonly ALLOW_CROSS_TENANT_REPLICATION
+
+if [[ -z "$STORAGE_ACCOUNT_ID" ]]; then
+  echo "Creating storage account..."
+  STORAGE_ACCOUNT_ID="$(az storage account create \
+    --name "$STORAGE_ACCOUNT_NAME" \
+    --resource-group "$RESOURCE_GROUP_NAME" \
+    --location "$LOCATION" \
+    --sku Standard_GRS \
+    --access-tier Hot \
+    --kind StorageV2 \
+    --https-only "$HTTPS_ONLY" \
+    --min-tls-version "$MIN_TLS_VERSION" \
+    --allow-blob-public-access "$ALLOW_BLOB_PUBLIC_ACCESS" \
+    --allow-shared-key-access "$ALLOW_SHARED_KEY_ACCESS" \
+    --allow-cross-tenant-replication "$ALLOW_CROSS_TENANT_REPLICATION" \
+    --default-action Allow \
+    --query id \
+    --output tsv)"
+else
+  echo "Updating existing storage account..."
+  az storage account update \
+    --name "$STORAGE_ACCOUNT_NAME" \
+    --resource-group "$RESOURCE_GROUP_NAME" \
+    --https-only "$HTTPS_ONLY" \
+    --min-tls-version "$MIN_TLS_VERSION" \
+    --allow-blob-public-access "$ALLOW_BLOB_PUBLIC_ACCESS" \
+    --allow-shared-key-access "$ALLOW_SHARED_KEY_ACCESS" \
+    --allow-cross-tenant-replication "$ALLOW_CROSS_TENANT_REPLICATION" \
+    --output none
+fi
 
 az storage account blob-service-properties update \
   --account-name "$STORAGE_ACCOUNT_NAME" \
