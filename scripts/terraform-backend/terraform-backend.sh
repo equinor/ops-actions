@@ -11,9 +11,6 @@ readonly CONFIG_FILE
 OBJECT_ID=${3:?"OBJECT_ID is unset or null"}
 readonly OBJECT_ID
 
-IP_ADDRESSES=${4:-""}
-readonly IP_ADDRESSES
-
 error() {
   echo -e "\033[0;31mERROR: $*\033[0;37m" >&2
 }
@@ -128,12 +125,6 @@ fi
 readonly ALLOW_SHARED_KEY_ACCESS
 readonly ROLE
 
-DEFAULT_ACTION="Deny"
-if [[ -z "$IP_ADDRESSES" ]]; then
-  DEFAULT_ACTION="Allow"
-fi
-readonly DEFAULT_ACTION
-
 echo "Creating storage account..."
 STORAGE_ACCOUNT_ID="$(az storage account create \
   --name "$STORAGE_ACCOUNT_NAME" \
@@ -147,17 +138,9 @@ STORAGE_ACCOUNT_ID="$(az storage account create \
   --allow-blob-public-access false \
   --allow-shared-key-access "$ALLOW_SHARED_KEY_ACCESS" \
   --allow-cross-tenant-replication false \
-  --default-action "$DEFAULT_ACTION" \
+  --default-action Allow \
   --query id \
   --output tsv)"
-
-for ip_address in $IP_ADDRESSES; do
-  az storage account network-rule add \
-    --account-name "$STORAGE_ACCOUNT_NAME" \
-    --resource-group "$RESOURCE_GROUP_NAME" \
-    --ip-address "$ip_address" \
-    --output none
-done
 
 az storage account blob-service-properties update \
   --account-name "$STORAGE_ACCOUNT_NAME" \
