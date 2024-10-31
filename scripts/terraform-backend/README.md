@@ -9,19 +9,9 @@ It accepts the following arguments:
 
 ## Prerequisites
 
-- [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure resource group, storage account and container:
-
-    ```console
-    winget install Microsoft.AzureCLI
-    ```
-
-- [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON config file:
-
-    ```console
-    winget install jqlang.jq
-    ```
-
-- Azure role `Owner` at the subscription scope.
+- [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Azure resource group and Storage account.
+- [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON configuration file.
+- Azure role `Owner` - to create Azure resource group and Storage account.
 
 ## Configuration specification
 
