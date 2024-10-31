@@ -4,7 +4,7 @@ This directory contains a Bash script `oidc.sh` that will configure OpenID Conne
 
 It will:
 
-1. Create an Microsoft Entra application
+1. Create a Microsoft Entra application
 1. Create a service principal for the Microsoft Entra application
 1. Create federated credentials for the Microsoft Entra application
 1. Create Azure role assignments for the service principal
@@ -51,18 +51,18 @@ Example configuration:
 }
 ```
 
-This configuration will instruct the script to create an Microsoft Entra application and a service principal with name `my-app` and a federated credential with name `deploy-dev` that'll allow deployments from the `dev` environment in the GitHub repository.
+> [!Note]
+>
+> `.federatedCredentials[].subject` should start with `repo:${REPO}:`.
+>
+> `.roleAssignments[].scope` should start with `/subscriptions/${SUBSCRIPTION_ID}`.
+
+This configuration will instruct the script to create a Microsoft Entra application and a service principal with name `my-app` and a federated credential with name `deploy-dev` that'll allow deployments from the `dev` environment in the GitHub repository.
 
 It'll also assign two Azure roles at the subscription scope to the service principal:
 
 1. `Contributor`
 1. `Role Based Access Control Administrator` (with a condition that prevents the service principal from assigning roles `Owner`, `User Access Administrator` and `Role Based Access Control Administrator` to other principals).
-
-> **Note**
->
-> `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
->
-> `.roleAssignments[].scope` must start with `/subscriptions/${SUBSCRIPTION_ID}`.
 
 ## Usage
 
