@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.9.0](https://github.com/equinor/ops-actions/compare/v9.8.1...v9.9.0) (2024-11-06)
+
+
+### Features
+
+* **terraform:** add option to run Apply on condition ([#582](https://github.com/equinor/ops-actions/issues/582)) ([4e290ad](https://github.com/equinor/ops-actions/commit/4e290adfc7e5bf1eb65c352a62e97819f0c3b998))
+
 ## [9.8.1](https://github.com/equinor/ops-actions/compare/v9.8.0...v9.8.1) (2024-10-23)
 
 
