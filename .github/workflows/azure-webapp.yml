@@ -76,6 +76,8 @@ jobs:
 
       - name: Extract tarball
         if: inputs.artifact_name != ''
+        env:
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
         run: |
           tarball="$ARTIFACT_NAME.tar"
           tar -xvf "$tarball"
