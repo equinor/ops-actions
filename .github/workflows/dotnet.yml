@@ -130,6 +130,8 @@ jobs:
       - name: Create tarball
         id: tar
         working-directory: ${{ steps.publish.outputs.publish_path }}
+        env:
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
           tar -cvf "$tarball" .
