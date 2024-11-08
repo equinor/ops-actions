@@ -1,5 +1,14 @@
 # Changelog
 
+## [9.9.1](https://github.com/equinor/ops-actions/compare/v9.9.0...v9.9.1) (2024-11-08)
+
+
+### Bug Fixes
+
+* **azure-function:** no artifact download ([#586](https://github.com/equinor/ops-actions/issues/586)) ([13e9dd2](https://github.com/equinor/ops-actions/commit/13e9dd2f87fecf29288249fc95b9ba5340a52d97))
+* **azure-webapp:** no artifact download ([#587](https://github.com/equinor/ops-actions/issues/587)) ([3635d54](https://github.com/equinor/ops-actions/commit/3635d545b1a04bb20e07779564d562174a725324))
+* **dotnet:** no artifact uploaded ([#584](https://github.com/equinor/ops-actions/issues/584)) ([2cd5ccf](https://github.com/equinor/ops-actions/commit/2cd5ccff5ae326a1c99ee95633fcc55f5d2de409))
+
 ## [9.9.0](https://github.com/equinor/ops-actions/compare/v9.8.1...v9.9.0) (2024-11-06)
 
 
