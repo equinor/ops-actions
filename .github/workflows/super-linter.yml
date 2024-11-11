@@ -43,3 +43,6 @@ jobs:
           # Explicitly disable these linters to prevent them from being run when they should not:
           VALIDATE_CHECKOV: false
           VALIDATE_JSCPD: false
+          # Terrascan is not actively maintained as of 11.11.2024, which results in outdated errors.
+          # For example, if using the `nullable` argument in a Terraform variable block, Terrascan throws an error. This argument was added in Terraform v1.1 (https://developer.hashicorp.com/terraform/language/values/variables#disallowing-null-input-values).
+          VALIDATE_TERRAFORM_TERRASCAN: false
