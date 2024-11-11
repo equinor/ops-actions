@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.9.2](https://github.com/equinor/ops-actions/compare/v9.9.1...v9.9.2) (2024-11-11)
+
+
+### Bug Fixes
+
+* **super-linter:** linter `TERRAFORM_TERRASCAN` throws redundant errors ([#588](https://github.com/equinor/ops-actions/issues/588)) ([b42a49b](https://github.com/equinor/ops-actions/commit/b42a49b6d4a3d7c7a258a6e8047f83bb548e9dae))
+
 ## [9.9.1](https://github.com/equinor/ops-actions/compare/v9.9.0...v9.9.1) (2024-11-08)
 
 
