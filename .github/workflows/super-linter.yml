@@ -9,6 +9,7 @@ on:
         type: string
         required: false
         default: ""
+
       filter_regex_include:
         description: Include files in linting using a regex pattern.
         type: string
@@ -29,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Required to get the list of files that changed across commits
 
       - name: Lint Codebase
         uses: super-linter/super-linter@b92721f792f381cedc002ecdbb9847a15ece5bb8
