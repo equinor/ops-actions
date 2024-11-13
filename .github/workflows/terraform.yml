@@ -3,16 +3,16 @@ name: ♻ terraform
 on:
   workflow_call:
     inputs:
-      environment:
-        description: The environment that the job references.
-        type: string
-        required: true
-
-      working_directory:
-        description: The working directory to run the Terraform commands in.
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
         type: string
         required: false
-        default: "."
+        default: ubuntu-latest
+
+      environment:
+        description: The environment that the jobs reference.
+        type: string
+        required: true
 
       terraform_version:
         description: The version of Terraform to install.
@@ -20,24 +20,32 @@ on:
         required: false
         default: latest
 
-      backend_config:
-        description: The path, relative to the working directory, of a configuration file containing the remaining arguments for a partial backend configuration.
+      working_directory:
+        description: The working directory to run the Terraform commands in.
         type: string
         required: false
-        default: ""
-        # Ref: https://developer.hashicorp.com/terraform/language/settings/backends/configuration#partial-configuration
+        default: "."
+
+      backend_config:
+        description: The path, relative to the working directory, of a configuration file (`.tfbackend`) containing the remaining arguments for a partial backend configuration.
+        type: string
+        required: false
+
+      var_file:
+        description: The path, relative to the working directory, of a variable definitions file (`.tfvars`) containing values for variables declared in the root module.
+        type: string
+        required: false
 
       artifact_name:
         description: The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name.
         type: string
         required: false
-        default: ""
 
-      runs_on:
-        description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
-        type: string
+      run_terraform_apply:
+        description: Run `terraform apply` for the saved plan file?
+        type: boolean
         required: false
-        default: ubuntu-latest
+        default: true
 
     secrets:
       AZURE_CLIENT_ID:
@@ -78,6 +86,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+  TFPLAN_FILE: tfplan
   ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
@@ -88,7 +97,7 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
-      contents: read  # Required to checkout the repository
+      contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
 
     defaults:
@@ -102,10 +111,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@651471c36a6092792c552e8b1bef71e592b462d8
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
         with:
           terraform_version: ${{ inputs.terraform_version }}
           terraform_wrapper: false
@@ -127,11 +136,27 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        run: terraform fmt -check
+        # Start Bash without fail-fast behavior.
+        # Required in order to check exitcode.
+        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
+        shell: bash {0}
+        continue-on-error: true # Formatting errors should not prevent the job from running.
+        run: |
+          terraform fmt -check
+          exitcode=$?
+          echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
+          exit "$exitcode"
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        env:
+          TFBACKEND_CONFIG: ${{ inputs.backend_config }}
+        run: |
+          optional_args=()
+          if [[ -n "$TFBACKEND_CONFIG" ]]; then
+            optional_args+=(-backend-config="$TFBACKEND_CONFIG")
+          fi
+          terraform init "${optional_args[@]}"
 
       - name: Terraform Validate
         id: validate
@@ -147,8 +172,14 @@ jobs:
         # Required in order to check exitcode.
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
         shell: bash {0}
+        env:
+          TFVARS_FILE: ${{ inputs.var_file }}
         run: |
-          terraform plan -input=false -out=tfplan -detailed-exitcode
+          optional_args=()
+          if [[ -n "$TFVARS_FILE" ]]; then
+            optional_args+=(-var-file="$TFVARS_FILE")
+          fi
+          terraform plan -input=false -out="$TFPLAN_FILE" -detailed-exitcode "${optional_args[@]}"
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
@@ -160,7 +191,7 @@ jobs:
       - name: Create job summary
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
         # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
-        if: steps.plan.outputs.exitcode == 2
+        if: steps.fmt.outputs.exitcode != 0 || steps.plan.outputs.exitcode == 2
         shell: bash {0}
         env:
           TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
@@ -169,7 +200,7 @@ jobs:
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         run: |
-          tfplan=$(terraform show tfplan -no-color)
+          tfplan=$(terraform show "$TFPLAN_FILE" -no-color)
 
           echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
           #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
@@ -198,7 +229,7 @@ jobs:
       - name: Upload artifact
         id: upload
         if: steps.tar.outcome == 'success'
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ steps.tar.outputs.tarball }}
@@ -211,13 +242,13 @@ jobs:
   terraform-apply:
     name: Terraform Apply
     needs: terraform-plan
-    if: github.actor != 'dependabot[bot]' && needs.terraform-plan.outputs.upload-outcome == 'success'
+    if: github.actor != 'dependabot[bot]' && needs.terraform-plan.outputs.upload-outcome == 'success' && inputs.run_terraform_apply
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     permissions:
-      contents: read  # Required to checkout the repository
+      contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
-      actions: write  # Required to delete the artifact
+      actions: write # Required to delete the artifact
 
     defaults:
       run:
@@ -226,7 +257,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Download artifact
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
@@ -235,7 +266,7 @@ jobs:
           path: ${{ inputs.working_directory }}
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@651471c36a6092792c552e8b1bef71e592b462d8
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
@@ -246,7 +277,7 @@ jobs:
           rm "$tarball"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false tfplan
+        run: terraform apply -auto-approve -input=false "$TFPLAN_FILE"
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.

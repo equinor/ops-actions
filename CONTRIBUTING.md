@@ -40,6 +40,35 @@ This document provides guidelines for contributing to the Ops Actions project.
 
     Use the Conventional Commits specification for semantic pull request titles.
 
+## ✅ Reviewing changes
+
+1. Ensure all changes follow our [best practices](./docs/best-practices.md).
+1. Check if there are any **breaking changes** that will require users to update their workflow calls:
+
+     - Add required input or secret.
+     - Update input type.
+     - Update output value.
+     - Rename input, secret or output.
+     - Remove input, secret or output.
+     - Rename workflow file.
+     - Remove workflow file.
+
+1. Ensure that the PR title follows the [Conventional Commits specificiation](https://www.conventionalcommits.org/en/v1.0.0/) and is using one of the following allowed types:
+
+      - **feat:** add or remove something (e.g. workflow, input, job, step or output)
+      - **fix:** fix something broken
+      - **refactor:** change something without adding, removing or fixing anything
+      - **docs:** document something
+      - **ci:** change CI/CD setup (e.g. non-reusable workflows or scripts)
+      - **chore:** everything else
+
+1. Audit third-party actions:
+
+      - Ensure commits are signed by trusted users (e.g. members of trusted organizations such as `actions`, `hashicorp`, `docker` or `Azure`).
+      - Perform a static security test (e.g. using [StepSecurity Action Advisor](https://app.stepsecurity.io/action-advisor)).
+
+1. Ensure that the workflow has been tested to work as expected. GitHub Actions workflows can be hard (if not impossible) to test locally. At a bare minimum, a workflow should be explicitly tested in a separate repository.
+
 ## 🤝 Roles and responsibilities
 
 This section describes the various roles and responsibilities in the Ops Actions project.

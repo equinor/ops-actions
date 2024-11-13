@@ -1,5 +1,77 @@
 # Changelog
 
+## [9.9.2](https://github.com/equinor/ops-actions/compare/v9.9.1...v9.9.2) (2024-11-11)
+
+
+### Bug Fixes
+
+* **super-linter:** linter `TERRAFORM_TERRASCAN` throws redundant errors ([#588](https://github.com/equinor/ops-actions/issues/588)) ([b42a49b](https://github.com/equinor/ops-actions/commit/b42a49b6d4a3d7c7a258a6e8047f83bb548e9dae))
+
+## [9.9.1](https://github.com/equinor/ops-actions/compare/v9.9.0...v9.9.1) (2024-11-08)
+
+
+### Bug Fixes
+
+* **azure-function:** no artifact download ([#586](https://github.com/equinor/ops-actions/issues/586)) ([13e9dd2](https://github.com/equinor/ops-actions/commit/13e9dd2f87fecf29288249fc95b9ba5340a52d97))
+* **azure-webapp:** no artifact download ([#587](https://github.com/equinor/ops-actions/issues/587)) ([3635d54](https://github.com/equinor/ops-actions/commit/3635d545b1a04bb20e07779564d562174a725324))
+* **dotnet:** no artifact uploaded ([#584](https://github.com/equinor/ops-actions/issues/584)) ([2cd5ccf](https://github.com/equinor/ops-actions/commit/2cd5ccff5ae326a1c99ee95633fcc55f5d2de409))
+
+## [9.9.0](https://github.com/equinor/ops-actions/compare/v9.8.1...v9.9.0) (2024-11-06)
+
+
+### Features
+
+* **terraform:** add option to run Apply on condition ([#582](https://github.com/equinor/ops-actions/issues/582)) ([4e290ad](https://github.com/equinor/ops-actions/commit/4e290adfc7e5bf1eb65c352a62e97819f0c3b998))
+
+## [9.8.1](https://github.com/equinor/ops-actions/compare/v9.8.0...v9.8.1) (2024-10-23)
+
+
+### Bug Fixes
+
+* **terraform:** formatting errors prevent job from running ([#575](https://github.com/equinor/ops-actions/issues/575)) ([45e610c](https://github.com/equinor/ops-actions/commit/45e610c8096145fc617f571d587578b01713334f))
+
+## [9.8.0](https://github.com/equinor/ops-actions/compare/v9.7.3...v9.8.0) (2024-10-09)
+
+
+### Features
+
+* **terraform:** add input variable file for greater customization options ([#559](https://github.com/equinor/ops-actions/issues/559)) ([242f621](https://github.com/equinor/ops-actions/commit/242f621b9c2c76f8c415195c79cc8b2d41bb942c))
+
+## [9.7.3](https://github.com/equinor/ops-actions/compare/v9.7.2...v9.7.3) (2024-10-08)
+
+
+### Bug Fixes
+
+* **terraform:** skip formatting check ([#568](https://github.com/equinor/ops-actions/issues/568)) ([7c84771](https://github.com/equinor/ops-actions/commit/7c8477122ea8334355a7757177413e18f013fe63))
+
+## [9.7.2](https://github.com/equinor/ops-actions/compare/v9.7.1...v9.7.2) (2024-09-12)
+
+
+### Code Refactoring
+
+* **docker:** replace deprecated environment variable ([#549](https://github.com/equinor/ops-actions/issues/549)) ([24214a3](https://github.com/equinor/ops-actions/commit/24214a3df127b02f512f85ac69aa4760686a0a2a))
+
+## [9.7.1](https://github.com/equinor/ops-actions/compare/v9.7.0...v9.7.1) (2024-09-11)
+
+
+### Bug Fixes
+
+* **super-linter:** disable Checkov and JSCPD linters ([#547](https://github.com/equinor/ops-actions/issues/547)) ([9b3e0e9](https://github.com/equinor/ops-actions/commit/9b3e0e9bc1f9102aff8930016e00cedc0be2edcf))
+
+## [9.7.0](https://github.com/equinor/ops-actions/compare/v9.6.3...v9.7.0) (2024-09-05)
+
+
+### Features
+
+* **super-linter:** read configuration file ([#544](https://github.com/equinor/ops-actions/issues/544)) ([5ce8e1a](https://github.com/equinor/ops-actions/commit/5ce8e1aed8bcced8dab4ac786aef0e1cb5a150bb))
+
+## [9.6.3](https://github.com/equinor/ops-actions/compare/v9.6.2...v9.6.3) (2024-08-26)
+
+
+### Bug Fixes
+
+* **super-linter:** unable to report status checks ([#539](https://github.com/equinor/ops-actions/issues/539)) ([66c21bf](https://github.com/equinor/ops-actions/commit/66c21bfb35dc2a93e5019253f78c41bd194b1230))
+
 ## [9.6.2](https://github.com/equinor/ops-actions/compare/v9.6.1...v9.6.2) (2024-07-15)
 
 

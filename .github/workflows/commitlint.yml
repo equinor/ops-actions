@@ -4,9 +4,6 @@
 # - commitlint: https://commitlint.js.org
 # - Conventional Commits: https://www.conventionalcommits.org
 
-# Additional configuration can be set in `commitlint.config.js`.
-# Docs: https://commitlint.js.org/#/reference-configuration
-
 name: ♻ commitlint
 
 on:
@@ -25,7 +22,10 @@ on:
         default: latest
 
       extends:
-        description: Newline-separated string of shareable configurations to extend.
+        description: |
+          Newline-separated string of shareable configurations to install.
+
+          Additional configuration can be set in a file `.commitlintrc` (https://commitlint.js.org/reference/configuration.html).
         type: string
         required: false
         default: |-
@@ -48,9 +48,17 @@ jobs:
   commitlint:
     name: commitlint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # Required to checkout the repository
+
     steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
       - name: Setup Node.js
-        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         with:
           node-version: ${{ inputs.node_version }}
 

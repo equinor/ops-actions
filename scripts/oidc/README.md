@@ -4,15 +4,24 @@ This directory contains a Bash script `oidc.sh` that will configure OpenID Conne
 
 It will:
 
-1. Create an Azure AD application
-1. Create a service principal for the Azure AD application
-1. Create federated credentials for the Azure AD application
+1. Create a Microsoft Entra application
+1. Create a service principal for the Microsoft Entra application
+1. Create federated credentials for the Microsoft Entra application
 1. Create Azure role assignments for the service principal
 1. Set GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 
 The script accepts the following arguments:
 
 1. The path of the JSON file containing the OIDC configuration
+
+## Prerequisites
+
+- [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Microsoft Entra application, service principal and Azure role assignments.
+- [Install GitHub CLI](https://cli.github.com) - to set GitHub secrets.
+- [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON configuration file.
+- Microsoft Entra role `Application Developer` - to create Microsoft Entra application and service principal.
+- Azure role `Owner` - to create Azure role assignments.
+- GitHub repository role `Admin` - to set GitHub secrets.
 
 ## Configuration specification
 
@@ -32,28 +41,28 @@ Example configuration:
     {
       "scope": "/subscriptions/${SUBSCRIPTION_ID}",
       "role": "Contributor"
+    },
+    {
+      "scope": "/subscriptions/${SUBSCRIPTION_ID}",
+      "role": "Role Based Access Control Administrator",
+      "condition": "((!(ActionMatches{'Microsoft.Authorization/roleAssignments/write'})) OR (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAllValues:GuidNotEquals {8e3af657-a8ff-443c-a75c-2fe8c4bcb635, 18d7d88d-d35e-4fb5-a5c3-7773c20a72d9, f58310d9-a9f6-439a-9e8d-f62e7b41a168})) AND ((!(ActionMatches{'Microsoft.Authorization/roleAssignments/delete'})) OR (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAllValues:GuidNotEquals {8e3af657-a8ff-443c-a75c-2fe8c4bcb635, 18d7d88d-d35e-4fb5-a5c3-7773c20a72d9, f58310d9-a9f6-439a-9e8d-f62e7b41a168}))"
     }
   ]
 }
 ```
 
-> **Note**
+> [!Note]
 >
-> `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
+> `.federatedCredentials[].subject` should start with `repo:${REPO}:`.
 >
-> `.roleAssignments[].scope` must start with `/subscriptions/${SUBSCRIPTION_ID}`.
+> `.roleAssignments[].scope` should start with `/subscriptions/${SUBSCRIPTION_ID}`.
 
-## Prerequisites
+This configuration will instruct the script to create a Microsoft Entra application and a service principal with name `my-app` and a federated credential with name `deploy-dev` that'll allow deployments from the `dev` environment in the GitHub repository.
 
-- [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) (latest version as of writing: `2.49.0`) - to create Azure AD application, federated credentials, service principal and Azure role assignments
-- [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to set GitHub secrets
-- [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
-- Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
-  > **Note:** Not necessary when updating the existing config.
-- Activate Azure role `Owner` - to create Azure role assignments
-  > **Note:** Minimum scope required is what's defined for role assignment in the `oidc.json` config.
-- GitHub repository role `Admin` - to set GitHub environment secrets
-- If a federated credential is configured with subject `repo:${REPO}:environment:<environment>`, create GitHub environment `<environment>` and set appropriate deployment protection rules.
+It'll also assign two Azure roles at the subscription scope to the service principal:
+
+1. `Contributor`
+1. `Role Based Access Control Administrator` (with a condition that prevents the service principal from assigning roles `Owner`, `User Access Administrator` and `Role Based Access Control Administrator` to other principals).
 
 ## Usage
 

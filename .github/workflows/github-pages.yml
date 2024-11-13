@@ -20,7 +20,7 @@ jobs:
       cancel-in-progress: false
 
     permissions:
-      pages: write    # Required to deploy to GitHub Pages
+      pages: write # Required to deploy to GitHub Pages
       id-token: write # Required to verify that GitHub Pages deployment originates from appropriate source
 
     environment:
