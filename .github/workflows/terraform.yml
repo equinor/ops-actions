@@ -121,6 +121,22 @@ jobs:
           # If the wrapper is enabled, the debug logs will be visible in the job summary.
           # The wrapper must be disabled to prevent this.
 
+      - name: Create Terraform plugin cache
+        id: mkdir
+        run: |
+          plugin_cache_dir="$RUNNER_TEMP/.terraform.d/plugin-cache"
+          mkdir --parents "$plugin_cache_dir"
+          echo "plugin_cache_dir=$plugin_cache_dir" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Terraform plugins
+        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a
+        with:
+          path: ${{ steps.mkdir.outputs.plugin_cache_dir }}
+          key: terraform-${{ hashFiles(format('{0}/.terraform.lock.hcl', inputs.working_directory)) }}
+          # The dependency lock file tracks provider dependencies for the Terraform configuration in the working directory.
+          # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
+          # https://developer.hashicorp.com/terraform/language/files/dependency-lock
+
       - name: Terraform Format
         id: fmt
         # Start Bash without fail-fast behavior.
@@ -138,6 +154,9 @@ jobs:
         id: init
         env:
           TFBACKEND_CONFIG: ${{ inputs.backend_config }}
+          # Enable Terraform plugin cache.
+          # https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache
+          TF_PLUGIN_CACHE_DIR: ${{ steps.mkdir.outputs.plugin_cache_dir }}
         run: |
           optional_args=()
           if [[ -n "$TFBACKEND_CONFIG" ]]; then
