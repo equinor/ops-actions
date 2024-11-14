@@ -133,7 +133,7 @@ jobs:
         with:
           path: ${{ steps.mkdir.outputs.plugin_cache_dir }}
           key: terraform-${{ hashFiles(format('{0}/.terraform.lock.hcl', inputs.working_directory)) }}
-          # The dependency lock file tracks provider dependencies for the Terraform configuration.
+          # The dependency lock file tracks provider dependencies for the Terraform configuration in the working directory.
           # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
           # https://developer.hashicorp.com/terraform/language/files/dependency-lock
 
