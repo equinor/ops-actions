@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.10.0](https://github.com/equinor/ops-actions/compare/v9.9.2...v9.10.0) (2024-11-14)
+
+
+### Features
+
+* **terraform:** store plugins in cache ([#396](https://github.com/equinor/ops-actions/issues/396)) ([744058b](https://github.com/equinor/ops-actions/commit/744058bac03a7dcbd2ecd2a4996f7c100523e86b))
+
 ## [9.9.2](https://github.com/equinor/ops-actions/compare/v9.9.1...v9.9.2) (2024-11-11)
 
 
