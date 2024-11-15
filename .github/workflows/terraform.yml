@@ -1,3 +1,11 @@
+# Reusable GitHub Actions workflow to provision cloud infrastructure using HashiCorp Terraform.
+#
+# Features:
+#   - Authenticate to Azure using federated credentials.
+#   - Queue concurrent jobs that target the same Terraform root configuration.
+#   - Cache Terraform plugins.
+#   - Create job summary containing Terraform command outcomes and plan.
+
 name: ♻ terraform
 
 on:
