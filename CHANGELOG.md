@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.10.2](https://github.com/equinor/ops-actions/compare/v9.10.1...v9.10.2) (2024-11-18)
+
+
+### Bug Fixes
+
+* **terraform:** no plugins uploaded to cache ([#593](https://github.com/equinor/ops-actions/issues/593)) ([7033d8d](https://github.com/equinor/ops-actions/commit/7033d8d425496abcbfe81056943120dc889ed380))
+
 ## [9.10.1](https://github.com/equinor/ops-actions/compare/v9.10.0...v9.10.1) (2024-11-18)
 
 
