@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.10.1](https://github.com/equinor/ops-actions/compare/v9.10.0...v9.10.1) (2024-11-18)
+
+
+### Bug Fixes
+
+* **terraform:** include plugins downloaded from cache in artifact ([#591](https://github.com/equinor/ops-actions/issues/591)) ([eaa211a](https://github.com/equinor/ops-actions/commit/eaa211a621866916d14ede701f0072a467af1dd2))
+
 ## [9.10.0](https://github.com/equinor/ops-actions/compare/v9.9.2...v9.10.0) (2024-11-14)
 
 
