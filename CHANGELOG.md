@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.10.3](https://github.com/equinor/ops-actions/compare/v9.10.2...v9.10.3) (2024-11-19)
+
+
+### Bug Fixes
+
+* **terraform:** duplicate caches created ([#596](https://github.com/equinor/ops-actions/issues/596)) ([5392dfc](https://github.com/equinor/ops-actions/commit/5392dfcd1425c5f1b7e828705a0044553cd41057))
+
 ## [9.10.2](https://github.com/equinor/ops-actions/compare/v9.10.1...v9.10.2) (2024-11-18)
 
 
