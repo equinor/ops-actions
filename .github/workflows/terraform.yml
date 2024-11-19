@@ -146,9 +146,6 @@ jobs:
           # The dependency lock file tracks provider dependencies for the Terraform configuration in the working directory.
           # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
           # https://developer.hashicorp.com/terraform/language/files/dependency-lock
-          #
-          # The cache primary key must be prefixed with the runner OS to ensure that we only try to restore caches that can actually be restored on this OS.
-          # https://github.com/actions/cache#cache-version
 
       - name: Terraform Format
         id: fmt
