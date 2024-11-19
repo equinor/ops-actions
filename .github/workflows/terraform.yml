@@ -289,6 +289,12 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working_directory }}
 
+      - name: Restore cache
+        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a
+        with:
+          path: ${{ needs.terraform-plan.outputs.plugin-cache-dir }}
+          key: ${{ needs.terraform-plan.outputs.cache-primary-key }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
         with:
@@ -299,12 +305,6 @@ jobs:
           tarball="$ARTIFACT_NAME.tar.gpg"
           gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$tarball" | tar -xv
           rm "$tarball"
-
-      - name: Restore cache
-        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a
-        with:
-          path: ${{ needs.terraform-plan.outputs.plugin-cache-dir }}
-          key: ${{ needs.terraform-plan.outputs.cache-primary-key }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false "$TFPLAN_FILE"
