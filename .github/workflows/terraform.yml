@@ -138,8 +138,8 @@ jobs:
           echo "plugin-cache-dir=$plugin_cache_dir" >> "$GITHUB_OUTPUT"
 
       - name: Restore cached Terraform plugins
-        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a
         id: cache-restore
+        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/.terraform.lock.hcl', inputs.working_directory)) }}
@@ -259,6 +259,7 @@ jobs:
           retention-days: 35
 
       - name: Cache Terraform plugins
+        if: always() && steps.cache-restore.outputs.cache-hit != 'true'
         uses: actions/cache/save@6849a6489940f00c2f30c0fb92c6274307ccb58a
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
