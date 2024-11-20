@@ -23,29 +23,24 @@ The script accepts the following arguments:
 - Azure role `Owner` - to create Azure role assignments.
 - GitHub repository role `Admin` - to set GitHub secrets.
 
-## Configuration specification
+## Configuration
 
 Example configuration:
 
 ```json
 {
-  "appName": "my-app",
+  "appName": "GitHub app",
   "federatedCredentials": [
     {
-      "name": "deploy-dev",
-      "subject": "repo:${REPO}:environment:dev",
-      "description": "Deploy to dev environment"
+      "name": "github-federated-identity",
+      "subject": "repo:${REPO}:environment:Development",
+      "description": "GitHub service principal federated identity"
     }
   ],
   "roleAssignments": [
     {
       "scope": "/subscriptions/${SUBSCRIPTION_ID}",
       "role": "Contributor"
-    },
-    {
-      "scope": "/subscriptions/${SUBSCRIPTION_ID}",
-      "role": "Role Based Access Control Administrator",
-      "condition": "((!(ActionMatches{'Microsoft.Authorization/roleAssignments/write'})) OR (@Request[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAllValues:GuidNotEquals {8e3af657-a8ff-443c-a75c-2fe8c4bcb635, 18d7d88d-d35e-4fb5-a5c3-7773c20a72d9, f58310d9-a9f6-439a-9e8d-f62e7b41a168})) AND ((!(ActionMatches{'Microsoft.Authorization/roleAssignments/delete'})) OR (@Resource[Microsoft.Authorization/roleAssignments:RoleDefinitionId] ForAnyOfAllValues:GuidNotEquals {8e3af657-a8ff-443c-a75c-2fe8c4bcb635, 18d7d88d-d35e-4fb5-a5c3-7773c20a72d9, f58310d9-a9f6-439a-9e8d-f62e7b41a168}))"
     }
   ]
 }
@@ -53,16 +48,9 @@ Example configuration:
 
 > [!Note]
 >
-> `.federatedCredentials[].subject` should start with `repo:${REPO}:`.
+> The value of `.federatedCredentials[].subject` should contain the prefix `repo:${REPO}:`.
 >
-> `.roleAssignments[].scope` should start with `/subscriptions/${SUBSCRIPTION_ID}`.
-
-This configuration will instruct the script to create a Microsoft Entra application and a service principal with name `my-app` and a federated credential with name `deploy-dev` that'll allow deployments from the `dev` environment in the GitHub repository.
-
-It'll also assign two Azure roles at the subscription scope to the service principal:
-
-1. `Contributor`
-1. `Role Based Access Control Administrator` (with a condition that prevents the service principal from assigning roles `Owner`, `User Access Administrator` and `Role Based Access Control Administrator` to other principals).
+> The value of `.roleAssignments[].scope` should contain the prefix `/subscriptions/${SUBSCRIPTION_ID}`.
 
 ## Usage
 
