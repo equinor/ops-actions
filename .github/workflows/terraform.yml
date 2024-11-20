@@ -1,12 +1,12 @@
-# Reusable GitHub Actions workflow to provision cloud infrastructure using HashiCorp Terraform.
+# Reusable GitHub Actions workflow to provision cloud infrastructure using OpenTofu.
 #
 # Features:
 #   - Authenticate to Azure using federated credentials.
-#   - Queue concurrent jobs that target the same Terraform root configuration.
-#   - Cache Terraform plugins.
-#   - Create job summary containing Terraform command outcomes and plan.
+#   - Queue concurrent jobs that target the same OpenTofu root configuration.
+#   - Cache OpenTofu plugins.
+#   - Create job summary containing OpenTofu command outcomes and plan.
 
-name: ♻ terraform
+name: ♻ tofu
 
 on:
   workflow_call:
@@ -22,14 +22,14 @@ on:
         type: string
         required: true
 
-      terraform_version:
-        description: The version of Terraform to install.
+      tofu_version:
+        description: The version of OpenTofu to install.
         type: string
         required: false
         default: latest
 
       working_directory:
-        description: The working directory to run the Terraform commands in.
+        description: The working directory to run the OpenTofu commands in.
         type: string
         required: false
         default: "."
@@ -49,8 +49,8 @@ on:
         type: string
         required: false
 
-      run_terraform_apply:
-        description: Run `terraform apply` for the saved plan file?
+      run_tofu_apply:
+        description: Run `tofu apply` for the saved plan file?
         type: boolean
         required: false
         default: true
@@ -69,19 +69,19 @@ on:
         required: true
 
       ENCRYPTION_PASSWORD:
-        description: A password used to encrypt the archive containing the Terraform configuration and plan file.
+        description: A password used to encrypt the archive containing the OpenTofu configuration and plan file.
         required: true
 
-# Queue jobs that target the same Terraform configuration.
+# Queue jobs that target the same OpenTofu configuration.
 concurrency:
-  group: terraform @ ${{ inputs.working_directory }}
+  group: tofu @ ${{ inputs.working_directory }}
   cancel-in-progress: false
 
 permissions: {}
 
 env:
-  # Configure Terraform to run in automation.
-  # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
+  # Configure OpenTofu to run in automation.
+  # Makes output more consistent and less confusing in workflows where users don't directly execute OpenTofu commands.
   TF_IN_AUTOMATION: true
 
   # Configure OIDC authentication to Azure using environment variables.
@@ -92,12 +92,12 @@ env:
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
   TFPLAN_FILE: tfplan
-  ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
+  ARTIFACT_NAME: ${{ inputs.artifact_name || format('tofu-{0}', inputs.environment) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
-  terraform-plan:
-    name: Terraform Plan
+  tofu-plan:
+    name: OpenTofu Plan
     runs-on: ${{ inputs.runs_on }}
     if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
@@ -120,18 +120,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@12f4debbf681675350b6cd1f0ff8ecfbda62027b
         with:
-          terraform_version: ${{ inputs.terraform_version }}
-          terraform_wrapper: false
-          # Wraps Terraform commands, exposing their stdout, stderr and exitcode.
-          # It also wraps Terraform command outputs with debug logs, including the output of the "terraform show" command.
+          tofu_version: ${{ inputs.tofu_version }}
+          tofu_wrapper: false
+          # Wraps OpenTofu commands, exposing their stdout, stderr and exitcode.
+          # It also wraps OpenTofu command outputs with debug logs, including the output of the "tofu show" command.
           # The "show" command is used to create a GitHub job summary containing the generated plan in a human-readable format.
           # If the wrapper is enabled, the debug logs will be visible in the job summary.
           # The wrapper must be disabled to prevent this.
 
-      - name: Create Terraform plugin cache
+      - name: Create OpenTofu plugin cache
         id: mkdir
         run: |
           plugin_cache_dir="$HOME/.terraform.d/plugin-cache"
@@ -144,11 +144,11 @@ jobs:
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/.terraform.lock.hcl', inputs.working_directory)) }}
-          # The dependency lock file tracks provider dependencies for the Terraform configuration in the working directory.
-          # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
-          # https://developer.hashicorp.com/terraform/language/files/dependency-lock
+          # The dependency lock file tracks provider dependencies for the OpenTofu configuration in the working directory.
+          # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the OpenTofu configuration.
+          # https://opentofu.org/docs/language/files/dependency-lock/
 
-      - name: Terraform Format
+      - name: OpenTofu Format
         id: fmt
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
@@ -156,34 +156,33 @@ jobs:
         shell: bash {0}
         continue-on-error: true # Formatting errors should not prevent the job from running.
         run: |
-          terraform fmt -check
+          tofu fmt -check
           exitcode=$?
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
           exit "$exitcode"
 
-      - name: Terraform Init
+      - name: OpenTofu Init
         id: init
         env:
           TFBACKEND_CONFIG: ${{ inputs.backend_config }}
-          # Enable Terraform plugin cache.
-          # https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache
+          # Enable OpenTofu plugin cache.
+          # https://opentofu.org/docs/cli/config/config-file/#provider-plugin-cache
           TF_PLUGIN_CACHE_DIR: ${{ steps.mkdir.outputs.plugin-cache-dir }}
         run: |
           optional_args=()
           if [[ -n "$TFBACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$TFBACKEND_CONFIG")
           fi
-          terraform init "${optional_args[@]}"
+          tofu init "${optional_args[@]}"
 
-      - name: Terraform Validate
+      - name: OpenTofu Validate
         id: validate
-        run: terraform validate
+        run: tofu validate
 
-      # Create Terraform plan file.
+      # Create OpenTofu plan file.
       # This file contains the full configuration, including sensitive data.
       # As a result, it should be treated as a potentially-sensitive artifact.
-      # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
-      - name: Terraform Plan
+      - name: OpenTofu Plan
         id: plan
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
@@ -196,7 +195,7 @@ jobs:
           if [[ -n "$TFVARS_FILE" ]]; then
             optional_args+=(-var-file="$TFVARS_FILE")
           fi
-          terraform plan -input=false -out="$TFPLAN_FILE" -detailed-exitcode "${optional_args[@]}"
+          tofu plan -input=false -out="$TFPLAN_FILE" -detailed-exitcode "${optional_args[@]}"
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
@@ -204,10 +203,10 @@ jobs:
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
 
       # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
-      # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
+      # To bypass this, the plan must be explicitly read during this step using the "tofu show" command.
       - name: Create job summary
-        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
-        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
+        # Only run if OpenTofu Plan succeeded with non-empty diff (changes present).
+        # Ref: https://opentofu.org/docs/cli/commands/plan/
         if: steps.fmt.outputs.exitcode != 0 || steps.plan.outputs.exitcode == 2
         shell: bash {0}
         env:
@@ -217,12 +216,12 @@ jobs:
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         run: |
-          tfplan=$(terraform show "$TFPLAN_FILE" -no-color)
+          tfplan=$(tofu show "$TFPLAN_FILE" -no-color)
 
-          echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
-          #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
-          #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
-          #### Terraform Plan 📖\`$TF_PLAN_OUTCOME\`
+          echo "#### OpenTofu Format and Style 🖌\`$TF_FMT_OUTCOME\`
+          #### OpenTofu Initialization ⚙\`$TF_INIT_OUTCOME\`
+          #### OpenTofu Validation 🤖\`$TF_VALIDATE_OUTCOME\`
+          #### OpenTofu Plan 📖\`$TF_PLAN_OUTCOME\`
 
           <details><summary>Show Plan</summary>
 
@@ -236,7 +235,7 @@ jobs:
 
       - name: Create tarball
         id: tar
-        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+        # Only run if OpenTofu Plan succeeded with non-empty diff (changes present).
         if: steps.plan.outputs.exitcode == 2
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gpg"
@@ -263,10 +262,10 @@ jobs:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
-  terraform-apply:
-    name: Terraform Apply
-    needs: terraform-plan
-    if: github.actor != 'dependabot[bot]' && needs.terraform-plan.outputs.upload-outcome == 'success' && inputs.run_terraform_apply
+  tofu-apply:
+    name: OpenTofu Apply
+    needs: tofu-plan
+    if: github.actor != 'dependabot[bot]' && needs.tofu-plan.outputs.upload-outcome == 'success' && inputs.run_tofu_apply
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     permissions:
@@ -292,13 +291,13 @@ jobs:
       - name: Restore cache
         uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a
         with:
-          path: ${{ needs.terraform-plan.outputs.plugin-cache-dir }}
-          key: ${{ needs.terraform-plan.outputs.cache-primary-key }}
+          path: ${{ needs.tofu-plan.outputs.plugin-cache-dir }}
+          key: ${{ needs.tofu-plan.outputs.cache-primary-key }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@12f4debbf681675350b6cd1f0ff8ecfbda62027b
         with:
-          terraform_version: ${{ inputs.terraform_version }}
+          tofu_version: ${{ inputs.tofu_version }}
 
       - name: Extract tarball
         run: |
@@ -306,16 +305,16 @@ jobs:
           gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$tarball" | tar -xv
           rm "$tarball"
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false "$TFPLAN_FILE"
+      - name: OpenTofu Apply
+        run: tofu apply -auto-approve -input=false "$TFPLAN_FILE"
 
-      # Once the Terraform plan file has been applied, the artifact is no longer needed.
+      # Once the OpenTofu plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
       # There is currently no official action to do this, so we use the GitHub CLI instead.
       - name: Delete artifact
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACT_ID: ${{ needs.terraform-plan.outputs.artifact-id }}
+          ARTIFACT_ID: ${{ needs.tofu-plan.outputs.artifact-id }}
         run: |
           gh api --method DELETE "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID" 1>/dev/null
           echo "Deleted artifact $ARTIFACT_NAME ($ARTIFACT_ID)"
