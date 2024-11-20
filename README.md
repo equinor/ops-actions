@@ -26,7 +26,7 @@ jobs:
 
 `{filename}` is the name of a workflow file in the [workflows directory](.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
 
-To pass inputs and secrets to the reusable workflow, use the `with` and `secrets` keywords.
+To pass inputs and secrets to the reusable workflow, use the `with` and `secrets` keywords respectively.
 
 For specific usage examples, see [this document](docs/usage-examples.md).
 
