@@ -1,3 +1,5 @@
+# TODO(@hknutsen): rename workflow to `tofu.yml`.
+
 # Reusable GitHub Actions workflow to provision cloud infrastructure using OpenTofu.
 #
 # Features:
