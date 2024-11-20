@@ -5,6 +5,10 @@ set -eu
 CONFIG_FILE=${1:?"CONFIG_FILE is unset or null"}
 readonly CONFIG_FILE
 
+REPO=${2:-""}
+
+SUBSCRIPTION_ID=${3:-""}
+
 error() {
   echo -e "\033[0;31mERROR: $*\033[0;37m" >&2
 }
@@ -40,21 +44,22 @@ hash jq 2>/dev/null || {
 # Verify target GitHub repository and Azure subscription
 ################################################################################
 
-REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
+if [[ -z "$REPO" ]]; then
+  REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
+fi
 readonly REPO
 export REPO
 
-ACCOUNT=$(az account show --output json)
-readonly ACCOUNT
-
-SUBSCRIPTION_NAME=$(echo "$ACCOUNT" | jq -j .name)
-readonly SUBSCRIPTION_NAME
-
-SUBSCRIPTION_ID=$(echo "$ACCOUNT" | jq -j .id)
+if [[ -z "$SUBSCRIPTION_ID" ]]; then
+  SUBSCRIPTION_ID=$(az account show -o tsv --query id)
+fi
 readonly SUBSCRIPTION_ID
 export SUBSCRIPTION_ID
 
-TENANT_ID=$(echo "$ACCOUNT" | jq -j .tenantId)
+SUBSCRIPTION_NAME=$(az account show -s "$SUBSCRIPTION_ID" -o tsv --query name)
+readonly SUBSCRIPTION_NAME
+
+TENANT_ID=$(az account show -s "$SUBSCRIPTION_ID" -o tsv --query tenantId)
 readonly TENANT_ID
 
 read -r -p "Configure OIDC from GitHub repository '$REPO' to \

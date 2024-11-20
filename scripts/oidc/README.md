@@ -13,6 +13,8 @@ It will:
 The script accepts the following arguments:
 
 1. The path of the JSON file containing the OIDC configuration
+1. (Optional) The GitHub repository to configure OIDC from.
+1. (Optional) The ID of the Azure subscription to configure OIDC to.
 
 ## Prerequisites
 
@@ -58,35 +60,35 @@ Example configuration:
 
 1. Login to Azure:
 
-    ```console
-    az login
-    ```
-
-1. Set Azure subscription:
-
-    ```console
-    az account set -s {SUBSCRIPTION_NAME_OR_ID}
-    ```
+   ```console
+   az login
+   ```
 
 1. Login to GitHub:
 
-    ```console
-    gh auth login
-    ```
+   ```console
+   gh auth login
+   ```
 
 1. Configure application name, federated credentials and role assignments in a file `oidc.json`.
 
 1. Run the script `oidc.sh`:
 
-    ```console
-    ./oidc.sh {CONFIG_FILE}
-    ```
+   ```console
+   ./oidc.sh <CONFIG_FILE> [<REPO>] [<SUBSCRIPTION_ID>]
+   ```
 
-    For example:
+   For example, configure OIDC from the GitHub repository containing the configuration file to the active Azure subscription:
 
-    ```console
-    ./oidc.sh oidc.json
-    ```
+   ```console
+   ./oidc.sh oidc.json
+   ```
+
+   Or, configure OIDC from the specified GitHub repository to the specified Azure subscription:
+
+   ```console
+   ./oidc.sh oidc.json equinor/ops-actions 034ce851-5375-47b3-8ed2-0a637c9d4141
+   ```
 
 ### After running the `oidc.sh` script
 
