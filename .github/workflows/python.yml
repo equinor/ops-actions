@@ -16,12 +16,18 @@ on:
         default: latest
 
       venv_path:
-        description: The path to create a virtual Python environment at (relative to working directory).
+        description: The path, relative to the working directory, to create a virtual Python environment at.
         type: string
         required: false
 
+      requirement:
+        description: The path, relative to the working directory, of a requirements file.
+        type: string
+        required: false
+        default: requirements.txt
+
       pip_install_target:
-        description: The target directory that PIP should install packages into (relative to working directory).
+        description: The path, relative to the working directory, of a target directory that PIP should install packages into.
         type: string
         required: false
 
@@ -68,11 +74,13 @@ jobs:
           source "$VENV_PATH/bin/activate"
 
       - name: Install dependencies
+        if: inputs.requirement != ''
         env:
-          TARGET: ${{ inputs.pip_install_target }}
+          PIP_INSTALL_REQUIREMENT: ${{ inputs.requirement }}
+          PIP_INSTALL_TARGET: ${{ inputs.pip_install_target }}
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt --target "$TARGET"
+          pip install --requirement "$PIP_INSTALL_REQUIREMENT" --target "$PIP_INSTALL_TARGET"
 
       - name: Create tarball
         id: tar
