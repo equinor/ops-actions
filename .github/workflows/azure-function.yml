@@ -93,10 +93,13 @@ jobs:
           SLOT_NAME: ${{ inputs.slot_name }}
           APP_SETTINGS: ${{ inputs.app_settings }}
           SLOT_SETTINGS: ${{ inputs.slot_settings }}
-        run: |
-          APP_ID=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          ARGS=(--settings "$APP_SETTINGS")
-          if [[ -n "$SLOT_NAME" ]]; then
-            ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
-          fi
-          az functionapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none
+        uses: azure/cli@089eac9d8cc39f5d003e94f8b65efc51076c9cbd
+        with:
+          azcliversion: 2.67.0
+          inlineScript: |
+            APP_ID=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
+            ARGS=(--settings "$APP_SETTINGS")
+            if [[ -n "$SLOT_NAME" ]]; then
+              ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
+            fi
+            az functionapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none
