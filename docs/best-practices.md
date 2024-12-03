@@ -80,8 +80,6 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
         runs-on: ubuntu-22.04
   ```
 
-  Until further notice maintain and ensure that our workflows are set to the explicit OS version for its runners by default.
-
 ## Naming conventions
 
 - Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow file names, job identifiers and step identifiers.
