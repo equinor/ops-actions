@@ -8,6 +8,9 @@ readonly CONFIG_FILE
 LOCATION=${2:?"LOCATION is unset or null"}
 readonly CONFIG_FILE
 
+IP_ADDRESSES=${3:-""}
+readonly IP_ADDRESSES
+
 error() {
   echo -e "\033[0;31mERROR: $*\033[0;37m" >&2
 }
@@ -131,6 +134,12 @@ readonly ALLOW_SHARED_KEY_ACCESS
 ALLOW_CROSS_TENANT_REPLICATION="false"
 readonly ALLOW_CROSS_TENANT_REPLICATION
 
+DEFAULT_ACTION="Deny"
+if [[ -z "$IP_ADDRESSES" ]]; then
+  DEFAULT_ACTION="Allow"
+fi
+readonly DEFAULT_ACTION
+
 if [[ -z "$STORAGE_ACCOUNT_ID" ]]; then
   echo "Creating storage account..."
   STORAGE_ACCOUNT_ID="$(az storage account create \
@@ -145,7 +154,7 @@ if [[ -z "$STORAGE_ACCOUNT_ID" ]]; then
     --allow-blob-public-access "$ALLOW_BLOB_PUBLIC_ACCESS" \
     --allow-shared-key-access "$ALLOW_SHARED_KEY_ACCESS" \
     --allow-cross-tenant-replication "$ALLOW_CROSS_TENANT_REPLICATION" \
-    --default-action Allow \
+    --default-action "$DEFAULT_ACTION" \
     --query id \
     --output tsv)"
 else
@@ -158,8 +167,18 @@ else
     --allow-blob-public-access "$ALLOW_BLOB_PUBLIC_ACCESS" \
     --allow-shared-key-access "$ALLOW_SHARED_KEY_ACCESS" \
     --allow-cross-tenant-replication "$ALLOW_CROSS_TENANT_REPLICATION" \
+    --default-action "$DEFAULT_ACTION" \
     --output none
 fi
+
+# Network rule must be added before updating Blob service properties.
+for ip_address in $IP_ADDRESSES; do
+  az storage account network-rule add \
+    --account-name "${STORAGE_ACCOUNT_NAME}" \
+    --resource-group "${RESOURCE_GROUP_NAME}" \
+    --ip-address "${ip_address}" \
+    --output none
+done
 
 az storage account blob-service-properties update \
   --account-name "$STORAGE_ACCOUNT_NAME" \

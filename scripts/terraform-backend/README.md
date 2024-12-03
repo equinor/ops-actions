@@ -6,6 +6,7 @@ It accepts the following arguments:
 
 1. The path of the JSON file containing the Terraform backend configuration.
 1. The Azure region to create the storage account in.
+1. (Optional) A space-separate string of IP addresses that should be able to bypass the storage account firewall.
 
 ## Prerequisites
 
@@ -46,7 +47,7 @@ Example configuration:
 1. Run the script:
 
     ```console
-    ./terraform-backend.sh <CONFIG_FILE> <LOCATION>
+    ./terraform-backend.sh <CONFIG_FILE> <LOCATION> [<IP_ADDRESSES>]
     ```
 
     For example:
