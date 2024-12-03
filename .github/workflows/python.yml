@@ -41,7 +41,7 @@ permissions: {}
 jobs:
   python:
     name: Python
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: read # Required to checkout the repository
 

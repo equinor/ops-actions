@@ -13,7 +13,7 @@ permissions: {}
 jobs:
   github-pages:
     name: GitHub Pages
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     concurrency:
       group: pages

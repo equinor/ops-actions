@@ -52,7 +52,7 @@ permissions: {}
 jobs:
   docker:
     name: Docker
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:

@@ -10,7 +10,7 @@ permissions: {}
 jobs:
   release-please:
     name: Release Please
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: write # Required to update changelog file
       pull-requests: write # Required to create release PRs

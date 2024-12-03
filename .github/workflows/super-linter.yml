@@ -21,7 +21,7 @@ permissions: {}
 jobs:
   super-linter:
     name: Super-linter
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: read # Required to checkout the repository
       statuses: write # Required to report GitHub Actions status checks
