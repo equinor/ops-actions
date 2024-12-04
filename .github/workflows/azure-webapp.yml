@@ -4,8 +4,8 @@ name: ♻ azure-webapp
 on:
   workflow_call:
     inputs:
-      runner-image:
-        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
+      run_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to 'ubuntu-22.04'.
         type: string
         required: false
         default: ubuntu-22.04
@@ -62,7 +62,7 @@ permissions: {}
 jobs:
   azure-webapp:
     name: Azure Web App
-    runs-on: ${{ inputs.runner-image }} # The steps for this job assume that OS is Ubuntu.
+    runs-on: ${{ inputs.run_on }} # The steps for this job assume that OS is Ubuntu.
     if: github.actor != 'dependabot[bot]'
     environment:
       name: ${{ inputs.environment }}

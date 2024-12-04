@@ -9,8 +9,8 @@ name: ♻ mkdocs-gh-pages
 on:
   workflow_call:
     inputs:
-      runner-image:
-        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
+      run_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to 'ubuntu-22.04'.
         type: string
         required: false
         default: ubuntu-22.04
@@ -37,7 +37,7 @@ permissions: {}
 jobs:
   mkdocs:
     name: MkDocs
-    runs-on: ${{ inputs.runner-image }}
+    runs-on: ${{ inputs.run_on }}
     permissions:
       contents: write # Required to checkout the repository push to the "gh-pages" branch
 
