@@ -1,12 +1,6 @@
 @description('The name of the Storage account to create.')
 param storageAccountName string
 
-@description('The location to create the resources in.')
-param location string = resourceGroup().location
-
-@description('The name of the container to create.')
-param containerName string = 'tfstate'
-
 @description('An array of IP addresses or IP ranges that should be allowed to bypass the firewall of the Terraform backend. If empty, the firewall will be disabled.')
 param ipRules array = []
 
@@ -15,7 +9,7 @@ param principalIds array = []
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
-  location: location
+  location: resourceGroup().location
   sku: {
     name: 'Standard_GRS'
   }
@@ -58,7 +52,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
     }
 
     resource container 'containers' = {
-      name: containerName
+      name: 'tfstate'
     }
   }
 
