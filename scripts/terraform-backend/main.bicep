@@ -1,5 +1,3 @@
-// TODO@hknutsen: get storageAccountName and containerName from JSON configuration file.
-
 @description('The name of the Storage account to create.')
 param storageAccountName string
 
