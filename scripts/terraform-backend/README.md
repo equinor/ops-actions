@@ -1,6 +1,6 @@
-# Deploy Terraform backend
+# Create Terraform backend
 
-This directory contains a Bicep template that will create an Azure Storage account that can be used as a Terraform backend.
+This directory contains a Bicep template that will create an Azure Storage account that can be used to store Terraform state files.
 
 ## Prerequisites
 
