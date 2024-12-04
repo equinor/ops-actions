@@ -1,37 +1,40 @@
 # Terraform backend
 
-This directory contains a Bicep template that will create an Azure Storage account that can be used as a Terraform backend.
+This directory contains a Bicep template that will create an Azure Storage account in a given resource group that can be used as a Terraform backend.
 
 ## Prerequisites
 
-- Install [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
-- Activate Azure role `Owner`.
+- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
+- Azure role `Owner` at the resource group scope.
 
 ## Usage
 
 1. Login to Azure:
 
-    ```console
-    az login
-    ```
+   ```console
+   az login
+   ```
 
 1. Set active subscription:
 
-    ```console
-    az account set -s <SUBSCRIPTION_NAME_OR_ID>
-    ```
+   ```console
+   az account set -s <SUBSCRIPTION_NAME_OR_ID>
+   ```
 
-1. Create a resource group:
+1. If you do not have one already, create a resource group:
 
-    ```console
-    az group create -n <RESOURCE_GROUP_NAME>
-    ```
+   ```console
+   az group create -n <RESOURCE_GROUP_NAME>
+   ```
+
+   > [!NOTE]
+   > Requires Azure role `Contributor` at the subscription scope.
 
 1. Deploy the Bicep template to the resource group:
 
-    ```console
-    az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-uri https://github.com/equinor/ops-actions/blob/main/scripts/terraform-backend/main.bicep
-    ```
+   ```console
+   az deployment group create -g <RESOURCE_GROUP_NAME> --template-uri https://github.com/equinor/ops-actions/blob/main/scripts/terraform-backend/main.bicep
+   ```
 
 ## References
 
