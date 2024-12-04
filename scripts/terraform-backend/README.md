@@ -33,26 +33,26 @@ This directory contains a Bicep template that will create an Azure Storage accou
 1. Deploy the Bicep template to the resource group:
 
    ```console
-   az deployment group create --name terraform-backend --resource-group tfstate --template-uri https://github.com/equinor/ops-actions/blob/main/scripts/terraform-backend/main.bicep --parameters storageAccountName=<STORAGE_ACCOUNT_NAME>
+   az deployment group create --name terraform-backend --resource-group tfstate --template-file main.bicep --parameters storageAccountName=<STORAGE_ACCOUNT_NAME>
    ```
 
    Requires Azure role `Owner` at the resource group scope.
 
 ### Configure Terraform backend
 
-In your Terraform configuration file, add the following backend configuration:
+1. In your Terraform configuration file, add the following backend configuration:
 
-```terraform
-terraform {
-  backend "azurerm" {
-    resource_group_name  = "tfstate"
-    storage_account_name = "<STORAGE_ACCOUNT_NAME>"
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-    use_azuread_auth     = true
-  }
-}
-```
+   ```terraform
+   terraform {
+     backend "azurerm" {
+       resource_group_name  = "tfstate"
+       storage_account_name = "<STORAGE_ACCOUNT_NAME>"
+       container_name       = "tfstate"
+       key                  = "terraform.tfstate"
+       use_azuread_auth     = true
+     }
+   }
+   ```
 
 ## References
 
