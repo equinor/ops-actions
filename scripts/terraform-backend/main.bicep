@@ -90,11 +90,11 @@ var roleDefinitionId = 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b' // Storage Blob Da
 
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
   for principalId in principalIds: {
-    name: guid(principalId, roleDefinitionId)
+    name: guid(storageAccount.id, principalId, roleDefinitionId)
     scope: storageAccount
     properties: {
       principalId: principalId
-      roleDefinitionId: roleDefinitionId
+      roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId)
     }
   }
 ]
