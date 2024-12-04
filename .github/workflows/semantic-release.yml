@@ -5,6 +5,11 @@ name: ♻ semantic-release
 on:
   workflow_call:
     inputs:
+      runner-image:
+        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
+        type: string
+        required: false
+        default: ubuntu-22.04
       branches:
         description: A newline-separated string of branches to release on.
         type: string
@@ -51,7 +56,7 @@ permissions: {}
 jobs:
   semantic-release:
     name: semantic-release
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.runner-image }}
     permissions:
       contents: read # Required to checkout the repository
 

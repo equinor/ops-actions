@@ -4,6 +4,11 @@ name: ♻ dotnet
 on:
   workflow_call:
     inputs:
+      runner-image:
+        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
+        type: string
+        required: false
+        default: ubuntu-22.04
       dotnet_version:
         description: The version of .NET to install.
         type: string
@@ -68,7 +73,7 @@ jobs:
     name: .NET
     # The steps for this job assume that OS is Ubuntu.
     # Use the "runtime" input to specify target OS and architecture instead.
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.runner-image }}
     permissions:
       contents: read # Required to checkout the repository
 

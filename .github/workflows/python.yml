@@ -3,6 +3,11 @@ name: ♻ python
 on:
   workflow_call:
     inputs:
+      runner-image:
+        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
+        type: string
+        required: false
+        default: ubuntu-22.04
       working_directory:
         description: The path of the directory containing the Python application.
         type: string
@@ -41,7 +46,7 @@ permissions: {}
 jobs:
   python:
     name: Python
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.runner-image }}
     permissions:
       contents: read # Required to checkout the repository
 

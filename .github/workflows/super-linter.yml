@@ -4,6 +4,11 @@ name: ♻ super-linter
 on:
   workflow_call:
     inputs:
+      runner-image:
+        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
+        type: string
+        required: false
+        default: ubuntu-22.04
       filter_regex_exclude:
         description: Exclude files from linting using a regex pattern.
         type: string
@@ -21,7 +26,7 @@ permissions: {}
 jobs:
   super-linter:
     name: Super-linter
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.runner-image }}
     permissions:
       contents: read # Required to checkout the repository
       statuses: write # Required to report GitHub Actions status checks

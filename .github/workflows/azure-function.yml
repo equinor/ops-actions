@@ -3,6 +3,11 @@ name: ♻ azure-function
 on:
   workflow_call:
     inputs:
+      runner-image:
+        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
+        type: string
+        required: false
+        default: ubuntu-22.04
       environment:
         description: The name of the GitHub environment that this job references.
         type: string
@@ -51,7 +56,7 @@ permissions: {}
 jobs:
   azure-function:
     name: Azure Function
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.runner-image }}
     if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:

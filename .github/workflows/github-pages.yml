@@ -3,6 +3,11 @@ name: ♻ github-pages
 on:
   workflow_call:
     inputs:
+      runner-image:
+        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
+        type: string
+        required: false
+        default: ubuntu-22.04
       artifact_name:
         description: The name of the artifact containing the site to deploy. Must contain a tarball.
         type: string
@@ -13,7 +18,7 @@ permissions: {}
 jobs:
   github-pages:
     name: GitHub Pages
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.runner-image}}
 
     concurrency:
       group: pages

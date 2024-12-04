@@ -9,6 +9,11 @@ name: ♻ commitlint
 on:
   workflow_call:
     inputs:
+      runner-image:
+        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
+        type: string
+        required: false
+        default: ubuntu-22.04
       node_version:
         description: The version of Node.js to install.
         type: string
@@ -47,7 +52,7 @@ permissions: {}
 jobs:
   commitlint:
     name: commitlint
-    runs-on: ubuntu-22.04
+    runs-on: ${{ inputs.runner-image }}
     permissions:
       contents: read # Required to checkout the repository
 

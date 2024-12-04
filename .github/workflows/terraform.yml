@@ -11,11 +11,11 @@ name: ♻ terraform
 on:
   workflow_call:
     inputs:
-      runs_on:
-        description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
+      runner-image:
+        description: The Docker image to use for the runner. Defaults to 'ubuntu-22.04'.
         type: string
         required: false
-        default: ubuntu-latest
+        default: ubuntu-22.04
 
       environment:
         description: The environment that the jobs reference.
@@ -98,7 +98,7 @@ env:
 jobs:
   terraform-plan:
     name: Terraform Plan
-    runs-on: ${{ inputs.runs_on }}
+    runs-on: ${{ inputs.runner-image }}
     if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
