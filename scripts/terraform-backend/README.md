@@ -1,12 +1,6 @@
 # Terraform backend script
 
-This directory contains a script `terraform-backend.sh` that will create an Azure Storage account that can be used as a Terraform backend.
-
-It accepts the following arguments:
-
-1. The path of the JSON file containing the Terraform backend configuration.
-1. The Azure region to create the storage account in.
-1. (Optional) A space-separate string of IP addresses that should be able to bypass the storage account firewall.
+This directory contains a Bicep template `terraform-backend.bicep` that will create an Azure Storage account that can be used as a Terraform backend.
 
 ## Prerequisites
 
@@ -35,25 +29,22 @@ Example configuration:
     az login
     ```
 
-1. Set Azure subscription:
+1. Set active subscription:
 
     ```console
     az account set -s <SUBSCRIPTION_NAME_OR_ID>
     ```
 
-1. Configure resource group name, storage account name and container name in a file `*.azurerm.tfbackend.json`,
-   e.g. `dev.azurerm.tfbackend.json`.
-
-1. Run the script:
+1. Create resource group:
 
     ```console
-    ./terraform-backend.sh <CONFIG_FILE> <LOCATION> [<IP_ADDRESSES>]
+    az group create -n tfstate
     ```
 
-    For example:
+1. Deploy the template:
 
     ```console
-    ./terraform-backend.sh dev.azurerm.tfbackend.json northeurope
+    az deployment group create -g tfstate --template-file terraform-backend.bicep
     ```
 
 ## Access control
