@@ -108,9 +108,9 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
 resource lock 'Microsoft.Authorization/locks@2020-05-01' = {
   name: 'Terraform'
   scope: storageAccount
+  dependsOn: [storageAccount::blobService, storageAccount::managementPolicy, roleAssignment] // Lock must be created last
   properties: {
     level: 'ReadOnly'
     notes: 'Prevent changes to Terraform backend configuration'
   }
-  dependsOn: [storageAccount::blobService, storageAccount::managementPolicy, roleAssignment] // Lock must be created last
 }
