@@ -24,12 +24,11 @@ This directory contains a Bicep template that will create an Azure Storage accou
 
 1. Create a resource group:
 
-    ```console
-    az group create --name tfstate --location northeurope
-    ```
+   ```console
+   az group create --name tfstate --location northeurope
+   ```
 
-> [!NOTE]
-> Requires Azure role `Contributor` at the subscription scope.
+   Requires Azure role `Contributor` at the subscription scope.
 
 1. Deploy the Bicep template to the resource group:
 
@@ -37,8 +36,7 @@ This directory contains a Bicep template that will create an Azure Storage accou
    az deployment group create --resource-group tfstate --template-uri https://github.com/equinor/ops-actions/blob/main/scripts/terraform-backend/main.bicep --parameters storageAccountName=<STORAGE_ACCOUNT_NAME>
    ```
 
-> [!NOTE]
-> Requires Azure role `Owner` at the resource group scope.
+   Requires Azure role `Owner` at the resource group scope.
 
 ### Configure Terraform backend
 
