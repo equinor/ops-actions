@@ -24,7 +24,7 @@ This directory contains a Bicep template that will create an Azure Storage accou
 1. Deploy the Bicep template to the resource group:
 
    ```console
-   az deployment group create -g <RESOURCE_GROUP_NAME> --template-uri https://github.com/equinor/ops-actions/blob/main/scripts/terraform-backend/main.bicep
+   az deployment group create -g <RESOURCE_GROUP_NAME> -u https://github.com/equinor/ops-actions/blob/main/scripts/terraform-backend/main.bicep
    ```
 
 ## References
