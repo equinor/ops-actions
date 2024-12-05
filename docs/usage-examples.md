@@ -26,7 +26,7 @@ jobs:
 Prerequisites:
 
 - [Configure Azure credentials](../scripts/oidc/README.md)
-- [Configure Terraform backend](../scripts/terraform-backend/README.md)
+- [Configure Terraform backend](https://github.com/equinor/terraform-backend)
 - Configure GitHub secret `ENCRYPTION_PASSWORD` with a randomly generated password (used to encrypt the uploaded artifact, as it may contain sensitive infrastructure configuration)
 
 Supported Terraform providers:
