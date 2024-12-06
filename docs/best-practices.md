@@ -69,16 +69,15 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
     Jobs that access secrets that grant non-privileged access (for example `Reader` access in an Azure subscription) should **not** be skipped if the workflow was triggered by Dependabot. In this scenario, separate Dependabot secrets must be created in the repository containing the caller workflow (see [official documentation](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#accessing-secrets)).
 
-- Set a specific runner OS version on all workflows, as of right now we are starting to see the following warnings when referring to the `ubuntu-latest` runner laber
-  > ubuntu-latest pipelines will use ubuntu-24.04 soon. For more details see [link](https://github.com/actions/runner-images/issues/10636)
+- Set a specific runner OS version for all jobs (see [supported GitHub-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources)):
 
-  Currently the newest version is `ubuntu-24.04`, but we have not tested that version yet and it could potentially start to break our workflows (this is theoretical but potentially real scenario). Therefore ensure that the workflows runners laber are refering to this specific OS version.
-
-   ```yaml
-    jobs:
-      docker:
-        runs-on: ubuntu-22.04
+  ```yaml
+  jobs:
+    example-job:
+      runs-on: ubuntu-22.04
   ```
+
+  This ensures that all jobs are executed on a runner that includes the required software by default.
 
 ## Naming conventions
 
