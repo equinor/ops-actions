@@ -4,6 +4,11 @@ name: ♻ azure-webapp
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-22.04`.
+        type: string
+        required: false
+        default: ubuntu-22.04
       environment:
         description: The name of the GitHub environment that this job references.
         type: string
@@ -57,7 +62,7 @@ permissions: {}
 jobs:
   azure-webapp:
     name: Azure Web App
-    runs-on: ubuntu-latest # The steps for this job assume that OS is Ubuntu.
+    runs-on: ${{ inputs.runs_on }} # The steps for this job assume that OS is Ubuntu.
     if: github.actor != 'dependabot[bot]'
     environment:
       name: ${{ inputs.environment }}

@@ -9,6 +9,11 @@ name: ♻ mkdocs-gh-pages
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-22.04`.
+        type: string
+        required: false
+        default: ubuntu-22.04
       python_version:
         description: The version of Python to install.
         type: string
@@ -32,7 +37,7 @@ permissions: {}
 jobs:
   mkdocs:
     name: MkDocs
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: write # Required to checkout the repository push to the "gh-pages" branch
 

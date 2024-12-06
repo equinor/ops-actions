@@ -69,6 +69,16 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
     Jobs that access secrets that grant non-privileged access (for example `Reader` access in an Azure subscription) should **not** be skipped if the workflow was triggered by Dependabot. In this scenario, separate Dependabot secrets must be created in the repository containing the caller workflow (see [official documentation](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#accessing-secrets)).
 
+- Set a specific runner OS version for all jobs (see [supported GitHub-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources)):
+
+  ```yaml
+  jobs:
+    example-job:
+      runs-on: ubuntu-22.04
+  ```
+
+  This ensures that all jobs are executed on a runner that includes the required software by default.
+
 ## Naming conventions
 
 - Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow file names, job identifiers and step identifiers.

@@ -4,6 +4,11 @@ name: ♻ docker-acr
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-22.04`.
+        type: string
+        required: false
+        default: ubuntu-22.04
       environment:
         description: The name of the GitHub environment that this job references.
         type: string
@@ -55,7 +60,7 @@ permissions: {}
 jobs:
   docker:
     name: Docker
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
