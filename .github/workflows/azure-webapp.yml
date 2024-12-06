@@ -63,7 +63,7 @@ permissions: {}
 jobs:
   azure-webapp:
     name: Azure Web App
-    runs-on: ${{ inputs.runs_on }} # The steps for this job assume that OS is Ubuntu.
+    runs-on: ${{ inputs.runs_on }}
     if: github.actor != 'dependabot[bot]'
     environment:
       name: ${{ inputs.environment }}
