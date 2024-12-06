@@ -12,7 +12,7 @@ on:
   workflow_call:
     inputs:
       runs_on:
-        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to 'ubuntu-22.04'.
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-22.04`.
         type: string
         required: false
         default: ubuntu-22.04
