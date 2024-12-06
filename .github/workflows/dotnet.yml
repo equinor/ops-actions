@@ -9,6 +9,7 @@ on:
         type: string
         required: false
         default: ubuntu-22.04
+
       dotnet_version:
         description: The version of .NET to install.
         type: string
@@ -71,8 +72,6 @@ permissions: {}
 jobs:
   dotnet:
     name: .NET
-    # The steps for this job assume that OS is Ubuntu.
-    # Use the "runtime" input to specify target OS and architecture instead.
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository

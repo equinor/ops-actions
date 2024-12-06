@@ -8,6 +8,7 @@ on:
         type: string
         required: false
         default: ubuntu-22.04
+
       working_directory:
         description: The path of the directory containing the Python application.
         type: string

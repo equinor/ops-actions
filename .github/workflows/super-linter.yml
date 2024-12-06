@@ -9,6 +9,7 @@ on:
         type: string
         required: false
         default: ubuntu-22.04
+
       filter_regex_exclude:
         description: Exclude files from linting using a regex pattern.
         type: string

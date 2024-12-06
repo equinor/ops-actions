@@ -9,6 +9,7 @@ on:
         type: string
         required: false
         default: ubuntu-22.04
+
       environment:
         description: The name of the GitHub environment that this job references.
         type: string
@@ -62,7 +63,7 @@ permissions: {}
 jobs:
   azure-webapp:
     name: Azure Web App
-    runs-on: ${{ inputs.runs_on }} # The steps for this job assume that OS is Ubuntu.
+    runs-on: ${{ inputs.runs_on }}
     if: github.actor != 'dependabot[bot]'
     environment:
       name: ${{ inputs.environment }}
