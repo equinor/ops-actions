@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.11.0](https://github.com/equinor/ops-actions/compare/v9.10.4...v9.11.0) (2024-12-06)
+
+
+### Features
+
+* set explicit OS version for runners ([#606](https://github.com/equinor/ops-actions/issues/606)) ([853c4a3](https://github.com/equinor/ops-actions/commit/853c4a3611965649aeaa8bbe20b19703d055504e))
+
 ## [9.10.4](https://github.com/equinor/ops-actions/compare/v9.10.3...v9.10.4) (2024-11-19)
 
 
