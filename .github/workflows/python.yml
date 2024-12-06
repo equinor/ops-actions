@@ -3,7 +3,7 @@ name: ♻ python
 on:
   workflow_call:
     inputs:
-      run_on:
+      runs_on:
         description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to 'ubuntu-22.04'.
         type: string
         required: false
@@ -46,7 +46,7 @@ permissions: {}
 jobs:
   python:
     name: Python
-    runs-on: ${{ inputs.run_on }}
+    runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
 
