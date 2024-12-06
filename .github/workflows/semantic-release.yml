@@ -10,6 +10,7 @@ on:
         type: string
         required: false
         default: ubuntu-22.04
+
       branches:
         description: A newline-separated string of branches to release on.
         type: string

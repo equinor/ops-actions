@@ -9,6 +9,7 @@ on:
         type: string
         required: false
         default: ubuntu-22.04
+
       dotnet_version:
         description: The version of .NET to install.
         type: string

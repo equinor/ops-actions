@@ -8,6 +8,7 @@ on:
         type: string
         required: false
         default: ubuntu-22.04
+
       python_version:
         description: The version of Python to install.
         type: string

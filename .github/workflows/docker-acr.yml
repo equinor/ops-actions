@@ -9,6 +9,7 @@ on:
         type: string
         required: false
         default: ubuntu-22.04
+
       environment:
         description: The name of the GitHub environment that this job references.
         type: string
