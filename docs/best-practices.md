@@ -28,20 +28,20 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
 - Disable top level GitHub token permissions, then enable required permissions at the job level instead:
 
-    ```yaml
-    permissions: {}
+  ```yaml
+  permissions: {}
 
-    jobs:
-      example-job:
-        runs-on: ubuntu-latest
-        permissions:
-          contents: read # Required to checkout the repository
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v4
-    ```
+  jobs:
+    example-job:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read # Required to checkout the repository
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+  ```
 
-    This ensures that workflows follow the principle of least privilege.
+  This ensures that workflows follow the principle of least privilege.
 
 - When using a third-party action, pin it to a specific commit SHA, for example:
 
@@ -51,23 +51,23 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
 - Jobs that access secrets that grant privileged access (for example `Contributor` access in an Azure subscription) should be skipped if the workflow was triggered by Dependabot:
 
-    ```yaml
-    jobs:
-      example-job:
-        runs-on: ubuntu-latest
-        if: github.actor != 'dependabot[bot]'
-      steps:
-        - name: Login to Azure
-          uses: azure/login@v2
-          with:
-            client-id: ${{ secrets.AZURE_CLIENT_ID }}
-            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-    ```
+  ```yaml
+  jobs:
+    example-job:
+      runs-on: ubuntu-latest
+      if: github.actor != 'dependabot[bot]'
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  ```
 
-    This is to prevent Dependabot from updating a dependency to a version containing malicious code, then automatically running that code in our workflow, allowing it to steal your secrets.
+  This is to prevent Dependabot from updating a dependency to a version containing malicious code, then automatically running that code in our workflow, allowing it to steal your secrets.
 
-    Jobs that access secrets that grant non-privileged access (for example `Reader` access in an Azure subscription) should **not** be skipped if the workflow was triggered by Dependabot. In this scenario, separate Dependabot secrets must be created in the repository containing the caller workflow (see [official documentation](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#accessing-secrets)).
+  Jobs that access secrets that grant non-privileged access (for example `Reader` access in an Azure subscription) should **not** be skipped if the workflow was triggered by Dependabot. In this scenario, separate Dependabot secrets must be created in the repository containing the caller workflow (see [official documentation](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#accessing-secrets)).
 
 - Set a specific runner OS version for all jobs (see [supported GitHub-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources)):
 
