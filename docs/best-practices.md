@@ -74,7 +74,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
   ```yaml
   jobs:
     example-job:
-      runs-on: ubuntu-22.04
+      runs-on: ubuntu-24.04
   ```
 
   This ensures that all jobs are executed on a runner that includes the required software by default.
