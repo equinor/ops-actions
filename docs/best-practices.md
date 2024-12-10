@@ -81,9 +81,9 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
 ## Naming conventions
 
-- Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow file names, job identifiers and step identifiers.
+- Use [kebab-case](https://en.wiktionary.org/wiki/kebab_case) for workflow filenames, job identifiers and step identifiers.
 
-- Use [snake case](https://en.wiktionary.org/wiki/snake_case) for input and output identifiers.
+- Use [snake_case](https://en.wiktionary.org/wiki/snake_case) for input and output identifiers.
 
 - A reusable workflow and its main job should be named after the main tool/service that is used, for example:
 
