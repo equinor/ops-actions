@@ -4,10 +4,10 @@ on:
   workflow_call:
     inputs:
       runs_on:
-        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-22.04`.
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
         type: string
         required: false
-        default: ubuntu-22.04
+        default: ubuntu-24.04
 
       artifact_name:
         description: The name of the artifact containing the site to deploy. Must contain a tarball.
