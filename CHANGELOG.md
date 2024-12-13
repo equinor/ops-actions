@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.12.1](https://github.com/equinor/ops-actions/compare/v9.12.0...v9.12.1) (2024-12-13)
+
+
+### Bug Fixes
+
+* **terraform:** apply job should fail if unable to restore cache ([#614](https://github.com/equinor/ops-actions/issues/614)) ([3aebc3d](https://github.com/equinor/ops-actions/commit/3aebc3dd67a93b43dc0d54f17a32cbfe72f5406b))
+
 ## [9.12.0](https://github.com/equinor/ops-actions/compare/v9.11.0...v9.12.0) (2024-12-13)
 
 
