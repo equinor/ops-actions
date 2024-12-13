@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.12.0](https://github.com/equinor/ops-actions/compare/v9.11.0...v9.12.0) (2024-12-13)
+
+
+### Features
+
+* update jobs to run on latest OS version ([#611](https://github.com/equinor/ops-actions/issues/611)) ([8b1544e](https://github.com/equinor/ops-actions/commit/8b1544e8c0b6c821974c2d802c9ee46d566fa818))
+
 ## [9.11.0](https://github.com/equinor/ops-actions/compare/v9.10.4...v9.11.0) (2024-12-06)
 
 
