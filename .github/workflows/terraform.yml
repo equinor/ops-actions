@@ -150,7 +150,7 @@ jobs:
 
       - name: Restore cache
         id: cache-restore
-        if: steps.mkdir.outputs.plugin-cache.dir != ''
+        if: steps.mkdir.outputs.plugin-cache-dir != ''
         uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
