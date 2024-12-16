@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.12.2](https://github.com/equinor/ops-actions/compare/v9.12.1...v9.12.2) (2024-12-16)
+
+
+### Bug Fixes
+
+* **terraform:** apply job fails if lock file has not been commited ([#617](https://github.com/equinor/ops-actions/issues/617)) ([c6292ea](https://github.com/equinor/ops-actions/commit/c6292eafd9a56831ec00f03decb4c5296265896d))
+
 ## [9.12.1](https://github.com/equinor/ops-actions/compare/v9.12.0...v9.12.1) (2024-12-13)
 
 
