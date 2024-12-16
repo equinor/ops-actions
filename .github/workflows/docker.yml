@@ -68,10 +68,6 @@ jobs:
       IMAGE: ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.tag }}
       IMAGE_LATEST: ${{ inputs.registry }}/${{ inputs.repository }}:latest
 
-    outputs:
-      image: ${{ env.IMAGE }}
-      image_latest: ${{ env.IMAGE_LATEST }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -94,3 +90,7 @@ jobs:
           context: ${{ inputs.working_directory }}
           tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
           push: true
+
+    outputs:
+      image: ${{ env.IMAGE }}
+      image_latest: ${{ env.IMAGE_LATEST }}

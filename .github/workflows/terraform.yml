@@ -111,13 +111,6 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
 
-    outputs:
-      upload-outcome: ${{ steps.upload.outcome }}
-      artifact-id: ${{ steps.upload.outputs.artifact-id }}
-      plugin-cache-dir: ${{ steps.mkdir.outputs.plugin-cache-dir }}
-      cache-primary-key: ${{ steps.cache-restore.outputs.cache-primary-key }}
-      cache-save-outcome: ${{ steps.cache-save.outcome }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -271,6 +264,13 @@ jobs:
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+
+    outputs:
+      upload-outcome: ${{ steps.upload.outcome }}
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+      plugin-cache-dir: ${{ steps.mkdir.outputs.plugin-cache-dir }}
+      cache-primary-key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+      cache-save-outcome: ${{ steps.cache-save.outcome }}
 
   terraform-apply:
     name: Terraform Apply
