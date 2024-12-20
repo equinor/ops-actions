@@ -100,7 +100,6 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ${{ inputs.runs_on }}
-    if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
       contents: read # Required to checkout the repository
@@ -170,7 +169,9 @@ jobs:
           TFBACKEND_CONFIG: ${{ inputs.backend_config }}
         run: |
           optional_args=()
-          if [[ -n "$TFBACKEND_CONFIG" ]]; then
+          if [[ "$GITHUB_ACTOR" == "dependabot[bot]" ]]; then
+            optional_args+=(-backend=false)
+          elif [[ -n "$TFBACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$TFBACKEND_CONFIG")
           fi
           terraform init "${optional_args[@]}"
@@ -185,6 +186,7 @@ jobs:
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
+        if: github.actor != 'dependabot[bot]'
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
