@@ -276,7 +276,7 @@ jobs:
   terraform-apply:
     name: Terraform Apply
     needs: terraform-plan
-    if: github.actor != 'dependabot[bot]' && needs.terraform-plan.outputs.upload-outcome == 'success' && inputs.run_terraform_apply
+    if: needs.terraform-plan.outputs.upload-outcome == 'success' && inputs.run_terraform_apply
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     permissions:
