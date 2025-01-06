@@ -16,10 +16,9 @@ on:
         required: true
 
       node_version:
-        description: The version of Node.js to install.
+        description: A specific version of Node.js to install. Use to override pre-installed version on GitHub-hosted runners.
         type: string
         required: false
-        default: latest
 
       npm_version:
         description: A specific version of npm to install. Use to override pre-installed version on GitHub-hosted runners.
@@ -92,6 +91,7 @@ jobs:
           dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Setup Node.js
+        if: inputs.node_version != ''
         uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
         with:
           node-version: ${{ inputs.node_version }}
