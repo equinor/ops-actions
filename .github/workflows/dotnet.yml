@@ -117,10 +117,9 @@ jobs:
           PROJECT: ${{ inputs.test_project }}
           COLLECT: ${{ inputs.test_collect }}
         run: |
-          echo "$PROJECT" |
-          while read -r p; do
-            dotnet test "$p" --configuration "$CONFIGURATION" --collect "$COLLECT"
-          done
+          while read -r project; do
+            dotnet test "$project" --configuration "$CONFIGURATION" --collect "$COLLECT"
+          done <<< "$PROJECT"
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: Dotnet publish
