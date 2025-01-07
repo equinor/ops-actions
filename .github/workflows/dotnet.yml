@@ -103,15 +103,15 @@ jobs:
         run: npm install -g "npm@$NPM_VERSION"
 
       # Restore dependencies for the application and runtime.
-      - name: Dotnet restore
+      - name: .NET Restore
         run: dotnet restore "$PROJECT" --runtime "$RUNTIME"
 
       # Build the application for release/deployment.
-      - name: Dotnet build
+      - name: .NET Build
         run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-restore
 
       # Execute unit tests.
-      - name: Dotnet test
+      - name: .NET Test
         if: inputs.test_project != ''
         env:
           PROJECT: ${{ inputs.test_project }}
@@ -122,7 +122,7 @@ jobs:
           done <<< "$PROJECT"
 
       # Publish the application and its dependencies to a folder for deployment.
-      - name: Dotnet publish
+      - name: .NET Publish
         id: publish
         env:
           OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
