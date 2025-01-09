@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.12.4](https://github.com/equinor/ops-actions/compare/v9.12.3...v9.12.4) (2025-01-09)
+
+
+### Bug Fixes
+
+* **terraform:** no log output when plugin cache enabled ([#630](https://github.com/equinor/ops-actions/issues/630)) ([306a079](https://github.com/equinor/ops-actions/commit/306a0793c5cf5b38b1de5168dfa59650e9aeec0b))
+
 ## [9.12.3](https://github.com/equinor/ops-actions/compare/v9.12.2...v9.12.3) (2025-01-07)
 
 
