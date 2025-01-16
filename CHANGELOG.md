@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.13.0](https://github.com/equinor/ops-actions/compare/v9.12.4...v9.13.0) (2025-01-16)
+
+
+### Features
+
+* **terraform:** validate configuration if triggered by Dependabot ([#623](https://github.com/equinor/ops-actions/issues/623)) ([9d552d9](https://github.com/equinor/ops-actions/commit/9d552d9811de33b0ce670c4bddbd39fc083ddc0e))
+
 ## [9.12.4](https://github.com/equinor/ops-actions/compare/v9.12.3...v9.12.4) (2025-01-09)
 
 
