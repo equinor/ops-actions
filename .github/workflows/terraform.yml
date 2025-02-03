@@ -204,6 +204,36 @@ jobs:
           fi
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
 
+      - name: Create tarball
+        id: tar
+        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+        if: steps.plan.outputs.exitcode == 2
+        run: |
+          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gpg"
+          tar -cv . | gpg -c --batch --passphrase "$ENCRYPTION_PASSWORD" -o "$tarball"
+          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifact
+        id: upload
+        if: steps.tar.outcome == 'success'
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ steps.tar.outputs.tarball }}
+          if-no-files-found: error
+          # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
+          # If a workflow reaches this limit, it will be cancelled and the artifact will no longer be needed.
+          # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
+          retention-days: 35
+
+      - name: Save cache
+        id: cache-save
+        if: steps.cache-restore.outcome == 'success' && steps.cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
+        with:
+          path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+
       # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
       # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
       - name: Create job summary
@@ -234,36 +264,6 @@ jobs:
           </details>
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Create tarball
-        id: tar
-        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
-        if: steps.plan.outputs.exitcode == 2
-        run: |
-          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gpg"
-          tar -cv . | gpg -c --batch --passphrase "$ENCRYPTION_PASSWORD" -o "$tarball"
-          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
-
-      - name: Upload artifact
-        id: upload
-        if: steps.tar.outcome == 'success'
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ steps.tar.outputs.tarball }}
-          if-no-files-found: error
-          # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
-          # If a workflow reaches this limit, it will be cancelled and the artifact will no longer be needed.
-          # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
-          retention-days: 35
-
-      - name: Save cache
-        id: cache-save
-        if: steps.cache-restore.outcome == 'success' && steps.cache-restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@1bd1e32a3bdc45362d1e726936510720a7c30a57
-        with:
-          path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
-          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
     outputs:
       upload-outcome: ${{ steps.upload.outcome }}
