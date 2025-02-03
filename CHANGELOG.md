@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.13.2](https://github.com/equinor/ops-actions/compare/v9.13.1...v9.13.2) (2025-02-03)
+
+
+### Code Refactoring
+
+* **terraform:** create summary at end of job ([#641](https://github.com/equinor/ops-actions/issues/641)) ([e4d6674](https://github.com/equinor/ops-actions/commit/e4d6674ca81f3c5588c76cc2182a590b7e75a733))
+
 ## [9.13.1](https://github.com/equinor/ops-actions/compare/v9.13.0...v9.13.1) (2025-01-16)
 
 
