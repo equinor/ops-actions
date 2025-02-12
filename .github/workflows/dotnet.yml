@@ -125,10 +125,10 @@ jobs:
       - name: .NET Publish
         id: publish
         env:
-          OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
+          DOTNET_PUBLISH_OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
         run: |
-          dotnet publish "$DOTNET_PROJECT" --configuration "$DOTNET_CONFIGURATION" --runtime "$DOTNET_RUNTIME" --self-contained "$DOTNET_SELF_CONTAINED" --output "$OUTPUT" --no-build
-          echo "publish_path=$OUTPUT" >> "$GITHUB_OUTPUT"
+          dotnet publish "$DOTNET_PROJECT" --configuration "$DOTNET_CONFIGURATION" --runtime "$DOTNET_RUNTIME" --self-contained "$DOTNET_SELF_CONTAINED" --output "$DOTNET_PUBLISH_OUTPUT" --no-build
+          echo "publish_path=$DOTNET_PUBLISH_OUTPUT" >> "$GITHUB_OUTPUT"
 
       - name: Create tarball
         id: tar
