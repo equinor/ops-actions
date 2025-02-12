@@ -92,7 +92,9 @@ env:
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
   TF_LOCK_FILE: .terraform.lock.hcl
+
   TF_PLAN_FILE: tfplan
+  TARBALL: terraform.tar.gpg
   ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
@@ -209,9 +211,9 @@ jobs:
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
         if: steps.plan.outputs.exitcode == 2
         run: |
-          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gpg"
-          tar -cv . | gpg -c --batch --passphrase "$ENCRYPTION_PASSWORD" -o "$tarball"
-          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
+          tarball_path="$RUNNER_TEMP/$TARBALL"
+          tar -cv . | gpg -c --batch --passphrase "$ENCRYPTION_PASSWORD" -o "$tarball_path"
+          echo "tarball_path=$tarball_path" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
         id: upload
@@ -219,7 +221,7 @@ jobs:
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
         with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ steps.tar.outputs.tarball }}
+          path: ${{ steps.tar.outputs.tarball_path }}
           if-no-files-found: error
           # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
           # If a workflow reaches this limit, it will be cancelled and the artifact will no longer be needed.
@@ -315,9 +317,8 @@ jobs:
 
       - name: Extract tarball
         run: |
-          tarball="$ARTIFACT_NAME.tar.gpg"
-          gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$tarball" | tar -xv
-          rm "$tarball"
+          gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar -xv
+          rm "$TARBALL"
 
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false "$TF_PLAN_FILE"
