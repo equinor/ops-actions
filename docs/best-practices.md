@@ -85,6 +85,8 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
 - Use [snake_case](https://en.wiktionary.org/wiki/snake_case) for input and output identifiers.
 
+- Use [SCREAMING_SNAKE_CASE](https://en.wiktionary.org/wiki/snake_case) for environment variable names.
+
 - A reusable workflow and its main job should be named after the main tool/service that is used, for example:
 
   - `terraform.yml`
@@ -97,11 +99,11 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
   - If a caller workflow has a job `build` that calls the reusable workflow `docker`, the final job will be named `build / docker`.
   - If a caller workflow has a job `deploy` that calls the reusable workflow `azure-webapp`, the final job will be named `deploy / azure-webapp`.
 
-- An input that is passed to a workflow property should inherit the name of that property.
+- An input or environment variable that is passed to a workflow property should inherit the name of that property.
 
-  An input that is passed to an action input should follow the common naming convention `[<action>]_<input>`, where `<action>` can be omitted if the name of the action is similar to the name of the workflow.
+  An input or environment variable that is passed to an action input should follow the common naming convention `[<action>]_<input>`, where `<action>` can be omitted if the name of the action is similar to the name of the workflow.
 
-  An input that is passed to a CLI command option should follow the common naming convention `[<command>]_<option>`.
+  An input or environment variable that is passed to a CLI command option should follow the common naming convention `[<command>]_<option>`.
 
   For example:
 
