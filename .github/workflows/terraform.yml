@@ -91,8 +91,8 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  TFLOCK_FILE: .terraform.lock.hcl
-  TFPLAN_FILE: tfplan
+  TF_LOCK_FILE: .terraform.lock.hcl
+  TF_PLAN_FILE: tfplan
   ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
@@ -131,7 +131,7 @@ jobs:
         id: mkdir
         run: |
           plugin_cache_dir=""
-          if [[ -f "$TFLOCK_FILE" ]]; then
+          if [[ -f "$TF_LOCK_FILE" ]]; then
             plugin_cache_dir="$HOME/.terraform.d/plugin-cache"
             mkdir --parents "$plugin_cache_dir"
             echo "TF_PLUGIN_CACHE_DIR=$plugin_cache_dir" >> "$GITHUB_ENV"
@@ -147,7 +147,7 @@ jobs:
         uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
-          key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/{1}', inputs.working_directory, env.TFLOCK_FILE)) }}
+          key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/{1}', inputs.working_directory, env.TF_LOCK_FILE)) }}
           # The dependency lock file tracks provider dependencies for the Terraform configuration in the working directory.
           # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
           # https://developer.hashicorp.com/terraform/language/files/dependency-lock
@@ -168,11 +168,11 @@ jobs:
       - name: Terraform Init
         id: init
         env:
-          TFBACKEND_CONFIG: ${{ inputs.backend_config }}
+          TF_BACKEND_CONFIG: ${{ inputs.backend_config }}
         run: |
           optional_args=()
-          if [[ -n "$TFBACKEND_CONFIG" ]]; then
-            optional_args+=(-backend-config="$TFBACKEND_CONFIG")
+          if [[ -n "$TF_BACKEND_CONFIG" ]]; then
+            optional_args+=(-backend-config="$TF_BACKEND_CONFIG")
           fi
           terraform init "${optional_args[@]}"
 
@@ -191,13 +191,13 @@ jobs:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
         shell: bash {0}
         env:
-          TFVARS_FILE: ${{ inputs.var_file }}
+          TF_VAR_FILE: ${{ inputs.var_file }}
         run: |
           optional_args=()
-          if [[ -n "$TFVARS_FILE" ]]; then
-            optional_args+=(-var-file="$TFVARS_FILE")
+          if [[ -n "$TF_VAR_FILE" ]]; then
+            optional_args+=(-var-file="$TF_VAR_FILE")
           fi
-          terraform plan -input=false -out="$TFPLAN_FILE" -detailed-exitcode "${optional_args[@]}"
+          terraform plan -input=false -out="$TF_PLAN_FILE" -detailed-exitcode "${optional_args[@]}"
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
@@ -248,7 +248,7 @@ jobs:
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         run: |
-          tfplan=$(terraform show "$TFPLAN_FILE" -no-color)
+          tfplan=$(terraform show "$TF_PLAN_FILE" -no-color)
 
           echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
           #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
@@ -320,7 +320,7 @@ jobs:
           rm "$tarball"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false "$TFPLAN_FILE"
+        run: terraform apply -auto-approve -input=false "$TF_PLAN_FILE"
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
