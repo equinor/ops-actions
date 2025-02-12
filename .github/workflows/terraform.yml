@@ -92,7 +92,6 @@ env:
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
   TF_LOCK_FILE: .terraform.lock.hcl
-
   TF_PLAN_FILE: tfplan
   TARBALL: terraform.tar.gpg
   ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
