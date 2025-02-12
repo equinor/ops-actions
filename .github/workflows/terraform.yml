@@ -236,8 +236,6 @@ jobs:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
 
-      # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
-      # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
       - name: Create job summary
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
         # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
@@ -249,6 +247,8 @@ jobs:
           TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
+        # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
+        # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
         run: |
           tfplan=$(terraform show "$TF_PLAN_FILE" -no-color)
 
