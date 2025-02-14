@@ -118,7 +118,7 @@ For example:
    curl -L -o /usr/local/bin/jq.exe \ https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
    ```
 
- References
+## References
 
 - [Microsoft Docs](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure)
 - [GitHub Docs](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure)
