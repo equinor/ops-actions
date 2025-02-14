@@ -110,8 +110,15 @@ For example:
 ## Troubleshooting
 
 - If running the script in Git Bash, you might encounter the following error message: `InvalidSchema: No connection adapters were found`. To fix this error, set the following environment variable: `export MSYS_NO_PATHCONV=1`.
+- if running the script in Git Bash on Windows, you might have problems installing prerequisite `jq`. Open Git Bash as administrator and run following commands:
+  ```console
+   mkdir -p "${EXEPATH}/usr/local/bin"
+   ```
+  ```console
+   curl -L -o /usr/local/bin/jq.exe \ https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+   ```
 
-## References
+ References
 
 - [Microsoft Docs](https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure)
 - [GitHub Docs](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure)
