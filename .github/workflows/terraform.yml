@@ -211,7 +211,7 @@ jobs:
         if: steps.plan.outputs.exitcode == 2
         run: |
           tarball_path="$RUNNER_TEMP/$TARBALL"
-          tar --create --verbose . | gpg --symmetric --batch --passphrase "$ENCRYPTION_PASSWORD" --output "$tarball_path"
+          tar --create . | gpg --symmetric --batch --passphrase "$ENCRYPTION_PASSWORD" --output "$tarball_path"
           echo "tarball_path=$tarball_path" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
@@ -316,7 +316,7 @@ jobs:
 
       - name: Extract tarball
         run: |
-          gpg --decrypt --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar --extract --verbose
+          gpg --decrypt --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar --extract
           rm "$TARBALL"
 
       - name: Terraform Apply
