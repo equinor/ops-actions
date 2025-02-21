@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.13.3](https://github.com/equinor/ops-actions/compare/v9.13.2...v9.13.3) (2025-02-21)
+
+
+### Code Refactoring
+
+* update descriptions for Azure secrets ([#650](https://github.com/equinor/ops-actions/issues/650)) ([fa8f08c](https://github.com/equinor/ops-actions/commit/fa8f08cbf89b0e3987297296c6a314280b61b059))
+
 ## [9.13.2](https://github.com/equinor/ops-actions/compare/v9.13.1...v9.13.2) (2025-02-03)
 
 
