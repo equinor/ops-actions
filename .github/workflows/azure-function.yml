@@ -41,15 +41,15 @@ on:
 
     secrets:
       AZURE_CLIENT_ID:
-        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        description: The client ID of the service principal to use for authenticating to Azure.
         required: true
 
       AZURE_SUBSCRIPTION_ID:
-        description: The ID of the Azure subscription to deploy the package to.
+        description: The ID of the Azure subscription to authenticate to.
         required: true
 
       AZURE_TENANT_ID:
-        description: The ID of the Azure tenant to deploy the package to.
+        description: The ID of the Microsoft Entra tenant to authenticate to.
         required: true
 
 permissions: {}
