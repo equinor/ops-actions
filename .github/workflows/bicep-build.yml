@@ -1,0 +1,71 @@
+name: ♻ bicep-build
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
+      bicep_file:
+        description: The path of the Bicep file to build. Defaults to `main.bicep`.
+        type: string
+        required: false
+        default: main.bicep
+
+      output_file:
+        description: The path of the file to save the output in. Defaults to `azuredeploy.json`.
+        type: string
+        required: false
+        default: azuredeploy.json
+
+# TODO(@hknutsen): set permissions at job level
+permissions: {}
+
+jobs:
+  bicep-build:
+    name: Bicep Build
+    runs-on: ${{ inputs.runs_on }}
+    env:
+      BICEP_FILE: ${{ inputs.bicep_file }}
+      OUTPUT_FILE: ${{ inputs.output_file }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          # TODO(@hknutsen): set correct values when not triggered by PR
+          fetch-depth: 0 # Required to show diff between PR source and target branch
+          ref: ${{ github.head_ref }} # Required to push commit to PR source branch
+
+      - name: Build Bicep file
+        id: build
+        shell: bash {0} # Required to check exit code
+        run: |
+          git diff --exit-code "origin/$GITHUB_BASE_REF" "$BICEP_FILE"
+          exit_code="$?"
+          if [[ "$exit_code" == 0 ]]; then
+            echo "No changes made to Bicep file. Skipping build."
+            exit "$exit_code"
+          fi
+
+          az bicep build --file "$BICEP_FILE" --outfile "$OUTPUT_FILE"
+          exit_code="$?"
+          if [[ "$exit_code" != 0 ]]; then
+            exit "$exit_code"
+          fi
+
+          git diff --exit-code "$OUTPUT_FILE"
+          exit_code="$?"
+
+          echo "exit-code=$exit_code" >> "$GITHUB_OUTPUT"
+
+      - name: Push commit
+        if: steps.build.outputs.exit-code != 0
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$OUTPUT_FILE"
+          git commit -m "Build Bicep file"
+          git push
