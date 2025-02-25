@@ -4,16 +4,21 @@ name: ♻ dotnet
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
       dotnet_version:
         description: The version of .NET to install.
         type: string
         required: true
 
       node_version:
-        description: The version of Node.js to install.
+        description: A specific version of Node.js to install. Use to override pre-installed version on GitHub-hosted runners.
         type: string
         required: false
-        default: latest
 
       npm_version:
         description: A specific version of npm to install. Use to override pre-installed version on GitHub-hosted runners.
@@ -66,29 +71,28 @@ permissions: {}
 jobs:
   dotnet:
     name: .NET
-    # The steps for this job assume that OS is Ubuntu.
-    # Use the "runtime" input to specify target OS and architecture instead.
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
 
     env:
-      PROJECT: ${{ inputs.project }}
-      CONFIGURATION: Release
-      RUNTIME: ${{ inputs.runtime }}
-      SELF_CONTAINED: ${{ inputs.self_contained }}
+      DOTNET_PROJECT: ${{ inputs.project }}
+      DOTNET_CONFIGURATION: Release
+      DOTNET_RUNTIME: ${{ inputs.runtime }}
+      DOTNET_SELF_CONTAINED: ${{ inputs.self_contained }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@3e891b0cb619bf60e2c25674b222b8940e2c1c25
+        uses: actions/setup-dotnet@3951f0dfe7a07e2313ec93c75700083e2005cbab
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+        if: inputs.node_version != ''
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         with:
           node-version: ${{ inputs.node_version }}
 
@@ -99,33 +103,32 @@ jobs:
         run: npm install -g "npm@$NPM_VERSION"
 
       # Restore dependencies for the application and runtime.
-      - name: Dotnet restore
-        run: dotnet restore "$PROJECT" --runtime "$RUNTIME"
+      - name: .NET Restore
+        run: dotnet restore "$DOTNET_PROJECT" --runtime "$DOTNET_RUNTIME"
 
       # Build the application for release/deployment.
-      - name: Dotnet build
-        run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-restore
+      - name: .NET Build
+        run: dotnet build "$DOTNET_PROJECT" --configuration "$DOTNET_CONFIGURATION" --runtime "$DOTNET_RUNTIME" --self-contained "$DOTNET_SELF_CONTAINED" --no-restore
 
       # Execute unit tests.
-      - name: Dotnet test
+      - name: .NET Test
         if: inputs.test_project != ''
         env:
-          PROJECT: ${{ inputs.test_project }}
-          COLLECT: ${{ inputs.test_collect }}
+          DOTNET_TEST_PROJECT: ${{ inputs.test_project }}
+          DOTNET_TEST_COLLECT: ${{ inputs.test_collect }}
         run: |
-          echo "$PROJECT" |
-          while read -r p; do
-            dotnet test "$p" --configuration "$CONFIGURATION" --collect "$COLLECT"
-          done
+          while read -r project; do
+            dotnet test "$project" --configuration "$DOTNET_CONFIGURATION" --collect "$DOTNET_TEST_COLLECT"
+          done <<< "$DOTNET_TEST_PROJECT"
 
       # Publish the application and its dependencies to a folder for deployment.
-      - name: Dotnet publish
+      - name: .NET Publish
         id: publish
         env:
-          OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
+          DOTNET_PUBLISH_OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
         run: |
-          dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT" --no-build
-          echo "publish_path=$OUTPUT" >> "$GITHUB_OUTPUT"
+          dotnet publish "$DOTNET_PROJECT" --configuration "$DOTNET_CONFIGURATION" --runtime "$DOTNET_RUNTIME" --self-contained "$DOTNET_SELF_CONTAINED" --output "$DOTNET_PUBLISH_OUTPUT" --no-build
+          echo "publish_path=$DOTNET_PUBLISH_OUTPUT" >> "$GITHUB_OUTPUT"
 
       - name: Create tarball
         id: tar
@@ -138,7 +141,7 @@ jobs:
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ steps.tar.outputs.tarball }}

@@ -3,6 +3,12 @@ name: ♻ python
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
       working_directory:
         description: The path of the directory containing the Python application.
         type: string
@@ -47,7 +53,7 @@ permissions: {}
 jobs:
   python:
     name: Python
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
 
@@ -61,7 +67,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Setup Python
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38
         with:
           python-version: ${{ inputs.python_version }}
 
@@ -90,7 +96,7 @@ jobs:
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ steps.tar.outputs.tarball }}

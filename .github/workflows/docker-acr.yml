@@ -4,6 +4,12 @@ name: ♻ docker-acr
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
       environment:
         description: The name of the GitHub environment that this job references.
         type: string
@@ -34,15 +40,15 @@ on:
 
     secrets:
       AZURE_CLIENT_ID:
-        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        description: The client ID of the service principal to use for authenticating to Azure.
         required: true
 
       AZURE_SUBSCRIPTION_ID:
-        description: The ID of the Azure subscription containing the Container Registry.
+        description: The ID of the Azure subscription to authenticate to.
         required: true
 
       AZURE_TENANT_ID:
-        description: The ID of the Azure tenant containing the Container Registry.
+        description: The ID of the Microsoft Entra tenant to authenticate to.
         required: true
 
     outputs:
@@ -55,7 +61,7 @@ permissions: {}
 jobs:
   docker:
     name: Docker
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
@@ -65,10 +71,6 @@ jobs:
     env:
       IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
       IMAGE_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
-
-    outputs:
-      image: ${{ env.IMAGE }}
-      image_latest: ${{ env.IMAGE_LATEST }}
 
     steps:
       - name: Checkout
@@ -90,10 +92,14 @@ jobs:
         run: az acr login --name "$REGISTRY_NAME"
 
       - name: Build and push
-        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75
+        uses: docker/build-push-action@0adf9959216b96bec444f325f1e493d4aa344497
         env:
           DOCKER_BUILD_SUMMARY: true
         with:
           context: ${{ inputs.working_directory }}
           tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
           push: true
+
+    outputs:
+      image: ${{ env.IMAGE }}
+      image_latest: ${{ env.IMAGE_LATEST }}

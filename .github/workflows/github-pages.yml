@@ -3,6 +3,12 @@ name: ♻ github-pages
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
       artifact_name:
         description: The name of the artifact containing the site to deploy. Must contain a tarball.
         type: string
@@ -13,7 +19,7 @@ permissions: {}
 jobs:
   github-pages:
     name: GitHub Pages
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on}}
 
     concurrency:
       group: pages

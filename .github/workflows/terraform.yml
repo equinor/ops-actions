@@ -12,10 +12,10 @@ on:
   workflow_call:
     inputs:
       runs_on:
-        description: The label of the runner (GitHub- or self-hosted) to run this workflow on.
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
         type: string
         required: false
-        default: ubuntu-latest
+        default: ubuntu-24.04
 
       environment:
         description: The environment that the jobs reference.
@@ -57,15 +57,15 @@ on:
 
     secrets:
       AZURE_CLIENT_ID:
-        description: The client ID of the Azure AD service principal to use for authenticating to Azure.
+        description: The client ID of the service principal to use for authenticating to Azure.
         required: true
 
       AZURE_SUBSCRIPTION_ID:
-        description: The ID of the Azure subscription to create the resources in.
+        description: The ID of the Azure subscription to authenticate to.
         required: true
 
       AZURE_TENANT_ID:
-        description: The ID of the Azure tenant to create the resources in.
+        description: The ID of the Microsoft Entra tenant to authenticate to.
         required: true
 
       ENCRYPTION_PASSWORD:
@@ -91,7 +91,9 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-  TFPLAN_FILE: tfplan
+  TF_LOCK_FILE: .terraform.lock.hcl
+  TF_PLAN_FILE: tfplan
+  TARBALL: terraform.tar.gpg
   ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
@@ -110,12 +112,6 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
 
-    outputs:
-      upload-outcome: ${{ steps.upload.outcome }}
-      artifact-id: ${{ steps.upload.outputs.artifact-id }}
-      plugin-cache-dir: ${{ steps.mkdir.outputs.plugin-cache-dir }}
-      cache-primary-key: ${{ steps.cache-restore.outputs.cache-primary-key }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -131,19 +127,28 @@ jobs:
           # If the wrapper is enabled, the debug logs will be visible in the job summary.
           # The wrapper must be disabled to prevent this.
 
-      - name: Create Terraform plugin cache
+      # https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache
+      - name: Enable Terraform plugin cache
         id: mkdir
         run: |
-          plugin_cache_dir="$HOME/.terraform.d/plugin-cache"
-          mkdir --parents "$plugin_cache_dir"
+          plugin_cache_dir=""
+          if [[ -f "$TF_LOCK_FILE" ]]; then
+            plugin_cache_dir="$HOME/.terraform.d/plugin-cache"
+            mkdir --parents "$plugin_cache_dir"
+            echo "TF_PLUGIN_CACHE_DIR=$plugin_cache_dir" >> "$GITHUB_ENV"
+            echo "Terraform plugin cache enabled."
+          else
+            echo "Dependency lock file not found. Terraform plugin cache will not be enabled."
+          fi
           echo "plugin-cache-dir=$plugin_cache_dir" >> "$GITHUB_OUTPUT"
 
       - name: Restore cache
         id: cache-restore
-        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a
+        if: steps.mkdir.outputs.plugin-cache-dir != ''
+        uses: actions/cache/restore@0c907a75c2c80ebcb7f088228285e798b750cf8f
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
-          key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/.terraform.lock.hcl', inputs.working_directory)) }}
+          key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/{1}', inputs.working_directory, env.TF_LOCK_FILE)) }}
           # The dependency lock file tracks provider dependencies for the Terraform configuration in the working directory.
           # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
           # https://developer.hashicorp.com/terraform/language/files/dependency-lock
@@ -164,14 +169,11 @@ jobs:
       - name: Terraform Init
         id: init
         env:
-          TFBACKEND_CONFIG: ${{ inputs.backend_config }}
-          # Enable Terraform plugin cache.
-          # https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache
-          TF_PLUGIN_CACHE_DIR: ${{ steps.mkdir.outputs.plugin-cache-dir }}
+          TF_BACKEND_CONFIG: ${{ inputs.backend_config }}
         run: |
           optional_args=()
-          if [[ -n "$TFBACKEND_CONFIG" ]]; then
-            optional_args+=(-backend-config="$TFBACKEND_CONFIG")
+          if [[ -n "$TF_BACKEND_CONFIG" ]]; then
+            optional_args+=(-backend-config="$TF_BACKEND_CONFIG")
           fi
           terraform init "${optional_args[@]}"
 
@@ -190,21 +192,49 @@ jobs:
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
         shell: bash {0}
         env:
-          TFVARS_FILE: ${{ inputs.var_file }}
+          TF_VAR_FILE: ${{ inputs.var_file }}
         run: |
           optional_args=()
-          if [[ -n "$TFVARS_FILE" ]]; then
-            optional_args+=(-var-file="$TFVARS_FILE")
+          if [[ -n "$TF_VAR_FILE" ]]; then
+            optional_args+=(-var-file="$TF_VAR_FILE")
           fi
-          terraform plan -input=false -out="$TFPLAN_FILE" -detailed-exitcode "${optional_args[@]}"
+          terraform plan -input=false -out="$TF_PLAN_FILE" -detailed-exitcode "${optional_args[@]}"
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
           fi
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
 
-      # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
-      # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
+      - name: Create tarball
+        id: tar
+        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+        if: steps.plan.outputs.exitcode == 2
+        run: |
+          tarball_path="$RUNNER_TEMP/$TARBALL"
+          tar --create . | gpg --symmetric --batch --passphrase "$ENCRYPTION_PASSWORD" --output "$tarball_path"
+          echo "tarball_path=$tarball_path" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifact
+        id: upload
+        if: steps.tar.outcome == 'success'
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ steps.tar.outputs.tarball_path }}
+          if-no-files-found: error
+          # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
+          # If a workflow reaches this limit, it will be cancelled and the artifact will no longer be needed.
+          # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
+          retention-days: 35
+
+      - name: Save cache
+        id: cache-save
+        if: steps.cache-restore.outcome == 'success' && steps.cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0c907a75c2c80ebcb7f088228285e798b750cf8f
+        with:
+          path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+
       - name: Create job summary
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
         # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
@@ -216,8 +246,10 @@ jobs:
           TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
           TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
+        # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
+        # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
         run: |
-          tfplan=$(terraform show "$TFPLAN_FILE" -no-color)
+          tfplan=$(terraform show "$TF_PLAN_FILE" -no-color)
 
           echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
           #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
@@ -234,34 +266,13 @@ jobs:
 
           *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Create tarball
-        id: tar
-        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
-        if: steps.plan.outputs.exitcode == 2
-        run: |
-          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gpg"
-          tar -cv . | gpg -c --batch --passphrase "$ENCRYPTION_PASSWORD" -o "$tarball"
-          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
-
-      - name: Upload artifact
-        id: upload
-        if: steps.tar.outcome == 'success'
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ steps.tar.outputs.tarball }}
-          if-no-files-found: error
-          # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
-          # If a workflow reaches this limit, it will be cancelled and the artifact will no longer be needed.
-          # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
-          retention-days: 35
-
-      - name: Save cache
-        if: steps.cache-restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@6849a6489940f00c2f30c0fb92c6274307ccb58a
-        with:
-          path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
-          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+    outputs:
+      upload-outcome: ${{ steps.upload.outcome }}
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+      plugin-cache-dir: ${{ steps.mkdir.outputs.plugin-cache-dir }}
+      cache-primary-key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+      cache-restore-hit: ${{ steps.cache-restore.outputs.cache-hit }}
+      cache-save-outcome: ${{ steps.cache-save.outcome }}
 
   terraform-apply:
     name: Terraform Apply
@@ -290,24 +301,26 @@ jobs:
           path: ${{ inputs.working_directory }}
 
       - name: Restore cache
-        uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a
+        if: needs.terraform-plan.outputs.cache-restore-hit == 'true' || needs.terraform-plan.outputs.cache-save-outcome == 'success'
+        uses: actions/cache/restore@0c907a75c2c80ebcb7f088228285e798b750cf8f
         with:
           path: ${{ needs.terraform-plan.outputs.plugin-cache-dir }}
           key: ${{ needs.terraform-plan.outputs.cache-primary-key }}
+          fail-on-cache-miss: true
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
         with:
           terraform_version: ${{ inputs.terraform_version }}
+          terraform_wrapper: false
 
       - name: Extract tarball
         run: |
-          tarball="$ARTIFACT_NAME.tar.gpg"
-          gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$tarball" | tar -xv
-          rm "$tarball"
+          gpg --decrypt --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar --extract
+          rm "$TARBALL"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false "$TFPLAN_FILE"
+        run: terraform apply -auto-approve -input=false "$TF_PLAN_FILE"
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.

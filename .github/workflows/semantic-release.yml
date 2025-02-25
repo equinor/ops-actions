@@ -5,6 +5,12 @@ name: ♻ semantic-release
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
       branches:
         description: A newline-separated string of branches to release on.
         type: string
@@ -51,7 +57,7 @@ permissions: {}
 jobs:
   semantic-release:
     name: semantic-release
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
 
@@ -62,7 +68,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
         with:
           node-version: ${{ inputs.node_version }}
 

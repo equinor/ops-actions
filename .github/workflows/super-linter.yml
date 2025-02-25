@@ -4,6 +4,12 @@ name: ♻ super-linter
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
       filter_regex_exclude:
         description: Exclude files from linting using a regex pattern.
         type: string
@@ -21,7 +27,7 @@ permissions: {}
 jobs:
   super-linter:
     name: Super-linter
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
       statuses: write # Required to report GitHub Actions status checks
@@ -33,7 +39,7 @@ jobs:
           fetch-depth: 0 # Required to get the list of files that changed across commits
 
       - name: Lint Codebase
-        uses: super-linter/super-linter@e1cb86b6e8d119f789513668b4b30bf17fe1efe4
+        uses: super-linter/super-linter@85f7611e0f7b53c8573cca84aa0ed4344f6f6a4d
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}

@@ -1,5 +1,75 @@
 # Changelog
 
+## [9.13.3](https://github.com/equinor/ops-actions/compare/v9.13.2...v9.13.3) (2025-02-21)
+
+
+### Code Refactoring
+
+* update descriptions for Azure secrets ([#650](https://github.com/equinor/ops-actions/issues/650)) ([fa8f08c](https://github.com/equinor/ops-actions/commit/fa8f08cbf89b0e3987297296c6a314280b61b059))
+
+## [9.13.2](https://github.com/equinor/ops-actions/compare/v9.13.1...v9.13.2) (2025-02-03)
+
+
+### Code Refactoring
+
+* **terraform:** create summary at end of job ([#641](https://github.com/equinor/ops-actions/issues/641)) ([e4d6674](https://github.com/equinor/ops-actions/commit/e4d6674ca81f3c5588c76cc2182a590b7e75a733))
+
+## [9.13.1](https://github.com/equinor/ops-actions/compare/v9.13.0...v9.13.1) (2025-01-16)
+
+
+### Reverts
+
+* **terraform:** validate configuration if triggered by Dependabot ([1ef1222](https://github.com/equinor/ops-actions/commit/1ef1222411f03b3a8b74949e1d461b72b5f29012))
+
+## [9.13.0](https://github.com/equinor/ops-actions/compare/v9.12.4...v9.13.0) (2025-01-16)
+
+
+### Features
+
+* **terraform:** validate configuration if triggered by Dependabot ([#623](https://github.com/equinor/ops-actions/issues/623)) ([9d552d9](https://github.com/equinor/ops-actions/commit/9d552d9811de33b0ce670c4bddbd39fc083ddc0e))
+
+## [9.12.4](https://github.com/equinor/ops-actions/compare/v9.12.3...v9.12.4) (2025-01-09)
+
+
+### Bug Fixes
+
+* **terraform:** no log output when plugin cache enabled ([#630](https://github.com/equinor/ops-actions/issues/630)) ([306a079](https://github.com/equinor/ops-actions/commit/306a0793c5cf5b38b1de5168dfa59650e9aeec0b))
+
+## [9.12.3](https://github.com/equinor/ops-actions/compare/v9.12.2...v9.12.3) (2025-01-07)
+
+
+### Bug Fixes
+
+* **terraform:** cache not restored in Apply job ([#627](https://github.com/equinor/ops-actions/issues/627)) ([a6ffd90](https://github.com/equinor/ops-actions/commit/a6ffd90eeff58a5571f6435edca7818645b2b0cf))
+
+## [9.12.2](https://github.com/equinor/ops-actions/compare/v9.12.1...v9.12.2) (2024-12-16)
+
+
+### Bug Fixes
+
+* **terraform:** apply job fails if lock file has not been commited ([#617](https://github.com/equinor/ops-actions/issues/617)) ([c6292ea](https://github.com/equinor/ops-actions/commit/c6292eafd9a56831ec00f03decb4c5296265896d))
+
+## [9.12.1](https://github.com/equinor/ops-actions/compare/v9.12.0...v9.12.1) (2024-12-13)
+
+
+### Bug Fixes
+
+* **terraform:** apply job should fail if unable to restore cache ([#614](https://github.com/equinor/ops-actions/issues/614)) ([3aebc3d](https://github.com/equinor/ops-actions/commit/3aebc3dd67a93b43dc0d54f17a32cbfe72f5406b))
+
+## [9.12.0](https://github.com/equinor/ops-actions/compare/v9.11.0...v9.12.0) (2024-12-13)
+
+
+### Features
+
+* update jobs to run on latest OS version ([#611](https://github.com/equinor/ops-actions/issues/611)) ([8b1544e](https://github.com/equinor/ops-actions/commit/8b1544e8c0b6c821974c2d802c9ee46d566fa818))
+
+## [9.11.0](https://github.com/equinor/ops-actions/compare/v9.10.4...v9.11.0) (2024-12-06)
+
+
+### Features
+
+* set explicit OS version for runners ([#606](https://github.com/equinor/ops-actions/issues/606)) ([853c4a3](https://github.com/equinor/ops-actions/commit/853c4a3611965649aeaa8bbe20b19703d055504e))
+
 ## [9.10.4](https://github.com/equinor/ops-actions/compare/v9.10.3...v9.10.4) (2024-11-19)
 
 
