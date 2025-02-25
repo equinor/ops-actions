@@ -47,7 +47,6 @@ on:
         description: Specify the path of a test project or solution file, or the path of a directory containing a test project or solution file.
         type: string
         required: false
-        default: ""
 
       test_collect:
         description: Enables data collector for the test run.
