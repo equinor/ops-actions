@@ -50,7 +50,7 @@ on:
         default: ""
 
       data_collector:
-        description: The name of a data collector to enable for the test run, for example `Code Coverage`.
+        description: A data collector to enable for the test run, for example `Code Coverage`.
         type: string
         required: false
 
