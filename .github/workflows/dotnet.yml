@@ -49,7 +49,7 @@ on:
         required: false
         default: ""
 
-      data_collector:
+      collect:
         description: A data collector to enable for the test run, for example `Code Coverage`.
         type: string
         required: false
@@ -114,10 +114,10 @@ jobs:
         if: inputs.test_project != ''
         env:
           DOTNET_TEST_PROJECT: ${{ inputs.test_project }}
-          DOTNET_DATA_COLLECTOR: ${{ inputs.data_collector }}
+          DOTNET_COLLECT: ${{ inputs.collect }}
         run: |
           while read -r project; do
-            dotnet test "$project" --configuration "$DOTNET_CONFIGURATION" --collect "$DOTNET_DATA_COLLECTOR"
+            dotnet test "$project" --configuration "$DOTNET_CONFIGURATION" --collect "$DOTNET_COLLECT"
           done <<< "$DOTNET_TEST_PROJECT"
 
       # Publish the application and its dependencies to a folder for deployment.
