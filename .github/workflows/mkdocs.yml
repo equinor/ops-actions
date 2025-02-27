@@ -81,7 +81,7 @@ jobs:
         working-directory: ${{ env.MKDOCS_SITE_DIR }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar -cvf "$tarball" .
+          tar --create --file "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
