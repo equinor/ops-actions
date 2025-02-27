@@ -47,7 +47,7 @@ jobs:
       contents: read # Required to checkout the repository
 
     env:
-      SITE_DIR: site
+      MKDOCS_SITE_DIR: site
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
 
     steps:
@@ -70,17 +70,17 @@ jobs:
         if: inputs.pip_requirements_file != ''
         env:
           PIP_REQUIREMENTS_FILE: ${{ inputs.pip_requirements_file }}
-        run: pip install -r "$PIP_REQUIREMENTS_FILE"
+        run: pip install --requirement "$PIP_REQUIREMENTS_FILE"
 
       - name: MkDocs Build
-        run: mkdocs build --site-dir "$SITE_DIR"
+        run: mkdocs build --site-dir "$MKDOCS_SITE_DIR"
 
       - name: Create tarball
         id: tar
-        working-directory: ${{ env.SITE_DIR }}
+        working-directory: ${{ env.MKDOCS_SITE_DIR }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar -cvf "$tarball" .
+          tar --create --file "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
