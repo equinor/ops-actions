@@ -22,12 +22,12 @@ on:
         default: latest
 
       venv_path:
-        description: The path to create a virtual Python environment at (relative to working directory).
+        description: The path, relative to the working directory, to create a virtual Python environment at.
         type: string
         required: false
 
       pip_install_target:
-        description: The target directory that PIP should install packages into (relative to working directory).
+        description: The path, relative to the working directory, of a target directory that pip should install packages into.
         type: string
         required: false
 
@@ -75,10 +75,10 @@ jobs:
 
       - name: Install dependencies
         env:
-          TARGET: ${{ inputs.pip_install_target }}
+          PIP_INSTALL_TARGET: ${{ inputs.pip_install_target }}
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt --target "$TARGET"
+          pip install -r requirements.txt --target "$PIP_INSTALL_TARGET"
 
       - name: Create tarball
         id: tar
