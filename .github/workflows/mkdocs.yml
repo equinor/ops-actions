@@ -21,7 +21,7 @@ on:
         required: false
         default: ">=1.0.0"
 
-      pip_requirement:
+      pip_requirements_file:
         description: The path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
         type: string
         required: false
@@ -67,10 +67,10 @@ jobs:
           pip install "mkdocs$MKDOCS_VERSION"
 
       - name: Install Python dependencies
-        if: inputs.pip_requirement != ''
+        if: inputs.pip_requirements_file != ''
         env:
-          PIP_REQUIREMENT: ${{ inputs.pip_requirement }}
-        run: pip install
+          PIP_REQUIREMENTS_FILE: ${{ inputs.pip_requirements_file }}
+        run: pip install -r "$PIP_REQUIREMENTS_FILE"
 
       - name: MkDocs Build
         run: mkdocs build --site-dir "$SITE_DIR"
