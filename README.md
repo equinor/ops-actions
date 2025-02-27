@@ -1,7 +1,9 @@
-# Equinor Ops Actions
+# Ops Actions
 
+[![GitHub License](https://img.shields.io/github/license/equinor/ops-actions)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/equinor/ops-actions)](https://github.com/equinor/ops-actions/releases/latest)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
-[![SCM Compliance](https://scm-compliance-api.radix.equinor.com/repos/equinor/ops-actions/badge)](https://scm-compliance-api.radix.equinor.com/repos/equinor/ops-actions/badge)
+[![SCM Compliance](https://scm-compliance-api.radix.equinor.com/repos/equinor/ops-actions/badge)](https://developer.equinor.com/governance/scm-policy/)
 
 [Reusable GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for common operational tasks.
 
@@ -26,7 +28,7 @@ jobs:
 
 `{filename}` is the name of a workflow file in the [workflows directory](.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
 
-To pass inputs and secrets to the reusable workflow, use the `with` and `secrets` keywords.
+To pass inputs and secrets to the reusable workflow, use the `with` and `secrets` keywords respectively.
 
 For specific usage examples, see [this document](docs/usage-examples.md).
 

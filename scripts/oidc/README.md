@@ -4,28 +4,39 @@ This directory contains a Bash script `oidc.sh` that will configure OpenID Conne
 
 It will:
 
-1. Create an Azure AD application
-1. Create a service principal for the Azure AD application
-1. Create federated credentials for the Azure AD application
+1. Create a Microsoft Entra application
+1. Create a service principal for the Microsoft Entra application
+1. Create federated credentials for the Microsoft Entra application
 1. Create Azure role assignments for the service principal
 1. Set GitHub secrets `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID` and `AZURE_TENANT_ID`
 
 The script accepts the following arguments:
 
 1. The path of the JSON file containing the OIDC configuration
+1. (Optional) The GitHub repository to configure OIDC from.
+1. (Optional) The ID of the Azure subscription to configure OIDC to.
 
-## Configuration specification
+## Prerequisites
+
+- [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) - to create Microsoft Entra application, service principal and Azure role assignments.
+- [Install GitHub CLI](https://cli.github.com) - to set GitHub secrets.
+- [Install jq](https://stedolan.github.io/jq/download/) - to parse JSON configuration file.
+- Microsoft Entra role `Application Developer` - to create Microsoft Entra application and service principal.
+- Azure role `Owner` - to create Azure role assignments.
+- GitHub repository role `Admin` - to set GitHub secrets.
+
+## Configuration
 
 Example configuration:
 
 ```json
 {
-  "appName": "my-app",
+  "appName": "GitHub app",
   "federatedCredentials": [
     {
-      "name": "deploy-dev",
-      "subject": "repo:${REPO}:environment:dev",
-      "description": "Deploy to dev environment"
+      "name": "github-federated-identity",
+      "subject": "repo:${REPO}:environment:Development",
+      "description": "GitHub service principal federated identity"
     }
   ],
   "roleAssignments": [
@@ -37,23 +48,11 @@ Example configuration:
 }
 ```
 
-> **Note**
+> [!Note]
 >
-> `.federatedCredentials[].subject` must start with `repo:${REPO}:`.
+> The value of `.federatedCredentials[].subject` should contain the prefix `repo:${REPO}:`.
 >
-> `.roleAssignments[].scope` must start with `/subscriptions/${SUBSCRIPTION_ID}`.
-
-## Prerequisites
-
-- [Install Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) (latest version as of writing: `2.49.0`) - to create Azure AD application, federated credentials, service principal and Azure role assignments
-- [Install GitHub CLI](https://cli.github.com) (latest version as of writing: `2.30.0`) - to set GitHub secrets
-- [Install jq](https://stedolan.github.io/jq/download/) (latest version as of writing: `1.6`) - to parse JSON config file
-- Activate Azure AD role `Application Developer` - to create Azure AD application, federated credentials and service principal
-  > **Note:** Not necessary when updating the existing config.
-- Activate Azure role `Owner` - to create Azure role assignments
-  > **Note:** Minimum scope required is what's defined for role assignment in the `oidc.json` config.
-- GitHub repository role `Admin` - to set GitHub environment secrets
-- If a federated credential is configured with subject `repo:${REPO}:environment:<environment>`, create GitHub environment `<environment>` and set appropriate deployment protection rules.
+> The value of `.roleAssignments[].scope` should contain the prefix `/subscriptions/${SUBSCRIPTION_ID}`.
 
 ## Usage
 
@@ -61,35 +60,35 @@ Example configuration:
 
 1. Login to Azure:
 
-    ```console
-    az login
-    ```
-
-1. Set Azure subscription:
-
-    ```console
-    az account set -s {SUBSCRIPTION_NAME_OR_ID}
-    ```
+   ```console
+   az login
+   ```
 
 1. Login to GitHub:
 
-    ```console
-    gh auth login
-    ```
+   ```console
+   gh auth login
+   ```
 
 1. Configure application name, federated credentials and role assignments in a file `oidc.json`.
 
 1. Run the script `oidc.sh`:
 
-    ```console
-    ./oidc.sh {CONFIG_FILE}
-    ```
+   ```console
+   ./oidc.sh <CONFIG_FILE> [<REPO>] [<SUBSCRIPTION_ID>]
+   ```
 
-    For example:
+   For example, configure OIDC from the GitHub repository containing the configuration file to the active Azure subscription:
 
-    ```console
-    ./oidc.sh oidc.json
-    ```
+   ```console
+   ./oidc.sh oidc.json
+   ```
+
+   Or, configure OIDC from the specified GitHub repository to the specified Azure subscription:
+
+   ```console
+   ./oidc.sh oidc.json equinor/ops-actions 034ce851-5375-47b3-8ed2-0a637c9d4141
+   ```
 
 ### After running the `oidc.sh` script
 

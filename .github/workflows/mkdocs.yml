@@ -3,6 +3,12 @@ name: ♻ mkdocs
 on:
   workflow_call:
     inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
       python_version:
         description: The version of Python to install.
         type: string
@@ -10,7 +16,7 @@ on:
         default: latest
 
       mkdocs_version:
-        description: The version of MkDocs to install using PIP.
+        description: The version of MkDocs to install using pip.
         type: string
         required: false
         default: ">=1.0.0"
@@ -37,20 +43,20 @@ permissions: {}
 jobs:
   mkdocs:
     name: MkDocs
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
 
     env:
-      SITE_DIR: site
+      MKDOCS_SITE_DIR: site
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Setup Python
-        uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38
         with:
           python-version: ${{ inputs.python_version }}
 
@@ -68,18 +74,18 @@ jobs:
         run: pip install -r "$REQUIREMENTS"
 
       - name: MkDocs Build
-        run: mkdocs build --site-dir "$SITE_DIR"
+        run: mkdocs build --site-dir "$MKDOCS_SITE_DIR"
 
       - name: Create tarball
         id: tar
-        working-directory: ${{ env.SITE_DIR }}
+        working-directory: ${{ env.MKDOCS_SITE_DIR }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar -cvf "$tarball" .
+          tar --create --file "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ steps.tar.outputs.tarball }}

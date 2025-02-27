@@ -28,20 +28,20 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
 - Disable top level GitHub token permissions, then enable required permissions at the job level instead:
 
-    ```yaml
-    permissions: {}
+  ```yaml
+  permissions: {}
 
-    jobs:
-      example-job:
-        runs-on: ubuntu-latest
-        permissions:
-          contents: read # Required to checkout the repository
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v4
-    ```
+  jobs:
+    example-job:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read # Required to checkout the repository
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+  ```
 
-    This ensures that workflows follow the principle of least privilege.
+  This ensures that workflows follow the principle of least privilege.
 
 - When using a third-party action, pin it to a specific commit SHA, for example:
 
@@ -51,29 +51,41 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
 - Jobs that access secrets that grant privileged access (for example `Contributor` access in an Azure subscription) should be skipped if the workflow was triggered by Dependabot:
 
-    ```yaml
-    jobs:
-      example-job:
-        runs-on: ubuntu-latest
-        if: github.actor != 'dependabot[bot]'
-      steps:
-        - name: Login to Azure
-          uses: azure/login@v2
-          with:
-            client-id: ${{ secrets.AZURE_CLIENT_ID }}
-            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-    ```
+  ```yaml
+  jobs:
+    example-job:
+      runs-on: ubuntu-latest
+      if: github.actor != 'dependabot[bot]'
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  ```
 
-    This is to prevent Dependabot from updating a dependency to a version containing malicious code, then automatically running that code in our workflow, allowing it to steal your secrets.
+  This is to prevent Dependabot from updating a dependency to a version containing malicious code, then automatically running that code in our workflow, allowing it to steal your secrets.
 
-    Jobs that access secrets that grant non-privileged access (for example `Reader` access in an Azure subscription) should **not** be skipped if the workflow was triggered by Dependabot. In this scenario, separate Dependabot secrets must be created in the repository containing the caller workflow (see [official documentation](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#accessing-secrets)).
+  Jobs that access secrets that grant non-privileged access (for example `Reader` access in an Azure subscription) should **not** be skipped if the workflow was triggered by Dependabot. In this scenario, separate Dependabot secrets must be created in the repository containing the caller workflow (see [official documentation](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#accessing-secrets)).
+
+- Set a specific runner OS version for all jobs (see [supported GitHub-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources)):
+
+  ```yaml
+  jobs:
+    example-job:
+      runs-on: ubuntu-24.04
+  ```
+
+  This ensures that all jobs are executed on a runner that includes the required software by default.
 
 ## Naming conventions
 
-- Use [kebab case](https://en.wiktionary.org/wiki/kebab_case) for workflow file names, job identifiers and step identifiers.
+- Use [kebab-case](https://en.wiktionary.org/wiki/kebab_case) for workflow filenames, job identifiers and step identifiers.
 
-- Use [snake case](https://en.wiktionary.org/wiki/snake_case) for input and output identifiers.
+- Use [snake_case](https://en.wiktionary.org/wiki/snake_case) for input and output identifiers.
+
+- Use [SCREAMING_SNAKE_CASE](https://en.wiktionary.org/wiki/snake_case) for environment variable names.
 
 - A reusable workflow and its main job should be named after the main tool/service that is used, for example:
 
@@ -87,11 +99,11 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
   - If a caller workflow has a job `build` that calls the reusable workflow `docker`, the final job will be named `build / docker`.
   - If a caller workflow has a job `deploy` that calls the reusable workflow `azure-webapp`, the final job will be named `deploy / azure-webapp`.
 
-- An input that is passed to a workflow property should inherit the name of that property.
+- An input or environment variable that is passed to a workflow property should inherit the name of that property.
 
-  An input that is passed to an action input should follow the common naming convention `[<action>]_<input>`, where `<action>` can be omitted if the name of the action is similar to the name of the workflow.
+  An input or environment variable that is passed to an action input should follow the common naming convention `[<action>]_<input>`, where `<action>` can be omitted if the name of the action is similar to the name of the workflow.
 
-  An input that is passed to a CLI command option should follow the common naming convention `[<command>]_<option>`.
+  An input or environment variable that is passed to a CLI command option should follow the common naming convention `[<command>]_<option>`.
 
   For example:
 
@@ -150,7 +162,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
     run: |
       tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-      tar -cvf "$tarball" .
+      tar --create --file "$tarball" .
       echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
   - name: Upload artifact
@@ -175,6 +187,6 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
     run: |
       tarball="$ARTIFACT_NAME.tar"
-      tar -xvf "$tarball"
+      tar --extract --file "$tarball"
       rm "$tarball"
   ```
