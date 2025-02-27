@@ -48,7 +48,7 @@ jobs:
       contents: read # Required to checkout the repository
 
     env:
-      SITE_DIR: site
+      MKDOCS_SITE_DIR: site
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
 
     steps:
@@ -74,11 +74,11 @@ jobs:
         run: pip install -r "$REQUIREMENTS"
 
       - name: MkDocs Build
-        run: mkdocs build --site-dir "$SITE_DIR"
+        run: mkdocs build --site-dir "$MKDOCS_SITE_DIR"
 
       - name: Create tarball
         id: tar
-        working-directory: ${{ env.SITE_DIR }}
+        working-directory: ${{ env.MKDOCS_SITE_DIR }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
           tar -cvf "$tarball" .
