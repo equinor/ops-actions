@@ -162,7 +162,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
     run: |
       tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-      tar -cvf "$tarball" .
+      tar --create --file "$tarball" .
       echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
   - name: Upload artifact
@@ -187,6 +187,6 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
     run: |
       tarball="$ARTIFACT_NAME.tar"
-      tar -xvf "$tarball"
+      tar --extract --file "$tarball"
       rm "$tarball"
   ```
