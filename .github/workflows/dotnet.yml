@@ -50,10 +50,9 @@ on:
         default: ""
 
       test_collect:
-        description: Enables data collector for the test run.
+        description: The name of a data collector to enable for the test run, for example `Code Coverage`.
         type: string
         required: false
-        default: ""
 
       artifact_name:
         description: The name of the build artifact to upload.
