@@ -71,7 +71,7 @@ jobs:
         if: inputs.requirements != ''
         env:
           REQUIREMENTS: ${{ inputs.requirements }}
-        run: pip install -r "$REQUIREMENTS"
+        run: pip install --requirement "$REQUIREMENTS"
 
       - name: MkDocs Build
         run: mkdocs build --site-dir "$MKDOCS_SITE_DIR"
