@@ -27,7 +27,7 @@ on:
         required: false
 
       pip_install_target:
-        description: The path, relative to the working directory, of a target directory that PIP should install packages into.
+        description: The path, relative to the working directory, of a target directory that pip should install packages into.
         type: string
         required: false
 
