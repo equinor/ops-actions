@@ -146,7 +146,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
         - name: Install requirements
           env:
             PIP_INSTALL_TARGET: ${{ inputs.pip_install_target }}
-          run: pip install -r requirements.txt --target "$PIP_INSTALL_TARGET"
+          run: pip install --requirement requirements.txt --target "$PIP_INSTALL_TARGET"
   ```
 
 ## Artifacts
