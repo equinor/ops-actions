@@ -22,12 +22,12 @@ on:
         default: latest
 
       venv_path:
-        description: The path to create a virtual Python environment at (relative to working directory).
+        description: The path, relative to the working directory, to create a virtual Python environment at.
         type: string
         required: false
 
       pip_install_target:
-        description: The target directory that PIP should install packages into (relative to working directory).
+        description: The path, relative to the working directory, of a target directory that PIP should install packages into.
         type: string
         required: false
 
