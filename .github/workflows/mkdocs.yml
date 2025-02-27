@@ -16,7 +16,7 @@ on:
         default: latest
 
       mkdocs_version:
-        description: The version of MkDocs to install using PIP.
+        description: The version of MkDocs to install using pip.
         type: string
         required: false
         default: ">=1.0.0"
