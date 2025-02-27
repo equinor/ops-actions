@@ -75,7 +75,7 @@ jobs:
           ARTIFACT_NAME: ${{ inputs.artifact_name }}
         run: |
           tarball="$ARTIFACT_NAME.tar"
-          tar -xvf "$tarball"
+          tar --extract --file "$tarball"
           rm "$tarball"
 
       - name: Login to Azure
@@ -95,14 +95,14 @@ jobs:
       - name: Configure Function App
         if: inputs.app_settings != '' || inputs.slot_settings != ''
         env:
-          APP_NAME: ${{ inputs.app_name }}
-          SLOT_NAME: ${{ inputs.slot_name }}
-          APP_SETTINGS: ${{ inputs.app_settings }}
-          SLOT_SETTINGS: ${{ inputs.slot_settings }}
+          AZURE_FUNCTIONAPP_NAME: ${{ inputs.app_name }}
+          AZURE_FUNCTIONAPP_SLOT_NAME: ${{ inputs.slot_name }}
+          AZURE_FUNCTIONAPP_SETTINGS: ${{ inputs.app_settings }}
+          AZURE_FUNCTIONAPP_SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
-          APP_ID=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          ARGS=(--settings "$APP_SETTINGS")
-          if [[ -n "$SLOT_NAME" ]]; then
-            ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
+          APP_ID=$(az functionapp list --query "[?name=='$AZURE_FUNCTIONAPP_NAME'].id" --output tsv)
+          ARGS=(--settings "$AZURE_FUNCTIONAPP_SETTINGS")
+          if [[ -n "$AZURE_FUNCTIONAPP_SLOT_NAME" ]]; then
+            ARGS+=(--slot "$AZURE_FUNCTIONAPP_SLOT_NAME" --slot-settings "$AZURE_FUNCTIONAPP_SLOT_SETTINGS")
           fi
           az functionapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none

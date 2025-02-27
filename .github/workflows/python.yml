@@ -85,13 +85,13 @@ jobs:
           PIP_INSTALL_TARGET: ${{ inputs.pip_install_target }}
         run: |
           python -m pip install --upgrade pip
-          pip install -r "$PIP_REQUIREMENTS_FILE" --target "$PIP_INSTALL_TARGET"
+          pip install --requirement "$PIP_REQUIREMENTS_FILE" --target "$PIP_INSTALL_TARGET"
 
       - name: Create tarball
         id: tar
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar -cvf "$tarball" .
+          tar --create --file "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
