@@ -26,7 +26,7 @@ on:
         type: string
         required: false
 
-      pip_requirement:
+      pip_requirements_file:
         description: The path, relative to the working directory, of a pip requirements file.
         type: string
         required: false
@@ -78,15 +78,14 @@ jobs:
           python -m venv "$VENV_PATH"
           source "$VENV_PATH/bin/activate"
 
-      # Ref: https://pip.pypa.io/en/stable/cli/pip_install/
       - name: Install dependencies
-        if: inputs.pip_requirement != ''
+        if: inputs.pip_requirements_file != ''
         env:
-          PIP_REQUIREMENT: ${{ inputs.pip_requirement }}
+          PIP_REQUIREMENTS_FILE: ${{ inputs.pip_requirements_file }}
           PIP_INSTALL_TARGET: ${{ inputs.pip_install_target }}
         run: |
           python -m pip install --upgrade pip
-          pip install --target "$PIP_INSTALL_TARGET"
+          pip install --requirement "$PIP_REQUIREMENTS_FILE" --target "$PIP_INSTALL_TARGET"
 
       - name: Create tarball
         id: tar
