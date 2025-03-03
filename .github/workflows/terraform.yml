@@ -68,8 +68,8 @@ on:
         description: The ID of the Microsoft Entra tenant to authenticate to.
         required: true
 
-      ENCRYPTION_PASSWORD:
-        description: A password used to encrypt the archive containing the Terraform configuration and plan file.
+      ENCRYPTION_PASSPHRASE:
+        description: A passphrase used to encrypt the archive containing the Terraform configuration and plan file.
         required: true
 
 # Queue jobs that target the same Terraform configuration.
@@ -95,7 +95,7 @@ env:
   TF_PLAN_FILE: tfplan
   TARBALL: terraform.tar.gpg
   ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
-  ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
+  ENCRYPTION_PASSPHRASE: ${{ secrets.ENCRYPTION_PASSPHRASE }}
 
 jobs:
   terraform-plan:
@@ -211,7 +211,7 @@ jobs:
         if: steps.plan.outputs.exitcode == 2
         run: |
           tarball_path="$RUNNER_TEMP/$TARBALL"
-          tar --create . | gpg --symmetric --batch --passphrase "$ENCRYPTION_PASSWORD" --output "$tarball_path"
+          tar --create . | gpg --symmetric --batch --passphrase "$ENCRYPTION_PASSPHRASE" --output "$tarball_path"
           echo "tarball_path=$tarball_path" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
@@ -316,7 +316,7 @@ jobs:
 
       - name: Extract tarball
         run: |
-          gpg --decrypt --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar --extract
+          gpg --decrypt --batch --passphrase "$ENCRYPTION_PASSPHRASE" "$TARBALL" | tar --extract
           rm "$TARBALL"
 
       - name: Terraform Apply
