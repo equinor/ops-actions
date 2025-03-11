@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.14.0](https://github.com/equinor/ops-actions/compare/v9.13.3...v9.14.0) (2025-03-11)
+
+
+### Features
+
+* disable Azure CLI output by default ([#671](https://github.com/equinor/ops-actions/issues/671)) ([25da2fd](https://github.com/equinor/ops-actions/commit/25da2fdab5ad1b407abf990dc38a112691f2352c))
+
 ## [9.13.3](https://github.com/equinor/ops-actions/compare/v9.13.2...v9.13.3) (2025-02-21)
 
 
