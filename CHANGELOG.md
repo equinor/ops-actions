@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.15.0](https://github.com/equinor/ops-actions/compare/v9.14.0...v9.15.0) (2025-03-27)
+
+
+### Features
+
+* add workflow `databricks-repos.yml` ([#675](https://github.com/equinor/ops-actions/issues/675)) ([9117bdb](https://github.com/equinor/ops-actions/commit/9117bdbcd9f981276be19227ed313c8d15e223da))
+
 ## [9.14.0](https://github.com/equinor/ops-actions/compare/v9.13.3...v9.14.0) (2025-03-11)
 
 
