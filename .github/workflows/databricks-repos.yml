@@ -1,0 +1,111 @@
+# Reusable GitHub Actions workflow for updating Databricks Repos.
+# Refs:
+#   - https://www.databricks.com/product/repos
+#   - https://learn.microsoft.com/en-us/azure/databricks/repos/ci-cd-techniques-with-repos
+
+name: Databricks Repos
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
+      environment:
+        description: The target GitHub environment that the jobs in this workflow should reference.
+        required: true
+        type: string
+
+      cli_version:
+        description: A version of the Databricks CLI to install.
+        type: string
+        required: false
+
+      databricks_host:
+        description: The URL of the target Databricks workspace.
+        required: true
+        type: string
+
+      repo_path:
+        description: The path of the Git folder (repo) object in the Databricks workspace.
+        required: true
+        type: string
+
+    secrets:
+      AZURE_CLIENT_ID:
+        description: The client ID of the service principal to use for authenticating to Azure.
+        required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: The ID of the Azure subscription to authenticate to.
+        required: true
+
+      AZURE_TENANT_ID:
+        description: The ID of the Microsoft Entra tenant to authenticate to.
+        required: true
+
+permissions: {}
+
+jobs:
+  databricks-repos:
+    name: Databricks Repos
+    runs-on: ${{ inputs.runs_on }}
+    environment: ${{ inputs.environment }}
+
+    concurrency:
+      group: databricks @ ${{ inputs.environment }}
+      cancel-in-progress: false
+
+    permissions:
+      id-token: write # Required to login to Azure using OIDC.
+      contents: read # Required for Databricks to pull from GitHub.
+
+    env:
+      DATABRICKS_HOST: ${{ inputs.databricks_host }}
+
+    steps:
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@39165aa0e6fd376550c750b85dc3d4ebff172fd7
+        with:
+          version: ${{ inputs.cli_version }}
+
+      - name: Login to Azure
+        uses: azure/login@a65d910e8af852a8061c627c456678983e180302
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Only one Git credential per user is supported at this time.
+      - name: Create Databricks Git credential
+        id: git-credentials-create
+        env:
+          GIT_PROVIDER: gitHub
+          GIT_USERNAME: github-actions
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          credential_id=$(databricks git-credentials list --output json | jq --raw-output .[0].credential_id)
+          if [[ "$credential_id" != "null" ]]; then
+            echo "Updating Git credential ($credential_id)..."
+            databricks git-credentials update "$credential_id" "$GIT_PROVIDER" --git-username "$GIT_USERNAME" --personal-access-token "$GITHUB_TOKEN"
+          else
+            credential_id=$(databricks git-credentials create "$GIT_PROVIDER" --git-username "$GIT_USERNAME" --personal-access-token "$GITHUB_TOKEN" --output json | jq --raw-output .credential_id)
+            echo "Created Git credential ($credential_id)"
+          fi
+          echo "credential-id=$credential_id" >> "$GITHUB_OUTPUT"
+
+      - name: Update Databricks repo
+        env:
+          REPO_PATH: ${{ inputs.repo_path }}
+        run: databricks repos update "$REPO_PATH" --branch main
+
+      - name: Delete Databricks Git credential
+        if: always() && steps.git-credentials-create.outputs.credential-id != ''
+        env:
+          CREDENTIAL_ID: ${{ steps.git-credentials-create.outputs.credential-id }}
+        run: |
+          databricks git-credentials delete "$CREDENTIAL_ID"
+          echo "Deleted Git credential ($CREDENTIAL_ID)"
