@@ -34,6 +34,12 @@ on:
         required: true
         type: string
 
+      branch:
+        description: The branch that the local version of the repo is checked out to. Defaults to `main`.
+        required: false
+        type: string
+        default: main
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -101,7 +107,8 @@ jobs:
       - name: Update Databricks repo
         env:
           REPO_PATH: ${{ inputs.repo_path }}
-        run: databricks repos update "$REPO_PATH" --branch main
+          BRANCH: ${{ inputs.branch }}
+        run: databricks repos update "$REPO_PATH" --branch "$BRANCH"
 
       # The GITHUB_TOKEN expires when the job finishes.
       - name: Delete Databricks Git credential
