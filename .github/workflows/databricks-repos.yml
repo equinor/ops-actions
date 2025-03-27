@@ -60,8 +60,8 @@ jobs:
       cancel-in-progress: false
 
     permissions:
-      id-token: write # Required to login to Azure using OIDC.
-      contents: read # Required for Databricks to pull from GitHub.
+      id-token: write # Required to request an OIDC token for the service principal.
+      contents: read # Required for the service principal to pull from GitHub repositories into Databricks Git folders.
 
     env:
       DATABRICKS_HOST: ${{ inputs.databricks_host }}
@@ -79,7 +79,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Authorize service principal to access Git folders (Repos) using the temporary GITHUB_TOKEN.
+      # Authorize the service principal to access Git folders using the temporary GITHUB_TOKEN.
       # Refs: https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication
       - name: Create Databricks Git credential
         id: git-credentials-create
