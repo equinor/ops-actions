@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.15.3](https://github.com/equinor/ops-actions/compare/v9.15.2...v9.15.3) (2025-03-31)
+
+
+### Bug Fixes
+
+* **azure-webapp:** unable to get access token from Azure CLI ([#684](https://github.com/equinor/ops-actions/issues/684)) ([4117bb2](https://github.com/equinor/ops-actions/commit/4117bb23581afc3f845629fd1a34ae05eb946693))
+
 ## [9.15.2](https://github.com/equinor/ops-actions/compare/v9.15.1...v9.15.2) (2025-03-31)
 
 
