@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.15.2](https://github.com/equinor/ops-actions/compare/v9.15.1...v9.15.2) (2025-03-31)
+
+
+### Bug Fixes
+
+* **azure-webapp:** typo in `tar` command option ([#682](https://github.com/equinor/ops-actions/issues/682)) ([81924ff](https://github.com/equinor/ops-actions/commit/81924ffaf3e88783dffa05cc28c5888bf11d22d3))
+
 ## [9.15.1](https://github.com/equinor/ops-actions/compare/v9.15.0...v9.15.1) (2025-03-31)
 
 
