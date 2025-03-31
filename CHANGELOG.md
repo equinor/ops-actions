@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.15.1](https://github.com/equinor/ops-actions/compare/v9.15.0...v9.15.1) (2025-03-31)
+
+
+### Bug Fixes
+
+* **azure-function:** unable to get access token from Azure CLI ([#679](https://github.com/equinor/ops-actions/issues/679)) ([385569c](https://github.com/equinor/ops-actions/commit/385569cb9a26e5530705354ff6c4fb0bb57ef8fa)), closes [#674](https://github.com/equinor/ops-actions/issues/674)
+
 ## [9.15.0](https://github.com/equinor/ops-actions/compare/v9.14.0...v9.15.0) (2025-03-27)
 
 
