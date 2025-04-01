@@ -61,8 +61,6 @@ on:
 permissions: {}
 
 env:
-  # Disable output from Azure CLI commands by default, as some commands may output secrets.
-  # Output can be explicitly enabled for commands that require it by using the "--output" argument.
   AZURE_CORE_OUTPUT: none
 
 jobs:
