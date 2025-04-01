@@ -108,9 +108,9 @@ jobs:
           APP_SETTINGS: ${{ inputs.app_settings }}
           SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
-          APP_ID=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          ARGS=(--settings "$APP_SETTINGS")
+          app_id=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
+          args=(--settings "$APP_SETTINGS")
           if [[ -n "$SLOT_NAME" ]]; then
-            ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
+            args+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
           fi
-          az functionapp config appsettings set --ids "$APP_ID" "${ARGS[@]}"
+          az functionapp config appsettings set --ids "$app_id" "${args[@]}"
