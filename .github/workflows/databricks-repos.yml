@@ -3,7 +3,7 @@
 #   - https://www.databricks.com/product/repos
 #   - https://learn.microsoft.com/en-us/azure/databricks/repos/ci-cd-techniques-with-repos
 
-name: Databricks Repos
+name: ♻ databricks-repos
 
 on:
   workflow_call:
