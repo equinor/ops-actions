@@ -115,14 +115,14 @@ jobs:
       - name: Configure Web App
         if: inputs.app_settings != '' || inputs.slot_settings != ''
         env:
-          AZURE_WEBAPP_NAME: ${{ inputs.app_name }}
-          AZURE_WEBAPP_SLOT_NAME: ${{ inputs.slot_name }}
-          AZURE_WEBAPP_SETTINGS: ${{ inputs.app_settings }}
-          AZURE_WEBAPP_SLOT_SETTINGS: ${{ inputs.slot_settings }}
+          APP_NAME: ${{ inputs.app_name }}
+          SLOT_NAME: ${{ inputs.slot_name }}
+          SETTINGS: ${{ inputs.app_settings }}
+          SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
-          APP_ID=$(az webapp list --query "[?name=='$AZURE_WEBAPP_NAME'].id" --output tsv)
-          ARGS=(--settings "$AZURE_WEBAPP_SETTINGS")
-          if [[ -n "$AZURE_WEBAPP_SLOT_NAME" ]]; then
-            ARGS+=(--slot "$AZURE_WEBAPP_SLOT_NAME" --slot-settings "$AZURE_WEBAPP_SLOT_SETTINGS")
+          APP_ID=$(az webapp list --query "[?name=='$APP_NAME'].id" --output tsv)
+          ARGS=(--settings "$SETTINGS")
+          if [[ -n "$SLOT_NAME" ]]; then
+            ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
           fi
           az webapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none
