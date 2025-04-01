@@ -86,7 +86,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
     AZURE_CORE_OUTPUT: none
   ```
 
-  Some Azure CLI commands may output secrets. Output can be explicitly enabled for commands that require it by using the [`--output` global parameter](https://learn.microsoft.com/en-us/cli/azure/azure-cli-global-parameters?tabs=tabid-1#--output-global-parameter).
+  This is to prevent Azure CLI commands from outputting secrets. Output can be explicitly enabled for commands that require it by using the [`--output` global parameter](https://learn.microsoft.com/en-us/cli/azure/azure-cli-global-parameters?tabs=tabid-1#--output-global-parameter).
 
 ## Naming conventions
 
