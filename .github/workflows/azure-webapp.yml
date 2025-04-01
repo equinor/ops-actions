@@ -121,8 +121,8 @@ jobs:
           SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
           app_id=$(az webapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          args=(--settings "$APP_SETTINGS")
+          optional_args=()
           if [[ -n "$SLOT_NAME" ]]; then
-            args+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
+            optional_args+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
           fi
-          az webapp config appsettings set --ids "$app_id" "${args[@]}"
+          az webapp config appsettings set --ids "$app_id" --settings "$APP_SETTINGS" "${optional_args[@]}"
