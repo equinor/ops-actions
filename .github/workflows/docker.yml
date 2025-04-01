@@ -65,8 +65,8 @@ jobs:
       contents: read # Required to checkout the repository
 
     env:
-      DOCKER_IMAGE: ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.tag }}
-      DOCKER_IMAGE_LATEST: ${{ inputs.registry }}/${{ inputs.repository }}:latest
+      IMAGE: ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.tag }}
+      IMAGE_LATEST: ${{ inputs.registry }}/${{ inputs.repository }}:latest
 
     steps:
       - name: Checkout
@@ -88,9 +88,9 @@ jobs:
           DOCKER_BUILD_SUMMARY: true
         with:
           context: ${{ inputs.working_directory }}
-          tags: ${{ env.DOCKER_IMAGE }},${{ env.DOCKER_IMAGE_LATEST }}
+          tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
           push: true
 
     outputs:
-      image: ${{ env.DOCKER_IMAGE }}
-      image_latest: ${{ env.DOCKER_IMAGE_LATEST }}
+      image: ${{ env.IMAGE }}
+      image_latest: ${{ env.IMAGE_LATEST }}
