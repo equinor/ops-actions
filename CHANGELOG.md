@@ -1,5 +1,40 @@
 # Changelog
 
+## [9.15.3](https://github.com/equinor/ops-actions/compare/v9.15.2...v9.15.3) (2025-03-31)
+
+
+### Bug Fixes
+
+* **azure-webapp:** unable to get access token from Azure CLI ([#684](https://github.com/equinor/ops-actions/issues/684)) ([4117bb2](https://github.com/equinor/ops-actions/commit/4117bb23581afc3f845629fd1a34ae05eb946693))
+
+## [9.15.2](https://github.com/equinor/ops-actions/compare/v9.15.1...v9.15.2) (2025-03-31)
+
+
+### Bug Fixes
+
+* **azure-webapp:** typo in `tar` command option ([#682](https://github.com/equinor/ops-actions/issues/682)) ([81924ff](https://github.com/equinor/ops-actions/commit/81924ffaf3e88783dffa05cc28c5888bf11d22d3))
+
+## [9.15.1](https://github.com/equinor/ops-actions/compare/v9.15.0...v9.15.1) (2025-03-31)
+
+
+### Bug Fixes
+
+* **azure-function:** unable to get access token from Azure CLI ([#679](https://github.com/equinor/ops-actions/issues/679)) ([385569c](https://github.com/equinor/ops-actions/commit/385569cb9a26e5530705354ff6c4fb0bb57ef8fa)), closes [#674](https://github.com/equinor/ops-actions/issues/674)
+
+## [9.15.0](https://github.com/equinor/ops-actions/compare/v9.14.0...v9.15.0) (2025-03-27)
+
+
+### Features
+
+* add workflow `databricks-repos.yml` ([#675](https://github.com/equinor/ops-actions/issues/675)) ([9117bdb](https://github.com/equinor/ops-actions/commit/9117bdbcd9f981276be19227ed313c8d15e223da))
+
+## [9.14.0](https://github.com/equinor/ops-actions/compare/v9.13.3...v9.14.0) (2025-03-11)
+
+
+### Features
+
+* disable Azure CLI output by default ([#671](https://github.com/equinor/ops-actions/issues/671)) ([25da2fd](https://github.com/equinor/ops-actions/commit/25da2fdab5ad1b407abf990dc38a112691f2352c))
+
 ## [9.13.3](https://github.com/equinor/ops-actions/compare/v9.13.2...v9.13.3) (2025-02-21)
 
 
