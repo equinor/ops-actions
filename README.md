@@ -1,4 +1,4 @@
-# Ops Actions
+# ops-actions
 
 [![GitHub License](https://img.shields.io/github/license/equinor/ops-actions)](LICENSE)
 [![GitHub Release](https://img.shields.io/github/v/release/equinor/ops-actions)](https://github.com/equinor/ops-actions/releases/latest)
