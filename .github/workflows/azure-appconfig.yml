@@ -1,0 +1,65 @@
+# Ref: https://learn.microsoft.com/en-us/azure/azure-app-configuration/push-kv-github-action
+
+name: ♻ azure-appconfig
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
+      endpoint:
+        description: Endpoint URL of the Azure App Configuration store.
+        type: string
+        required: true
+
+      configuration_file:
+        description: The path of the configuration file to import into Azure App Configuration.
+        type: string
+        required: true
+
+    secrets:
+      AZURE_CLIENT_ID:
+        description: The client ID of the service principal to use for authenticating to Azure.
+        required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: The ID of the Azure subscription to authenticate to.
+        required: true
+
+      AZURE_TENANT_ID:
+        description: The ID of the Microsoft Entra tenant to authenticate to.
+        required: true
+
+permissions: {}
+
+env:
+  AZURE_CORE_OUTPUT: none
+
+jobs:
+  azure-appconfig:
+    name: Azure App Config
+    runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read # Required to checkout the repository
+      id-token: write # Required to login to Azure using OIDC
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Login to Azure
+        uses: azure/login@a65d910e8af852a8061c627c456678983e180302
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Import into App Config
+        env:
+          ENDPOINT: ${{ inputs.endpoint }}
+          FILE: ${{ inputs.configuration_file }}
+        run: az appconfig kv import --endpoint "$ENDPOINT" --auth-mode login --source file --path "$FILE" --format json --yes
