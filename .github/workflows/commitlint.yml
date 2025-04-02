@@ -3,7 +3,6 @@
 # References:
 # - commitlint: https://commitlint.js.org
 # - Conventional Commits: https://www.conventionalcommits.org
-
 name: ♻ commitlint
 
 on:
@@ -19,7 +18,7 @@ on:
         description: The version of Node.js to install.
         type: string
         required: false
-        default: lts/*
+        default: latest
 
       commitlint_version:
         description: The version of commitlint to install.
@@ -28,14 +27,10 @@ on:
         default: latest
 
       extends:
-        description: |
-          Newline-separated string of shareable configurations to install.
-
-          Additional configuration can be set in a file `.commitlintrc` (https://commitlint.js.org/reference/configuration.html).
+        description: A newline-separated string of shareable configurations to install. Additional configuration can be set in a file `.commitlintrc` (https://commitlint.js.org/reference/configuration.html).
         type: string
         required: false
-        default: |-
-          @commitlint/config-conventional
+        default: "@commitlint/config-conventional"
 
       message:
         description: Commit message to lint. Default is latest commit message.
@@ -56,7 +51,11 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
-
+    env:
+      COMMITLINT_VERSION: ${{ inputs.commitlint_version }}
+      EXTENDS: ${{ inputs.extends }}
+      MESSAGE: ${{ inputs.message }}
+      HELP_URL: ${{ inputs.help_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -69,18 +68,11 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Install dependencies
-        env:
-          EXTENDS: ${{ inputs.extends }}
         run: |
           readarray -t extends_array <<< "$EXTENDS"
           npm install "${extends_array[@]}"
 
       - name: Lint
-        env:
-          VERSION: ${{ inputs.commitlint_version }}
-          EXTENDS: ${{ inputs.extends }}
-          MESSAGE: ${{ inputs.message }}
-          HELP_URL: ${{ inputs.help_url }}
         run: |
           readarray -t extends_array <<< "$EXTENDS"
-          npx "commitlint@$VERSION" --extends "${extends_array[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends_array[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"

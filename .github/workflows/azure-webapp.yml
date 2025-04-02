@@ -73,11 +73,9 @@ jobs:
     environment:
       name: ${{ inputs.environment }}
       url: ${{ steps.deploy.outputs.webapp-url }}
-
     permissions:
       contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
-
     steps:
       - name: Download artifact
         if: inputs.artifact_name != ''
@@ -120,9 +118,9 @@ jobs:
           APP_SETTINGS: ${{ inputs.app_settings }}
           SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
-          APP_ID=$(az webapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          ARGS=(--settings "$APP_SETTINGS")
+          app_id=$(az webapp list --query "[?name=='$APP_NAME'].id" --output tsv)
+          optional_args=()
           if [[ -n "$SLOT_NAME" ]]; then
-            ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
+            optional_args+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
           fi
-          az webapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none
+          az webapp config appsettings set --ids "$app_id" --settings "$APP_SETTINGS" "${optional_args[@]}"

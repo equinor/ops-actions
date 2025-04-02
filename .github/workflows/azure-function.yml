@@ -68,7 +68,6 @@ jobs:
     permissions:
       contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
-
     steps:
       - name: Download artifact
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
@@ -108,9 +107,9 @@ jobs:
           APP_SETTINGS: ${{ inputs.app_settings }}
           SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
-          APP_ID=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
-          ARGS=(--settings "$APP_SETTINGS")
+          app_id=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
+          optional_args=()
           if [[ -n "$SLOT_NAME" ]]; then
-            ARGS+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
+            optional_args+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
           fi
-          az functionapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none
+          az functionapp config appsettings set --ids "$app_id" --settings "$APP_SETTINGS" "${optional_args[@]}"

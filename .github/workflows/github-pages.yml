@@ -20,20 +20,16 @@ jobs:
   github-pages:
     name: GitHub Pages
     runs-on: ${{ inputs.runs_on}}
-
     concurrency:
       group: pages
       cancel-in-progress: false
-
     permissions:
       pages: write # Required to deploy to GitHub Pages
       id-token: write # Required to verify that GitHub Pages deployment originates from appropriate source
-
     environment:
       # Setting a different environment name is possible, but not recommended by GitHub.
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
-
     steps:
       - name: Deploy to GitHub Pages
         id: deploy

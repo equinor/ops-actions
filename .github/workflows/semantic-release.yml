@@ -11,12 +11,23 @@ on:
         required: false
         default: ubuntu-24.04
 
+      node_version:
+        description: Specify specific version of Node.js, with default set to latest version.
+        type: string
+        required: false
+        default: latest
+
+      semantic_version:
+        description: Specify specific version of semantic-release, with default set to latest version.
+        type: string
+        required: false
+        default: latest
+
       branches:
         description: A newline-separated string of branches to release on.
         type: string
         required: false
-        default: |-
-          main
+        default: main
 
       preset:
         description: Which preset to use for semantic-release.
@@ -37,20 +48,7 @@ on:
         description: A newline-separated string of additional plugins to install.
         type: string
         required: false
-        default: |-
-          conventional-changelog-conventionalcommits
-
-      node_version:
-        description: Specify specific version of Node.js, with default set to latest version.
-        type: string
-        required: false
-        default: lts/*
-
-      semantic_version:
-        description: Specify specific version of semantic-release, with default set to latest version.
-        type: string
-        required: false
-        default: latest
+        default: conventional-changelog-conventionalcommits
 
 permissions: {}
 
@@ -60,7 +58,13 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
-
+    env:
+      SEMANTIC_VERSION: ${{ inputs.semantic_version }}
+      BRANCHES: ${{ inputs.branches }}
+      PLUGINS: ${{ inputs.plugins }}
+      ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
+      PRESET: ${{ inputs.preset }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -73,19 +77,11 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Install additional plugins
-        env:
-          ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
         run: |
           readarray -t plugins_array <<< "$ADDITIONAL_PLUGINS"
           npm install "${plugins_array[@]}"
 
       - name: Release
-        env:
-          BRANCHES: ${{ inputs.branches }}
-          PLUGINS: ${{ inputs.plugins }}
-          PRESET: ${{ inputs.preset }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SEMANTIC_VERSION: ${{ inputs.semantic_version }}
         run: |
           readarray -t branches_array <<< "$BRANCHES"
           readarray -t plugins_array <<< "$PLUGINS"
