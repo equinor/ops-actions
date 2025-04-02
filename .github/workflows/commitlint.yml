@@ -19,7 +19,7 @@ on:
         description: The version of Node.js to install.
         type: string
         required: false
-        default: lts/*
+        default: latest
 
       commitlint_version:
         description: The version of commitlint to install.

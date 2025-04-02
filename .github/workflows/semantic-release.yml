@@ -15,7 +15,7 @@ on:
         description: Specify specific version of Node.js, with default set to latest version.
         type: string
         required: false
-        default: lts/*
+        default: latest
 
       semantic_version:
         description: Specify specific version of semantic-release, with default set to latest version.
