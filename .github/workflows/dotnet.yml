@@ -35,7 +35,6 @@ on:
         description: Which runtime to publish the application for.
         type: string
         required: false
-        default: ""
 
       self_contained:
         description: Publish the .NET runtime with your application so the runtime doesn't need to be installed on the target machine?
@@ -98,15 +97,12 @@ jobs:
           NPM_VERSION: ${{ inputs.npm_version }}
         run: npm install -g "npm@$NPM_VERSION"
 
-      # Restore dependencies for the application and runtime.
       - name: .NET Restore
         run: dotnet restore "$PROJECT" --runtime "$RUNTIME"
 
-      # Build the application for release/deployment.
       - name: .NET Build
         run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-restore
 
-      # Execute unit tests.
       - name: .NET Test
         if: inputs.test_project != ''
         env:
@@ -114,7 +110,6 @@ jobs:
           TEST_COLLECT: ${{ inputs.test_collect }}
         run: dotnet test "$TEST_PROJECT" --configuration "$CONFIGURATION" --collect "$TEST_COLLECT"
 
-      # Publish the application and its dependencies to a folder for deployment.
       - name: .NET Publish
         id: publish
         env:
