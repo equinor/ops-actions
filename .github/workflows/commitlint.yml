@@ -34,8 +34,7 @@ on:
           Additional configuration can be set in a file `.commitlintrc` (https://commitlint.js.org/reference/configuration.html).
         type: string
         required: false
-        default: |-
-          @commitlint/config-conventional
+        default: "@commitlint/config-conventional"
 
       message:
         description: Commit message to lint. Default is latest commit message.
