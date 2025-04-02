@@ -4,7 +4,11 @@ This document contains *minimal* usage examples for the reusable workflows in th
 
 ## Provision Azure resources using Terraform
 
-Example workflow:
+Prerequisites:
+
+- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
+- [Configure Terraform backend](https://github.com/equinor/azure-terraform-backend-template)
+- Configure GitHub secret `ENCRYPTION_PASSWORD` with a randomly generated password (used to encrypt the uploaded artifact, as it may contain sensitive infrastructure configuration)
 
 ```yaml
 on:
@@ -13,8 +17,10 @@ on:
 
 jobs:
   provision:
-    uses: equinor/ops-actions/.github/workflows/terraform.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/terraform.yml@main
     with:
+      terraform_version: latest
+      working_directory: "."
       environment: development
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -22,12 +28,6 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 ```
-
-Prerequisites:
-
-- [Configure Azure credentials](../scripts/oidc/README.md)
-- [Configure Terraform backend](https://github.com/equinor/azure-terraform-backend-template)
-- Configure GitHub secret `ENCRYPTION_PASSWORD` with a randomly generated password (used to encrypt the uploaded artifact, as it may contain sensitive infrastructure configuration)
 
 Supported Terraform providers:
 
@@ -38,7 +38,9 @@ Supported Terraform providers:
 
 ## Deploy Docker image to Azure Web App
 
-Example workflow:
+Prerequisites:
+
+- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
 
 ```yaml
 on:
@@ -47,8 +49,9 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/docker-acr@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/docker-acr@main
     with:
+      working_directory: "."
       registry_name: crexampledev
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -57,7 +60,7 @@ jobs:
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@main
     with:
       environment: development
       image: ${{ needs.build.outputs.image }}
@@ -68,13 +71,11 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
-Prerequisites:
-
-- [Configure Azure credentials](../scripts/oidc/README.md)
-
 ## Deploy Python application to Azure Function App
 
-Example workflow:
+Prerequisites:
+
+- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
 
 ```yaml
 on:
@@ -83,13 +84,16 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/python.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/python.yml@main
     with:
+      python_version: latest
+      working_directory: "."
+      requirements: requirements.txt
       pip_install_target: .python_packages/lib/site-packages # Required
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/azure-function.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/azure-function.yml@main
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
@@ -100,13 +104,11 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
-Prerequisites:
-
-- [Configure Azure credentials](../scripts/oidc/README.md)
-
 ## Deploy Python application to Azure Web App
 
-Example workflow:
+Prerequisites:
+
+- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
 
 ```yaml
 on:
@@ -115,14 +117,17 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/python.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/python.yml@main
     with:
+      python_version: latest
+      working_directory: "."
       venv_path: antenv # Required
+      requirements: requirements.txt
       pip_install_target: .python_packages/lib/site-packages # Required
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@main
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
@@ -133,13 +138,11 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
-Prerequisites:
-
-- [Configure Azure credentials](../scripts/oidc/README.md)
-
 ## Deploy .NET application to Azure Web App
 
-Example workflow:
+Prerequisites:
+
+- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
 
 ```yaml
 on:
@@ -148,13 +151,14 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/dotnet.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/dotnet.yml@main
     with:
-      project: .
+      dotnet_version: "9.x"
+      project: Source/ExampleApp/ExampleApp.csproj
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/azure-webapp.yml@main
     with:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
@@ -165,13 +169,7 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
-Prerequisites:
-
-- [Configure Azure credentials](../scripts/oidc/README.md)
-
 ## Deploy MkDocs site to GitHub Pages
-
-Example workflow:
 
 ```yaml
 on:
@@ -183,11 +181,14 @@ on:
 
 jobs:
   build:
-    uses: equinor/ops-actions/.github/workflows/mkdocs.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/mkdocs.yml@main
+    with:
+      python_version: latest
+      mkdocs_version: ">=1.0.0"
 
   deploy:
     needs: build
-    uses: equinor/ops-actions/.github/workflows/github-pages.yml@v9.5.0
+    uses: equinor/ops-actions/.github/workflows/github-pages.yml@main
     with:
       artifact_name: ${{ needs.build.outputs.artifact_name }}
 ```
