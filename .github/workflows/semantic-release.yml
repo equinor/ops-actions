@@ -11,12 +11,23 @@ on:
         required: false
         default: ubuntu-24.04
 
+      node_version:
+        description: Specify specific version of Node.js, with default set to latest version.
+        type: string
+        required: false
+        default: lts/*
+
+      semantic_version:
+        description: Specify specific version of semantic-release, with default set to latest version.
+        type: string
+        required: false
+        default: latest
+
       branches:
         description: A newline-separated string of branches to release on.
         type: string
         required: false
-        default: |-
-          main
+        default: main
 
       preset:
         description: Which preset to use for semantic-release.
@@ -37,20 +48,7 @@ on:
         description: A newline-separated string of additional plugins to install.
         type: string
         required: false
-        default: |-
-          conventional-changelog-conventionalcommits
-
-      node_version:
-        description: Specify specific version of Node.js, with default set to latest version.
-        type: string
-        required: false
-        default: lts/*
-
-      semantic_version:
-        description: Specify specific version of semantic-release, with default set to latest version.
-        type: string
-        required: false
-        default: latest
+        default: conventional-changelog-conventionalcommits
 
 permissions: {}
 
