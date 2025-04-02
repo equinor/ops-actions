@@ -60,6 +60,11 @@ on:
 
 permissions: {}
 
+env:
+  # Disable output from Azure CLI commands by default, as some commands may output secrets.
+  # Output can be explicitly enabled for commands that require it by using the "--output" argument.
+  AZURE_CORE_OUTPUT: none
+
 jobs:
   azure-webapp:
     name: Azure Web App
@@ -86,7 +91,7 @@ jobs:
           ARTIFACT_NAME: ${{ inputs.artifact_name }}
         run: |
           tarball="$ARTIFACT_NAME.tar"
-          tar -extract --file "$tarball"
+          tar --extract --file "$tarball"
           rm "$tarball"
 
       - name: Login to Azure
@@ -99,6 +104,9 @@ jobs:
       - name: Deploy Web App
         id: deploy
         uses: azure/webapps-deploy@2fdd5c3ebb4e540834e86ecc1f6fdcd5539023ee
+        env:
+          # Required for this action to get access token from Azure CLI.
+          AZURE_CORE_OUTPUT: json
         with:
           app-name: ${{ inputs.app_name }}
           slot-name: ${{ inputs.slot_name }}
@@ -107,14 +115,14 @@ jobs:
       - name: Configure Web App
         if: inputs.app_settings != '' || inputs.slot_settings != ''
         env:
-          AZURE_WEBAPP_NAME: ${{ inputs.app_name }}
-          AZURE_WEBAPP_SLOT_NAME: ${{ inputs.slot_name }}
-          AZURE_WEBAPP_SETTINGS: ${{ inputs.app_settings }}
-          AZURE_WEBAPP_SLOT_SETTINGS: ${{ inputs.slot_settings }}
+          APP_NAME: ${{ inputs.app_name }}
+          SLOT_NAME: ${{ inputs.slot_name }}
+          APP_SETTINGS: ${{ inputs.app_settings }}
+          SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
-          APP_ID=$(az webapp list --query "[?name=='$AZURE_WEBAPP_NAME'].id" --output tsv)
-          ARGS=(--settings "$AZURE_WEBAPP_SETTINGS")
-          if [[ -n "$AZURE_WEBAPP_SLOT_NAME" ]]; then
-            ARGS+=(--slot "$AZURE_WEBAPP_SLOT_NAME" --slot-settings "$AZURE_WEBAPP_SLOT_SETTINGS")
+          app_id=$(az webapp list --query "[?name=='$APP_NAME'].id" --output tsv)
+          optional_args=()
+          if [[ -n "$SLOT_NAME" ]]; then
+            optional_args+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
           fi
-          az webapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none
+          az webapp config appsettings set --ids "$app_id" --settings "$APP_SETTINGS" "${optional_args[@]}"

@@ -54,6 +54,11 @@ on:
 
 permissions: {}
 
+env:
+  # Disable output from Azure CLI commands by default, as some commands may output secrets.
+  # Output can be explicitly enabled for commands that require it by using the "--output" argument.
+  AZURE_CORE_OUTPUT: none
+
 jobs:
   azure-function:
     name: Azure Function
@@ -88,6 +93,9 @@ jobs:
       - name: Deploy Function App
         id: deploy
         uses: azure/functions-action@fd80521afbba9a2a76a99ba1acc07aff8d733d11
+        env:
+          # Required for this action to get access token from Azure CLI.
+          AZURE_CORE_OUTPUT: json
         with:
           app-name: ${{ inputs.app_name }}
           slot-name: ${{ inputs.slot_name }}
@@ -95,14 +103,14 @@ jobs:
       - name: Configure Function App
         if: inputs.app_settings != '' || inputs.slot_settings != ''
         env:
-          AZURE_FUNCTIONAPP_NAME: ${{ inputs.app_name }}
-          AZURE_FUNCTIONAPP_SLOT_NAME: ${{ inputs.slot_name }}
-          AZURE_FUNCTIONAPP_SETTINGS: ${{ inputs.app_settings }}
-          AZURE_FUNCTIONAPP_SLOT_SETTINGS: ${{ inputs.slot_settings }}
+          APP_NAME: ${{ inputs.app_name }}
+          SLOT_NAME: ${{ inputs.slot_name }}
+          APP_SETTINGS: ${{ inputs.app_settings }}
+          SLOT_SETTINGS: ${{ inputs.slot_settings }}
         run: |
-          APP_ID=$(az functionapp list --query "[?name=='$AZURE_FUNCTIONAPP_NAME'].id" --output tsv)
-          ARGS=(--settings "$AZURE_FUNCTIONAPP_SETTINGS")
-          if [[ -n "$AZURE_FUNCTIONAPP_SLOT_NAME" ]]; then
-            ARGS+=(--slot "$AZURE_FUNCTIONAPP_SLOT_NAME" --slot-settings "$AZURE_FUNCTIONAPP_SLOT_SETTINGS")
+          app_id=$(az functionapp list --query "[?name=='$APP_NAME'].id" --output tsv)
+          optional_args=()
+          if [[ -n "$SLOT_NAME" ]]; then
+            optional_args+=(--slot "$SLOT_NAME" --slot-settings "$SLOT_SETTINGS")
           fi
-          az functionapp config appsettings set --ids "$APP_ID" "${ARGS[@]}" --output none
+          az functionapp config appsettings set --ids "$app_id" --settings "$APP_SETTINGS" "${optional_args[@]}"

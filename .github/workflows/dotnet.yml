@@ -75,10 +75,10 @@ jobs:
       contents: read # Required to checkout the repository
 
     env:
-      DOTNET_PROJECT: ${{ inputs.project }}
-      DOTNET_CONFIGURATION: Release
-      DOTNET_RUNTIME: ${{ inputs.runtime }}
-      DOTNET_SELF_CONTAINED: ${{ inputs.self_contained }}
+      PROJECT: ${{ inputs.project }}
+      CONFIGURATION: Release
+      RUNTIME: ${{ inputs.runtime }}
+      SELF_CONTAINED: ${{ inputs.self_contained }}
 
     steps:
       - name: Checkout
@@ -103,31 +103,31 @@ jobs:
 
       # Restore dependencies for the application and runtime.
       - name: .NET Restore
-        run: dotnet restore "$DOTNET_PROJECT" --runtime "$DOTNET_RUNTIME"
+        run: dotnet restore "$PROJECT" --runtime "$RUNTIME"
 
       # Build the application for release/deployment.
       - name: .NET Build
-        run: dotnet build "$DOTNET_PROJECT" --configuration "$DOTNET_CONFIGURATION" --runtime "$DOTNET_RUNTIME" --self-contained "$DOTNET_SELF_CONTAINED" --no-restore
+        run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-restore
 
       # Execute unit tests.
       - name: .NET Test
         if: inputs.test_project != ''
         env:
-          DOTNET_TEST_PROJECT: ${{ inputs.test_project }}
-          DOTNET_TEST_COLLECT: ${{ inputs.test_collect }}
+          TEST_PROJECT: ${{ inputs.test_project }}
+          TEST_COLLECT: ${{ inputs.test_collect }}
         run: |
           while read -r project; do
-            dotnet test "$project" --configuration "$DOTNET_CONFIGURATION" --collect "$DOTNET_TEST_COLLECT"
-          done <<< "$DOTNET_TEST_PROJECT"
+            dotnet test "$project" --configuration "$CONFIGURATION" --collect "$TEST_COLLECT"
+          done <<< "$TEST_PROJECT"
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: .NET Publish
         id: publish
         env:
-          DOTNET_PUBLISH_OUTPUT: ${{ runner.temp }}/${{ inputs.artifact_name }}
+          OUTPUT_PATH: ${{ runner.temp }}/${{ inputs.artifact_name }}
         run: |
-          dotnet publish "$DOTNET_PROJECT" --configuration "$DOTNET_CONFIGURATION" --runtime "$DOTNET_RUNTIME" --self-contained "$DOTNET_SELF_CONTAINED" --output "$DOTNET_PUBLISH_OUTPUT" --no-build
-          echo "publish_path=$DOTNET_PUBLISH_OUTPUT" >> "$GITHUB_OUTPUT"
+          dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT_PATH" --no-build
+          echo "publish_path=$OUTPUT_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Create tarball
         id: tar

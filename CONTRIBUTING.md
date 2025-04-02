@@ -1,6 +1,6 @@
 # Contributing guidelines
 
-This document provides guidelines for contributing to the Ops Actions project.
+This document provides guidelines for contributing to the ops-actions project.
 
 ## 💡 Requesting changes
 
@@ -71,7 +71,7 @@ This document provides guidelines for contributing to the Ops Actions project.
 
 ## 🤝 Roles and responsibilities
 
-This section describes the various roles and responsibilities in the Ops Actions project.
+This section describes the various roles and responsibilities in the ops-actions project.
 
 ### 🦸‍♀️ External contributors
 
