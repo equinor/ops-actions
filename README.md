@@ -47,6 +47,11 @@ updates:
       interval: weekly
 ```
 
+## Development
+
+- The [GitHub Actions extension for VS Code](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions) is highly recommended for syntax highlighting, validation and code completion for GitHub Actions workflows.
+- The [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extensions for VS Code are recommended for formatting.
+
 ## Contributing
 
 See [contributing guidelines](CONTRIBUTING.md).
