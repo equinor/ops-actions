@@ -22,16 +22,15 @@ on:
         default: latest
 
       mkdocs_version:
-        description: The version of MkDocs to install using PIP.
+        description: The version of MkDocs to install using pip.
         type: string
         required: false
         default: ">=1.0.0"
 
       requirements:
-        description: The path of a file containing the Python packages to install using PIP, usually "requirements.txt".
+        description: The path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
         type: string
         required: false
-        default: ""
 
 permissions: {}
 
@@ -41,7 +40,6 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: write # Required to checkout the repository push to the "gh-pages" branch
-
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -58,7 +56,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install "mkdocs$MKDOCS_VERSION"
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         if: inputs.requirements != ''
         env:
           REQUIREMENTS: ${{ inputs.requirements }}
