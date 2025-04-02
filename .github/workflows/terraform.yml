@@ -173,7 +173,7 @@ jobs:
           if [[ -n "$BACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$BACKEND_CONFIG")
           fi
-          terraform init "${optional_args[@]}"
+          terraform init -input=false "${optional_args[@]}"
 
       - name: Terraform Validate
         id: validate
@@ -196,7 +196,7 @@ jobs:
           if [[ -n "$VAR_FILE" ]]; then
             optional_args+=(-var-file="$VAR_FILE")
           fi
-          terraform plan -input=false -out="$PLAN_FILE" -detailed-exitcode "${optional_args[@]}"
+          terraform plan -out="$PLAN_FILE" -input=false -detailed-exitcode "${optional_args[@]}"
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
@@ -316,7 +316,7 @@ jobs:
           rm "$TARBALL"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false "$PLAN_FILE"
+        run: terraform apply -input=false "$PLAN_FILE"
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
