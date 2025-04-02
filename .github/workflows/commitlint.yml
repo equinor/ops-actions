@@ -3,7 +3,6 @@
 # References:
 # - commitlint: https://commitlint.js.org
 # - Conventional Commits: https://www.conventionalcommits.org
-
 name: ♻ commitlint
 
 on:
@@ -52,7 +51,11 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
-
+    env:
+      COMMITLINT_VERSION: ${{ inputs.commitlint_version }}
+      EXTENDS: ${{ inputs.extends }}
+      MESSAGE: ${{ inputs.message }}
+      HELP_URL: ${{ inputs.help_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -65,18 +68,11 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Install dependencies
-        env:
-          EXTENDS: ${{ inputs.extends }}
         run: |
           readarray -t extends_array <<< "$EXTENDS"
           npm install "${extends_array[@]}"
 
       - name: Lint
-        env:
-          VERSION: ${{ inputs.commitlint_version }}
-          EXTENDS: ${{ inputs.extends }}
-          MESSAGE: ${{ inputs.message }}
-          HELP_URL: ${{ inputs.help_url }}
         run: |
           readarray -t extends_array <<< "$EXTENDS"
-          npx "commitlint@$VERSION" --extends "${extends_array[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends_array[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"

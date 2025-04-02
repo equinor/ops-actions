@@ -58,7 +58,13 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
-
+    env:
+      SEMANTIC_VERSION: ${{ inputs.semantic_version }}
+      BRANCHES: ${{ inputs.branches }}
+      PLUGINS: ${{ inputs.plugins }}
+      ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
+      PRESET: ${{ inputs.preset }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -71,19 +77,11 @@ jobs:
           node-version: ${{ inputs.node_version }}
 
       - name: Install additional plugins
-        env:
-          ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
         run: |
           readarray -t plugins_array <<< "$ADDITIONAL_PLUGINS"
           npm install "${plugins_array[@]}"
 
       - name: Release
-        env:
-          BRANCHES: ${{ inputs.branches }}
-          PLUGINS: ${{ inputs.plugins }}
-          PRESET: ${{ inputs.preset }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SEMANTIC_VERSION: ${{ inputs.semantic_version }}
         run: |
           readarray -t branches_array <<< "$BRANCHES"
           readarray -t plugins_array <<< "$PLUGINS"
