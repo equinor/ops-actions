@@ -44,10 +44,9 @@ on:
         default: false
 
       test_project:
-        description: Specify the path of a test project or solution file, or the path of a directory containing a test project or solution file. Pass a newline-separated string to specify multiple test projects.
+        description: Specify the path of a test project or solution file, or the path of a directory containing a test project or solution file.
         type: string
         required: false
-        default: ""
 
       test_collect:
         description: The name of a data collector to enable for the test run, for example `Code Coverage`.
@@ -113,10 +112,7 @@ jobs:
         env:
           TEST_PROJECT: ${{ inputs.test_project }}
           TEST_COLLECT: ${{ inputs.test_collect }}
-        run: |
-          while read -r project; do
-            dotnet test "$project" --configuration "$CONFIGURATION" --collect "$TEST_COLLECT"
-          done <<< "$TEST_PROJECT"
+        run: dotnet test "$TEST_PROJECT" --configuration "$CONFIGURATION" --collect "$TEST_COLLECT"
 
       # Publish the application and its dependencies to a folder for deployment.
       - name: .NET Publish
