@@ -72,11 +72,9 @@ jobs:
     permissions:
       contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
-
     env:
       IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
       IMAGE_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683

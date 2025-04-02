@@ -63,11 +63,9 @@ jobs:
     environment: ${{ inputs.environment }}
     permissions:
       contents: read # Required to checkout the repository
-
     env:
       IMAGE: ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.tag }}
       IMAGE_LATEST: ${{ inputs.registry }}/${{ inputs.repository }}:latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683

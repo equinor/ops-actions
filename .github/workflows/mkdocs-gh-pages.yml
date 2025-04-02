@@ -41,7 +41,6 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: write # Required to checkout the repository push to the "gh-pages" branch
-
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683

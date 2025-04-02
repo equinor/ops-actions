@@ -73,13 +73,11 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
-
     env:
       PROJECT: ${{ inputs.project }}
       CONFIGURATION: Release
       RUNTIME: ${{ inputs.runtime }}
       SELF_CONTAINED: ${{ inputs.self_contained }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
