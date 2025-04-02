@@ -6,7 +6,7 @@ This document contains *minimal* usage examples for the reusable workflows in th
 
 Prerequisites:
 
-- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
+- [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
 - [Configure Terraform backend](https://github.com/equinor/azure-terraform-backend-template)
 - Configure GitHub secret `ENCRYPTION_PASSWORD` with a randomly generated password (used to encrypt the uploaded artifact, as it may contain sensitive infrastructure configuration)
 
@@ -40,7 +40,7 @@ Supported Terraform providers:
 
 Prerequisites:
 
-- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
+- [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
 
 ```yaml
 on:
@@ -75,7 +75,7 @@ jobs:
 
 Prerequisites:
 
-- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
+- [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
 
 ```yaml
 on:
@@ -108,7 +108,7 @@ jobs:
 
 Prerequisites:
 
-- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
+- [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
 
 ```yaml
 on:
@@ -142,7 +142,7 @@ jobs:
 
 Prerequisites:
 
-- [Configure OIDC authentication from GitHub Actions to Azure](../scripts/oidc/README.md)
+- [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
 
 ```yaml
 on:
