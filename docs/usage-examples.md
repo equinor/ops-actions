@@ -1,6 +1,6 @@
 # Usage examples
 
-This document contains *minimal* usage examples for the reusable workflows in this repository.
+This document contains _minimal_ usage examples for the reusable workflows in this repository.
 
 ## Provision Azure resources using Terraform
 
