@@ -14,13 +14,11 @@ on:
         description: Exclude files from linting using a regex pattern.
         type: string
         required: false
-        default: ""
 
       filter_regex_include:
         description: Include files in linting using a regex pattern.
         type: string
         required: false
-        default: ""
 
 permissions: {}
 

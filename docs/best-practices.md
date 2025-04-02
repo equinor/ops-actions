@@ -129,7 +129,6 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
           description: The target directory that pip should install packages into.
           type: string
           required: false
-          default: ""
 
   jobs:
     python:
