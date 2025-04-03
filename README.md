@@ -32,6 +32,23 @@ To pass inputs and secrets to the reusable workflow, use the `with` and `secrets
 
 For specific usage examples, see [this document](docs/usage-examples.md).
 
+### Workflows
+
+| Task | Workflow |
+| - | - |
+| Provision cloud infrastructure using Terraform | [`terraform.yml`](.github/workflows/terraform.yml) |
+| Build Docker image and push to container registry | [`docker.yml`](.github/workflows/docker.yml) or [`docker-acr.yml`](.github/workflows/docker-acr.yml) (push to Azure Container Registry) |
+| Build .NET application | [`dotnet.yml`](.github/workflows/dotnet.yml) |
+| Package Python application | [`python.yml`](.github/workflows/python.yml) |
+| Build MkDocs site | [`mkdocs.yml`](.github/workflows/mkdocs.yml) or [`mkdocs-gh-pages`](.github/workflows/mkdocs-gh-pages.yml) (deploy to GitHub Pages) |
+| Deploy to GitHub Pages | [`github-pages.yml`](.github/workflows/github-pages.yml) |
+| Deploy to Azure Web App | [`azure-webapp.yml`](.github/workflows/azure-webapp.yml) |
+| Deploy to Azure Function App | [`azure-function.yml`](.github/workflows/azure-function.yml) |
+| Update Databricks Git folder (repo) | [`databricks-repos.yml`](.github/workflows/databricks-repos.yml) |
+| Create GitHub release | [`release-please.yml`](.github/workflows/release-please.yml) or [`semantic-release.yml`](.github/workflows/semantic-release.yml) |
+| Lint codebase | [`super-linter.yml`](.github/workflows/super-linter.yml) |
+| Lint commit message | [`commitlint.yml`](.github/workflows/commitlint.yml) |
+
 ### Version updates
 
 Use [Dependabot](https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/about-dependabot-version-updates) to keep workflows you use updated to the latest versions.
