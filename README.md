@@ -40,7 +40,7 @@ For specific usage examples, see [this document](docs/usage-examples.md).
 | Build Docker image and push to container registry | [`docker.yml`](.github/workflows/docker.yml) or [`docker-acr.yml`](.github/workflows/docker-acr.yml) (push to Azure Container Registry) |
 | Build .NET application                            | [`dotnet.yml`](.github/workflows/dotnet.yml)                                                                                            |
 | Package Python application                        | [`python.yml`](.github/workflows/python.yml)                                                                                            |
-| Build MkDocs site                                 | [`mkdocs.yml`](.github/workflows/mkdocs.yml) or [`mkdocs-gh-pages`](.github/workflows/mkdocs-gh-pages.yml) (deploy to GitHub Pages)     |
+| Build MkDocs site                                 | [`mkdocs.yml`](.github/workflows/mkdocs.yml) or [`mkdocs-gh-pages.yml`](.github/workflows/mkdocs-gh-pages.yml) (deploy to GitHub Pages)     |
 | Deploy to GitHub Pages                            | [`github-pages.yml`](.github/workflows/github-pages.yml)                                                                                |
 | Deploy to Azure Web App                           | [`azure-webapp.yml`](.github/workflows/azure-webapp.yml)                                                                                |
 | Deploy to Azure Function App                      | [`azure-function.yml`](.github/workflows/azure-function.yml)                                                                            |
