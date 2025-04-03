@@ -52,6 +52,10 @@ updates:
 - The [GitHub Actions extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions) is highly recommended for syntax highlighting, validation and code completion for GitHub Actions workflows.
 - The [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) extensions are recommended for formatting.
 
+## Testing
+
+We perform [user acceptance tests](https://en.wikipedia.org/wiki/Acceptance_testing#User_acceptance_testing) for reusable workflows.
+
 ## Contributing
 
 See [contributing guidelines](CONTRIBUTING.md).
