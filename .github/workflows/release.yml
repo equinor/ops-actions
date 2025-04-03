@@ -5,16 +5,7 @@ on:
     branches:
       - main
 
-permissions: {}
-
 jobs:
-  release-please:
-    name: Release Please
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write # Required to update changelog file
-      pull-requests: write # Required to create release PRs
-    steps:
-      - uses: googleapis/release-please-action@a02a34c4d625f9be7cb89156071d8567266a2445
-        with:
-          release-type: simple
+  release:
+    name: Release
+    uses: ./.github/workflows/release-please.yml

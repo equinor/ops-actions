@@ -1,0 +1,30 @@
+name: ♻ release-please
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
+      release_type:
+        description: The type of release to create (see [supported release types](https://github.com/googleapis/release-please/blob/main/README.md#strategy-language-types-supported)). Defaults to `simple`.
+        type: string
+        required: false
+        default: simple
+
+permissions: {}
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: write # Required to update changelog file
+      pull-requests: write # Required to create release PRs
+    steps:
+      - uses: googleapis/release-please-action@a02a34c4d625f9be7cb89156071d8567266a2445
+        with:
+          release-type: ${{ inputs.release_type }}
