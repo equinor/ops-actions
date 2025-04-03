@@ -143,7 +143,7 @@ jobs:
       - name: Restore cache
         id: cache-restore
         if: steps.mkdir.outputs.plugin-cache-dir != ''
-        uses: actions/cache/restore@0c907a75c2c80ebcb7f088228285e798b750cf8f
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/{1}', inputs.working_directory, env.LOCK_FILE)) }}
@@ -173,7 +173,7 @@ jobs:
           if [[ -n "$BACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$BACKEND_CONFIG")
           fi
-          terraform init "${optional_args[@]}"
+          terraform init -input=false "${optional_args[@]}"
 
       - name: Terraform Validate
         id: validate
@@ -196,7 +196,7 @@ jobs:
           if [[ -n "$VAR_FILE" ]]; then
             optional_args+=(-var-file="$VAR_FILE")
           fi
-          terraform plan -input=false -out="$PLAN_FILE" -detailed-exitcode "${optional_args[@]}"
+          terraform plan -out="$PLAN_FILE" -input=false -detailed-exitcode "${optional_args[@]}"
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
@@ -228,7 +228,7 @@ jobs:
       - name: Save cache
         id: cache-save
         if: steps.cache-restore.outcome == 'success' && steps.cache-restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@0c907a75c2c80ebcb7f088228285e798b750cf8f
+        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
@@ -291,14 +291,14 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Download artifact
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
+        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working_directory }}
 
       - name: Restore cache
         if: needs.terraform-plan.outputs.cache-restore-hit == 'true' || needs.terraform-plan.outputs.cache-save-outcome == 'success'
-        uses: actions/cache/restore@0c907a75c2c80ebcb7f088228285e798b750cf8f
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684
         with:
           path: ${{ needs.terraform-plan.outputs.plugin-cache-dir }}
           key: ${{ needs.terraform-plan.outputs.cache-primary-key }}
@@ -316,7 +316,7 @@ jobs:
           rm "$TARBALL"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false "$PLAN_FILE"
+        run: terraform apply -input=false "$PLAN_FILE"
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.

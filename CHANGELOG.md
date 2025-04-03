@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.16.0](https://github.com/equinor/ops-actions/compare/v9.15.3...v9.16.0) (2025-04-02)
+
+
+### Features
+
+* **python:** add input `requirements` ([#602](https://github.com/equinor/ops-actions/issues/602)) ([f0be28c](https://github.com/equinor/ops-actions/commit/f0be28cc6bd763d06628cd2bceeffd88c0a4528f))
+
 ## [9.15.3](https://github.com/equinor/ops-actions/compare/v9.15.2...v9.15.3) (2025-03-31)
 
 

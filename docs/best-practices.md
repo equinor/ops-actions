@@ -79,6 +79,15 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
   This ensures that all jobs are executed on a runner that includes the required software by default.
 
+- Workflows that run [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/) commands should declare the following top level environment variable to disable output from Azure CLI commands by default:
+
+  ```yaml
+  env:
+    AZURE_CORE_OUTPUT: none
+  ```
+
+  This is to prevent Azure CLI commands from outputting secrets. Output can be explicitly enabled for commands that require it by using the [`--output` global parameter](https://learn.microsoft.com/en-us/cli/azure/azure-cli-global-parameters?tabs=tabid-1#--output-global-parameter).
+
 ## Naming conventions
 
 - Use [kebab-case](https://en.wiktionary.org/wiki/kebab_case) for workflow filenames, job identifiers and step identifiers.

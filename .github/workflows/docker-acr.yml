@@ -59,8 +59,6 @@ on:
 permissions: {}
 
 env:
-  # Disable output from Azure CLI commands by default, as some commands may output secrets.
-  # Output can be explicitly enabled for commands that require it by using the "--output" argument.
   AZURE_CORE_OUTPUT: none
 
 jobs:
@@ -95,7 +93,7 @@ jobs:
         run: az acr login --name "$REGISTRY_NAME"
 
       - name: Build and push
-        uses: docker/build-push-action@0adf9959216b96bec444f325f1e493d4aa344497
+        uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4
         env:
           DOCKER_BUILD_SUMMARY: true
         with:
