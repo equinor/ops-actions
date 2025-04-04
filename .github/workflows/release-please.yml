@@ -25,6 +25,7 @@ jobs:
       contents: write # Required to update changelog file
       pull-requests: write # Required to create release PRs
     steps:
-      - uses: googleapis/release-please-action@a02a34c4d625f9be7cb89156071d8567266a2445
+      - name: Release Please
+        uses: googleapis/release-please-action@a02a34c4d625f9be7cb89156071d8567266a2445
         with:
           release-type: ${{ inputs.release_type }}
