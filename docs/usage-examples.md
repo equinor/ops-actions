@@ -192,3 +192,28 @@ jobs:
     with:
       artifact_name: ${{ needs.build.outputs.artifact_name }}
 ```
+
+## Update Databricks Git folder
+
+Prerequisites:
+
+- [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
+- Create Git folder `/Repos/<GITHUB_REPOSITORY>` in the target Databricks workspace and add the service principal with access `Can Manage`
+
+```yaml
+on:
+  push:
+    branches: [main]
+
+jobs:
+  update:
+    uses: equinor/ops-actions/.github/workflows/databricks-repos.yml@main
+    with:
+      environment: development
+      cli_version: "" # empty == latest
+      databricks_host: https://adb-709200391298940.4.azuredatabricks.net
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+```
