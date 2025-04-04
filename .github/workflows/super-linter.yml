@@ -51,7 +51,7 @@ jobs:
           # For example, if using the `nullable` argument in a Terraform variable block, Terrascan throws an error. This argument was added in Terraform v1.1 (https://developer.hashicorp.com/terraform/language/values/variables#disallowing-null-input-values).
           VALIDATE_TERRAFORM_TERRASCAN: false
           # For Python, prefer the Ruff linter over Flake8 and isort.
-          # The Ruff linter is faster than, has feature parity with, and serves as a drop-in replacement, for both Flake8 and isort.
+          # The Ruff linter is faster than, has feature parity with, and serves as a drop-in replacement for both Flake8 and isort.
           # The Ruff formatter also has feature parity with Black, however Super-linter does not yet support the Ruff formatter.
           # Ref: https://docs.astral.sh/ruff/
           VALIDATE_PYTHON_FLAKE8: false
