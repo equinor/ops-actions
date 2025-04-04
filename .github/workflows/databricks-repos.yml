@@ -30,9 +30,10 @@ on:
         type: string
 
       repo_path:
-        description: The path of the Git folder (repo) object in the Databricks workspace.
-        required: true
+        description: The path of the Git folder (repo) object in the Databricks workspace. Defaults to `/Repos/<GITHUB_REPOSITORY>`.
+        required: false
         type: string
+        default: /Repos/${{ github.repository }}
 
       branch:
         description: The branch that the local version of the repo is checked out to. Defaults to `main`.
