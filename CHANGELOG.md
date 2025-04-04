@@ -1,5 +1,14 @@
 # Changelog
 
+## [9.17.0](https://github.com/equinor/ops-actions/compare/v9.16.0...v9.17.0) (2025-04-04)
+
+
+### Features
+
+* add workflow `release-please.yml` ([#691](https://github.com/equinor/ops-actions/issues/691)) ([0b1964d](https://github.com/equinor/ops-actions/commit/0b1964dfe2920cf7f61237536e05e6780a9b6416))
+* **databricks-repos:** set default repo path ([#692](https://github.com/equinor/ops-actions/issues/692)) ([6e7eecb](https://github.com/equinor/ops-actions/commit/6e7eecb8a26d0d1021d326f2432f755e8eb8a17a))
+* **super-linter:** prefer Ruff over Flake8 and isort ([#694](https://github.com/equinor/ops-actions/issues/694)) ([5ee1a1e](https://github.com/equinor/ops-actions/commit/5ee1a1eeac7de5cb924b5a07c61825defe754b7b))
+
 ## [9.16.0](https://github.com/equinor/ops-actions/compare/v9.15.3...v9.16.0) (2025-04-02)
 
 
