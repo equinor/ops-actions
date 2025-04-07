@@ -1,5 +1,7 @@
 # Reusable GitHub Actions workflow for Databricks Asset Bundles.
-# Ref: https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/
+# Refs:
+# - https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/
+# - https://learn.microsoft.com/nb-no/azure/databricks/dev-tools/bundles/ci-cd-bundles
 
 name: ♻ databricks-bundle
 
@@ -27,6 +29,12 @@ on:
         required: true
         type: string
 
+      working_directory:
+        description: The working directory to run the Databricks commands in.
+        type: string
+        required: false
+        default: "."
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -53,6 +61,9 @@ jobs:
     permissions:
       contents: read # Required by actions/checkout.
       id-token: write # Required by azure/login.
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
     env:
       DATABRICKS_HOST: ${{ inputs.databricks_host }}
     steps:
@@ -71,4 +82,23 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # TODO: deploy bundle.
+      # Ref: https://learn.microsoft.com/en-us/azure/databricks/dev-tools/auth/pat
+      - name: Create Databricks token
+        id: token-create
+        run: |
+          token=$(databricks token create --output json)
+          token_id=$(echo "$token" | jq --raw-output .token_info.token_id)
+          echo "Created Databricks token ($token_id)"
+          echo "token-id=$token_id" >> "$GITHUB_OUTPUT"
+          token_value=$(echo "$token" | jq --raw-output .token_value)
+          echo "DATABRICKS_TOKEN=$token_value" >> "$GITHUB_ENV"
+
+      # TODO: Deploy Databricks Bundle.
+
+      - name: Delete Databricks token
+        if: always() && steps.token-create.outputs.token-id != ''
+        env:
+          TOKEN_ID: ${{ steps.token-create.outputs.token-id }}
+        run: |
+          databricks token delete "$TOKEN_ID"
+          echo "Deleted Databricks token ($TOKEN_ID)"
