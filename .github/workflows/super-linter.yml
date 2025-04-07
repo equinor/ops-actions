@@ -28,7 +28,6 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository
-      statuses: write # Required to report GitHub Actions status checks
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
