@@ -84,9 +84,9 @@ jobs:
 
       - name: Create Databricks token
         id: token-create
+        # Set lifetime of the token to 6 hours (21 600 seconds), which is the maxiumum job execution time in GitHub Actions.
+        # Ref: https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration#usage-limits
         run: |
-          # Set lifetime of the token to 6 hours (21 600 seconds), which is the maxiumum job execution time in GitHub Actions.
-          # Ref: https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration#usage-limits
           token=$(databricks token create --comment "GitHub Actions" --lifetime-seconds 21600 --output json)
 
           token_value=$(echo "$token" | jq --raw-output .token_value)
