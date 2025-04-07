@@ -95,8 +95,8 @@ jobs:
           echo "Created Databricks token ($token_id)"
           echo "token-id=$token_id" >> "$GITHUB_OUTPUT"
 
-      # - name: Deploy Databricks Bundle
-      #   run: databricks bundle deploy
+      - name: Deploy Databricks bundle
+        run: databricks bundle deploy
 
       - name: Delete Databricks token
         if: always() && steps.token-create.outputs.token-id != ''
