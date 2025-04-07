@@ -1,4 +1,4 @@
-# Reusable GitHub Actions workflow for ???
+# Reusable GitHub Actions workflow for Databricks Asset Bundles.
 # Ref: https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/
 
 name: ♻ databricks-bundle
