@@ -88,12 +88,12 @@ jobs:
           # Set lifetime of the token to 6 hours (21 600 seconds), which is the maxiumum job execution time in GitHub Actions.
           # Ref: https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration#usage-limits
           token=$(databricks token create --comment "GitHub Actions" --lifetime-seconds 21600 --output json)
-          token_value=$(echo "$token" | jq --raw-output .token_value)
-          echo "::add-mask::$token_value"
-          echo "DATABRICKS_TOKEN=$token_value" >> "$GITHUB_ENV"
           token_id=$(echo "$token" | jq --raw-output .token_info.token_id)
           echo "Created Databricks token ($token_id)"
           echo "token-id=$token_id" >> "$GITHUB_OUTPUT"
+          token_value=$(echo "$token" | jq --raw-output .token_value)
+          echo "::add-mask::$token_value"
+          echo "DATABRICKS_TOKEN=$token_value" >> "$GITHUB_ENV"
 
       # TODO: Deploy Databricks Bundle.
 
