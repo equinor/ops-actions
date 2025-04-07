@@ -94,8 +94,8 @@ jobs:
           echo "DATABRICKS_TOKEN=$token_value" >> "$GITHUB_ENV"
 
           token_id=$(echo "$token" | jq --raw-output .token_info.token_id)
-          echo "Created Databricks token ($token_id)"
           echo "token-id=$token_id" >> "$GITHUB_OUTPUT"
+          echo "Created Databricks token ($token_id)"
 
       - name: Deploy Databricks bundle
         run: databricks bundle deploy
