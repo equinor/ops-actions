@@ -57,3 +57,7 @@ jobs:
           # For example, if using the nullable argument in a Terraform variable block, Terrascan throws an error.
           # This argument was added in Terraform v1.1 (ref: https://developer.hashicorp.com/terraform/language/values/variables#disallowing-null-input-values).
           VALIDATE_TERRAFORM_TERRASCAN: false
+          # Don't create status checks per linter.
+          # Create GitHub Actions job summary instead.
+          MULTI_STATUS: false
+          ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: true
