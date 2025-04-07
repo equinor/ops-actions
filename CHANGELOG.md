@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.18.0](https://github.com/equinor/ops-actions/compare/v9.17.0...v9.18.0) (2025-04-07)
+
+
+### Features
+
+* **super-linter:** create job summary instead of status checks ([#695](https://github.com/equinor/ops-actions/issues/695)) ([b20735e](https://github.com/equinor/ops-actions/commit/b20735ebe801f72c3583d4905a91591a4ae39b80))
+
 ## [9.17.0](https://github.com/equinor/ops-actions/compare/v9.16.0...v9.17.0) (2025-04-04)
 
 
