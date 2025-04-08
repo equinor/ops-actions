@@ -25,7 +25,7 @@ on:
         required: false
 
       working_directory:
-        description: The working directory to run the Databricks commands in.
+        description: The working directory to run the Databricks commands in. Must contain a [Databricks Asset Bundle configuration](https://docs.databricks.com/aws/en/dev-tools/bundles/settings) file `databricks.yml`.
         type: string
         required: false
         default: "."
