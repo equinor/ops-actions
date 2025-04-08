@@ -1,5 +1,13 @@
 # Changelog
 
+## [9.19.0](https://github.com/equinor/ops-actions/compare/v9.18.0...v9.19.0) (2025-04-08)
+
+
+### Features
+
+* add workflow `databricks-bundle.yml` ([#697](https://github.com/equinor/ops-actions/issues/697)) ([1a65214](https://github.com/equinor/ops-actions/commit/1a65214d44dd9c9d259647c7dd75089ce39ef8d2))
+* **databricks-bundle:** validate before deploy ([#704](https://github.com/equinor/ops-actions/issues/704)) ([00986b7](https://github.com/equinor/ops-actions/commit/00986b75821e7480231be766a4cc03cc5c8996cc))
+
 ## [9.18.0](https://github.com/equinor/ops-actions/compare/v9.17.0...v9.18.0) (2025-04-07)
 
 
