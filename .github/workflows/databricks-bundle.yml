@@ -35,6 +35,11 @@ on:
         type: string
         required: false
 
+      run_job:
+        description: The key of a job or pipeline to run.
+        type: string
+        required: false
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -87,3 +92,9 @@ jobs:
 
       - name: Deploy Databricks bundle
         run: databricks bundle deploy
+
+      - name: Run Databricks job
+        if: inputs.run_job != ''
+        env:
+          RUN_JOB: ${{ inputs.run_job }}
+        run: databricks bundle run "$RUN_JOB"
