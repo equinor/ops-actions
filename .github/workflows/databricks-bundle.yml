@@ -30,6 +30,11 @@ on:
         required: false
         default: "."
 
+      target:
+        description: The bundle target to use.
+        type: string
+        required: false
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -76,4 +81,6 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Deploy Databricks bundle
+        env:
+          DATABRICKS_BUNDLE_ENV: ${{ inputs.target }}
         run: databricks bundle deploy
