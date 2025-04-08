@@ -64,6 +64,8 @@ jobs:
     defaults:
       run:
         working-directory: ${{ inputs.working_directory }}
+    env:
+      DATABRICKS_BUNDLE_ENV: ${{ inputs.target }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -80,7 +82,8 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
+      - name: Validate Databricks bundle
+        run: databricks bundle validate
+
       - name: Deploy Databricks bundle
-        env:
-          DATABRICKS_BUNDLE_ENV: ${{ inputs.target }}
         run: databricks bundle deploy
