@@ -24,11 +24,6 @@ on:
         type: string
         required: false
 
-      # databricks_host:
-      #   description: The URL of the target Databricks workspace.
-      #   required: true
-      #   type: string
-
       working_directory:
         description: The working directory to run the Databricks commands in.
         type: string
@@ -55,17 +50,15 @@ jobs:
     name: Databricks Bundle
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
-    # concurrency:
-    #   group: databricks @ ${{ inputs.databricks_host }}
-    #   cancel-in-progress: false
+    concurrency:
+      group: databricks @ ${{ inputs.environment }}
+      cancel-in-progress: false
     permissions:
       contents: read # Required by actions/checkout.
       id-token: write # Required by azure/login.
     defaults:
       run:
         working-directory: ${{ inputs.working_directory }}
-    # env:
-    #   DATABRICKS_HOST: ${{ inputs.databricks_host }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -82,28 +75,5 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # - name: Create Databricks token
-      #   id: token-create
-      #   # Set lifetime of the token to 6 hours (21 600 seconds), which is the maxiumum job execution time in GitHub Actions.
-      #   # Ref: https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration#usage-limits
-      #   run: |
-      #     token=$(databricks token create --comment "GitHub Actions" --lifetime-seconds 21600 --output json)
-
-      #     token_value=$(echo "$token" | jq --raw-output .token_value)
-      #     echo "::add-mask::$token_value"
-      #     echo "DATABRICKS_TOKEN=$token_value" >> "$GITHUB_ENV"
-
-      #     token_id=$(echo "$token" | jq --raw-output .token_info.token_id)
-      #     echo "token-id=$token_id" >> "$GITHUB_OUTPUT"
-      #     echo "Created Databricks token ($token_id)"
-
       - name: Deploy Databricks bundle
         run: databricks bundle deploy
-
-      # - name: Delete Databricks token
-      #   if: always() && steps.token-create.outputs.token-id != ''
-      #   env:
-      #     TOKEN_ID: ${{ steps.token-create.outputs.token-id }}
-      #   run: |
-      #     databricks token delete "$TOKEN_ID"
-      #     echo "Deleted Databricks token ($TOKEN_ID)"
