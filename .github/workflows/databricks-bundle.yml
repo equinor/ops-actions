@@ -31,7 +31,7 @@ on:
         default: "."
 
       target:
-        description: The bundle target to use.
+        description: The bundle target to use. Must be a deployment target defined in the `databricks.yml` file.
         type: string
         required: false
 
