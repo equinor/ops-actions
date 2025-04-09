@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.19.1](https://github.com/equinor/ops-actions/compare/v9.19.0...v9.19.1) (2025-04-09)
+
+
+### Documentation
+
+* **databricks-bundle:** clarify bundle target ([5643731](https://github.com/equinor/ops-actions/commit/564373157cec3fbcc41676a7d569f310eba72f97))
+
 ## [9.19.0](https://github.com/equinor/ops-actions/compare/v9.18.0...v9.19.0) (2025-04-08)
 
 
