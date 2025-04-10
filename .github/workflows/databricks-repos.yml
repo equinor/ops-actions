@@ -62,7 +62,7 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     concurrency:
-      group: databricks @ ${{ inputs.environment }}
+      group: databricks-repos @ ${{ inputs.environment }}
       cancel-in-progress: false
     permissions:
       id-token: write # Required to request an OIDC token for the service principal.

@@ -56,7 +56,7 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     concurrency:
-      group: databricks @ ${{ inputs.environment }}
+      group: databricks-bundle @ ${{ inputs.environment }}
       cancel-in-progress: false
     permissions:
       contents: read # Required by actions/checkout.
