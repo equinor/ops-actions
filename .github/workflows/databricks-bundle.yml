@@ -20,7 +20,7 @@ on:
         type: string
 
       cli_version:
-        description: A version of the Databricks CLI to install.
+        description: A version of the Databricks CLI to install. Defaults to latest.
         type: string
         required: false
 
