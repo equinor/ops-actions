@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.19.2](https://github.com/equinor/ops-actions/compare/v9.19.1...v9.19.2) (2025-04-11)
+
+
+### Bug Fixes
+
+* `databricks-repos.yml` and `databricks-bundle.yml` use same concurrency queue ([#707](https://github.com/equinor/ops-actions/issues/707)) ([ae4c084](https://github.com/equinor/ops-actions/commit/ae4c084d767744518da355f08e85f7ba44ed78e0))
+
 ## [9.19.1](https://github.com/equinor/ops-actions/compare/v9.19.0...v9.19.1) (2025-04-09)
 
 
