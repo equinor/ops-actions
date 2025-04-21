@@ -71,7 +71,7 @@ jobs:
       DATABRICKS_HOST: ${{ inputs.databricks_host }}
     steps:
       - name: Setup Databricks CLI
-        uses: databricks/setup-cli@49580195afe1ccb06d195764a1d0ae9fabfe2edd
+        uses: databricks/setup-cli@0885facdeaca4b97a1b35cb923abc7717e8519db
         with:
           version: ${{ inputs.cli_version }}
 
