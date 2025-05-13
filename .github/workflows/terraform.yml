@@ -72,9 +72,9 @@ on:
         description: A password used to encrypt the archive containing the Terraform configuration and plan file.
         required: true
 
-# Queue jobs that target the same Terraform configuration.
+# Queue jobs that target the same state file, i.e. the same working directory and backend configuration.
 concurrency:
-  group: terraform @ ${{ inputs.working_directory }}
+  group: terraform-${{ inputs.working_directory }}-${{ inputs.backend_config }}
   cancel-in-progress: false
 
 permissions: {}
