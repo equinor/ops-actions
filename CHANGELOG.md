@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.19.3](https://github.com/equinor/ops-actions/compare/v9.19.2...v9.19.3) (2025-05-13)
+
+
+### Bug Fixes
+
+* **terraform:** jobs that target different state files run in same concurrency group ([#718](https://github.com/equinor/ops-actions/issues/718)) ([bd21256](https://github.com/equinor/ops-actions/commit/bd212560893603826093aed8204a40325d9ff952)), closes [#717](https://github.com/equinor/ops-actions/issues/717)
+
 ## [9.19.2](https://github.com/equinor/ops-actions/compare/v9.19.1...v9.19.2) (2025-04-11)
 
 
