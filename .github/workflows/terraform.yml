@@ -3,7 +3,7 @@
 # Features:
 #   - Authenticate to Azure using federated credentials.
 #   - Queue concurrent jobs that target the same Terraform state file.
-#   - Cache Terraform plugins.
+#   - Cache Terraform provider plugins.
 #   - Create job summary containing Terraform command outcomes and plan.
 
 name: ♻ terraform
