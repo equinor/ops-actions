@@ -55,6 +55,11 @@ on:
         required: false
         default: true
 
+      tag_name:
+        description: The name of a tag to create after applying the Terraform plan.
+        type: string
+        required: false
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -317,6 +322,14 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -input=false "$PLAN_FILE"
+
+      - name: Create tag
+        if: inputs.tag_name != ''
+        env:
+          TAG_NAME: ${{ inputs.tag_name }}
+        run: |
+          git tag "$TAG_NAME"
+          git push origin "$TAG_NAME" 
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
