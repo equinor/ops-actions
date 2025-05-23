@@ -329,7 +329,7 @@ jobs:
           TAG_NAME: ${{ inputs.tag_name }}
         run: |
           git tag "$TAG_NAME"
-          git push origin "$TAG_NAME" 
+          git push origin "$TAG_NAME"
 
       # Once the Terraform plan file has been applied, the artifact is no longer needed.
       # Delete it to save storage space.
