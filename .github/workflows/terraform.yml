@@ -126,7 +126,7 @@ jobs:
           # If the wrapper is enabled, the debug logs will be visible in the job summary.
           # The wrapper must be disabled to prevent this.
 
-      # https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache
+      # Ref: https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache
       - name: Enable Terraform plugin cache
         id: mkdir
         run: |
@@ -150,13 +150,13 @@ jobs:
           key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/{1}', inputs.working_directory, env.LOCK_FILE)) }}
           # The dependency lock file tracks provider dependencies for the Terraform configuration in the working directory.
           # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
-          # https://developer.hashicorp.com/terraform/language/files/dependency-lock
+          # Ref: https://developer.hashicorp.com/terraform/language/files/dependency-lock
 
       - name: Terraform Format
         id: fmt
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
-        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
+        # Ref: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
         shell: bash {0}
         continue-on-error: true # Formatting errors should not prevent the job from running.
         run: |
@@ -188,7 +188,7 @@ jobs:
         id: plan
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
-        # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
+        # Ref: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
         shell: bash {0}
         env:
           VAR_FILE: ${{ inputs.var_file }}
