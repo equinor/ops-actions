@@ -82,10 +82,11 @@ permissions: {}
 env:
   # Configure Terraform to run in automation.
   # Makes output more consistent and less confusing in workflows where users don't directly execute Terraform commands.
+  # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#controlling-terraform-output-in-automation
   TF_IN_AUTOMATION: true
 
-  # Configure OIDC authentication to Azure using environment variables.
-  # Required by the AzureRM backend and provider.
+  # Authenticate to Azure using a service principal with OpenID Connect (OIDC).
+  # Ref: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_oidc#configuring-the-service-principal-in-terraform
   ARM_USE_OIDC: true
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
