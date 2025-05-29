@@ -1,7 +1,7 @@
 # Reusable GitHub Actions workflow to provision cloud infrastructure using HashiCorp Terraform.
 #
 # Features:
-#   - Authenticate to Azure using federated credentials.
+#   - Authenticate to Azure using a service principal with OpenID Connect (OIDC).
 #   - Queue concurrent jobs that target the same Terraform state file.
 #   - Cache Terraform provider plugins.
 #   - Create job summary containing Terraform command outcomes and plan.
@@ -106,7 +106,7 @@ jobs:
     environment: ${{ inputs.environment }}
     permissions:
       contents: read # Required to checkout the repository
-      id-token: write # Required to login to Azure using OIDC
+      id-token: write # Required to authenticate to Azure with OIDC
     defaults:
       run:
         shell: bash
@@ -281,7 +281,7 @@ jobs:
     environment: ${{ inputs.environment }}
     permissions:
       contents: read # Required to checkout the repository
-      id-token: write # Required to login to Azure using OIDC
+      id-token: write # Required to authenticate to Azure with OIDC
       actions: write # Required to delete the artifact
     defaults:
       run:
