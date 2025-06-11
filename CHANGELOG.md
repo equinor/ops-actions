@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.19.4](https://github.com/equinor/ops-actions/compare/v9.19.3...v9.19.4) (2025-06-11)
+
+
+### Bug Fixes
+
+* **databricks:** update concurrency group to allow simultaneous runs ([#727](https://github.com/equinor/ops-actions/issues/727)) ([4ebf933](https://github.com/equinor/ops-actions/commit/4ebf933250380a267d7db82b0e7afcf975f79e19))
+
 ## [9.19.3](https://github.com/equinor/ops-actions/compare/v9.19.2...v9.19.3) (2025-05-13)
 
 
