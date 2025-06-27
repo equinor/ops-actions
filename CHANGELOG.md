@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.20.0](https://github.com/equinor/ops-actions/compare/v9.19.4...v9.20.0) (2025-06-27)
+
+
+### Features
+
+* **docker:** pass build arguments ([#729](https://github.com/equinor/ops-actions/issues/729)) ([60a3994](https://github.com/equinor/ops-actions/commit/60a399464b58f0db0d5ec9d316ff09e0cdf0107f))
+
 ## [9.19.4](https://github.com/equinor/ops-actions/compare/v9.19.3...v9.19.4) (2025-06-11)
 
 
