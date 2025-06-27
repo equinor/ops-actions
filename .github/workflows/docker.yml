@@ -43,8 +43,8 @@ on:
         required: false
         default: ${{ github.run_number }}
 
-      build-args:
-        description: a list of build arguments to pass to the Docker build command.
+      build_args:
+        description: A list of build arguments to pass to the Docker build command.
         type: string
         required: false
 
@@ -90,7 +90,7 @@ jobs:
         env:
           DOCKER_BUILD_SUMMARY: true
         with:
-          build-args: ${{ inputs.build-args }}
+          build-args: ${{ inputs.build_args }}
           context: ${{ inputs.working_directory }}
           tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
           push: true
