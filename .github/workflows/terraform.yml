@@ -68,6 +68,10 @@ on:
         description: The ID of the Microsoft Entra tenant to authenticate to.
         required: true
 
+      GRAFANA_AUTH:
+        description: A service account token to use for authenticating to Grafana.
+        required: false
+
       ENCRYPTION_PASSWORD:
         description: A password used to encrypt the archive containing the Terraform configuration and plan file.
         required: true
@@ -91,6 +95,10 @@ env:
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+  # Authenticate to Grafana using a service account token.
+  # Ref: https://registry.terraform.io/providers/grafana/grafana/latest/docs#authentication
+  GRAFANA_AUTH: ${{ secrets.GRAFANA_AUTH }}
 
   LOCK_FILE: .terraform.lock.hcl
   PLAN_FILE: tfplan
