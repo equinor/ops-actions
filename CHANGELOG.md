@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.21.0](https://github.com/equinor/ops-actions/compare/v9.20.0...v9.21.0) (2025-07-07)
+
+
+### Features
+
+* **terraform:** authenticate Grafana provider ([#731](https://github.com/equinor/ops-actions/issues/731)) ([256e5e6](https://github.com/equinor/ops-actions/commit/256e5e6e2383933a9b28a549aea55c27e019ea71))
+
 ## [9.20.0](https://github.com/equinor/ops-actions/compare/v9.19.4...v9.20.0) (2025-06-27)
 
 
