@@ -77,7 +77,8 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
       runs-on: ubuntu-24.04
   ```
 
-  This ensures that all jobs are executed on a runner that includes the required software by default.
+  This ensures that all jobs are executed on a runner that includes the required software by default.  
+  **Please note: While a specific runner version ensures a consistent environment, some pre-installed packages may still be updated over time to address bugs or other issues. As a result, the exact package versions may vary.**
 
 - Workflows that run [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/) commands should declare the following top level environment variable to disable output from Azure CLI commands by default:
 
