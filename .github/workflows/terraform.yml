@@ -58,15 +58,15 @@ on:
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
-        required: true
+        required: false
 
       AZURE_SUBSCRIPTION_ID:
         description: The ID of the Azure subscription to authenticate to.
-        required: true
+        required: false
 
       AZURE_TENANT_ID:
         description: The ID of the Microsoft Entra tenant to authenticate to.
-        required: true
+        required: false
 
       GRAFANA_AUTH:
         description: A service account token to use for authenticating to Grafana.
@@ -110,7 +110,6 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ${{ inputs.runs_on }}
-    if: github.actor != 'dependabot[bot]'
     environment: ${{ inputs.environment }}
     permissions:
       contents: read # Required to checkout the repository
@@ -179,7 +178,9 @@ jobs:
           BACKEND_CONFIG: ${{ inputs.backend_config }}
         run: |
           optional_args=()
-          if [[ -n "$BACKEND_CONFIG" ]]; then
+          if [[ "$GITHUB_ACTOR" == "dependabot[bot]" ]]; then
+            optional_args+=(-backend=false)
+          elif [[ -n "$BACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$BACKEND_CONFIG")
           fi
           terraform init -input=false "${optional_args[@]}"
@@ -194,6 +195,7 @@ jobs:
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Terraform Plan
         id: plan
+        if: github.actor != 'dependabot[bot]'
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
         # Ref: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
@@ -284,7 +286,7 @@ jobs:
   terraform-apply:
     name: Terraform Apply
     needs: terraform-plan
-    if: github.actor != 'dependabot[bot]' && needs.terraform-plan.outputs.upload-outcome == 'success' && inputs.run_terraform_apply
+    if: needs.terraform-plan.outputs.upload-outcome == 'success' && inputs.run_terraform_apply
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     permissions:
