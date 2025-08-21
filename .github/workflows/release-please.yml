@@ -26,6 +26,6 @@ jobs:
       pull-requests: write # Required to create release PRs
     steps:
       - name: Release Please
-        uses: googleapis/release-please-action@a02a34c4d625f9be7cb89156071d8567266a2445
+        uses: googleapis/release-please-action@c2a5a2bd6a758a0937f1ddb1e8950609867ed15c
         with:
           release-type: ${{ inputs.release_type }}
