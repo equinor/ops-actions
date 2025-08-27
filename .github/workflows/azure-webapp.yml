@@ -99,7 +99,7 @@ jobs:
 
       - name: Deploy Web App
         id: deploy
-        uses: azure/webapps-deploy@2fdd5c3ebb4e540834e86ecc1f6fdcd5539023ee
+        uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d
         env:
           # Required for this action to get access token from Azure CLI.
           AZURE_CORE_OUTPUT: json
