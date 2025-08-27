@@ -71,7 +71,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
 
       - name: Setup Databricks CLI
-        uses: databricks/setup-cli@11f76db397b8e731a1e0deda33c44805f3ad5129
+        uses: databricks/setup-cli@502ac09613c7ca0eda68838be2f1b27b0e8bb7ac
         with:
           version: ${{ inputs.cli_version }}
 
