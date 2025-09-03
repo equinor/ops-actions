@@ -69,6 +69,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          persist-credentials: false
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@502ac09613c7ca0eda68838be2f1b27b0e8bb7ac

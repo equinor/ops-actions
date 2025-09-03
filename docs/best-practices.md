@@ -39,6 +39,8 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
       steps:
         - name: Checkout
           uses: actions/checkout@v4
+          with:
+            persist-credentials: false
   ```
 
   This ensures that workflows follow the principle of least privilege.
@@ -146,6 +148,8 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
       steps:
         - name: Checkout
           uses: actions/checkout@v4
+          with:
+            persist-credentials: false
 
         - name: Setup Python
           uses: actions/setup-python@v5
