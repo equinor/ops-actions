@@ -38,7 +38,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
         contents: read # Required to checkout the repository
       steps:
         - name: Checkout
-          uses: actions/checkout@v4
+          uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
           with:
             persist-credentials: false
   ```
@@ -87,7 +87,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
   ```yaml
   steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       with:
         persist-credentials: false
   ```
@@ -157,7 +157,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
       runs-on: ${{ inputs.runs_on }}
       steps:
         - name: Checkout
-          uses: actions/checkout@v4
+          uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
           with:
             persist-credentials: false
 
