@@ -55,6 +55,12 @@ on:
         required: false
         default: true
 
+      authenticate_azure_cli:
+        description: Authenticate to Azure CLI with OpenID Connect (OIDC).
+        type: boolean
+        required: false
+        default: false
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -123,6 +129,14 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           persist-credentials: false
+
+      - name: Login to Azure
+        if: ${{ inputs.authenticate_azure_cli }}
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
@@ -304,6 +318,14 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           persist-credentials: false
+
+      - name: Login to Azure
+        if: ${{ inputs.authenticate_azure_cli }}
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Download artifact
         uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
