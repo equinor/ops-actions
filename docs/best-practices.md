@@ -38,7 +38,9 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
         contents: read # Required to checkout the repository
       steps:
         - name: Checkout
-          uses: actions/checkout@v4
+          uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+          with:
+            persist-credentials: false
   ```
 
   This ensures that workflows follow the principle of least privilege.
@@ -80,6 +82,16 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
   This ensures that all jobs are executed on a runner that includes the required software by default.  
   **Please note: While a specific runner version ensures a consistent environment, some pre-installed packages may still be updated over time to address bugs or other issues. As a result, the exact package versions may vary.**
 
+- Steps that use the [actions/checkout](https://github.com/actions/checkout) action should disable credential persistence unless explicitly required:
+
+  ```yaml
+  steps:
+    - name: Checkout
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+      with:
+        persist-credentials: false
+  ```
+
 - Workflows that run [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/) commands should declare the following top level environment variable to disable output from Azure CLI commands by default:
 
   ```yaml
@@ -98,13 +110,11 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 - Use [SCREAMING_SNAKE_CASE](https://en.wiktionary.org/wiki/snake_case) for environment variable names.
 
 - A reusable workflow and its main job should be named after the main tool/service that is used, for example:
-
   - `terraform.yml`
   - `docker.yml`
   - `azure-webapp.yml`
 
   This is to ensure descriptive job names, for example:
-
   - If a caller workflow has a job `provision` that calls the reusable workflow `terraform`, the final job will be named `provision / terraform`.
   - If a caller workflow has a job `build` that calls the reusable workflow `docker`, the final job will be named `build / docker`.
   - If a caller workflow has a job `deploy` that calls the reusable workflow `azure-webapp`, the final job will be named `deploy / azure-webapp`.
@@ -145,7 +155,9 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
       runs-on: ${{ inputs.runs_on }}
       steps:
         - name: Checkout
-          uses: actions/checkout@v4
+          uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+          with:
+            persist-credentials: false
 
         - name: Setup Python
           uses: actions/setup-python@v5
