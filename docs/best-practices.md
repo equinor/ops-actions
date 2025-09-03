@@ -110,13 +110,11 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 - Use [SCREAMING_SNAKE_CASE](https://en.wiktionary.org/wiki/snake_case) for environment variable names.
 
 - A reusable workflow and its main job should be named after the main tool/service that is used, for example:
-
   - `terraform.yml`
   - `docker.yml`
   - `azure-webapp.yml`
 
   This is to ensure descriptive job names, for example:
-
   - If a caller workflow has a job `provision` that calls the reusable workflow `terraform`, the final job will be named `provision / terraform`.
   - If a caller workflow has a job `build` that calls the reusable workflow `docker`, the final job will be named `build / docker`.
   - If a caller workflow has a job `deploy` that calls the reusable workflow `azure-webapp`, the final job will be named `deploy / azure-webapp`.
