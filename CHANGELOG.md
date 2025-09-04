@@ -1,5 +1,18 @@
 # Changelog
 
+## [9.23.0](https://github.com/equinor/ops-actions/compare/v9.22.0...v9.23.0) (2025-09-04)
+
+
+### Features
+
+* disable Git credential persistance ([#751](https://github.com/equinor/ops-actions/issues/751)) ([cd950fc](https://github.com/equinor/ops-actions/commit/cd950fcdd0debd387bf1f95cda66254da4ac6766))
+
+
+### Bug Fixes
+
+* **docker:** pin `docker/setup-buildx-action` action to commit SHA ([#752](https://github.com/equinor/ops-actions/issues/752)) ([d3c9e73](https://github.com/equinor/ops-actions/commit/d3c9e73c5a11d767b007099e282dd5d6c570e53f))
+* **docker:** prevent code injection via template expression ([#755](https://github.com/equinor/ops-actions/issues/755)) ([ded635d](https://github.com/equinor/ops-actions/commit/ded635d87dfb4aaac5845c460e9f8aec47c4da3c)), closes [#753](https://github.com/equinor/ops-actions/issues/753)
+
 ## [9.22.0](https://github.com/equinor/ops-actions/compare/v9.21.0...v9.22.0) (2025-07-24)
 
 
