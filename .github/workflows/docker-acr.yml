@@ -99,7 +99,7 @@ jobs:
         env:
           DOCKER_BUILD_SUMMARY: true
         with:
-          context: ${{ inputs.working_directory }}
+          file: ${{ inputs.working_directory }}/Dockerfile
           tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
           push: true
 
