@@ -16,10 +16,6 @@ on:
         default: simple
 
     outputs:
-      releases_created:
-        description: If any release was created, returns `true`. Else, returns `false`.
-        value: ${{ jobs.release-please.outputs.releases_created }}
-
       paths_released:
         description: A JSON string of the array of paths that had releases created (`[]` if nothing was released). Use the `fromJSON()` function to convert the string to an array, which can then be used to define a matrix of job configurations per package that was released.
         value: ${{ jobs.release-please.outputs.paths_released }}
@@ -40,5 +36,4 @@ jobs:
         with:
           release-type: ${{ inputs.release_type }}
     outputs:
-      releases_created: ${{ steps.release-please.outputs.releases_created }}
       paths_released: ${{ steps.release-please.outputs.paths_released }}
