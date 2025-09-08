@@ -17,8 +17,8 @@ on:
 
     outputs:
       paths_released:
-        description: An array of the paths that had releases created (`[]` if nothing was released).
-        value: ${{ fromJson(jobs.release-please.outputs.paths_released) }}
+        description: A JSON string of the array of paths that had releases created (`[]` if nothing was released). Use the `fromJSON()` function to convert the string to an array, which can then be used to define a matrix of job configurations per package that was released.
+        value: ${{ jobs.release-please.outputs.paths_released }}
 
 permissions: {}
 
