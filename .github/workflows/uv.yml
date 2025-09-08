@@ -21,6 +21,11 @@ on:
         required: false
         default: uv-build-wheel
 
+    outputs:
+      artifact_name:
+        description: The name of the uploaded build artifact.
+        value: ${{ inputs.artifact_name }}
+
 jobs:
   uv:
     name: uv
