@@ -9,28 +9,11 @@ on:
         required: false
         default: ubuntu-24.04
 
-      working_directory:
-        description: The working directory containing the `pyproject.toml` file.
-        type: string
-        required: false
-        default: "."
-
       uv_version:
         description: The version of uv to install.
         type: string
         required: false
         default: latest
-
-      artifact_name:
-        description: The name of the build artifact to upload.
-        type: string
-        required: false
-        default: uv-build-wheel
-
-    outputs:
-      artifact_name:
-        description: The name of the uploaded build artifact.
-        value: ${{ inputs.artifact_name }}
 
 permissions: {}
 
@@ -63,7 +46,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ${{ inputs.working_directory }}
+        working-directory: ${{ matrix.path }}
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
