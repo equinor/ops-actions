@@ -47,7 +47,9 @@ jobs:
         path: ${{ fromJSON(needs.release-please.outputs.paths_released) }}
     runs-on: ${{ inputs.runs_on }}
     permissions:
-      contents: read # Required to checkout the repository
+      # Read permission required to checkout the repository.
+      # Write permission required to upload the release artifact.
+      contents: write
     defaults:
       run:
         shell: bash
