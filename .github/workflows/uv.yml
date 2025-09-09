@@ -81,7 +81,7 @@ jobs:
       - name: Build distributions
         run: uv build
 
-      - name: Upload release artifact
+      - name: Upload release artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_NAME: ${{ fromJSON(needs.release-please.outputs.json)[format('{0}--tag_name', matrix.path)] }}
