@@ -35,15 +35,35 @@ on:
 permissions: {}
 
 jobs:
+  release-please:
+    name: Release Please
+    runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: write # Required to update changelog file
+      pull-requests: write # Required to create release PRs
+    steps:
+      - name: Release Please
+        id: release-please
+        uses: googleapis/release-please-action@c2a5a2bd6a758a0937f1ddb1e8950609867ed15c
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+    outputs:
+      paths_released: ${{ steps.release-please.outputs.paths_released }}
+
   uv:
     name: uv
+    needs: release-please
+    strategy:
+      matrix:
+        path: ${{ fromJSON(needs.release-please.outputs.paths_released) }}
     runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read # Required to checkout the repository
     defaults:
       run:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
-    permissions:
-      contents: read # Required to checkout the repository
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
@@ -71,11 +91,10 @@ jobs:
       - name: Build distributions
         run: uv build
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: ${{ inputs.artifact_name }}
-          # By default, the `uv build` command will build the project in the
-          # working directory, and place the build artifacts in a `dist/` subdirectory.
-          # Ref: https://docs.astral.sh/uv/concepts/projects/build/#using-uv-build
-          path: ${{ inputs.working_directory }}/dist/
+      - name: Upload release artifact
+        env:
+          TAG_NAME: ${{ needs.release-please.outputs[format('{0}--tag_name', matrix.path)] }}
+        # By default, the `uv build` command will build the project in the
+        # working directory, and place the build artifacts in a `dist/` subdirectory.
+        # Ref: https://docs.astral.sh/uv/concepts/projects/build/#using-uv-build
+        run: gh release upload "$TAG_NAME" dist/*
