@@ -10,9 +10,10 @@ on:
         default: ubuntu-24.04
 
       release_type:
-        description: The type of release to create (see [supported release types](https://github.com/googleapis/release-please/blob/main/README.md#strategy-language-types-supported)).
+        description: The type of release to create (see [supported release types](https://github.com/googleapis/release-please/blob/main/README.md#strategy-language-types-supported)). Defaults to `simple`.
         type: string
         required: false
+        default: simple
 
 permissions: {}
 
