@@ -32,13 +32,12 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
     outputs:
-      releases_created: ${{ steps.release-please.outputs.releases_created }}
       paths_released: ${{ steps.release-please.outputs.paths_released }}
 
   uv:
     name: uv
     needs: release-please
-    if: needs.release-please.outputs.releases_created
+    if: needs.release-please.outputs.paths_released != '[]'
     strategy:
       matrix:
         path: ${{ fromJSON(needs.release-please.outputs.paths_released) }}
