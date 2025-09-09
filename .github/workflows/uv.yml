@@ -36,7 +36,7 @@ jobs:
       # Dump entire outputs JSON object. Required because the release-please
       # action dynamically generates outputs based on released packages, however
       # GitHub Actions doesn't support dynamically creating job outputs...
-      json_dump: ${{ steps.release-please.outputs }}
+      json: ${{ toJSON(steps.release-please.outputs) }}
 
   uv:
     name: uv
@@ -82,7 +82,7 @@ jobs:
       - name: Upload release artifact
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG_NAME: ${{ fromJSON(needs.release-please.outputs.json_dump)[format('{0}--tag_name', matrix.path)] }}
+          TAG_NAME: ${{ fromJSON(needs.release-please.outputs.json)[format('{0}--tag_name', matrix.path)] }}
         # By default, the `uv build` command will build the project in the
         # working directory, and place the build artifacts in a `dist/` subdirectory.
         # Ref: https://docs.astral.sh/uv/concepts/projects/build/#using-uv-build
