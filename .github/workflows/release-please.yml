@@ -20,6 +20,28 @@ on:
         description: A JSON string of the array of paths that had releases created (`[]` if nothing was released). Use the `fromJSON()` function to convert the string to an array, which can then be used to define a matrix of job configurations per package that was released.
         value: ${{ jobs.release-please.outputs.paths_released }}
 
+      releases:
+        description: |
+            A JSON string containing a map of releases created for each package:
+
+            ```json
+            {
+              "path/to/package": {
+                "release_created": bool,
+                "upload_url": string,
+                "html_url": string,
+                "tag_name": string,
+                "version": string,
+                "major": int,
+                "minor": int,
+                "patch": int,
+                "sha": string,
+                "body": string
+              }
+            }
+            ```
+        value: ${{ jobs.release-please.outputs.releases }}
+
 permissions: {}
 
 jobs:
@@ -35,5 +57,54 @@ jobs:
         uses: googleapis/release-please-action@c2a5a2bd6a758a0937f1ddb1e8950609867ed15c
         with:
           release-type: ${{ inputs.release_type }}
+      
+      # Generating outputs is currently the "recommended" for monorepos (i.e., a maintainer has recommended doing it this way)...
+      # Ref: https://github.com/googleapis/release-please-action/issues/823
+      - name: Set outputs
+        id: set-outputs
+        if: steps.release-please.outputs.paths_released != '[]'
+        env:
+          RELEASE_PLEASE_OUTPUTS: ${{ toJSON(steps.release-please.outputs) }}
+        run: |
+          readarray -t paths_released <<< "$(echo "$RELEASE_PLEASE_OUTPUTS" | jq -c .paths_released[])"
+
+          releases="{}"
+
+          for path in "$paths_released[@]"; do
+            release=$(jq -n \
+              --arg release_created "$(echo "$RELEASE_PLEASE_OUTPUTS" | jq -r --arg path "$path" '.[$path]--release_created')" \
+              --arg upload_url "" \
+              --arg html_url "" \
+              --arg tag_name "" \
+              --arg version "" \
+              --arg major "" \
+              --arg minor "" \
+              --arg patch "" \
+              --arg sha "" \
+              --arg body "" \
+              '{
+                "release_created": $release_created,
+                "upload_url": $upload_url,
+                "html_url": $html_url,
+                "tag_name": $tag_name,
+                "version": $version,
+                "major": $major,
+                "minor": $minor,
+                "patch": $patch,
+                "sha": $sha,
+                "body": $body
+              }')
+
+            # Merge the new release object into the releases map
+            releases=$(jq -n \
+              --argjson releases "$releases" \
+              --arg path "$path" \
+              --argjson release "$release" \
+              '$releases + {($path): $release}')
+          done
+
+          echo "releases=$releases" >> "$GITHUB_OUTPUT"
+
     outputs:
       paths_released: ${{ steps.release-please.outputs.paths_released }}
+      releases: ${{ steps.set-outputs.outputs.releases }}
