@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.23.1](https://github.com/equinor/ops-actions/compare/v9.23.0...v9.23.1) (2025-09-09)
+
+
+### Bug Fixes
+
+* **release-please:** remove default release type ([#758](https://github.com/equinor/ops-actions/issues/758)) ([516bc9a](https://github.com/equinor/ops-actions/commit/516bc9a93645ac706c49c0d7b65eb4ba620246b6))
+
+
+### Reverts
+
+* **release-please:** remove default release type ([fc57633](https://github.com/equinor/ops-actions/commit/fc5763331cc731edb3dc80e55356285aca9beea8))
+
 ## [9.23.0](https://github.com/equinor/ops-actions/compare/v9.22.0...v9.23.0) (2025-09-04)
 
 
