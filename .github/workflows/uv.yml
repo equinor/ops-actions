@@ -32,15 +32,17 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
     outputs:
+      releases_created: ${{ steps.release-please.outputs.releases_created }}
+      paths_released: ${{ steps.release-please.outputs.paths_released }}
       json: ${{ toJSON(steps.release-please.outputs) }}
 
   uv:
     name: uv
     needs: release-please
-    if: fromJSON(needs.release-please.outputs.json).releases_created == 'true'
+    if: needs.release-please.outputs.releases_created == 'true'
     strategy:
       matrix:
-        path: ${{ fromJSON(needs.release-please.outputs.json).paths_released }}
+        path: ${{ fromJSON(needs.release-please.outputs.paths_released) }}
     runs-on: ${{ inputs.runs_on }}
     permissions:
       # Read permission required to checkout the repository.
