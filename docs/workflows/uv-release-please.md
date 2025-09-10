@@ -5,15 +5,10 @@ Python Package Releaser is a reusable GitHub Actions workflow that automatically
 - [uv](https://docs.astral.sh/uv/) for Python package management
 - [Release Please](https://github.com/googleapis/release-please) for GitHub release automation
 
-## Features
+## Key Features
 
-<!--
-TODO: add features list
-- Autorelease using `release-please`.
-- Build using `uv`.
-- Uploads the `uv build` artifact to the GitHub release created by `release-please`.
-- Thanks to native functionality in `release-please`, this workflow supports both monorepo and single-package repo structures.
--->
+- **Monorepo support**: Manage multiple Python packages in a single GitHub repository.
+- **Automatic package distribution**: Python source (`.tar.gz`) and built (`.whl`) distributions are automatically uploaded to the corresponding GitHub releases.
 
 ## Prerequisites
 
