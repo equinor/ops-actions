@@ -42,20 +42,6 @@ Add a `.release-please-manifest.json` manifest file at the root of your reposito
 
 For detailed instructions on configuring Release Please, please refer to the [official documentation](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md).
 
-## Inputs
-
-### (*Optional*) `runs_on`
-
-The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
-
-### (*Optional*) `environment`
-
-The name of the GitHub environment that this workflow should use for publishing.
-
-### (*Optional*) `uv_version`
-
-The version of `uv` to install. Defaults to `latest`.
-
 ## Usage
 
 Add a GitHub Actions workflow file `.github/workflows/ci.yml` in your repository, and add the following recommended configuration:
@@ -80,3 +66,17 @@ jobs:
 ```
 
 On push to branch `main`, this workflow will automatically build and release your Python packages 🚀
+
+### Inputs
+
+#### (*Optional*) `runs_on`
+
+The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+
+#### (*Optional*) `environment`
+
+The name of the GitHub environment that this workflow should use for publishing.
+
+#### (*Optional*) `uv_version`
+
+The version of `uv` to install. Defaults to `latest`.
