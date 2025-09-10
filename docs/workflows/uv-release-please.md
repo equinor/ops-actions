@@ -12,45 +12,53 @@ Python Package Releaser is a reusable GitHub Actions workflow that automatically
 
 ## Prerequisites
 
-1. **Create your Python projects**: Add a `pyproject.toml` configuration file for each Python project in your repository. For example: `packages/example_package/pyproject.toml`.
+### Create Python projects
 
-    For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
+Add a `pyproject.toml` configuration file for each Python project in your repository. For example: `packages/example_package/pyproject.toml`.
 
-1. **Configure Release Please**: Add a `release-please-config.json` configuration file at the root of your repository, and define your Python packages. For example:
+For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
 
-    ```json
-    {
-      "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-      "release-type": "python",
-      "packages": {
-        "packages/example_package": {
-          "package-name": "example-package",
-        }
-      }
+### Configure Release Please
+
+Add a `release-please-config.json` configuration file at the root of your repository, and define your Python packages. For example:
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "python",
+  "packages": {
+    "packages/example_package": {
+      "package-name": "example-package",
     }
-    ```
+  }
+}
+```
 
-    Add a `.release-please-manifest.json` manifest file at the root of your repository, and add an initial empty JSON object:
+Add a `.release-please-manifest.json` manifest file at the root of your repository, and add an initial empty JSON object:
 
-    ```json
-    {}
-    ```
+```json
+{}
+```
 
-    For detailed instructions on configuring Release Please, please refer to the [official documentation](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md).
+For detailed instructions on configuring Release Please, please refer to the [official documentation](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md).
 
 ## Inputs
 
-### `runs_on`
+### (*Optional*) `runs_on`
 
 The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
 
-### `uv_version`
+### (*Optional*) `environment`
+
+The name of the GitHub environment that this workflow should use for publishing.
+
+### (*Optional*) `uv_version`
 
 The version of `uv` to install. Defaults to `latest`.
 
 ## Usage
 
-Add a GitHub Actions workflow file `.github/workflows/ci.yml` in your repository, and add the following configuration:
+Add a GitHub Actions workflow file `.github/workflows/ci.yml` in your repository, and add the following recommended configuration:
 
 ```yaml
 name: CI

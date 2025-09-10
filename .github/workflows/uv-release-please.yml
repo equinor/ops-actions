@@ -9,6 +9,11 @@ on:
         required: false
         default: ubuntu-24.04
 
+      environment:
+        description: The name of the GitHub environment that this workflow should use for publishing.
+        type: string
+        required: false
+
       uv_version:
         description: The version of uv to install.
         type: string
@@ -52,6 +57,7 @@ jobs:
       matrix:
         path: ${{ fromJSON(needs.release-please.outputs.paths_released) }}
     runs-on: ${{ inputs.runs_on }}
+    environment: ${{ inputs.environment }}
     permissions:
       # Read permission required to checkout the repository.
       # Write permission required to upload the release artifact.
