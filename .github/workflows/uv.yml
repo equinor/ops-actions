@@ -32,19 +32,15 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
     outputs:
-      paths_released: ${{ steps.release-please.outputs.paths_released }}
-      # Dump entire outputs JSON object. Required because the release-please
-      # action dynamically generates outputs based on released packages, however
-      # GitHub Actions doesn't support dynamically creating job outputs...
       json: ${{ toJSON(steps.release-please.outputs) }}
 
   uv:
     name: uv
     needs: release-please
-    if: needs.release-please.outputs.paths_released != '[]'
+    if: fromJSON(needs.release-please.outputs.json).releases_created
     strategy:
       matrix:
-        path: ${{ fromJSON(needs.release-please.outputs.paths_released) }}
+        path: ${{ fromJSON(needs.release-please.outputs.json).paths_released }}
     runs-on: ${{ inputs.runs_on }}
     permissions:
       # Read permission required to checkout the repository.
