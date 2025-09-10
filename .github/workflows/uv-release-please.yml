@@ -1,4 +1,4 @@
-name: ♻ uv
+name: ♻ uv-release-please
 
 on:
   workflow_call:
