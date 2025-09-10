@@ -28,7 +28,7 @@ Add a `release-please-config.json` configuration file at the root of your reposi
   "release-type": "python",
   "packages": {
     "packages/example_package": {
-      "package-name": "example-package",
+      "package-name": "example-package"
     }
   }
 }
