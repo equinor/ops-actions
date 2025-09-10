@@ -37,7 +37,7 @@ jobs:
   uv:
     name: uv
     needs: release-please
-    if: fromJSON(needs.release-please.outputs.json).releases_created
+    if: fromJSON(needs.release-please.outputs.json).releases_created == 'true'
     strategy:
       matrix:
         path: ${{ fromJSON(needs.release-please.outputs.json).paths_released }}
