@@ -34,6 +34,14 @@ jobs:
     outputs:
       releases_created: ${{ steps.release-please.outputs.releases_created }}
       paths_released: ${{ steps.release-please.outputs.paths_released }}
+      # The Release Please action dynamically defines outputs for each path that
+      # had a release created. Dynamically defining outputs for a job is not
+      # supported, so we have to convert the entire Release Please action
+      # outputs object to a JSON string, then map that string to a single job
+      # output. Dependent jobs can then get the JSON string from this output and
+      # convert it back to an object, allowing the outputs for each path to be
+      # accessed.
+      # Ref: https://github.com/googleapis/release-please-action/blob/3612a99d75bd7a010bb03d6e2ee3e2392b7392fb/README.md#path-outputs
       json: ${{ toJSON(steps.release-please.outputs) }}
 
   uv:
