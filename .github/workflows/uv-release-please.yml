@@ -37,8 +37,17 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
     outputs:
+      # The Release Please action will always set the value of the following
+      # outputs.
+      # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#outputs
       releases_created: ${{ steps.release-please.outputs.releases_created }}
       paths_released: ${{ steps.release-please.outputs.paths_released }}
+
+      # The Release Please action will set the value of the following outputs if
+      # you have a root package (path is `.`).
+      release_created: ${{ steps.release-please.outputs.release_created }}
+      tag_name: ${{ steps.release-please.outputs.tag_name }}
+
       # The Release Please action dynamically defines outputs for each path that
       # had a release created. Dynamically defining outputs for a job is not
       # supported, so we have to convert the entire Release Please action
@@ -46,7 +55,6 @@ jobs:
       # output. Dependent jobs can then get the JSON string from this output and
       # convert it back to an object, allowing the outputs for each path to be
       # accessed.
-      # Ref: https://github.com/googleapis/release-please-action/blob/3612a99d75bd7a010bb03d6e2ee3e2392b7392fb/README.md#path-outputs
       json: ${{ toJSON(steps.release-please.outputs) }}
 
   uv:
@@ -91,13 +99,23 @@ jobs:
         run: uv sync
 
       - name: Build distributions
+        # By default, the `uv build` command will build the project in the
+        # working directory, and place the build artifacts in a `dist/` subdirectory.
+        # Ref: https://docs.astral.sh/uv/concepts/projects/build/#using-uv-build
         run: uv build
 
       - name: Upload release artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG_NAME: ${{ fromJSON(needs.release-please.outputs.json)[format('{0}--tag_name', matrix.path)] }}
-        # By default, the `uv build` command will build the project in the
-        # working directory, and place the build artifacts in a `dist/` subdirectory.
-        # Ref: https://docs.astral.sh/uv/concepts/projects/build/#using-uv-build
-        run: gh release upload "$TAG_NAME" dist/*
+          RELEASE_CREATED: ${{ needs.release-please.outputs.release_created }}
+          MATRIX_PATH: ${{ matrix.path }}
+          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+          PATH_TAG_NAME: ${{ fromJSON(needs.release-please.outputs.json)[format('{0}--tag_name', matrix.path)] }}
+        run: |
+          if [[ "$RELEASE_CREATED" == true ]] && [[ "$MATRIX_PATH" == "." ]]; then
+            gh release upload "$TAG_NAME" dist/*
+          else
+            gh release_upload "$PATH_TAG_NAME" dist/*
+          fi
+
+# Should be root component be built last, after all packages?
