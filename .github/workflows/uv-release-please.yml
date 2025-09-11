@@ -116,5 +116,5 @@ jobs:
             # Root package
             gh release upload "$TAG_NAME" dist/*
           else
-            gh release_upload "$PATH_TAG_NAME" dist/*
+            gh release upload "$PATH_TAG_NAME" dist/*
           fi
