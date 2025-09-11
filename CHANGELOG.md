@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.24.0](https://github.com/equinor/ops-actions/compare/v9.23.1...v9.24.0) (2025-09-11)
+
+
+### Features
+
+* add workflow `uv-release-please.yml` ([#757](https://github.com/equinor/ops-actions/issues/757)) ([9ffddf9](https://github.com/equinor/ops-actions/commit/9ffddf9b1ad0b47391834e0fc9da137dc0a2a2fb))
+
 ## [9.23.1](https://github.com/equinor/ops-actions/compare/v9.23.0...v9.23.1) (2025-09-09)
 
 
