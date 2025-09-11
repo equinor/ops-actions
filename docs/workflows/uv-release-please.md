@@ -26,7 +26,7 @@
 
 ### Configure Release Please
 
-1. Add a `release-please-config.json` configuration file at the root of your repository, and define your Python packages. For example:
+1. Add a `release-please-config.json` configuration file at the root of your repository, and define your Python packages. Optionally, define a root package `"."` that combines all packages in your repository. For example:
 
     ```json
     {
@@ -36,7 +36,6 @@
         "packages/example_package": {
           "package-name": "example-package"
         },
-        // (Optional) Define a root package that combines all packages in your repository
         ".": {},
       }
     }
