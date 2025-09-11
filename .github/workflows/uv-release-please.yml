@@ -108,11 +108,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_CREATED: ${{ needs.release-please.outputs.release_created }}
-          PATH_RELEASED: ${{ matrix.path }}
+          MATRIX_PATH: ${{ matrix.path }}
           TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
           PATH_TAG_NAME: ${{ fromJSON(needs.release-please.outputs.json)[format('{0}--tag_name', matrix.path)] }}
         run: |
-          if [[ "$RELEASE_CREATED" == true ]] && [[ "$PATH_RELEASED" == "." ]]; then
+          if [[ "$RELEASE_CREATED" == true ]] && [[ "$MATRIX_PATH" == "." ]]; then
             # Root package
             gh release upload "$TAG_NAME" dist/*
           else
