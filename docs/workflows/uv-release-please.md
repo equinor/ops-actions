@@ -14,33 +14,46 @@
 
 ### Create Python projects
 
-Add a `pyproject.toml` configuration file for each Python project in your repository. For example: `packages/example_package/pyproject.toml`.
+1. Add a `.python-version` file at the root of your repository, and set your preferred Python version. For example:
 
-For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
+    ```plaintext
+    3.12.10
+    ```
+
+1. Add a `pyproject.toml` configuration file for each Python project in your repository. For example: `packages/example_package/pyproject.toml`.
+
+    For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
 
 ### Configure Release Please
 
-Add a `release-please-config.json` configuration file at the root of your repository, and define your Python packages. For example:
+1. Add a `release-please-config.json` configuration file at the root of your repository, and define your Python packages. For example:
 
-```json
-{
-  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-  "release-type": "python",
-  "packages": {
-    "packages/example_package": {
-      "package-name": "example-package"
+    ```json
+    {
+      "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+      "release-type": "python",
+      "packages": {
+        "packages/example_package": {
+          "package-name": "example-package"
+        },
+        // (Optional) Define a root package that combines all packages in your repository
+        ".": {},
+      }
     }
-  }
-}
-```
+    ```
 
-Add a `.release-please-manifest.json` manifest file at the root of your repository, and add an initial empty JSON object:
+1. Add a `.release-please-manifest.json` manifest file at the root of your repository, and add an initial empty JSON object:
 
-```json
-{}
-```
+    ```json
+    {}
+    ```
 
 For detailed instructions on configuring Release Please, please refer to the [official documentation](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md).
+
+### Configure GitHub repository
+
+1. [Enforce commit squashing for pull requests](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/configuring-commit-squashing-for-pull-requests)
+1. [Allow GitHub Actions to create and approve pull requests](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests)
 
 ## Usage
 
