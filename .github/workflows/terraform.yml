@@ -18,7 +18,7 @@ on:
         default: ubuntu-24.04
 
       environment:
-        description: The environment that the jobs reference.
+        description: The name of the GitHub environment that this workflow should use for deployments.
         type: string
         required: true
 
