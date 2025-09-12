@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.24.2](https://github.com/equinor/ops-actions/compare/v9.24.1...v9.24.2) (2025-09-12)
+
+
+### Bug Fixes
+
+* **docker-acr:** fix context input ([#768](https://github.com/equinor/ops-actions/issues/768)) ([48b3843](https://github.com/equinor/ops-actions/commit/48b38430072ab9dbacc1129996d094168a1d62ec))
+
 ## [9.24.1](https://github.com/equinor/ops-actions/compare/v9.24.0...v9.24.1) (2025-09-12)
 
 
