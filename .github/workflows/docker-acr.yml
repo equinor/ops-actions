@@ -96,7 +96,7 @@ jobs:
 
       - name: Sanitize inputs
         id: sanitize-inputs
-        # Check that input working directory exists, relative to input working
+        # Check that input working directory exists, relative to default working
         # directory.
         working-directory: ${{ github.workspace }}
         env:
