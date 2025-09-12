@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.24.1](https://github.com/equinor/ops-actions/compare/v9.24.0...v9.24.1) (2025-09-12)
+
+
+### Code Refactoring
+
+* rename workflow `uv-release-please.yml` to `python-release.yml` ([#766](https://github.com/equinor/ops-actions/issues/766)) ([1d0cbe8](https://github.com/equinor/ops-actions/commit/1d0cbe8ec03901e7c9f61fa1b617859245a29a2e))
+
 ## [9.24.0](https://github.com/equinor/ops-actions/compare/v9.23.1...v9.24.0) (2025-09-11)
 
 
