@@ -79,6 +79,7 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/python-release.yml@main
     permissions:
       contents: write
+      issues: write
       pull-requests: write
 
 ```
