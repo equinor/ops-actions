@@ -52,7 +52,7 @@ jobs:
       json: ${{ toJSON(steps.release-please.outputs) }}
 
   python:
-    name: python
+    name: Python
     needs: release-please
     if: needs.release-please.outputs.releases_created == 'true'
     strategy:
