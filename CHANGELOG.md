@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.24.3](https://github.com/equinor/ops-actions/compare/v9.24.2...v9.24.3) (2025-09-15)
+
+
+### Bug Fixes
+
+* **python-release:** don't use uv ([26f809a](https://github.com/equinor/ops-actions/commit/26f809aea1b52ddfa59f9d4c9022c3c2cf73fde1))
+
 ## [9.24.2](https://github.com/equinor/ops-actions/compare/v9.24.1...v9.24.2) (2025-09-12)
 
 
