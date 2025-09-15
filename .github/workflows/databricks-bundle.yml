@@ -73,7 +73,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Databricks CLI
-        uses: databricks/setup-cli@133b754d18516c0b944f5c40f90a7707611e2723
+        uses: databricks/setup-cli@9eb707facdbd10c201cc19999357ca9f90571fc4
         with:
           version: ${{ inputs.cli_version }}
 
