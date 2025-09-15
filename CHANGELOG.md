@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.24.5](https://github.com/equinor/ops-actions/compare/v9.24.4...v9.24.5) (2025-09-15)
+
+
+### Bug Fixes
+
+* **python-release:** add required workflow permission ([#771](https://github.com/equinor/ops-actions/issues/771)) ([4d04d46](https://github.com/equinor/ops-actions/commit/4d04d464cb01fa5fb60e76c5b6d86f08eca7d894))
+
+
+### Code Refactoring
+
+* **python-release:** uppercase job name ([6333c92](https://github.com/equinor/ops-actions/commit/6333c92c8b8d21da2ecf26e6daccd78f663a39e2))
+
 ## [9.24.4](https://github.com/equinor/ops-actions/compare/v9.24.3...v9.24.4) (2025-09-15)
 
 
