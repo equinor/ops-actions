@@ -51,8 +51,8 @@ jobs:
       # accessed.
       json: ${{ toJSON(steps.release-please.outputs) }}
 
-  uv:
-    name: uv
+  python:
+    name: python
     needs: release-please
     if: needs.release-please.outputs.releases_created == 'true'
     strategy:
