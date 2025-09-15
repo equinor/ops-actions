@@ -17,7 +17,17 @@
     3.12.10
     ```
 
-1. Add a `pyproject.toml` configuration file for each Python project in your repository. For example: `packages/example_package/pyproject.toml`.
+1. Add a `pyproject.toml` configuration file for each Python project in your repository. For example, `packages/example_package/pyproject.toml`:
+
+    ```toml
+    [build-system]
+    requires = ["hatchling"]
+    build-backend = "hatchling.build"
+
+    [project]
+    name = "example_package"
+    version = "0.0.0"
+    ```
 
     For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
 
@@ -31,9 +41,9 @@
       "release-type": "python",
       "packages": {
         "packages/example_package": {
-          "package-name": "example-package"
+          "package-name": "example_package"
         },
-        ".": {},
+        ".": {}
       }
     }
     ```
@@ -65,6 +75,7 @@ on:
 
 jobs:
   build:
+    name: Build
     uses: equinor/ops-actions/.github/workflows/python-release.yml@main
     permissions:
       contents: write
