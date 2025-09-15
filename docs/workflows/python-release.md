@@ -73,6 +73,7 @@ jobs:
       uv_version: 0.8.15
     permissions:
       contents: write
+      issues: write
       pull-requests: write
 
 ```
