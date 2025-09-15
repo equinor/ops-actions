@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.24.4](https://github.com/equinor/ops-actions/compare/v9.24.3...v9.24.4) (2025-09-15)
+
+
+### Code Refactoring
+
+* **python-release:** correct job name ([e2715f9](https://github.com/equinor/ops-actions/commit/e2715f9c75567d19f9bfca544e95bff9dde50130))
+
 ## [9.24.3](https://github.com/equinor/ops-actions/compare/v9.24.2...v9.24.3) (2025-09-15)
 
 
