@@ -1,9 +1,6 @@
 # Python Package Releaser
 
-[Python Package Releaser](../../.github/workflows/python-release.yml) is a reusable GitHub Actions workflow that automatically builds and releases your Python packages using modern tooling:
-
-- [uv](https://docs.astral.sh/uv/) for Python package management
-- [Release Please](https://github.com/googleapis/release-please) for GitHub release automation
+[Python Package Releaser](../../.github/workflows/python-release.yml) is a reusable GitHub Actions workflow that automatically builds and releases your Python packages.
 
 ## Key Features
 
@@ -69,8 +66,6 @@ on:
 jobs:
   build:
     uses: equinor/ops-actions/.github/workflows/python-release.yml@main
-    with:
-      uv_version: 0.8.15
     permissions:
       contents: write
       pull-requests: write
@@ -88,7 +83,3 @@ The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaul
 #### (*Optional*) `environment`
 
 The name of the GitHub environment that this workflow should use for publishing.
-
-#### (*Optional*) `uv_version`
-
-The version of `uv` to install. Defaults to `latest`.
