@@ -34,7 +34,7 @@
 1. Add an empty `__init__.py` file for each Python project in your repository. For example, `packages/example_package/src/example_package/__init__.py`.
 
 > [!IMPORTANT]
-> Directory names must use underscores. The project name specified in `pyproject.toml` should use hyphens.
+> Directory names (i.e. import package names) [must use underscores](https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/). The project name (i.e. the distribution package name) specified in `pyproject.toml` should use hyphens, according to the [name normalization specification](https://packaging.python.org/en/latest/specifications/name-normalization/).
 
 ### Configure Release Please
 
