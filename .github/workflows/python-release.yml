@@ -1,3 +1,6 @@
+# Package your Python project.
+# Ref: https://packaging.python.org/en/latest/tutorials/packaging-projects/
+
 name: ♻ python-release
 
 on:
@@ -89,6 +92,8 @@ jobs:
         # Ref: https://packaging.python.org/en/latest/tutorials/packaging-projects/#generating-distribution-archives
         run: python -m build
 
+      # Attach distributions to the GitHub release.
+      # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#attaching-files-to-the-github-release
       - name: Upload release artifacts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
