@@ -17,7 +17,7 @@
     3.12.10
     ```
 
-1. Add a `pyproject.toml` configuration file for each Python project in your repository. For example, `packages/example_package/pyproject.toml`:
+1. Add a `pyproject.toml` configuration file for each Python package in your repository. For example, `packages/example_package/pyproject.toml`:
 
     ```toml
     [build-system]
@@ -25,11 +25,16 @@
     build-backend = "hatchling.build"
 
     [project]
-    name = "example_package"
+    name = "example-package"
     version = "0.0.0"
     ```
 
     For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
+
+1. Add an empty `__init__.py` file for each Python project in your repository. For example, `packages/example_package/src/example_package/__init__.py`.
+
+> [!IMPORTANT]
+> Directory names must use underscores. The project name specified in `pyproject.toml` should use hyphens.
 
 ### Configure Release Please
 
@@ -41,7 +46,7 @@
       "release-type": "python",
       "packages": {
         "packages/example_package": {
-          "package-name": "example_package"
+          "package-name": "example-package"
         },
         ".": {}
       }
@@ -55,6 +60,9 @@
     ```
 
 For detailed instructions on configuring Release Please, please refer to the [official documentation](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md).
+
+> [!IMPORTANT]
+> The package name specified in `release-please-config.json` must match the project name specified in `pyproject.toml`.
 
 ### Configure GitHub repository
 
