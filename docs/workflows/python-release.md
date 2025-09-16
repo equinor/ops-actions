@@ -17,7 +17,7 @@
     3.12.10
     ```
 
-1. Add a `pyproject.toml` configuration file for each Python package in your repository. For example, `packages/example_package/pyproject.toml`:
+1. Add a `pyproject.toml` configuration file for each Python project in your repository. For example, `packages/example_package/pyproject.toml`:
 
     ```toml
     [build-system]
@@ -31,7 +31,7 @@
 
     For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
 
-1. Add an empty `__init__.py` file for each Python project in your repository. For example, `packages/example_package/src/example_package/__init__.py`.
+1. Add an empty `__init__.py` file for each Python package in your repository. For example, `packages/example_package/src/example_package/__init__.py`.
 
 > [!IMPORTANT]
 > Directory names (i.e., import package names) [must use underscores](https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/). The project name (i.e., the distribution package name) specified in `pyproject.toml` should use hyphens, according to the [name normalization specification](https://packaging.python.org/en/latest/specifications/name-normalization/).
