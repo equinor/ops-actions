@@ -9,9 +9,9 @@
 
 Examples:
 
-- 🌲 `terraform.yml`: provision cloud environment using Terraform.
-- 📦 `docker.yml`: build Docker image and push to container registry.
-- 🚀 `azure-webapp.yml`: deploy to Azure Web App.
+- `terraform.yml`: provision cloud environment using Terraform.
+- `docker.yml`: build Docker image and push to container registry.
+- `azure-webapp.yml`: deploy to Azure Web App.
 
 ## Usage
 

@@ -1,5 +1,64 @@
 # Changelog
 
+## [9.24.5](https://github.com/equinor/ops-actions/compare/v9.24.4...v9.24.5) (2025-09-15)
+
+
+### Bug Fixes
+
+* **python-release:** add required workflow permission ([#771](https://github.com/equinor/ops-actions/issues/771)) ([4d04d46](https://github.com/equinor/ops-actions/commit/4d04d464cb01fa5fb60e76c5b6d86f08eca7d894))
+
+
+### Code Refactoring
+
+* **python-release:** uppercase job name ([6333c92](https://github.com/equinor/ops-actions/commit/6333c92c8b8d21da2ecf26e6daccd78f663a39e2))
+
+## [9.24.4](https://github.com/equinor/ops-actions/compare/v9.24.3...v9.24.4) (2025-09-15)
+
+
+### Code Refactoring
+
+* **python-release:** correct job name ([e2715f9](https://github.com/equinor/ops-actions/commit/e2715f9c75567d19f9bfca544e95bff9dde50130))
+
+## [9.24.3](https://github.com/equinor/ops-actions/compare/v9.24.2...v9.24.3) (2025-09-15)
+
+
+### Bug Fixes
+
+* **python-release:** don't use uv ([26f809a](https://github.com/equinor/ops-actions/commit/26f809aea1b52ddfa59f9d4c9022c3c2cf73fde1))
+
+## [9.24.2](https://github.com/equinor/ops-actions/compare/v9.24.1...v9.24.2) (2025-09-12)
+
+
+### Bug Fixes
+
+* **docker-acr:** fix context input ([#768](https://github.com/equinor/ops-actions/issues/768)) ([48b3843](https://github.com/equinor/ops-actions/commit/48b38430072ab9dbacc1129996d094168a1d62ec))
+
+## [9.24.1](https://github.com/equinor/ops-actions/compare/v9.24.0...v9.24.1) (2025-09-12)
+
+
+### Code Refactoring
+
+* rename workflow `uv-release-please.yml` to `python-release.yml` ([#766](https://github.com/equinor/ops-actions/issues/766)) ([1d0cbe8](https://github.com/equinor/ops-actions/commit/1d0cbe8ec03901e7c9f61fa1b617859245a29a2e))
+
+## [9.24.0](https://github.com/equinor/ops-actions/compare/v9.23.1...v9.24.0) (2025-09-11)
+
+
+### Features
+
+* add workflow `uv-release-please.yml` ([#757](https://github.com/equinor/ops-actions/issues/757)) ([9ffddf9](https://github.com/equinor/ops-actions/commit/9ffddf9b1ad0b47391834e0fc9da137dc0a2a2fb))
+
+## [9.23.1](https://github.com/equinor/ops-actions/compare/v9.23.0...v9.23.1) (2025-09-09)
+
+
+### Bug Fixes
+
+* **release-please:** remove default release type ([#758](https://github.com/equinor/ops-actions/issues/758)) ([516bc9a](https://github.com/equinor/ops-actions/commit/516bc9a93645ac706c49c0d7b65eb4ba620246b6))
+
+
+### Reverts
+
+* **release-please:** remove default release type ([fc57633](https://github.com/equinor/ops-actions/commit/fc5763331cc731edb3dc80e55356285aca9beea8))
+
 ## [9.23.0](https://github.com/equinor/ops-actions/compare/v9.22.0...v9.23.0) (2025-09-04)
 
 
