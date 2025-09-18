@@ -31,7 +31,7 @@
 
     For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
 
-1. Add a `packages/<PROJECT_NAME>/src/<MODULE_NAME>/__init__.py` file for each Python module in your repository. For example, `packages/example-package/src/example_package/__init__.py`.
+1. Add a `packages/<PROJECT_NAME>/src/<MODULE_NAME>/__init__.py` package initialization file for each Python module in your repository. For example, `packages/example-package/src/example_package/__init__.py`.
 
     ```python
     __version__ = "0.0.0"
