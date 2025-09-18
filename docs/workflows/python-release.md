@@ -17,7 +17,7 @@
     3.12.10
     ```
 
-1. Add a `packages/<PROJECT_NAME>/pyproject.toml` configuration file for each Python project (i.e., [distribution package](https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/#what-s-a-distribution-package)) in your repository. For example, `packages/example-package/pyproject.toml`:
+1. Add a `packages/<PROJECT_NAME>/pyproject.toml` configuration file for each Python project in your repository. For example, `packages/example-package/pyproject.toml`:
 
     ```toml
     [build-system]
@@ -31,14 +31,14 @@
 
     For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
 
-1. Add a `packages/<PROJECT_NAME>/src/<MODULE_NAME>/__init__.py` file for each Python module (i.e., [import package](https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/#what-s-an-import-package)) in your repository. For example, `packages/example-package/src/example_package/__init__.py`.
+1. Add a `packages/<PROJECT_NAME>/src/<MODULE_NAME>/__init__.py` file for each Python module in your repository. For example, `packages/example-package/src/example_package/__init__.py`.
 
     ```python
     __version__ = "0.0.0"
     ```
 
 > [!IMPORTANT]
-> [Python module names must use underscores. Python project names should use hyphens](https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/#how-do-distribution-package-names-and-import-package-names-compare), according to the [name normalization specification](https://packaging.python.org/en/latest/specifications/name-normalization/).
+> Python project names should use hyphens, while Python module names must use underscores ([ref.](https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/#how-do-distribution-package-names-and-import-package-names-compare)).
 
 ### Configure Release Please
 
