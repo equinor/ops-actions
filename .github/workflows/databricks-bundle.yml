@@ -35,6 +35,11 @@ on:
         type: string
         required: false
 
+      artifact_name:
+        description: The name of a GitHub Actions artifact to download. The artifact must contain a tarball (`.tar` file) with the same name as the artifact.
+        type: string
+        required: false
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -71,6 +76,22 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           persist-credentials: false
+
+      - name: Download artifact
+        if: inputs.artifact_name != ''
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.working_directory }}
+
+      - name: Extract tarball
+        if: inputs.artifact_name != ''
+        env:
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
+        run: |
+          tarball="$ARTIFACT_NAME.tar"
+          tar --extract --file "$tarball"
+          rm "$tarball"
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@133b754d18516c0b944f5c40f90a7707611e2723
