@@ -41,8 +41,8 @@ jobs:
           # The Release Please action dynamically defines outputs for each path
           # that had a release created. Dynamically defining outputs for a job
           # is not supported, so we have to convert the entire Release Please
-          # action outputs object to a JSON string, then use jq to query the
-          # outputs that we need.
+          # action outputs object to a JSON string, then use jq to construct
+          # static JSON objects containing the specific outputs that we need.
           # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#path-outputs
           OUTPUTS_JSON: ${{ toJSON(steps.release-please.outputs) }}
         run: |
