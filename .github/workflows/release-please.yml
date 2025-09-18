@@ -16,31 +16,25 @@ on:
         default: simple
 
     outputs:
+      releases_created:
+        description: Value is `true` if any release was created, else `false`.
+        value: ${{ jobs.release-please.outputs.releases_created }}
+
       paths_released:
-        description: A JSON string of the array of paths that had releases created (`[]` if nothing was released). Use the `fromJSON()` function to convert the string to an array, which can then be used to define a matrix of job configurations per package that was released.
+        description: Value is a JSON array of paths that had releases created, `[]` if nothing was released.
         value: ${{ jobs.release-please.outputs.paths_released }}
 
-      releases:
-        description: |
-            A JSON string containing a map of releases created for each package:
+      release_created:
+        description: Value is `true` if a release was created for the root package (path is `.`), else `false`.
+        value: ${{ jobs.release-please.outputs.release_created }}
 
-            ```json
-            {
-              "path/to/package": {
-                "release_created": bool,
-                "upload_url": string,
-                "html_url": string,
-                "tag_name": string,
-                "version": string,
-                "major": int,
-                "minor": int,
-                "patch": int,
-                "sha": string,
-                "body": string
-              }
-            }
-            ```
-        value: ${{ jobs.release-please.outputs.releases }}
+      tag_name:
+        description: Value is the tag name that was created for the root package, empty if a release was not created for the root package.
+        value: ${{ jobs.release-please.outputs.tag_name }}
+
+      path_tag_names:
+        description: Value is a JSON object of key-value pairs, where the key is a path that had a release created, and the value is the tag name that was created for that package.
+        value: ${{ jobs.release-please.outputs.path_tag_names }}
 
 permissions: {}
 
@@ -58,53 +52,23 @@ jobs:
         with:
           release-type: ${{ inputs.release_type }}
       
-      # Generating outputs is currently the "recommended" for monorepos (i.e., a maintainer has recommended doing it this way)...
-      # Ref: https://github.com/googleapis/release-please-action/issues/823
-      - name: Set outputs
-        id: set-outputs
-        if: steps.release-please.outputs.paths_released != '[]'
+        # The Release Please action dynamically defines outputs for each path
+        # that had a release created. Dynamically defining outputs for a job is
+        # not supported, so we have to convert the entire Release Please action
+        # outputs object to a JSON object, then use jq to construct static JSON
+        # objects containing the specific outputs that we need.
+        # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#path-outputs
+      - name: Set path outputs
+        id: set-path-outputs
         env:
-          RELEASE_PLEASE_OUTPUTS: ${{ toJSON(steps.release-please.outputs) }}
+          OUTPUTS_JSON: ${{ toJSON(steps.release-please.outputs) }}
         run: |
-          readarray -t paths_released <<< "$(echo "$RELEASE_PLEASE_OUTPUTS" | jq -c .paths_released[])"
-
-          releases="{}"
-
-          for path in "$paths_released[@]"; do
-            release=$(jq -n \
-              --arg release_created "$(echo "$RELEASE_PLEASE_OUTPUTS" | jq -r --arg path "$path" '.[$path]--release_created')" \
-              --arg upload_url "" \
-              --arg html_url "" \
-              --arg tag_name "" \
-              --arg version "" \
-              --arg major "" \
-              --arg minor "" \
-              --arg patch "" \
-              --arg sha "" \
-              --arg body "" \
-              '{
-                "release_created": $release_created,
-                "upload_url": $upload_url,
-                "html_url": $html_url,
-                "tag_name": $tag_name,
-                "version": $version,
-                "major": $major,
-                "minor": $minor,
-                "patch": $patch,
-                "sha": $sha,
-                "body": $body
-              }')
-
-            # Merge the new release object into the releases map
-            releases=$(jq -n \
-              --argjson releases "$releases" \
-              --arg path "$path" \
-              --argjson release "$release" \
-              '$releases + {($path): $release}')
-          done
-
-          echo "releases=$releases" >> "$GITHUB_OUTPUT"
+          path_tag_names=$(echo "$OUTPUTS_JSON" | jq 'with_entries(select(.key | endswith("--tag_name")) | .key |= rtrimstr("--tag_name"))')
+          echo "path_tag_names=$path_tag_names" >> "$GITHUB_OUTPUT"
 
     outputs:
+      releases_created: ${{ steps.release-please.outputs.releases_created }}
       paths_released: ${{ steps.release-please.outputs.paths_released }}
-      releases: ${{ steps.set-outputs.outputs.releases }}
+      release_created: ${{ steps.release-please.outputs.release_created }}
+      tag_name: ${{ steps.release-please.outputs.tag_name }}
+      path_tag_names: ${{ steps.set-path-outputs.outputs.path_tag_names }}
