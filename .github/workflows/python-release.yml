@@ -34,26 +34,41 @@ jobs:
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+
+      - name: Set path outputs
+        id: set-path-outputs
+        env:
+          # The Release Please action dynamically defines outputs for each path
+          # that had a release created. Dynamically defining outputs for a job
+          # is not supported, so we have to convert the entire Release Please
+          # action outputs object to a JSON string, then use jq to query the
+          # outputs that we need.
+          # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#path-outputs
+          OUTPUTS_JSON: ${{ toJSON(steps.release-please.outputs) }}
+        run: |
+          path_tag_names=$(echo "$OUTPUTS_JSON" | jq 'with_entries(select(.key | endswith("--tag_name"))) | with_entries(.key |= sub("--tag_name$"; ""))')
+          echo "path_tag_names=$path_tag_names" >> "$GITHUB_OUTPUT"
+
     outputs:
-      # The Release Please action will always set the value of the following
-      # outputs.
-      # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#outputs
+      # Value is `true` if any release was created, else `false`.
       releases_created: ${{ steps.release-please.outputs.releases_created }}
+
+      # Value is a JSON array of paths that had releases created, `[]` if
+      # nothing was released.
       paths_released: ${{ steps.release-please.outputs.paths_released }}
 
-      # The Release Please action will set the value of the following outputs if
-      # you have a root package (path is `.`).
+      # Value is `true` if a release was created for the root package (path
+      # is `.`), else `false`.
       release_created: ${{ steps.release-please.outputs.release_created }}
+
+      # Value is the tag name that was created for the root package, empty if
+      # a release was not created for the root package.
       tag_name: ${{ steps.release-please.outputs.tag_name }}
 
-      # The Release Please action dynamically defines outputs for each path that
-      # had a release created. Dynamically defining outputs for a job is not
-      # supported, so we have to convert the entire Release Please action
-      # outputs object to a JSON string, then map that string to a single job
-      # output. Dependent jobs can then get the JSON string from this output and
-      # convert it back to an object, allowing the outputs for each path to be
-      # accessed.
-      json: ${{ toJSON(steps.release-please.outputs) }}
+      # Value is a JSON object of key-value pairs, where the key is a path that
+      # had a release created, and the value is the tag name that was created
+      # for that package.
+      path_tag_names: ${{ steps.set-path-outputs.outputs.path_tag_names }}
 
   python:
     name: Python
@@ -100,7 +115,7 @@ jobs:
           RELEASE_CREATED: ${{ needs.release-please.outputs.release_created }}
           MATRIX_PATH: ${{ matrix.path }}
           TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
-          PATH_TAG_NAME: ${{ fromJSON(needs.release-please.outputs.json)[format('{0}--tag_name', matrix.path)] }}
+          PATH_TAG_NAME: ${{ fromJSON(needs.release-please.outputs.path_tag_names)[matrix.path] }}
         run: |
           if [[ "$RELEASE_CREATED" == true ]] && [[ "$MATRIX_PATH" == "." ]]; then
             # Root package
