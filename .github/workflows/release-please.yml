@@ -33,7 +33,7 @@ on:
         value: ${{ jobs.release-please.outputs.tag_name }}
 
       path_tag_names:
-        description: Value is a JSON object of key-value pairs, where the key is a path that had a release created, and the value is the tag name that was created for that package.
+        description: Value is a JSON object of key-value pairs, where the key is a path that had a release created, and the value is the tag name that was created for that release.
         value: ${{ jobs.release-please.outputs.path_tag_names }}
 
 permissions: {}
