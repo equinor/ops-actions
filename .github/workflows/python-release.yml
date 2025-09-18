@@ -46,7 +46,7 @@ jobs:
           # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#path-outputs
           OUTPUTS_JSON: ${{ toJSON(steps.release-please.outputs) }}
         run: |
-          path_tag_names=$(echo "$OUTPUTS_JSON" | jq 'with_entries(select(.key | endswith("--tag_name"))) | with_entries(.key |= rtrimstr("--tag_name"))')
+          path_tag_names=$(echo "$OUTPUTS_JSON" | jq 'with_entries(select(.key | endswith("--tag_name")) | .key |= rtrimstr("--tag_name"))')
           echo "path_tag_names=$path_tag_names" >> "$GITHUB_OUTPUT"
 
     outputs:
