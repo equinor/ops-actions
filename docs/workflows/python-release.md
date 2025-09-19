@@ -98,12 +98,12 @@ jobs:
 
 On push to branch `main`, this workflow will automatically build and release your Python packages 🚀
 
-### Inputs
+## Inputs
 
-#### (*Optional*) `runs_on`
+### (*Optional*) `runs_on`
 
 The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
 
-#### (*Optional*) `environment`
+### (*Optional*) `environment`
 
 The name of the GitHub environment that this workflow should use for publishing.
