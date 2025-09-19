@@ -67,7 +67,7 @@ jobs:
 
       # Value is a JSON object of key-value pairs, where the key is a path that
       # had a release created, and the value is the tag name that was created
-      # for that package.
+      # for that release.
       path_tag_names: ${{ steps.set-path-outputs.outputs.path_tag_names }}
 
   python:
