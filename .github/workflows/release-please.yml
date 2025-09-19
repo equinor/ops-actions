@@ -17,23 +17,23 @@ on:
 
     outputs:
       releases_created:
-        description: Value is `true` if any release was created, else `false`.
+        description: "`true` if any release was created, else `false`"
         value: ${{ jobs.release-please.outputs.releases_created }}
 
       paths_released:
-        description: Value is a JSON array of paths that had releases created, `[]` if nothing was released.
+        description: A JSON array of paths that had releases created, `[]` if nothing was released.
         value: ${{ jobs.release-please.outputs.paths_released }}
 
       release_created:
-        description: Value is `true` if a release was created for the root package (path is `.`), else `false`.
+        description: "`true` if a release was created for the root package (path is `.`), else `false`."
         value: ${{ jobs.release-please.outputs.release_created }}
 
       tag_name:
-        description: Value is the tag name that was created for the root package, empty if a release was not created for the root package.
+        description: The tag name that was created for the root package, empty if a release was not created for the root package.
         value: ${{ jobs.release-please.outputs.tag_name }}
 
       path_tag_names:
-        description: Value is a JSON object of key-value pairs, where the key is a path that had a release created, and the value is the tag name that was created for that release.
+        description: A JSON object of key-value pairs, where the key is a path that had a release created, and the value is the tag name that was created for that release.
         value: ${{ jobs.release-please.outputs.path_tag_names }}
 
 permissions: {}
