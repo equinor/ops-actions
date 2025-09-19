@@ -87,16 +87,8 @@ jobs:
           username: ${{ inputs.username }}
           password: ${{ secrets.password }}
 
-      - name: Build and push
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
-        env:
-          DOCKER_BUILD_SUMMARY: true
-        with:
-          build-args: ${{ inputs.build_args }}
-          file: ${{ inputs.working_directory }}/Dockerfile
-          context: ${{ inputs.working_directory }}
-          tags: ${{ env.IMAGE }},${{ env.IMAGE_LATEST }}
-          push: true
+      - name: Docker Build
+        run: docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" --push .
 
     outputs:
       image: ${{ env.IMAGE }}
