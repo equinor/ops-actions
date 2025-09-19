@@ -1,6 +1,6 @@
-# Python Package Releaser
+# `python-release.yml`
 
-[Python Package Releaser](../../.github/workflows/python-release.yml) is a reusable GitHub Actions workflow that automatically builds and releases your Python packages.
+A reusable GitHub Actions workflow that automatically builds and releases your Python packages.
 
 ## Key Features
 

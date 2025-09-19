@@ -1,6 +1,6 @@
-# Terraform
+# `terraform.yml`
 
-Reusable GitHub Actions workflow for automatically running Terraform.
+A reusable GitHub Actions workflow for automatically running Terraform.
 
 ## Key Features
 

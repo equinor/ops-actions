@@ -7,11 +7,12 @@
 
 [Reusable GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for common operational tasks.
 
-Examples:
+## Workflows
 
-- `terraform.yml`: provision cloud environment using Terraform.
-- `docker.yml`: build Docker image and push to container registry.
-- `azure-webapp.yml`: deploy to Azure Web App.
+This repository contains the following workflow files - clicking on a workflow file name will redirect you to the usage documentation for that workflow:
+
+- [`python-release.yml`](docs/workflows/python-release.md): Python package build and release automation.
+- [`terraform.yml`](docs/workflows/terraform.md): run Terraform in automation.
 
 ## Usage
 
@@ -26,11 +27,9 @@ jobs:
     secrets: {}
 ```
 
-`{filename}` is the name of a workflow file in the [workflows directory](.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
+`{filename}` is the name of a [workflow file](#workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
 
 To pass inputs and secrets to the reusable workflow, use the `with` and `secrets` keywords respectively.
-
-For specific usage examples, see [this document](docs/usage-examples.md).
 
 ### Version updates
 
