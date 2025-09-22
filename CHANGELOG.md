@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.24.6](https://github.com/equinor/ops-actions/compare/v9.24.5...v9.24.6) (2025-09-22)
+
+
+### Bug Fixes
+
+* **docker:** prevent code injection via template expression ([#781](https://github.com/equinor/ops-actions/issues/781)) ([a61cfd1](https://github.com/equinor/ops-actions/commit/a61cfd1bd9d1cd8e82700c7801c99877f2fc450f))
+
 ## [9.24.5](https://github.com/equinor/ops-actions/compare/v9.24.4...v9.24.5) (2025-09-15)
 
 
