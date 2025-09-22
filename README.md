@@ -1,5 +1,6 @@
 # ops-actions
 
+[![CI](https://github.com/equinor/ops-actions/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/equinor/ops-actions/actions/workflows/ci.yml)
 [![GitHub License](https://img.shields.io/github/license/equinor/ops-actions)](LICENSE)
 [![GitHub Release](https://img.shields.io/github/v/release/equinor/ops-actions)](https://github.com/equinor/ops-actions/releases/latest)
 [![GitHub contributors](https://img.shields.io/github/contributors/equinor/ops-actions)](https://github.com/equinor/ops-actions/graphs/contributors)
