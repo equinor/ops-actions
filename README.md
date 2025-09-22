@@ -12,7 +12,17 @@
 
 This repository contains the following workflow files - clicking on a workflow file name will redirect you to the usage documentation for that workflow:
 
+- `azure-function.yml`: deploy an artifact to Azure Functions.
+- `azure-webapp.yml`: deploy an artifact to an Azure Web App.
+- `databricks-bundle.yml`: deploy a Databricks Asset Bundle.
+- `databricks-repos.yml`: update a Databricks Git folder (repo).
+- `docker.yml`: build a Docker image and push to a container registry.
+- `docker-acr.yml`: build a Docker image and push to an Azure Container Registry (ACR) using secretless authentication.
+- `dotnet.yml`: build a .NET application.
+- `github-pages.yml`: publish a static site to GitHub Pages.
 - [`python-release.yml`](docs/workflows/python-release.md): Python package build and release automation.
+- `release-please.yml`: automate GitHub releases using Release Please.
+- `super-linter.yml`: run a collection of ready-to-go linters and formatters using Super-linter.
 - [`terraform.yml`](docs/workflows/terraform.md): run Terraform in automation.
 
 ## Usage
