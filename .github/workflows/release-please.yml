@@ -15,6 +15,15 @@ on:
         required: false
         default: simple
 
+    outputs:
+      release_created:
+        description: "`true` if a release was created, else `false`."
+        value: ${{ jobs.release-please.outputs.release_created }}
+
+      tag_name:
+        description: The tag name that was created for the release, empty if a release was not created.
+        value: ${{ jobs.release-please.outputs.tag_name }}
+
 permissions: {}
 
 jobs:
@@ -26,6 +35,11 @@ jobs:
       pull-requests: write # Required to create release PRs
     steps:
       - name: Release Please
+        id: release-please
         uses: googleapis/release-please-action@c2a5a2bd6a758a0937f1ddb1e8950609867ed15c
         with:
           release-type: ${{ inputs.release_type }}
+
+    outputs:
+      release_created: ${{ steps.release-please.outputs.release_created }}
+      tag_name: ${{ steps.release-please.outputs.tag_name }}
