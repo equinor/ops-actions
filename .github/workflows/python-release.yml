@@ -41,20 +41,6 @@ jobs:
       releases_created: ${{ steps.release-please.outputs.releases_created }}
       paths_released: ${{ steps.release-please.outputs.paths_released }}
 
-      # The Release Please action will set the value of the following outputs if
-      # you have a root package (path is `.`).
-      release_created: ${{ steps.release-please.outputs.release_created }}
-      tag_name: ${{ steps.release-please.outputs.tag_name }}
-
-      # The Release Please action dynamically defines outputs for each path that
-      # had a release created. Dynamically defining outputs for a job is not
-      # supported, so we have to convert the entire Release Please action
-      # outputs object to a JSON string, then map that string to a single job
-      # output. Dependent jobs can then get the JSON string from this output and
-      # convert it back to an object, allowing the outputs for each path to be
-      # accessed.
-      json: ${{ toJSON(steps.release-please.outputs) }}
-
   python:
     name: Python
     needs: release-please
@@ -68,6 +54,8 @@ jobs:
       # Read permission required to checkout the repository.
       # Write permission required to upload the release artifact.
       contents: write
+      # Write permissions required for PyPI Trusted Publishing.
+      id-token: write
     defaults:
       run:
         shell: bash
@@ -92,19 +80,5 @@ jobs:
         # Ref: https://packaging.python.org/en/latest/tutorials/packaging-projects/#generating-distribution-archives
         run: python -m build
 
-      # Attach distributions to the GitHub release.
-      # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#attaching-files-to-the-github-release
-      - name: Upload release artifacts
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_CREATED: ${{ needs.release-please.outputs.release_created }}
-          MATRIX_PATH: ${{ matrix.path }}
-          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
-          PATH_TAG_NAME: ${{ fromJSON(needs.release-please.outputs.json)[format('{0}--tag_name', matrix.path)] }}
-        run: |
-          if [[ "$RELEASE_CREATED" == true ]] && [[ "$MATRIX_PATH" == "." ]]; then
-            # Root package
-            gh release upload "$TAG_NAME" dist/*
-          else
-            gh release upload "$PATH_TAG_NAME" dist/*
-          fi
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e
