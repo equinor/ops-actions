@@ -75,10 +75,10 @@ For detailed instructions on configuring Release Please, please refer to the [of
 
 ## Usage
 
-Add a GitHub Actions workflow file `.github/workflows/ci.yml` in your repository, and add the following recommended configuration:
+Add a GitHub Actions workflow file `.github/workflows/python-release.yml` in your repository, and add the following recommended configuration:
 
 ```yaml
-name: CI
+name: Python Release
 
 on:
   push:

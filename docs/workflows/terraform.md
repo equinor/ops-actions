@@ -17,10 +17,10 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 
 ## Usage
 
-Add a GitHub Actions workflow file `.github/workflows/pr.yml` in your repository, and add the following recommended configuration:
+Add a GitHub Actions workflow file `.github/workflows/terraform.yml` in your repository, and add the following recommended configuration:
 
 ```yaml
-name: PR
+name: Terraform
 
 on:
   pull_request:
@@ -42,6 +42,7 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
+
 ```
 
 ## Inputs
