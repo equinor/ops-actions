@@ -31,7 +31,7 @@ To pass inputs and secrets to the reusable workflow, use the `with` and `secrets
 This repository contains the following workflow files - clicking on a workflow file name will redirect you to the usage documentation for that workflow:
 
 - `azure-function.yml`: deploy an artifact to Azure Functions.
-- `azure-webapp.yml`: deploy an artifact to an Azure Web App.
+- `azure-webapp.yml`: deploy an artifact or container image to an Azure Web App.
 - `databricks-bundle.yml`: deploy a Databricks Asset Bundle.
 - `databricks-repos.yml`: update a Databricks Git folder (repo).
 - `docker.yml`: build a Docker image and push to a container registry.
