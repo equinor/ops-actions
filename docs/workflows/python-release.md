@@ -86,8 +86,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build
+  Release:
+    name: Release
     uses: equinor/ops-actions/.github/workflows/python-release.yml@main
     permissions:
       contents: write
