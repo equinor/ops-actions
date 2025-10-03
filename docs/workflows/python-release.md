@@ -83,10 +83,10 @@ For detailed instructions on configuring Release Please, please refer to the [of
 
 ## Usage
 
-Add a GitHub Actions workflow file `.github/workflows/python-release.yml` in your repository, and add the following recommended configuration:
+Add a GitHub Actions workflow file `.github/workflows/release.yml` in your repository, and add the following recommended configuration:
 
 ```yaml
-name: Python Release
+name: Release
 
 on:
   push:
@@ -114,4 +114,4 @@ The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaul
 
 ### (*Optional*) `environment`
 
-The name of the GitHub environment that this workflow should use for publishing.
+The name of the GitHub environment that this workflow should use for publishing. Defaults to `pypi`.
