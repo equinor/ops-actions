@@ -56,7 +56,9 @@ A reusable GitHub Actions workflow that automatically builds and releases your P
         "packages/example-package": {
           "package-name": "example-package"
         },
-        ".": {}
+        ".": {
+          "package-name": "root-package"
+        }
       }
     }
     ```
