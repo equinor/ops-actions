@@ -1,5 +1,8 @@
 # `python-release.yml`
 
+> [!IMPORTANT]
+> This workflow is still in active development - breaking changes may be implemented in the future.
+
 A reusable GitHub Actions workflow that automatically builds and releases your Python packages.
 
 ## Key Features
@@ -91,8 +94,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: Build
+  Release:
+    name: Release
     uses: equinor/ops-actions/.github/workflows/python-release.yml@main
     permissions:
       contents: write

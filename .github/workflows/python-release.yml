@@ -35,14 +35,11 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
     outputs:
-      # The Release Please action will always set the value of the following
-      # outputs.
-      # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#outputs
       releases_created: ${{ steps.release-please.outputs.releases_created }}
       paths_released: ${{ steps.release-please.outputs.paths_released }}
 
-  python:
-    name: Python
+  python-build:
+    name: Python Build
     needs: release-please
     if: needs.release-please.outputs.releases_created == 'true'
     strategy:

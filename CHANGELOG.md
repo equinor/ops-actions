@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.25.0](https://github.com/equinor/ops-actions/compare/v9.24.6...v9.25.0) (2025-09-30)
+
+
+### Features
+
+* **release-please:** output release properties ([#780](https://github.com/equinor/ops-actions/issues/780)) ([37b402b](https://github.com/equinor/ops-actions/commit/37b402b3d8a0b5d9e9d0d18f9f033c644a59d1ec))
+
 ## [9.24.6](https://github.com/equinor/ops-actions/compare/v9.24.5...v9.24.6) (2025-09-22)
 
 
