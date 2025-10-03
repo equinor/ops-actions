@@ -8,7 +8,8 @@ A reusable GitHub Actions workflow that automatically builds and releases your P
 ## Key Features
 
 - **Monorepo support**: Manage multiple Python packages in a single GitHub repository.
-- **Automatic package distribution**: Python source (`.tar.gz`) and built (`.whl`) distributions are automatically uploaded to the corresponding GitHub releases.
+- **Automatic package distribution**: Python source (`.tar.gz`) and built (`.whl`) distributions are automatically published to PyPI.
+- **Secretless publishing** to PyPI using OpenID Connect (OIDC).
 
 ## Prerequisites
 
@@ -76,12 +77,16 @@ For detailed instructions on configuring Release Please, please refer to the [of
 1. [Enforce commit squashing for pull requests](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/configuring-commit-squashing-for-pull-requests)
 1. [Allow GitHub Actions to create pull requests](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests)
 
+### Configure PyPI Trusted Publishing
+
+[Create a PyPI project with a Trusted Publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/#github-actions).
+
 ## Usage
 
-Add a GitHub Actions workflow file `.github/workflows/python-release.yml` in your repository, and add the following recommended configuration:
+Add a GitHub Actions workflow file `.github/workflows/release.yml` in your repository, and add the following recommended configuration:
 
 ```yaml
-name: Python Release
+name: Release
 
 on:
   push:
@@ -109,4 +114,4 @@ The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaul
 
 ### (*Optional*) `environment`
 
-The name of the GitHub environment that this workflow should use for publishing.
+The name of the GitHub environment that this workflow should use for publishing. Defaults to `pypi`.
