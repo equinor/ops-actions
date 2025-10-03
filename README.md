@@ -38,6 +38,7 @@ This repository contains the following workflow files - clicking on a workflow f
 - `docker-acr.yml`: build a Docker image and push to an Azure Container Registry (ACR) using secretless authentication.
 - `dotnet.yml`: build a .NET application.
 - `github-pages.yml`: publish a static site to GitHub Pages.
+- [`python-lint.yml`](docs/workflows/python-lint.md): lint Python project using the Ruff Linter.
 - [`python-release.yml`](docs/workflows/python-release.md): Python package build and release automation.
 - `release-please.yml`: automate GitHub releases using Release Please.
 - `super-linter.yml`: run a collection of ready-to-go linters and formatters using Super-linter.
