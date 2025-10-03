@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.26.0](https://github.com/equinor/ops-actions/compare/v9.25.0...v9.26.0) (2025-10-03)
+
+
+### Features
+
+* **python-release:** publish to PyPI ([#785](https://github.com/equinor/ops-actions/issues/785)) ([445c03f](https://github.com/equinor/ops-actions/commit/445c03fc6b19382cf8782b8c33abe0cc068b591f))
+
 ## [9.25.0](https://github.com/equinor/ops-actions/compare/v9.24.6...v9.25.0) (2025-09-30)
 
 
