@@ -49,11 +49,8 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     environment: ${{ inputs.environment }}
     permissions:
-      # Read permission required to checkout the repository.
-      # Write permission required to upload the release artifact.
-      contents: write
-      # Write permissions required for PyPI Trusted Publishing.
-      id-token: write
+      contents: read # Required to checkout the repository.
+      id-token: write # Required for PyPI Trusted Publishing.
     defaults:
       run:
         shell: bash
