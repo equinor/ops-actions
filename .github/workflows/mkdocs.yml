@@ -35,7 +35,7 @@ on:
       git_fetch_depth:
         description: |
           The number of commits that Git should fetch. Defaults to `1` (to decrease build time).
-          
+
           Fetch depth `0` required by some MkDocs plugins (e.g., [mkdocs-git-revision-date-localized-plugin](https://pypi.org/project/mkdocs-git-revision-date-localized-plugin/)).
         type: number
         required: false
