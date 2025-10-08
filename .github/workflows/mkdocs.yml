@@ -39,6 +39,10 @@ on:
         default: mkdocs
 
     outputs:
+      artifact_uploaded:
+        description: Was the MkDocs build artifact uploaded?
+        value: ${{ inputs.upload_artifact }}
+
       artifact_name:
         description: The name of the uploaded artifact containing the site.
         value: ${{ inputs.artifact_name }}
