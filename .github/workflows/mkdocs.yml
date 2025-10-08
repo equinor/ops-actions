@@ -32,6 +32,15 @@ on:
         required: false
         default: mkdocs
 
+      git_fetch_depth:
+        description: |
+          The number of commits that Git should fetch. Defaults to `1` (to decrease build time).
+          
+          Fetch depth `0` required by some MkDocs plugins (e.g., [mkdocs-git-revision-date-localized-plugin](https://pypi.org/project/mkdocs-git-revision-date-localized-plugin/)).
+        type: number
+        required: false
+        default: 1
+
     outputs:
       artifact_name:
         description: The name of the uploaded artifact containing the site.
@@ -53,6 +62,7 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           persist-credentials: false
+          fetch-depth: ${{ inputs.git_fetch_depth }}
 
       - name: Setup Python
         uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
