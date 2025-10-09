@@ -10,10 +10,9 @@ on:
         default: ubuntu-24.04
 
       python_version:
-        description: The version of Python to install.
+        description: The version of Python to install. Defaults to the version specified in the `.python-version` file.
         type: string
         required: false
-        default: latest
 
       mkdocs_version:
         description: The version of MkDocs to install using pip.
