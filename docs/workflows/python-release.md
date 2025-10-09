@@ -1,7 +1,7 @@
 # `python-release.yml`
 
 > [!IMPORTANT]
-> This workflow is still in active development - breaking changes may be implemented in the future.
+> This workflow uses [PyPI Trusted Publishing](https://docs.pypi.org/trusted-publishers/). This feature currently does not support publishing from a reusable workflow. Until this feature is officially supported (see [pypi/warehouse#11096](https://github.com/pypi/warehouse/issues/11096) for status), this reusable workflow serves as a working reference.
 
 A reusable GitHub Actions workflow that automatically builds and releases your Python packages.
 
