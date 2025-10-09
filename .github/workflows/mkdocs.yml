@@ -25,8 +25,14 @@ on:
         type: string
         required: false
 
+      upload_artifact:
+        description: Should the MkDocs build artifact be uploaded? Defaults to `true`.
+        type: boolean
+        required: false
+        default: true
+
       artifact_name:
-        description: The name of the artifact to upload.
+        description: The name of the artifact to upload. Defaults to `mkdocs`.
         type: string
         required: false
         default: mkdocs
@@ -41,6 +47,10 @@ on:
         default: 1
 
     outputs:
+      artifact_uploaded:
+        description: Was the MkDocs build artifact uploaded?
+        value: ${{ inputs.upload_artifact }}
+
       artifact_name:
         description: The name of the uploaded artifact containing the site.
         value: ${{ inputs.artifact_name }}
@@ -86,6 +96,7 @@ jobs:
 
       - name: Create tarball
         id: tar
+        if: inputs.upload_artifact
         working-directory: ${{ env.SITE_DIR }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
@@ -93,6 +104,7 @@ jobs:
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
+        if: inputs.upload_artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: ${{ inputs.artifact_name }}
