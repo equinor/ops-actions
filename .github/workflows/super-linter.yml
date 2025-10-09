@@ -53,6 +53,9 @@ jobs:
           # Ref: https://docs.astral.sh/ruff/
           VALIDATE_PYTHON_FLAKE8: false
           VALIDATE_PYTHON_ISORT: false
+          # For JavaScript, to prevent conflicts, prefer the industry standard ESLint and Prettier over Biome.
+          VALIDATE_BIOME_LINT: false
+          VALIDATE_BIOME_FORMAT: false
           # Terrascan is not actively maintained, which results in outdated errors.
           # For example, if using the nullable argument in a Terraform variable block, Terrascan throws an error.
           # This argument was added in Terraform v1.1 (ref: https://developer.hashicorp.com/terraform/language/values/variables#disallowing-null-input-values).
