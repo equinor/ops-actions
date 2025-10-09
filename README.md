@@ -12,8 +12,8 @@
 ## Features
 
 - ♻ **Reusable workflows** for common operational tasks, simplifying CI/CD pipeline setup.
-- 📦 **Build workflows for multiple languages and frameworks** including Docker, .NET and Python.
-- 🚀 **Deploy workflows for multiple cloud platforms and services** including Azure Web App, Azure Functions and GitHub Pages.
+- 📦 **Build multiple languages and frameworks** including Docker, .NET and Python.
+- 🚀 **Deploy to multiple cloud platforms and services** including Azure Web App, Azure Functions and GitHub Pages.
 - 🔑 **Secretless authentication** where supported.
 - 📝 **Comprehensive documentation** for each workflow, with usage examples.
 - 🤖 **Easy workflow updates** using [Dependabot version updates](#version-updates).
