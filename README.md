@@ -9,6 +9,15 @@
 
 [Reusable GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for common operational tasks.
 
+## Features
+
+- ♻ **Reusable workflows** for common operational tasks, simplifying CI/CD pipeline setup.
+- 📦 **Build workflows for multiple languages and frameworks** including Docker, .NET and Python.
+- 🚀 **Deploy workflows for multiple cloud platforms and services** including Azure Web App, Azure Functions and GitHub Pages.
+- 🔑 **Secretless authentication** where supported.
+- 📝 **Comprehensive documentation** for each workflow, with usage examples.
+- 🤖 **Easy workflow updates** using [Dependabot version updates](#version-updates).
+
 ## Usage
 
 Call a reusable workflow by using the following syntax:
@@ -20,6 +29,7 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/{filename}@{ref}
     with: {}
     secrets: {}
+    permissions: {}
 ```
 
 `{filename}` is the name of a [workflow file](#workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
