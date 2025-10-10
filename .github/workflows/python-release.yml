@@ -70,9 +70,6 @@ jobs:
         run: python -m pip install --upgrade pip build
 
       - name: Generate distributions
-        # The build command will generate a source distribution (`.tar.gz` file)
-        # and a built distribution (`.whl` file) in the `dist` directory.
-        # Ref: https://packaging.python.org/en/latest/tutorials/packaging-projects/#generating-distribution-archives
         run: python -m build
 
       - name: Publish to PyPI
