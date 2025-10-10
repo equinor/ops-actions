@@ -1,5 +1,15 @@
 # Changelog
 
+## [9.26.1](https://github.com/equinor/ops-actions/compare/v9.26.0...v9.26.1) (2025-10-10)
+
+
+### Bug Fixes
+
+* **deps:** bump astral-sh/setup-uv from 6.8.0 to 7.0.0 ([#807](https://github.com/equinor/ops-actions/issues/807)) ([90a0433](https://github.com/equinor/ops-actions/commit/90a043361f744d62a0968d79d192cc3e96ac9955))
+* **deps:** bump databricks/setup-cli from 0.271.0 to 0.272.0 ([#806](https://github.com/equinor/ops-actions/issues/806)) ([93f0c9d](https://github.com/equinor/ops-actions/commit/93f0c9da5a17ce94191cac9da852e134e6bbe463))
+* **deps:** bump github/codeql-action from 3.30.6 to 4.30.7 ([#808](https://github.com/equinor/ops-actions/issues/808)) ([07f737d](https://github.com/equinor/ops-actions/commit/07f737d6f0b5e59ca38967db331dba80284444ae))
+* **super-linter:** disable Biome linter ([#804](https://github.com/equinor/ops-actions/issues/804)) ([cc53259](https://github.com/equinor/ops-actions/commit/cc53259f13569a639b9d0b7f71c1e06cb7720ca1))
+
 ## [9.26.0](https://github.com/equinor/ops-actions/compare/v9.25.0...v9.26.0) (2025-10-09)
 
 
