@@ -1,13 +1,13 @@
-# `python-release.yml`
+# `python-package.yml`
 
 > [!IMPORTANT]
 > This workflow uses [PyPI Trusted Publishing](https://docs.pypi.org/trusted-publishers/). This feature currently does not support publishing from a reusable workflow. Until this feature is officially supported (see [pypi/warehouse#11096](https://github.com/pypi/warehouse/issues/11096) for status), this reusable workflow serves as a working reference.
 
-A reusable GitHub Actions workflow that automatically builds and releases your Python packages.
+A reusable workflow that automatically releases, builds and publishes your Python packages.
 
 ## Key Features
 
-- **Monorepo support**: Manage multiple Python packages in a single GitHub repository.
+- **Automatic version managment:** automated version bumps, CHANGELOG generation and creation of GitHub releases using [Release Please](https://github.com/googleapis/release-please).
 - **Automatic package distribution**: Python source (`.tar.gz`) and built (`.whl`) distributions are automatically published to PyPI.
 - **Secretless publishing** to PyPI using OpenID Connect (OIDC).
 
@@ -87,7 +87,7 @@ on:
 jobs:
   Release:
     name: Release
-    uses: equinor/ops-actions/.github/workflows/python-release.yml@main
+    uses: equinor/ops-actions/.github/workflows/python-package.yml@main
     permissions:
       contents: write
       issues: write

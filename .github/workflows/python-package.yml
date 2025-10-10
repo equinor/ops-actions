@@ -1,7 +1,7 @@
 # Package your Python project.
 # Ref: https://packaging.python.org/en/latest/tutorials/packaging-projects/
 
-name: ♻ python-release
+name: ♻ python-package
 
 on:
   workflow_call:
