@@ -41,23 +41,51 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
           FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}
-          # If triggered by PR, only validate changed files.
-          VALIDATE_ALL_CODEBASE: ${{ github.event_name != 'pull_request' }}
-          # Checkov and JSCPD ignore the above FILTER_REGEX_EXCLUDE, FILTER_REGEX_INCLUDE and VALIDATE_ALL_CODEBASE environment variables.
-          # Explicitly disable these linters to prevent them from being run when they should not.
-          VALIDATE_CHECKOV: false
-          VALIDATE_JSCPD: false
-          # For Python, prefer the Ruff linter over Flake8 and isort.
-          # The Ruff linter is faster than, has feature parity with, and serves as a drop-in replacement for both Flake8 and isort.
-          # The Ruff formatter also has feature parity with Black, however Super-linter does not yet support the Ruff formatter.
-          # Ref: https://docs.astral.sh/ruff/
-          VALIDATE_PYTHON_FLAKE8: false
-          VALIDATE_PYTHON_ISORT: false
-          # Terrascan is not actively maintained, which results in outdated errors.
-          # For example, if using the nullable argument in a Terraform variable block, Terrascan throws an error.
-          # This argument was added in Terraform v1.1 (ref: https://developer.hashicorp.com/terraform/language/values/variables#disallowing-null-input-values).
-          VALIDATE_TERRAFORM_TERRASCAN: false
+
           # Don't create status checks per linter.
           # Create GitHub Actions job summary instead.
           MULTI_STATUS: false
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: true
+
+          # If triggered by PR, only validate changed files.
+          VALIDATE_ALL_CODEBASE: ${{ github.event_name != 'pull_request' }}
+
+          VALIDATE_CSHARP: true
+          VALIDATE_DOTNET_SLN_FORMAT_ANALYZERS: true
+          VALIDATE_DOTNET_SLN_FORMAT_STYLE: true
+          VALIDATE_DOTNET_SLN_FORMAT_WHITESPACE: true
+
+          VALIDATE_HTML: true
+
+          VALIDATE_CSS: true
+
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_JAVASCRIPT_PRETTIER: true
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_TYPESCRIPT_PRETTIER: true
+
+          # Common in both Node.js and ASP.NET projects
+          VALIDATE_EDITORCONFIG: true
+
+          # For Python, prefer the Ruff linter over Flake8 and isort.
+          # The Ruff linter is faster than, has feature parity with, and serves as a drop-in replacement for both Flake8 and isort.
+          # The Ruff formatter also has feature parity with Black, however Super-linter does not yet support the Ruff formatter.
+          # Ref: https://docs.astral.sh/ruff/
+          VALIDATE_PYTHON_RUFF: true
+          VALIDATE_PYTHON_RUFF_FORMAT: true
+          VALIDATE_PYTHON_MYPY: true
+
+          VALIDATE_BASH: true
+
+          VALIDATE_POWERSHELL: true
+
+          VALIDATE_GITHUB_ACTIONS: true
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: true
+
+          VALIDATE_TERRAFORM_FMT: true
+          VALIDATE_TERRAFORM_TFLINT: true
+
+          VALIDATE_JSON: true
+          VALIDATE_YAML: true
+
+          VALIDATE_MARKDOWN: true
