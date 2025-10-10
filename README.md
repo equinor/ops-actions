@@ -15,7 +15,6 @@
 - 📦 **Build multiple languages and frameworks** including Docker, .NET and Python.
 - 🚀 **Deploy to multiple cloud platforms and services** including Azure Web App, Azure Functions and GitHub Pages.
 - 🔑 **Secretless authentication** where supported.
-- 📝 **Comprehensive documentation** for each workflow, with usage examples.
 - 🤖 **Easy workflow updates** using [Dependabot version updates](#version-updates).
 
 ## Usage
@@ -27,9 +26,9 @@ on: [push]
 jobs:
   example:
     uses: equinor/ops-actions/.github/workflows/{filename}@{ref}
+    permissions: {}
     with: {}
     secrets: {}
-    permissions: {}
 ```
 
 `{filename}` is the name of a workflow file in the [workflows directory](.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
