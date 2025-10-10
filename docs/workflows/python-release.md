@@ -15,34 +15,23 @@ A reusable GitHub Actions workflow that automatically builds and releases your P
 
 ### Create Python projects
 
-1. Add a `.python-version` file at the root of your repository, and set your preferred Python version. For example:
+1. Create a packages directory:
 
-    ```plaintext
-    3.12.10
+    ```console
+    mkdir packages && cd packages
     ```
 
-1. Add a `packages/<PROJECT_NAME>/pyproject.toml` configuration file for each Python project in your repository. For example, `packages/example-package/pyproject.toml`:
+1. Create a new project:
 
-    ```toml
-    [build-system]
-    requires = ["hatchling"]
-    build-backend = "hatchling.build"
-
-    [project]
-    name = "example-package"
-    version = "0.0.0"
+    ```console
+    uv init --package <project-name>
     ```
 
-    For instructions on writing your `pyproject.toml` files, please refer to the [official guide](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/).
+    For example, create a new project `example-package`:
 
-1. Add a `packages/<PROJECT_NAME>/src/<MODULE_NAME>/__init__.py` package initialization file for each Python module in your repository. For example, `packages/example-package/src/example_package/__init__.py`.
-
-    ```python
-    __version__ = "0.0.0"
+    ```console
+    uv init --package example-package
     ```
-
-> [!IMPORTANT]
-> Python project names should use hyphens, while Python module names must use underscores ([ref.](https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/#how-do-distribution-package-names-and-import-package-names-compare)).
 
 ### Configure Release Please
 
@@ -72,7 +61,7 @@ A reusable GitHub Actions workflow that automatically builds and releases your P
 For detailed instructions on configuring Release Please, please refer to the [official documentation](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md).
 
 > [!IMPORTANT]
-> The package name specified in `release-please-config.json` should match the project name specified in `pyproject.toml`.
+> The package name specified in `release-please-config.json` should match the name of the project you created in the previous step.
 
 ### Configure GitHub repository
 
