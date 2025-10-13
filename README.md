@@ -25,7 +25,6 @@ on: [push]
 jobs:
   example:
     uses: equinor/ops-actions/.github/workflows/{filename}@{ref}
-    permissions: {}
     with: {}
     secrets: {}
 ```
