@@ -24,10 +24,10 @@ on:
         default: latest
 
       branches:
-        description: A newline-separated string of branches to release on.
+        description: A JSON array of branches to release on.
         type: string
         required: false
-        default: main
+        default: '["main"]'
 
       preset:
         description: Which preset to use for semantic-release.
@@ -36,19 +36,16 @@ on:
         default: conventionalcommits
 
       plugins:
-        description: A newline-separated string of default plugins to use.
+        description: A JSON array of default plugins to use.
         type: string
         required: false
-        default: |-
-          @semantic-release/commit-analyzer
-          @semantic-release/release-notes-generator
-          @semantic-release/github
+        default: '["@semantic-release/commit-analyzer", "@semantic-release/release-notes-generator", "@semantic-release/github"]'
 
       additional_plugins:
-        description: A newline-separated string of additional plugins to install.
+        description: A JSON array of additional plugins to install.
         type: string
         required: false
-        default: conventional-changelog-conventionalcommits
+        default: '["conventional-changelog-conventionalcommits"]'
 
 permissions: {}
 
@@ -60,30 +57,30 @@ jobs:
       contents: read # Required to checkout the repository
     env:
       SEMANTIC_VERSION: ${{ inputs.semantic_version }}
-      BRANCHES: ${{ inputs.branches }}
-      PLUGINS: ${{ inputs.plugins }}
-      ADDITIONAL_PLUGINS: ${{ inputs.additional_plugins }}
+      BRANCHES_JSON: ${{ inputs.branches }}
+      PLUGINS_JSON: ${{ inputs.plugins }}
+      ADDITIONAL_PLUGINS_JSON: ${{ inputs.additional_plugins }}
       PRESET: ${{ inputs.preset }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
-          fetch-depth: 0
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
           node-version: ${{ inputs.node_version }}
 
-      - name: Install additional plugins
+      - name: Install dependencies
         run: |
-          readarray -t plugins_array <<< "$ADDITIONAL_PLUGINS"
-          npm install "${plugins_array[@]}"
+          readarray -t additional_plugins <<< "$(echo "$ADDITIONAL_PLUGINS_JSON" | jq -cr '.[]')"
+          npm install "${additional_plugins[@]}"
 
-      - name: Release
+      - name: Run semantic-release
         run: |
-          readarray -t branches_array <<< "$BRANCHES"
-          readarray -t plugins_array <<< "$PLUGINS"
-          npx "semantic-release@$SEMANTIC_VERSION" --branches "${branches_array[@]}" --plugins "${plugins_array[@]}" --preset "$PRESET"
+          readarray -t branches <<< "$(echo "$BRANCHES_JSON" | jq -cr '.[]')"
+          readarray -t plugins <<< "$(echo "$PLUGINS_JSON" | jq -cr '.[]')"
+          npx "semantic-release@$SEMANTIC_VERSION" --branches "${branches[@]}" --plugins "${plugins[@]}" --preset "$PRESET"
