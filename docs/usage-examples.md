@@ -89,7 +89,7 @@ jobs:
       python_version: latest
       working_directory: "."
       requirements: requirements.txt
-      pip_install_target: .python_packages/lib/site-packages # Required
+      pip_target_dir: .python_packages/lib/site-packages # Required
 
   deploy:
     needs: build
@@ -123,7 +123,7 @@ jobs:
       working_directory: "."
       venv_path: antenv # Required
       requirements: requirements.txt
-      pip_install_target: .python_packages/lib/site-packages # Required
+      pip_target_dir: .python_packages/lib/site-packages # Required
 
   deploy:
     needs: build

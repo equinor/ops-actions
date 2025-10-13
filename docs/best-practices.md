@@ -145,7 +145,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
           required: false
           default: latest
 
-        pip_install_target:
+        pip_target_dir:
           description: The target directory that pip should install packages into.
           type: string
           required: false
@@ -166,8 +166,8 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
         - name: Install requirements
           env:
-            PIP_INSTALL_TARGET: ${{ inputs.pip_install_target }}
-          run: pip install --requirement requirements.txt --target "$PIP_INSTALL_TARGET"
+            PIP_TARGET_DIR: ${{ inputs.pip_target_dir }}
+          run: pip install --requirement requirements.txt --target "$PIP_TARGET_DIR"
   ```
 
 ## Input and outputs
