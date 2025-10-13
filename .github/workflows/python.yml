@@ -91,7 +91,7 @@ jobs:
         id: tar
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar --create --file "$tarball" .
+          tar -cf "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact

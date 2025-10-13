@@ -127,7 +127,7 @@ jobs:
           ARTIFACT_NAME: ${{ inputs.artifact_name }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar --create --file "$tarball" .
+          tar -cf "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
