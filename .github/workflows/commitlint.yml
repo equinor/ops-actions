@@ -27,10 +27,10 @@ on:
         default: latest
 
       extends:
-        description: A newline-separated string of shareable configurations to install. Additional configuration can be set in a file `.commitlintrc` (https://commitlint.js.org/reference/configuration.html).
+        description: A JSON array of shareable configurations to install. Additional configuration can be set in a file `.commitlintrc` (https://commitlint.js.org/reference/configuration.html).
         type: string
         required: false
-        default: "@commitlint/config-conventional"
+        default: '["@commitlint/config-conventional"]'
 
       message:
         description: Commit message to lint. Default is latest commit message.
@@ -53,15 +53,15 @@ jobs:
       contents: read # Required to checkout the repository
     env:
       COMMITLINT_VERSION: ${{ inputs.commitlint_version }}
-      EXTENDS: ${{ inputs.extends }}
+      EXTENDS_JSON: ${{ inputs.extends }}
       MESSAGE: ${{ inputs.message }}
       HELP_URL: ${{ inputs.help_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
-          fetch-depth: 0
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
@@ -70,10 +70,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          readarray -t extends_array <<< "$EXTENDS"
-          npm install "${extends_array[@]}"
+          readarray -t extends <<< "$(echo "$EXTENDS_JSON" | jq -cr '.[]')"
+          npm install "${extends[@]}"
 
-      - name: Lint
+      - name: Run commitlint
         run: |
-          readarray -t extends_array <<< "$EXTENDS"
-          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends_array[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"
+          readarray -t extends <<< "$(echo "$EXTENDS_JSON" | jq -cr '.[]')"
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"
