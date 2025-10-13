@@ -167,7 +167,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
         - name: Install requirements
           env:
             PIP_TARGET_DIR: ${{ inputs.pip_target_dir }}
-          run: pip install --requirement requirements.txt --target "$PIP_TARGET_DIR"
+          run: pip install -r requirements.txt --target "$PIP_TARGET_DIR"
   ```
 
 ## Input and outputs
