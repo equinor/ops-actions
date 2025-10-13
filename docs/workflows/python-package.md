@@ -84,6 +84,8 @@ on:
     branches:
       - main
 
+permissions: {}
+
 jobs:
   Release:
     name: Release
@@ -96,7 +98,7 @@ jobs:
 
 ```
 
-On push to branch `main`, this workflow will automatically build and release your Python packages 🚀
+On push to branch `main`, this workflow will automatically release, build and publish your Python packages 🚀
 
 ## Inputs
 
