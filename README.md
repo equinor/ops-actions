@@ -11,7 +11,7 @@
 ## Features
 
 - ♻ **Reusable workflows** for common operational tasks, simplifying CI/CD pipeline setup.
-- 📦 **Build multiple languages and frameworks** including Docker, .NET and Python.
+- 📦 **Build support for multiple languages and frameworks** including Docker, .NET and Python.
 - 🚀 **Deploy to multiple cloud platforms and services** including Azure Web App, Azure Functions and GitHub Pages.
 - 🔑 **Secretless authentication** where supported.
 - 📝 **Comprehensive documentation** for each workflow, with usage examples.
