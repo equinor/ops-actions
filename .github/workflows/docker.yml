@@ -44,9 +44,10 @@ on:
         default: ${{ github.run_number }}
 
       build_args:
-        description: A list of build arguments to pass to the Docker build command.
+        description: A JSON array of build arguments to pass to the Docker build command.
         type: string
         required: false
+        default: '[]'
 
     secrets:
       DOCKER_PASSWORD:
