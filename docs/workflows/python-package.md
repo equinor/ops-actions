@@ -15,7 +15,13 @@ A reusable workflow that automatically releases, builds and publishes your Pytho
 
 ### Create Python projects
 
-1. Create a packages directory:
+1. Add a `.python-version` file at the root of your repository. For example:
+
+    ```plaintext
+    3.12.10
+    ```
+
+1. Create a packages directory at the root of your repository:
 
     ```console
     mkdir packages && cd packages
