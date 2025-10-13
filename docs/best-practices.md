@@ -170,6 +170,73 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
           run: pip install --requirement requirements.txt --target "$PIP_INSTALL_TARGET"
   ```
 
+## Input and outputs
+
+- For complex type inputs and outputs (i.e., objects and arrays), use JSON strings. For example:
+
+    ```yaml
+    # greetings.yml
+
+    on:
+      workflow_call:
+        inputs:
+          names:
+            description: A JSON array of names to greet.
+            type: string
+            default: "[]"
+    ```
+
+    Use `jq` to parse the JSON string:
+
+    ```yaml
+    jobs:
+      hello:
+        runs-on: ubuntu-24.04
+        steps:
+          - name: Print greetings
+            if: inputs.names != '[]'
+            env:
+              NAMES_JSON: ${{ inputs.names }}
+            run: |
+              readarray -t names <<< "$(echo "$NAMES_JSON" | jq -cr '.[]')"
+              for name in "${names[@]}"; do
+                echo "Hello $name!"
+              done
+    ```
+
+    Alternatively, use the `fromJSON` function to parse the JSON string at the job level, for example to configure a matrix strategy:
+
+    ```yaml
+    jobs:
+      hello:
+        if: inputs.names != '[]'
+        strategy:
+          matrix:
+            name: ${{ fromJSON(inputs.names) }}
+        runs-on: ubuntu-24.04
+        steps:
+          - name: Print greetings
+            env:
+              NAME: ${{ matrix.name }}
+            run: echo "Hello $NAME!"
+    ```
+
+    Example caller workflow:
+
+    ```yaml
+    # hello.yml
+    
+    on:
+      push:
+        branches: [main]
+
+    jobs:
+      main:
+        uses: ./.github/workflows/greetings.yml
+        with:
+          names: '["Kari Nordmann", "Ola Nordmann"]'
+    ```
+
 ## Artifacts
 
 - Workflows that upload or download an artifact must have an input `artifact_name` that specifies the name of the artifact to be uploaded or downloaded.
