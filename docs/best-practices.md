@@ -237,6 +237,20 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
           names: '["Kari Nordmann", "Ola Nordmann"]'
     ```
 
+## Actions vs. command-line programs
+
+A step can run an [action](https://docs.github.com/en/actions/concepts/workflows-and-actions/custom-actions) (a reusable unit of code) or command-line program:
+
+- Actions are generally fine-tuned for GitHub Actions, and are better for setting up the runner and authenticating to cloud providers with OpenID Connect (OIDC).
+- Command-line programs are generally better for building and testing your code.
+
+For example:
+
+1. The `actions/checkout` action checks out the repository on the runner.
+1. The `actions/setup-python` action sets up Python on the runner.
+1. The `python -m build` command-line program generates the Python package distributions.
+1. The `pypa/gh-action-pypi-publish` action publishes the Python package distributions to PyPI with OIDC.
+
 ## Artifacts
 
 - Workflows that upload or download an artifact must have an input `artifact_name` that specifies the name of the artifact to be uploaded or downloaded.
