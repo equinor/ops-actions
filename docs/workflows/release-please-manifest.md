@@ -42,7 +42,7 @@ For detailed instructions on configuring Release Please, please refer to the [of
 1. [Enforce commit squashing for pull requests](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/configuring-commit-squashing-for-pull-requests)
 1. [Allow GitHub Actions to create pull requests](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests)
 
-### (_Optional_) Configure commitlint
+### (*Optional*) Configure commitlint
 
 Use the [commitlint workflow](commitlint.md) to lint PR titles, ensuring that they follow the Conventional Commits specification.
 
@@ -72,7 +72,7 @@ On push to branch `main`, this workflow will automatically create release PRs ba
 
 ## Inputs
 
-### (_Optional_) `runs_on`
+### (*Optional*) `runs_on`
 
 The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
 
