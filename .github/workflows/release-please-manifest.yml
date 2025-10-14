@@ -15,7 +15,7 @@ on:
         value: ${{ jobs.release-please.outputs.releases_created }}
 
       paths_released:
-        description: A JSON array of paths that had releases created, `[]` if nothing was released. Use the `fromJSON` function to convert this value to an array that can be used to define a matrix strategy job. 
+        description: A JSON array of paths that had releases created, `[]` if nothing was released. Use the `fromJSON` function to convert this value to an array that can be used to define a matrix strategy job.
         value: ${{ jobs.release-please.outputs.paths_released }}
 
 permissions: {}
