@@ -76,8 +76,8 @@ jobs:
         env:
           ARTIFACT_NAME: ${{ inputs.artifact_name }}
         run: |
-          tarball="$ARTIFACT_NAME.tar.gz"
-          tar -xzf "$tarball"
+          tarball="$ARTIFACT_NAME.tar"
+          tar -xf "$tarball"
           rm "$tarball"
 
       - name: Login to Azure
