@@ -1,0 +1,40 @@
+name: ♻ release-please-manifest
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
+    outputs:
+      releases_created:
+        description: "`true` if any release was created, else `false`."
+        value: ${{ jobs.release-please.outputs.releases_created }}
+
+      paths_released:
+        description: A JSON array of paths that had releases created, `[]` if nothing was released. Use the `fromJSON` function to convert this value to an array that can be used to define a matrix strategy job. 
+        value: ${{ jobs.release-please.outputs.paths_released }}
+
+permissions: {}
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: write # Required to update changelog file
+      pull-requests: write # Required to create release PRs
+    steps:
+      - name: Release Please
+        id: release-please
+        uses: googleapis/release-please-action@c2a5a2bd6a758a0937f1ddb1e8950609867ed15c
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+    outputs:
+      releases_created: ${{ steps.release-please.outputs.releases_created }}
+      paths_released: ${{ steps.release-please.outputs.paths_released }}
