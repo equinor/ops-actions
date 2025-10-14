@@ -249,8 +249,8 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
     env:
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
     run: |
-      tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-      tar -cf "$tarball" .
+      tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar.gz"
+      tar -czf "$tarball" .
       echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
   - name: Upload artifact
@@ -274,7 +274,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
     env:
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
     run: |
-      tarball="$ARTIFACT_NAME.tar"
-      tar -xf "$tarball"
+      tarball="$ARTIFACT_NAME.tar.gz"
+      tar -xzf "$tarball"
       rm "$tarball"
   ```
