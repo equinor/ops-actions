@@ -9,11 +9,11 @@ on:
         required: false
         default: ubuntu-24.04
 
-      environment:
-        description: The name of the GitHub environment that this workflow should use for publishing. Defaults to `pypi`.
-        type: string
-        required: false
-        default: pypi
+      # environment:
+      #   description: The name of the GitHub environment that this workflow should use for publishing. Defaults to `pypi`.
+      #   type: string
+      #   required: false
+      #   default: pypi
 
       working_directory:
         description: The path of the directory containing the Python project to build. Defaults to `.`.
@@ -26,6 +26,11 @@ on:
         type: string
         required: false
         default: python-package-dist
+
+    outputs:
+      artifact_name:
+        description: The name of the uploaded build artifact.
+        value: ${{ inputs.artifact_name }}
 
 permissions: {}
 
@@ -62,19 +67,22 @@ jobs:
           name: ${{ inputs.artifact_name }}
           path: ${{ inputs.working_directory }}/dist
 
-  pypi-publish:
-    name: PyPI Publish
-    needs: python-build
-    runs-on: ${{ inputs.runs_on }}
-    environment: ${{ inputs.environment }}
-    permissions:
-      id-token: write # Required for PyPI Trusted Publishing.
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
-        with:
-          name: ${{ inputs.artifact_name }}
-          path: dist
+  # Reusable workflows are currently not supported for PyPI Trusted Publishing.
+  # Ref: https://docs.pypi.org/trusted-publishers/troubleshooting/#reusable-workflows-on-github
 
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e
+  # pypi-publish:
+  #   name: PyPI Publish
+  #   needs: python-build
+  #   runs-on: ${{ inputs.runs_on }}
+  #   environment: ${{ inputs.environment }}
+  #   permissions:
+  #     id-token: write # Required for PyPI Trusted Publishing.
+  #   steps:
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+  #       with:
+  #         name: ${{ inputs.artifact_name }}
+  #         path: dist
+
+  #     - name: Publish to PyPI
+  #       uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e

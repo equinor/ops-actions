@@ -1,8 +1,5 @@
 # `python-package.yml`
 
-> [!IMPORTANT]
-> This workflow uses [PyPI Trusted Publishing](https://docs.pypi.org/trusted-publishers/). This feature currently does not support publishing from a reusable workflow. Until this feature is officially supported (see [pypi/warehouse#11096](https://github.com/pypi/warehouse/issues/11096) for status), this reusable workflow serves as a working reference.
-
 A reusable workflow that automatically builds and publishes your Python packages.
 
 ## Key Features
@@ -49,8 +46,26 @@ jobs:
     name: Build
     uses: equinor/ops-actions/.github/workflows/python-package.yml@main
     permissions:
-      contents: write
-      id-token: write
+      contents: read
+
+  # Reusable workflows are currently not supported for PyPI Trusted Publishing.
+  # Ref: https://docs.pypi.org/trusted-publishers/troubleshooting/#reusable-workflows-on-github
+  pypi-publish:
+    name: PyPI Publish
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write # Required for PyPI Trusted Publishing.
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: ${{ needs.build.outputs.artifact_name }}
+          path: dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e
 
 ```
 
@@ -61,10 +76,6 @@ On push to branch `main`, this workflow will automatically build and publish you
 ### (*Optional*) `runs_on`
 
 The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
-
-### (*Optional*) `environment`
-
-The name of the GitHub environment that this workflow should use for publishing. Defaults to `pypi`.
 
 ### (*Optional*) `working_directory`
 
