@@ -83,7 +83,21 @@ The path of the directory containing the Python project to build. Defaults to `.
 
 ### (*Optional*) `artifact_name`
 
-The name of the build artifact to upload. Defaults to `python-package-dist`.
+The name of the build artifact. Defaults to `python-package-dist`.
+
+### (*Optional*) `upload_artifact`
+
+Should the build artifact be uploaded? Defaults to `true`.
+
+## Outputs
+
+### `artifact_name`
+
+The name of the build artifact.
+
+### `artifact_uploaded`
+
+Was the build artifact uploaded? Value is `"true"` if the build artifact was uploaded, else `"false"`.
 
 ## References
 
