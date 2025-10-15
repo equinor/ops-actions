@@ -22,15 +22,25 @@ on:
         default: "."
 
       artifact_name:
-        description: The name of the build artifact to upload. Defaults to `python-package-dist`.
+        description: The name of the build artifact. Defaults to `python-package-dist`.
         type: string
         required: false
         default: python-package-dist
 
+      upload_artifact:
+        description: Should the build artifact be uploaded? Defaults to `true`.
+        type: boolean
+        required: false
+        default: true
+
     outputs:
       artifact_name:
-        description: The name of the uploaded build artifact.
+        description: The name of the build artifact.
         value: ${{ inputs.artifact_name }}
+
+      artifact_uploaded:
+        description: Was the build artifact uploaded? Value is `"true"` if the build artifact was uploaded, else `"false"`.
+        value: ${{ jobs.python-build.outputs.artifact-uploaded }}
 
 permissions: {}
 
@@ -62,10 +72,15 @@ jobs:
         run: python -m build
 
       - name: Upload artifact
+        id: upload-artifact
+        if: ${{ inputs.upload_artifact }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ inputs.working_directory }}/dist
+
+    outputs:
+      artifact-uploaded: ${{ steps.upload-artifact.outcome == 'success' }}
 
   # Reusable workflows are currently not supported for PyPI Trusted Publishing.
   # Ref: https://docs.pypi.org/trusted-publishers/troubleshooting/#reusable-workflows-on-github
@@ -73,6 +88,7 @@ jobs:
   # pypi-publish:
   #   name: PyPI Publish
   #   needs: python-build
+  #   if: needs.python-build.outputs.artifact-uploaded
   #   runs-on: ${{ inputs.runs_on }}
   #   environment: ${{ inputs.environment }}
   #   permissions:
