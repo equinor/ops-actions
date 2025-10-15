@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.27.0](https://github.com/equinor/ops-actions/compare/v9.26.1...v9.27.0) (2025-10-15)
+
+
+### Features
+
+* add workflow `release-please-manifest.yml` ([#814](https://github.com/equinor/ops-actions/issues/814)) ([6f234d7](https://github.com/equinor/ops-actions/commit/6f234d71d5d842b5c0f1ab40b91a9fe0112dd1a4))
+* **python-package:** add output `artifact_name` ([#818](https://github.com/equinor/ops-actions/issues/818)) ([5be59af](https://github.com/equinor/ops-actions/commit/5be59af74dd895e735bf372346411bbf924e96f4))
+
+
+### Bug Fixes
+
+* **deps:** bump github/codeql-action from 4.30.7 to 4.30.8 ([#812](https://github.com/equinor/ops-actions/issues/812)) ([0254ecc](https://github.com/equinor/ops-actions/commit/0254eccdc3a46e2649fba2f5c177c49a767ed7a7))
+* **release-please:** add missing permission `issues: write` ([#815](https://github.com/equinor/ops-actions/issues/815)) ([ff41fd3](https://github.com/equinor/ops-actions/commit/ff41fd31d389a6fdd785484e755838497eafb74b))
+
 ## [9.26.1](https://github.com/equinor/ops-actions/compare/v9.26.0...v9.26.1) (2025-10-10)
 
 
