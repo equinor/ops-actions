@@ -46,8 +46,7 @@ jobs:
     name: Build
     uses: equinor/ops-actions/.github/workflows/python-package.yml@main
     permissions:
-      contents: write
-      id-token: write
+      contents: read
 
   # Reusable workflows are currently not supported for PyPI Trusted Publishing.
   # Ref: https://docs.pypi.org/trusted-publishers/troubleshooting/#reusable-workflows-on-github
