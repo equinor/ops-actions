@@ -29,15 +29,17 @@ uv init --name example-package --package .
 
 ## Usage
 
-Add a GitHub Actions workflow file `.github/workflows/publish.yml` in your repository, and add the following recommended configuration:
+### Manual release
+
+Add a GitHub Actions workflow file `.github/workflows/release.yml` in your repository, and add the following recommended configuration:
 
 ```yaml
-name: Publish to PyPI
+name: Release
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types:
+      - published
 
 permissions: {}
 
@@ -66,10 +68,64 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e
-
 ```
 
-On push to branch `main`, this workflow will automatically build and publish your Python package to PyPI.
+When a GitHub release is published in your repository, this workflow will automatically build and publish your package.
+
+### Automated release
+
+To automate the creation of GitHub releases, add the `release-please.yml` reusable workflow to your workflow file:
+
+```yaml
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  release:
+    name: Release
+    uses: equinor/ops-actions/.github/workflows/release-please.yml@main
+    with:
+      release_type: python
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+  build:
+    name: Build
+    needs: release
+    if: needs.release.outputs.release_created == 'true'
+    uses: equinor/ops-actions/.github/workflows/python-package.yml@main
+    permissions:
+      contents: read
+
+  # Reusable workflows are currently not supported for PyPI Trusted Publishing.
+  # Ref: https://docs.pypi.org/trusted-publishers/troubleshooting/#reusable-workflows-on-github
+  pypi-publish:
+    name: PyPI Publish
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write # Required for PyPI Trusted Publishing.
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: ${{ needs.build.outputs.artifact_name }}
+          path: dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e
+```
+
+On push to branch `main`, this workflow will automatically release, build and publish your package.
 
 ## Inputs
 
