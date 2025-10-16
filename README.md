@@ -57,6 +57,10 @@ The [GitHub Actions extension for Visual Studio Code](https://marketplace.visual
 
 We perform [user acceptance tests](https://en.wikipedia.org/wiki/Acceptance_testing#User_acceptance_testing) for reusable workflows.
 
+## Versioning
+
+This project follows [Semantic Versioning](https://semver.org/).
+
 ## Contributing
 
 See [contributing guidelines](CONTRIBUTING.md).
