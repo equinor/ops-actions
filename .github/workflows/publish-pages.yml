@@ -1,0 +1,23 @@
+name: Publish Docs
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/mkdocs.yml
+    with:
+      upload_artifact: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+  deploy:
+    name: Deploy
+    needs: build
+    if: needs.build.outputs.artifact_uploaded == 'true'
+    uses: ./.github/workflows/github-pages.yml
+    with:
+      artifact_name: ${{ needs.build.outputs.artifact_name }}
