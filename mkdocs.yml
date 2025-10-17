@@ -1,0 +1,44 @@
+site_name: ops-actions
+site_description: Reusable GitHub Actions workflows for common operational tasks.
+site_author: Team Cyclops
+site_url: https://equinor.github.io/ops-actions/
+
+repo_name: equinor/ops-actions
+repo_url: https://github.com/equinor/ops-actions
+edit_uri: edit/main/docs/ # Configure "Edit this page" button to redirect to "<repo_url>/<edit_uri>/<doc_path>", where "<doc_path>" is the path of the currently viewed Markdown document as configured in "nav".
+
+copyright: Copyright &copy; 2025 Equinor
+
+theme:
+  name: material
+  palette:
+    primary: black
+  icon:
+    logo: fontawesome/solid/rocket
+    repo: fontawesome/brands/github
+  features:
+    - navigation.sections
+    - content.action.edit # Enables "Edit this page" button.
+    - content.code.copy # Enables "Copy to clipboard" button for code blocks.
+
+markdown_extensions:
+  # Enable syntax highlighting of code blocks.
+  - pymdownx.superfences
+  - pymdownx.highlight
+
+  # Enable the Snippets extension to add the ability to embed content from
+  # external files.
+  # Ref: https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/#snippets
+  - pymdownx.snippets
+
+nav:
+  - Home: index.md
+  - Workflows:
+      - workflows/commitlint.md
+      - workflows/python-package.md
+      - workflows/release-please-manifest.md
+      - workflows/release-please.md
+      - workflows/terraform.md
+  - Development:
+      - best-practices.md
+      - Changelog: changelog.md
