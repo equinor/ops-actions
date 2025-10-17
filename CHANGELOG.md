@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.28.0](https://github.com/equinor/ops-actions/compare/v9.27.0...v9.28.0) (2025-10-17)
+
+
+### Features
+
+* **python-package:** toggle whether build artifact should be uploaded ([#819](https://github.com/equinor/ops-actions/issues/819)) ([3e6aa76](https://github.com/equinor/ops-actions/commit/3e6aa7652940db0420cfe0ed1e39136b5dcb12ed))
+
 ## [9.27.0](https://github.com/equinor/ops-actions/compare/v9.26.1...v9.27.0) (2025-10-15)
 
 
