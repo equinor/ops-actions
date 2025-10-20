@@ -12,6 +12,7 @@ jobs:
     name: Build
     uses: ./.github/workflows/mkdocs.yml
     with:
+      requirements: requirements-docs.txt
       upload_artifact: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
   deploy:
