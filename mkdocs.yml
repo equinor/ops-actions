@@ -13,6 +13,8 @@ theme:
   name: material
   palette:
     primary: black
+  icon:
+    repo: fontawesome/brands/github
   features:
     - navigation.sections
     - content.action.edit # Enables "Edit this page" button.
