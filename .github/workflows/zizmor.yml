@@ -1,4 +1,4 @@
-name: GitHub Actions Security Analysis with zizmor 🌈
+name: ♻ GitHub Actions Security Analysis with zizmor 🌈
 
 on:
   workflow_call:
@@ -7,7 +7,7 @@ on:
         description: The path to the zizmor configuration file.
         type: string
         required: false
-        default: ./.github/zizmor.yml
+        default: .github/zizmor.yml
       output_file:
         description: The path to the output file.
         type: string
