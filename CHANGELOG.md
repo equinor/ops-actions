@@ -1,5 +1,20 @@
 # Changelog
 
+## [9.28.0](https://github.com/equinor/ops-actions/compare/v9.27.0...v9.28.0) (2025-10-21)
+
+
+### Features
+
+* **python-package:** toggle whether build artifact should be uploaded ([#819](https://github.com/equinor/ops-actions/issues/819)) ([3e6aa76](https://github.com/equinor/ops-actions/commit/3e6aa7652940db0420cfe0ed1e39136b5dcb12ed))
+
+
+### Bug Fixes
+
+* **deps:** bump actions/setup-node from 5.0.0 to 6.0.0 ([#830](https://github.com/equinor/ops-actions/issues/830)) ([17b6824](https://github.com/equinor/ops-actions/commit/17b68249826f6298bf9bbde1cfca9eeb85528049))
+* **deps:** bump databricks/setup-cli from 0.272.0 to 0.273.0 ([#827](https://github.com/equinor/ops-actions/issues/827)) ([8fd7f2a](https://github.com/equinor/ops-actions/commit/8fd7f2ab3ef929ced00d7fd67e15a47958f3370a))
+* **deps:** bump github/codeql-action from 4.30.8 to 4.30.9 ([#829](https://github.com/equinor/ops-actions/issues/829)) ([b2c15da](https://github.com/equinor/ops-actions/commit/b2c15da5f253c56714d2f31ab91858be106169f6))
+* **deps:** bump super-linter/super-linter from 8.2.0 to 8.2.1 ([#828](https://github.com/equinor/ops-actions/issues/828)) ([c54b836](https://github.com/equinor/ops-actions/commit/c54b8368c0e4e36ca7eb57084467a5dcea5c1572))
+
 ## [9.27.0](https://github.com/equinor/ops-actions/compare/v9.26.1...v9.27.0) (2025-10-15)
 
 
