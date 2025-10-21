@@ -1,0 +1,103 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: ♻ Trivy Infrastructure as Code (IaC) and Container Scan 🛡️
+
+on:
+  workflow_call:
+    inputs:
+      scan_iac:
+        description: Whether to run Trivy in Infrastructure as Code (IaC) scanning mode.
+        type: boolean
+        required: false
+        default: true
+
+      scan_containers:
+        description: Whether to run Trivy in container image scanning mode.
+        type: boolean
+        required: false
+        default: false
+
+      image_name:
+        description: The name of the container image to scan (required if scan_containers is true).
+        type: string
+        required: false
+
+      context_path:
+        description: The build context path for the Docker image (required if scan_containers is true).
+        type: string
+        required: false
+        default: .
+
+permissions: {}
+
+jobs:
+  trivy:
+    name: Trivy Scan
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Validate container scan inputs
+        if: inputs.scan_containers
+        run: |
+          if [ -z "$IMAGE_NAME" ]; then
+            echo "❌ Error: image_name is required when scan_containers is true"
+            exit 1
+          fi
+          echo "✅ Container scan inputs validated"
+        env:
+          IMAGE_NAME: ${{ inputs.image_name }}
+
+      - name: Build an image from Dockerfile
+        if: inputs.scan_containers
+        env:
+          IMAGE_NAME: ${{ inputs.image_name }}
+          CONTEXT_PATH: ${{ inputs.context_path }}
+        run: |
+          echo "🐳 Building Docker image: $IMAGE_NAME"
+          docker build -t "$IMAGE_NAME" "$CONTEXT_PATH"
+          echo "✅ Docker image built successfully"
+
+      - name: Run Trivy vulnerability scanner on container image
+        if: inputs.scan_containers
+        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # v0.33.1
+        with:
+          image-ref: ${{ inputs.image_name }}
+          format: sarif
+          output: trivy-container-results.sarif
+
+      - name: Upload Trivy container scan results to GitHub Security tab
+        if: inputs.scan_containers
+        uses: github/codeql-action/upload-sarif@16140ae1a102900babc80a33c44059580f687047 # v4.30.9
+        with:
+          sarif_file: "trivy-container-results.sarif"
+
+      - name: Run Trivy vulnerability scanner in IaC mode
+        if: inputs.scan_iac
+        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # v0.33.1
+        with:
+          scan-type: "config"
+          hide-progress: false
+          format: sarif
+          exit-code: "0"
+          ignore-unfixed: true
+          severity: "CRITICAL,HIGH"
+          output: trivy-iac-results.sarif
+          limit-severities-for-sarif: true
+
+      - name: Upload Trivy IaC scan results to GitHub Security tab
+        if: inputs.scan_iac
+        uses: github/codeql-action/upload-sarif@16140ae1a102900babc80a33c44059580f687047 # v4.30.9
+        with:
+          sarif_file: "trivy-iac-results.sarif"
