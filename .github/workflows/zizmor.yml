@@ -1,0 +1,62 @@
+name: ♻ GitHub Actions Security Analysis with zizmor 🌈
+
+on:
+  workflow_call:
+    inputs:
+      config_file:
+        description: The path to the zizmor configuration file.
+        type: string
+        required: false
+        default: .github/zizmor.yml
+      output_file:
+        description: The path to the output file.
+        type: string
+        required: false
+        default: results.sarif
+
+permissions: {}
+
+jobs:
+  zizmor:
+    name: zizmor latest via PyPI
+    runs-on: ubuntu-24.04
+    permissions:
+      security-events: write # needed for SARIF uploads
+      contents: read # only needed for private repos
+      actions: read # only needed for private repos
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@b75a909f75acd358c2196fb9a5f1299a9a8868a4 # v6.7.0
+
+      - name: Validate inputs
+        run: |
+          if [[ ! "$CONFIG_FILE" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
+            echo "Invalid config file path"
+            exit 1
+          fi
+          if [[ ! "$OUTPUT_FILE" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
+            echo "Invalid output file path"
+            exit 1
+          fi
+        env:
+          CONFIG_FILE: ${{ inputs.config_file }}
+          OUTPUT_FILE: ${{ inputs.output_file }}
+
+      - name: Run zizmor 🌈
+        run: uvx zizmor --format=sarif --config "$CONFIG_FILE" . > "$OUTPUT_FILE"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG_FILE: ${{ inputs.config_file }}
+          OUTPUT_FILE: ${{ inputs.output_file }}
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@192325c86100d080feab897ff886c34abd4c83a3 # v3.30.3
+        with:
+          sarif_file: ${{ inputs.output_file }}
+          category: zizmor
