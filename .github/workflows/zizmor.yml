@@ -37,18 +37,16 @@ jobs:
         env:
           CONFIG_FILE: ${{ inputs.config_file }}
 
-      - name: Run zizmor with config file 🌈
-        if: inputs.config_file != ''
-        run: uvx zizmor --format=sarif --config "$CONFIG_FILE" . > results.sarif
+      - name: Run zizmor 🌈
+        run: |
+          optional_args=()
+          if [[ -n "$CONFIG_FILE" ]]; then
+            optional_args+=(--config "$CONFIG_FILE")
+          fi
+          uvx zizmor --format=sarif "${optional_args[@]}" . > results.sarif
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CONFIG_FILE: ${{ inputs.config_file }}
-
-      - name: Run zizmor without config file 🌈
-        if: inputs.config_file == ''
-        run: uvx zizmor --format=sarif . > results.sarif
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@192325c86100d080feab897ff886c34abd4c83a3 # v3.30.3
