@@ -7,12 +7,6 @@ on:
         description: The path to the zizmor configuration file.
         type: string
         required: false
-        default: .github/zizmor.yml
-      output_file:
-        description: The path to the output file.
-        type: string
-        required: false
-        default: results.sarif
 
 permissions: {}
 
@@ -40,23 +34,22 @@ jobs:
             echo "Invalid config file path"
             exit 1
           fi
-          if [[ ! "$OUTPUT_FILE" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
-            echo "Invalid output file path"
-            exit 1
-          fi
         env:
           CONFIG_FILE: ${{ inputs.config_file }}
-          OUTPUT_FILE: ${{ inputs.output_file }}
 
       - name: Run zizmor 🌈
-        run: uvx zizmor --format=sarif --config "$CONFIG_FILE" . > "$OUTPUT_FILE"
+        run: |
+          optional_args=()
+          if [[ -n "$CONFIG_FILE" ]]; then
+            optional_args+=(--config "$CONFIG_FILE")
+          fi
+          uvx zizmor --format=sarif "${optional_args[@]}" . > results.sarif
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CONFIG_FILE: ${{ inputs.config_file }}
-          OUTPUT_FILE: ${{ inputs.output_file }}
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@192325c86100d080feab897ff886c34abd4c83a3 # v3.30.3
         with:
-          sarif_file: ${{ inputs.output_file }}
+          sarif_file: results.sarif
           category: zizmor
