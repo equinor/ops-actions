@@ -38,6 +38,12 @@ on:
         required: false
         default: ${{ github.run_number }}
 
+      allow-no-subscription:
+        description: Allow Azure login to authenticate without a subscription ID.
+        type: boolean
+        required: false
+        default: false
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -45,7 +51,7 @@ on:
 
       AZURE_SUBSCRIPTION_ID:
         description: The ID of the Azure subscription to authenticate to.
-        required: true
+        required: false
 
       AZURE_TENANT_ID:
         description: The ID of the Microsoft Entra tenant to authenticate to.
@@ -91,6 +97,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          allow-no-subscriptions: ${{ inputs.allow-no-subscription }}
 
       - name: Login to ACR
         env:
