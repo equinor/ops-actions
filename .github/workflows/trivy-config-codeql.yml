@@ -6,7 +6,13 @@
 name: ♻ Trivy Infrastructure as Code (IaC) and Container Scan 🛡️
 
 on:
-  workflow_call: {}
+  workflow_call:
+    inputs:
+      severity:
+        description: The severity levels to include in the scan results.
+        type: string
+        required: false
+        default: "CRITICAL,HIGH"
 
 permissions: {}
 
@@ -33,7 +39,7 @@ jobs:
           format: sarif
           exit-code: "0"
           ignore-unfixed: true
-          severity: "CRITICAL,HIGH"
+          severity: ${{ inputs.severity }}
           output: trivy-iac-results.sarif
           limit-severities-for-sarif: true
 
