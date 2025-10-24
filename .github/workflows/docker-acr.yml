@@ -91,6 +91,9 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          # Don't require access to the subscription control plane. Required for
+          # service principals that only have access to the ACR data plane,
+          # e.g., service principals with the "AcrPush" role at the ACR scope.
           allow-no-subscriptions: true
 
       - name: Login to ACR
