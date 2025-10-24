@@ -44,8 +44,8 @@ on:
         required: true
 
       AZURE_SUBSCRIPTION_ID:
-        description: The ID of the Azure subscription to authenticate to.
-        required: true
+        description: The ID of an Azure subscription to authenticate to.
+        required: false
 
       AZURE_TENANT_ID:
         description: The ID of the Microsoft Entra tenant to authenticate to.
@@ -91,6 +91,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
 
       - name: Login to ACR
         env:
