@@ -1,4 +1,4 @@
-name: ♻ GitHub Actions Security Analysis with zizmor 🌈 with upload to CodeQL
+name: ♻ GitHub Actions Security Analysis with zizmor with upload to CodeQL
 
 on:
   workflow_call:
