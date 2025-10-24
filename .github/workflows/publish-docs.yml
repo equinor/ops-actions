@@ -7,6 +7,8 @@ on:
   pull_request:
     branches: [main]
 
+permissions: {}
+
 jobs:
   build:
     name: Build
@@ -14,6 +16,8 @@ jobs:
     with:
       requirements: requirements-docs.txt
       upload_artifact: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    permissions:
+      contents: read
 
   deploy:
     name: Deploy
@@ -22,3 +26,6 @@ jobs:
     uses: ./.github/workflows/github-pages.yml
     with:
       artifact_name: ${{ needs.build.outputs.artifact_name }}
+    permissions:
+      pages: write
+      id-token: write
