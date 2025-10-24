@@ -1,4 +1,4 @@
-# `zizmor.yml`
+# `zizmor-codeql.yml`
 
 A reusable GitHub Actions workflow for running the Zizmor linter, and uploading the results to Github Actions.
 
@@ -49,7 +49,7 @@ jobs:
       actions: read
       contents: read
       security-events: write
-    uses: equinor/ops-actions/.github/workflows/zizmor.yml@main
+    uses: equinor/ops-actions/.github/workflows/zizmor-codeql.yml@main
     with:
       config_file: .github/zizmor.yml
 ```
