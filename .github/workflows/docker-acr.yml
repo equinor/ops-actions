@@ -38,7 +38,7 @@ on:
         required: false
         default: ${{ github.run_number }}
 
-      allow-no-subscription:
+      allow-no-subscriptions:
         description: Allow Azure login to authenticate without a subscription ID.
         type: boolean
         required: false
@@ -97,7 +97,8 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          allow-no-subscriptions: ${{ inputs.allow-no-subscription }}
+          allow-no-subscriptions: ${{ inputs.allow-no-subscriptions }}
+          auth-type: ${{ inputs.allow-no-subscriptions && 'IDENTITY' || 'SERVICE_PRINCIPAL' }}
 
       - name: Login to ACR
         env:
