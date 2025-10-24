@@ -43,13 +43,13 @@ on:
         description: The client ID of the service principal to use for authenticating to Azure.
         required: true
 
-      AZURE_SUBSCRIPTION_ID:
-        description: The ID of an Azure subscription to authenticate to.
-        required: false
-
       AZURE_TENANT_ID:
         description: The ID of the Microsoft Entra tenant to authenticate to.
         required: true
+
+      AZURE_SUBSCRIPTION_ID:
+        description: (Deprecated) The ID of an Azure subscription to authenticate to.
+        required: false
 
     outputs:
       image:
@@ -89,7 +89,6 @@ jobs:
         uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           # Don't require access to the subscription control plane. Required for
           # service principals that only have access to the ACR data plane,
