@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.29.0](https://github.com/equinor/ops-actions/compare/v9.28.0...v9.29.0) (2025-10-24)
+
+
+### Features
+
+* add trivy reusable workflow ([#832](https://github.com/equinor/ops-actions/issues/832)) ([14e795d](https://github.com/equinor/ops-actions/commit/14e795dacee614fbd65db85b9860256b6f17969e))
+* add zizmor reusable workflow ([#826](https://github.com/equinor/ops-actions/issues/826)) ([98550ee](https://github.com/equinor/ops-actions/commit/98550eee60c0f246e28f528436b8ed6611654ecd))
+* rename zizmor workflow ([#838](https://github.com/equinor/ops-actions/issues/838)) ([ebec794](https://github.com/equinor/ops-actions/commit/ebec794e0f8a41f8169903bc80aa809f4246d138))
+
+
+### Bug Fixes
+
+* remove output_file parameter and change config_file parameter ([#836](https://github.com/equinor/ops-actions/issues/836)) ([dd822d6](https://github.com/equinor/ops-actions/commit/dd822d65d8106f32316acb1a23d67d7959fa2f89))
+
 ## [9.28.0](https://github.com/equinor/ops-actions/compare/v9.27.0...v9.28.0) (2025-10-21)
 
 
