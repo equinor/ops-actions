@@ -14,6 +14,7 @@
 - 📦 **Build support for multiple languages and frameworks** including Docker, .NET and Python.
 - 🚀 **Deploy to multiple cloud platforms and services** including Azure Web App, Azure Functions and GitHub Pages.
 - 🔑 **Secretless authentication** where supported.
+- 🛡️ **Security scanning** using static analysis tools (e.g., CodeQL, Trivy, zizmor).
 - 📝 **Comprehensive documentation** for each workflow, with usage examples.
 - 🤖 **Easy workflow updates** using [Dependabot version updates](#version-updates).
 
