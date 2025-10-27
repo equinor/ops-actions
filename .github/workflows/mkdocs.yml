@@ -99,7 +99,7 @@ jobs:
           STRICT_MODE: ${{ inputs.strict_mode }}
         run: |
           optional_args=()
-          if [[ "$STRICT_MODE" ]]; then
+          if [[ "$STRICT_MODE" == "true" ]]; then
             optional_args+=(--strict)
           fi
           mkdocs build --site-dir "$SITE_DIR" "${optional_args[@]}"
