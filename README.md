@@ -1,10 +1,10 @@
 # ops-actions
 
 [![GitHub Release](https://img.shields.io/github/v/release/equinor/ops-actions)](https://github.com/equinor/ops-actions/releases/latest)
+[![GitHub License](https://img.shields.io/github/license/equinor/ops-actions?color=blue)](LICENSE)
 [![GitHub contributors](https://img.shields.io/github/contributors/equinor/ops-actions)](https://github.com/equinor/ops-actions/graphs/contributors)
 [![GitHub Issues](https://img.shields.io/github/issues/equinor/ops-actions)](https://github.com/equinor/ops-actions/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/equinor/ops-actions)](https://github.com/equinor/ops-actions/pulls)
-[![GitHub License](https://img.shields.io/github/license/equinor/ops-actions)](LICENSE)
 
 [Reusable GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for common operational tasks.
 
