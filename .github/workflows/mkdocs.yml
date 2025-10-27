@@ -25,6 +25,12 @@ on:
         type: string
         required: false
 
+      strict_mode:
+        description: Should strict mode be enabled? This will cause MkDocs to abort the build on any warnings.
+        type: boolean
+        required: false
+        default: false 
+
       upload_artifact:
         description: Should the MkDocs build artifact be uploaded? Defaults to `true`.
         type: boolean
@@ -89,7 +95,14 @@ jobs:
         run: pip install -r "$REQUIREMENTS"
 
       - name: MkDocs Build
-        run: mkdocs build --site-dir "$SITE_DIR"
+        env:
+          STRICT_MODE: ${{ inputs.strict_mode }}
+        run: |
+          optional_args=()
+          if [[ "$STRICT_MODE" == "true" ]]; then
+            optional_args+=(--strict)
+          fi
+          mkdocs build --site-dir "$SITE_DIR" "${optional_args[@]}"
 
       - name: Create tarball
         id: tar
