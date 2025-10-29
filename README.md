@@ -1,11 +1,5 @@
 # ops-actions
 
-[![GitHub Release](https://img.shields.io/github/v/release/equinor/ops-actions)](https://github.com/equinor/ops-actions/releases/latest)
-[![GitHub contributors](https://img.shields.io/github/contributors/equinor/ops-actions)](https://github.com/equinor/ops-actions/graphs/contributors)
-[![GitHub Issues](https://img.shields.io/github/issues/equinor/ops-actions)](https://github.com/equinor/ops-actions/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/equinor/ops-actions)](https://github.com/equinor/ops-actions/pulls)
-[![GitHub License](https://img.shields.io/github/license/equinor/ops-actions)](LICENSE)
-
 [Reusable GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for common operational tasks.
 
 ## Features
@@ -14,6 +8,7 @@
 - 📦 **Build support for multiple languages and frameworks** including Docker, .NET and Python.
 - 🚀 **Deploy to multiple cloud platforms and services** including Azure Web App, Azure Functions and GitHub Pages.
 - 🔑 **Secretless authentication** where supported.
+- 🛡️ **Security scanning** using static analysis tools, including CodeQL, Trivy and zizmor.
 - 📝 **Comprehensive documentation** for each workflow, with usage examples.
 - 🤖 **Easy workflow updates** using [Dependabot version updates](#version-updates).
 
