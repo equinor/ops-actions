@@ -9,9 +9,13 @@ on:
       - edited
       - reopened
 
+permissions: {}
+
 jobs:
   lint-pr:
     name: Lint PR
+    permissions:
+      contents: read
     uses: ./.github/workflows/commitlint.yml
     with:
       message: ${{ github.event.pull_request.title }}

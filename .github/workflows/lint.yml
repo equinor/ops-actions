@@ -8,11 +8,13 @@ on:
     branches:
       - main
 
+permissions: {}
+
 jobs:
   lint-actions:
     name: Lint actions
-    uses: ./.github/workflows/zizmor-codeql.yml
     permissions:
       contents: read
       security-events: write
       actions: read
+    uses: ./.github/workflows/zizmor-codeql.yml
