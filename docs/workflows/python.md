@@ -4,7 +4,7 @@ A reusable CI workflow for Python applications.
 
 ## Key Features
 
-<!-- TODO(@hknutsen) -->
+- Prepares Python application for deployment.
 
 ## Usage
 
