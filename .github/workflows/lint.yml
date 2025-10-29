@@ -12,7 +12,7 @@ permissions: {}
 
 jobs:
   lint-actions:
-    name: Lint actions
+    name: Lint Actions
     permissions:
       contents: read
       security-events: write
