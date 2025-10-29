@@ -25,7 +25,7 @@ jobs:
     secrets: {}
 ```
 
-`{filename}` is the name of a workflow file in the [workflows directory](.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
+`{filename}` is the name of a workflow file in the [workflows directory](https://github.com/equinor/ops-actions/tree/main/.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
 
 To pass inputs and secrets to the reusable workflow, use the `with` and `secrets` keywords respectively.
 
@@ -58,8 +58,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## Contributing
 
-See [contributing guidelines](CONTRIBUTING.md).
+See [contributing guidelines](https://github.com/equinor/ops-actions/blob/main/CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under the terms of the [MIT license](LICENSE).
+This project is licensed under the terms of the [MIT license](https://github.com/equinor/ops-actions/blob/main/LICENSE).
