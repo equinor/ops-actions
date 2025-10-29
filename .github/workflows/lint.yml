@@ -1,27 +1,18 @@
-name: Lint
+name: Lint Codebase
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
-    types:
-      - opened
-      - edited
-      - synchronize
-      - reopened
 
 jobs:
-  lint-codebase:
-    name: Lint codebase
-    uses: ./.github/workflows/super-linter.yml
+  lint-actions:
+    name: Lint actions
+    uses: ./.github/workflows/zizmor-codeql.yml
     permissions:
       contents: read
-      statuses: write
-    with:
-      filter_regex_exclude: (.*CHANGELOG\.md$|docs/workflows/.*)
-
-  lint-pr:
-    name: Lint PR
-    uses: ./.github/workflows/commitlint.yml
-    with:
-      message: ${{ github.event.pull_request.title }}
+      security-events: write
+      actions: read
