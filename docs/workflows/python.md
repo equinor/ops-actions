@@ -1,6 +1,6 @@
 # `python.yml`
 
-<!-- TODO(@hknutsen) -->
+A reusable CI workflow for Python applications.
 
 ## Key Features
 
