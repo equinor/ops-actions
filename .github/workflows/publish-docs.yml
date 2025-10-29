@@ -15,6 +15,7 @@ jobs:
     uses: ./.github/workflows/mkdocs.yml
     with:
       requirements: requirements-docs.txt
+      strict_mode: true
       upload_artifact: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     permissions:
       contents: read
