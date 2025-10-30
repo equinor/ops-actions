@@ -10,18 +10,21 @@ on:
       - synchronize
       - reopened
 
+permissions: {}
+
 jobs:
-  lint-codebase:
-    name: Lint codebase
-    uses: ./.github/workflows/super-linter.yml
+  lint-actions:
+    name: Lint Actions
     permissions:
       contents: read
-      statuses: write
-    with:
-      filter_regex_exclude: (.*CHANGELOG\.md$|docs/workflows/.*)
+      security-events: write
+      actions: read
+    uses: ./.github/workflows/zizmor-codeql.yml
 
   lint-pr:
     name: Lint PR
+    permissions:
+      contents: read
     uses: ./.github/workflows/commitlint.yml
     with:
       message: ${{ github.event.pull_request.title }}
