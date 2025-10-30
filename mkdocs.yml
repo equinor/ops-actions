@@ -34,6 +34,7 @@ nav:
   - Home: index.md
   - Workflows:
       - commitlint: workflows/commitlint.md
+      - Python: workflows/python.md
       - Python Package: workflows/python-package.md
       - Release Please: workflows/release-please.md
       - Release Please (Manifest): workflows/release-please-manifest.md
