@@ -9,9 +9,9 @@ on:
       - main
     types:
       - opened
+      - edited
       - synchronize
       - reopened
-      - edited
 
 permissions: {}
 
