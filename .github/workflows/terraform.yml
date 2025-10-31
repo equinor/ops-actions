@@ -188,7 +188,8 @@ jobs:
           fi
 
           # Required for Terraform to download modules from internal GitHub repositories
-          git config user.name "github-actions[bot]"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           terraform init -input=false "${optional_args[@]}"
 
