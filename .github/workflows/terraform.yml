@@ -122,7 +122,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
-          persist-credentials: false
+          # Required for Terraform to download modules from internal GitHub repositories.
+          persist-credentials: true
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
