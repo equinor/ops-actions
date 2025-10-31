@@ -1,14 +1,10 @@
-name: Lint
+name: Lint Codebase
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    branches:
-      - main
-    types:
-      - opened
-      - edited
-      - synchronize
-      - reopened
+    branches: [main]
 
 permissions: {}
 
@@ -20,11 +16,3 @@ jobs:
       security-events: write
       actions: read
     uses: ./.github/workflows/zizmor-codeql.yml
-
-  lint-pr:
-    name: Lint PR
-    permissions:
-      contents: read
-    uses: ./.github/workflows/commitlint.yml
-    with:
-      message: ${{ github.event.pull_request.title }}

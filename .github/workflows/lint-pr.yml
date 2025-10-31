@@ -1,0 +1,20 @@
+name: Lint Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+permissions: {}
+
+jobs:
+  lint-pr:
+    name: Lint PR Title
+    permissions:
+      contents: read
+    uses: ./.github/workflows/commitlint.yml
+    with:
+      message: ${{ github.event.pull_request.title }}
