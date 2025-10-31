@@ -43,9 +43,8 @@ jobs:
 
           if [[ -n "$CONFIG_FILE" ]]; then
             optional_args+=(--config "$CONFIG_FILE")
-          fi
 
-          elsif [[ -f "$CONFIG_FILE" ]]; then
+          elseif [[ -f "$CONFIG_FILE" ]]; then
             optional_args+=(--config "$CONFIG_FILE")
           fi
 
