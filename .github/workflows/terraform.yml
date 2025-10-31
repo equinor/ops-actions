@@ -186,6 +186,10 @@ jobs:
           elif [[ -n "$BACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$BACKEND_CONFIG")
           fi
+
+          # Required for Terraform to download modules from internal GitHub repositories
+          git config user.name "github-actions[bot]"
+
           terraform init -input=false "${optional_args[@]}"
 
       - name: Terraform Validate
