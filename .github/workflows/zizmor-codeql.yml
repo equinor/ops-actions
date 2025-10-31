@@ -28,23 +28,13 @@ jobs:
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
 
-      # - name: Validate inputs
-      #   run: |
-      #     if [[ ! "$CONFIG_FILE" =~ ^[a-zA-Z0-9._/-]+$ ]]; then
-      #       echo "Invalid config file path"
-      #       exit 1
-      #     fi
-      #   env:
-      #     CONFIG_FILE: ${{ inputs.config_file }}
-
       - name: Run zizmor 🌈
         run: |
           optional_args=()
 
           if [[ -n "$CONFIG_FILE" ]]; then
             optional_args+=(--config "$CONFIG_FILE")
-
-          elseif [[ -f "$CONFIG_FILE" ]]; then
+          elif [[ -f "$CONFIG_FILE" ]]; then
             optional_args+=(--config "$CONFIG_FILE")
           fi
 
