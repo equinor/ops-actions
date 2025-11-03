@@ -6,6 +6,7 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 
 - **Plan and apply queueing**: Queue concurrent jobs that target the same Terraform state file.
 - **Plugin chaching**: Cache Terraform provider plugins.
+- **Private modules support**: Download Terraform modules from private repositories.
 - **Job summary**: Create job summary containing Terraform command outcomes and plan.
 - **Secretless authentication to Azure**: Authenticate to Azure using a service principal with OpenID Connect (OIDC).
 
@@ -14,6 +15,32 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 - [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
 - [Configure Terraform backend](https://github.com/equinor/azure-terraform-backend-template)
 - Create GitHub secret `ENCRYPTION_PASSWORD` and set the value to a randomly generated password (used to encrypt the uploaded artifact, as it may contain sensitive infrastructure configuration)
+
+### (*Optional*) Generate SSH key
+
+TODO: write instructions.
+
+Generate SSH key:
+
+```console
+ssh-keygen -t rsa -m PEM -f ~/.ssh/service_github_actions -C hkn-playground
+cat ~/.ssh/service_github_actions # SSH_PRIVATE_KEY
+cat ~/.ssh/service_github_actions.pub # Deploy key
+```
+
+The corresponding public key must be added as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#set-up-deploy-keys) in the private repository:
+
+```console
+gh ...
+```
+
+Finally, configure Terraform module sources to use SSH. For example:
+
+```terraform
+module "example" {
+  source = "git@github.com:<OWNER>/<REPO>.git"
+}
+```
 
 ## Usage
 
@@ -87,9 +114,7 @@ A password used to encrypt the archive containing the Terraform configuration an
 
 ### (*Optional*) `SSH_PRIVATE_KEY`
 
-An SSH private key used to download Terraform modules from a private GitHub repository.
-
-The corresponding public key must be added as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) in the private repository.
+An SSH private key used to download Terraform modules from private repositories (see [prerequisites](#optional-generate-ssh-key)).
 
 ### (*Optional*) `AZURE_CLIENT_ID`
 
