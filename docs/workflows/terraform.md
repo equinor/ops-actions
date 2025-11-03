@@ -85,6 +85,12 @@ Run `terraform apply` for the saved plan file? Defaults to `true`.
 
 A password used to encrypt the archive containing the Terraform configuration and plan file.
 
+### (*Optional*) `SSH_PRIVATE_KEY`
+
+An SSH private key used to download Terraform modules from a private GitHub repository.
+
+The corresponding public key must be added as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) in the private repository.
+
 ### (*Optional*) `AZURE_CLIENT_ID`
 
 The client ID of the service principal to use for authenticating to Azure.
