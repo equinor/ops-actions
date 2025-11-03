@@ -18,29 +18,40 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 
 ### (*Optional*) Generate SSH key
 
-TODO: write instructions.
+Terraform requires an SSH key to download modules from private repositories:
 
-Generate SSH key:
+1. Generate a passwordless SSH key, for example:
 
-```console
-ssh-keygen -t rsa -m PEM -f ~/.ssh/service_github_actions -C hkn-playground
-cat ~/.ssh/service_github_actions # SSH_PRIVATE_KEY
-cat ~/.ssh/service_github_actions.pub # Deploy key
-```
+    ```console
+    ssh-keygen -t ed25519 -C "my-repo deploy key" -N "" -f ~/.ssh/github_deploy_key
+    ```
 
-The corresponding public key must be added as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#set-up-deploy-keys) in the private repository:
+1. Add the key as a secret in your repository, for example:
 
-```console
-gh ...
-```
+    ```console
+    gh secret set SSH_PRIVATE_KEY --repo equinor/my-repo < ~/.ssh/github_deploy_key
+    ```
 
-Finally, configure Terraform module sources to use SSH. For example:
+1. Add the corresponding public key as a deploy key in the private repository, for example:
 
-```terraform
-module "example" {
-  source = "git@github.com:<OWNER>/<REPO>.git"
-}
-```
+    ```console
+    gh repo deploy-key add ~/.ssh/github_deploy_key.pub --repo equinor/terraform-modules --title "my-repo deploy key"
+    ```
+
+1. Configure Terraform module sources to use SSH, for example:
+
+    ```terraform
+    module "example" {
+      source = "git@github.com:equinor/terraform-modules.git"
+    }
+    ```
+
+1. Remove the SSH key (and the corresponding public key) from your local machine:
+
+    ```console
+    rm ~/.ssh/github_deploy_key
+    rm ~/.ssh/github_deploy_key.pub
+    ```
 
 ## Usage
 

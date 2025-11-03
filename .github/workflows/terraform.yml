@@ -77,7 +77,7 @@ on:
         required: true
 
       SSH_PRIVATE_KEY:
-        description: An SSH private key used to download Terraform modules from private GitHub repositories.
+        description: An SSH private key used to download Terraform modules from private repositories.
         required: false
 
 # Queue jobs that target the same state file, i.e. the same working directory and backend configuration.
