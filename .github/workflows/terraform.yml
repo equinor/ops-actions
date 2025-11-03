@@ -190,12 +190,10 @@ jobs:
           elif [[ -n "$BACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$BACKEND_CONFIG")
           fi
-
           if [[ -n "$SSH_PRIVATE_KEY" ]]; then
             eval "$(ssh-agent -s)"
             ssh-add - <<< "$SSH_PRIVATE_KEY"
           fi
-
           terraform init -input=false "${optional_args[@]}"
 
       - name: Terraform Validate
