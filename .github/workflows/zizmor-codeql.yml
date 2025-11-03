@@ -32,10 +32,11 @@ jobs:
         run: |
           optional_args=()
 
-          if [[ -n "$CONFIG_FILE" ]]; then
+          if [[ -f "$CONFIG_FILE" ]]; then
             optional_args+=(--config "$CONFIG_FILE")
-          elif [[ -f "$CONFIG_FILE" ]]; then
-            optional_args+=(--config "$CONFIG_FILE")
+          elif [[ -n "$CONFIG_FILE" ]]; then
+            echo "Config file '$CONFIG_FILE' not found" >&2
+            exit 1
           fi
 
           uvx zizmor --format=sarif "${optional_args[@]}" . > results.sarif
