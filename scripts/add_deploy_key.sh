@@ -20,6 +20,11 @@
 
 set -eu
 
+hash gh 2>/dev/null || {
+  echo -e "ERROR: gh not found in PATH. Exiting..." >&2
+  exit 1
+}
+
 OWNER=${1:?"OWNER is unset or null"}
 readonly OWNER
 
