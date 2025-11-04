@@ -1,14 +1,22 @@
 #! /bin/bash
 
-# TODO: write description
+# This script generates a passwordless SSH key, sets the private key as a
+# GitHub Actions secret SSH_PRIVATE_KEY in the specified target repository,
+# and adds the public key as a deploy key in the specified private repository.
+#
+# This enables GitHub Actions workflows in the target repository to pull the
+# private repository using the SSH_PRIVATE_KEY secret.
+#
+# Prerequisites:
+#   gh
 #
 # Arguments:
-#   OWNER
-#   REPO
-#   PRIVATE_REPO
+#   OWNER:        GitHub organization or user name
+#   REPO:         Target repository to set the private key as a GitHub Actions secret
+#   PRIVATE_REPO: Private repository to add the deploy key
 #
 # Usage:
-#   ./add-deploy-key <OWNER> <REPO> <PRIVATE_REPO>
+#   ./add-deploy-key.sh <OWNER> <REPO> <PRIVATE_REPO>
 
 set -eu
 
@@ -38,9 +46,8 @@ readonly PUBLIC_KEY_NAME
 # Generate a passwordless SSH key
 ssh-keygen -t ed25519 -C "$KEY_NAME" -N "" -f "$KEY_NAME"
 
-# Add the key as a secret in the repository
+# Set the private key as a secret in the target repository
 gh secret set SSH_PRIVATE_KEY --repo "$OWNER/$REPO" < "$KEY_NAME"
 
-# Add the corresponding public key as a deploy key in the private repository
-gh repo deploy-key add "$PUBLIC_KEY_NAME" --repo "$OWNER/$PRIVATE_REPO" \
-  --title "$KEY_NAME"
+# Add the public key as a deploy key in the private repository
+gh repo deploy-key add "$PUBLIC_KEY_NAME" --repo "$OWNER/$PRIVATE_REPO"
