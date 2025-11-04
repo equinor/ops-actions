@@ -102,30 +102,6 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 ```
 
-## Deploy MkDocs site to GitHub Pages
-
-```yaml
-on:
-  push:
-    branches: [main]
-    paths:
-      - docs/**
-      - mkdocs.yml
-
-jobs:
-  build:
-    uses: equinor/ops-actions/.github/workflows/mkdocs.yml@main
-    with:
-      python_version: latest
-      mkdocs_version: ">=1.0.0"
-
-  deploy:
-    needs: build
-    uses: equinor/ops-actions/.github/workflows/github-pages.yml@main
-    with:
-      artifact_name: ${{ needs.build.outputs.artifact_name }}
-```
-
 ## Update Databricks Git folder
 
 Prerequisites:
