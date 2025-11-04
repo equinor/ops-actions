@@ -16,42 +16,12 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 - [Configure Terraform backend](https://github.com/equinor/azure-terraform-backend-template)
 - Create GitHub secret `ENCRYPTION_PASSWORD` and set the value to a randomly generated password (used to encrypt the uploaded artifact, as it may contain sensitive infrastructure configuration)
 
-### (*Optional*) Generate SSH key
+### (*Optional*) Add deploy key to private GitHub repository
 
-Terraform requires an SSH key to download modules from private repositories:
+Terraform requires a deploy key to download modules from private GitHub repositories:
 
-1. Generate a passwordless SSH key, for example:
-
-    ```console
-    ssh-keygen -t ed25519 -C "my-repo deploy key" -N "" -f ~/.ssh/github_deploy_key
-    ```
-
-1. Add the key as a secret in your repository, for example:
-
-    ```console
-    gh secret set SSH_PRIVATE_KEY --repo equinor/my-repo < ~/.ssh/github_deploy_key
-    ```
-
-1. Add the corresponding public key as a deploy key in the private repository, for example:
-
-    ```console
-    gh repo deploy-key add ~/.ssh/github_deploy_key.pub --repo equinor/terraform-modules --title "my-repo deploy key"
-    ```
-
-1. Configure Terraform module sources to use SSH, for example:
-
-    ```terraform
-    module "example" {
-      source = "git@github.com:equinor/terraform-modules.git"
-    }
-    ```
-
-1. Remove the SSH key (and the corresponding public key) from your local machine:
-
-    ```console
-    rm ~/.ssh/github_deploy_key
-    rm ~/.ssh/github_deploy_key.pub
-    ```
+1. [Add a deploy key to the private GitHub repository](https://github.com/equinor/ops-actions/blob/main/scripts/add_deploy_key.sh)
+1. [Configure Terraform to clone module sources from GitHub over SSH](https://developer.hashicorp.com/terraform/language/block/module#github-repository)
 
 ## Usage
 
@@ -125,7 +95,7 @@ A password used to encrypt the archive containing the Terraform configuration an
 
 ### (*Optional*) `SSH_PRIVATE_KEY`
 
-An SSH private key used to download Terraform modules from private repositories (see [prerequisites](#optional-generate-ssh-key)).
+An SSH private key used to download Terraform modules from a private GitHub repository (see [prerequisites](#optional-add-deploy-key-to-private-github-repository)).
 
 ### (*Optional*) `AZURE_CLIENT_ID`
 
