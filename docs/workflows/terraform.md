@@ -6,7 +6,7 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 
 - **Plan and apply queueing**: Queue concurrent jobs that target the same Terraform state file.
 - **Plugin chaching**: Cache Terraform provider plugins.
-- **Private modules support**: Download Terraform modules from private repositories.
+- **Private modules support**: Download Terraform modules from a private GitHub repository.
 - **Job summary**: Create job summary containing Terraform command outcomes and plan.
 - **Secretless authentication to Azure**: Authenticate to Azure using a service principal with OpenID Connect (OIDC).
 
