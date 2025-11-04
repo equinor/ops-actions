@@ -38,7 +38,7 @@ readonly PUBLIC_KEY_NAME
 # Generate a passwordless SSH key
 ssh-keygen -t ed25519 -C "$KEY_NAME" -N "" -f "$KEY_NAME"
 
-# Add the key as a secret in your repository
+# Add the key as a secret in the repository
 gh secret set SSH_PRIVATE_KEY --repo "$OWNER/$REPO" < "$KEY_NAME"
 
 # Add the corresponding public key as a deploy key in the private repository
