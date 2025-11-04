@@ -76,6 +76,10 @@ on:
         description: A password used to encrypt the archive containing the Terraform configuration and plan file.
         required: true
 
+      SSH_PRIVATE_KEY:
+        description: An SSH private key used to download Terraform modules from a private GitHub repository.
+        required: false
+
 # Queue jobs that target the same state file, i.e. the same working directory and backend configuration.
 concurrency:
   group: terraform-${{ inputs.working_directory }}-${{ inputs.backend_config }}
@@ -178,12 +182,17 @@ jobs:
         id: init
         env:
           BACKEND_CONFIG: ${{ inputs.backend_config }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           optional_args=()
           if [[ "$GITHUB_ACTOR" == "dependabot[bot]" ]]; then
             optional_args+=(-backend=false)
           elif [[ -n "$BACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$BACKEND_CONFIG")
+          fi
+          if [[ -n "$SSH_PRIVATE_KEY" ]]; then
+            eval "$(ssh-agent -s)"
+            ssh-add - <<< "$SSH_PRIVATE_KEY"
           fi
           terraform init -input=false "${optional_args[@]}"
 
