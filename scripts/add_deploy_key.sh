@@ -16,7 +16,7 @@
 #   PRIVATE_REPO: Private repository to add the deploy key
 #
 # Usage:
-#   ./add-deploy-key.sh <OWNER> <REPO> <PRIVATE_REPO>
+#   ./add_deploy_key.sh <OWNER> <REPO> <PRIVATE_REPO>
 
 set -eu
 
