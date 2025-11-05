@@ -3,20 +3,20 @@ rules:
   scope-enum:
     - 2
     - always
-    - azure-function
-      azure-webapp
-      commitlint
-      databricks-bundle
-      databricks-repos
-      docker-acr
-      docker
-      dotnet
-      github-pages
-      mkdocs
-      python-package
-      python
-      release-please
-      semantic-release
-      terraform
-      trivy-config-codeql
-      zizmor-codeql
+    - - azure-function
+      - azure-webapp
+      - commitlint
+      - databricks-bundle
+      - databricks-repos
+      - docker-acr
+      - docker
+      - dotnet
+      - github-pages
+      - mkdocs
+      - python-package
+      - python
+      - release-please
+      - semantic-release
+      - terraform
+      - trivy-config-codeql
+      - zizmor-codeql
