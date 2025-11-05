@@ -33,10 +33,9 @@ on:
         default: '["@commitlint/config-conventional"]'
 
       message:
-        description: Commit message to lint. Default is latest commit message.
+        description: A commit message to lint. Defaults to last commit message.
         type: string
         required: false
-        default: ${{ github.event.head_commit.message }}
 
       help_url:
         description: Custom help URL for error messages.
@@ -61,7 +60,6 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           persist-credentials: false
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903
@@ -76,4 +74,8 @@ jobs:
       - name: Run commitlint
         run: |
           readarray -t extends <<< "$(echo "$EXTENDS_JSON" | jq -cr '.[]')"
-          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"
+          optional_args=()
+          if [[ -z "$MESSAGE" ]]; then
+            optional_args+=(--last)
+          fi
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" "${optional_args[@]}" <<< "$MESSAGE"
