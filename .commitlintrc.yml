@@ -1,10 +1,10 @@
 extends: ["@commitlint/config-conventional"]
 rules:
   {
-    scope-enum:
+    "scope-enum":
       [
         2,
-        always,
+        "always",
         [
           "azure-function",
           "azure-webapp",
