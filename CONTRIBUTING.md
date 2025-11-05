@@ -16,7 +16,7 @@ This document provides guidelines for contributing to the ops-actions project.
 
 1. Commit your changes.
 
-    Use the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification for semantic commit messages, where scope is the name of the updated workflow file.
+    Use the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification for semantic commit messages, where scope is the name of the updated reusable workflow file.
 
     For example, if you've updated the `terraform.yml` workflow file:
 
