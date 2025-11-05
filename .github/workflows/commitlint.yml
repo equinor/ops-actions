@@ -78,4 +78,4 @@ jobs:
           if [[ -z "$MESSAGE" ]]; then
             optional_args+=(--last)
           fi
-          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" "${optional_args[@]}" <<< "$MESSAGE"
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" "${optional_args[@]}" --verbose <<< "$MESSAGE"
