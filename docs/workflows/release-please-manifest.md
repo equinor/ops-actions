@@ -1,4 +1,4 @@
-# `release-please-manifest.json`
+# `release-please-manifest.yml`
 
 A reusable workflow that runs manifest-driven [Release Please](https://www.npmjs.com/package/release-please). Requires more initial setup than the [basic Release Please workflow](release-please.md), but supports advanced configuration and monorepos.
 
@@ -11,29 +11,29 @@ A reusable workflow that runs manifest-driven [Release Please](https://www.npmjs
 
 ### Configure Release Please
 
-1. Add a `release-please-config.json` configuration file at the root of your repository, and define your packages. Optionally, define a root package `"."` that combines all packages in your repository. For example:
+Add a `release-please-config.json` configuration file at the root of your repository, and define your packages. Optionally, define a root package `"."` that combines all packages in your repository. For example:
 
-   ```json
-   {
-     "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-     "release-type": "python",
-     "packages": {
-       "packages/example-package": {
-         "package-name": "example-package"
-       },
-       ".": {
-         "package-name": "root-package",
-         "include-component-in-tag": false
-       }
-     }
-   }
-   ```
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "python",
+  "packages": {
+    "packages/example-package": {
+      "package-name": "example-package"
+    },
+    ".": {
+      "package-name": "root-package",
+      "include-component-in-tag": false
+    }
+  }
+}
+```
 
-1. Add a `.release-please-manifest.json` manifest file at the root of your repository, and add an initial empty JSON object:
+Add a `.release-please-manifest.json` manifest file at the root of your repository, and add an initial empty JSON object:
 
-   ```json
-   {}
-   ```
+```json
+{}
+```
 
 For detailed instructions on configuring Release Please, please refer to the [official documentation](https://github.com/googleapis/release-please/blob/main/docs/manifest-releaser.md).
 
