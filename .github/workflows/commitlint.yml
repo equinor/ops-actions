@@ -60,6 +60,8 @@ jobs:
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           persist-credentials: false
+          # TODO: clarify why this is required
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903
@@ -72,10 +74,17 @@ jobs:
           npm install "${extends[@]}"
 
       - name: Run commitlint
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           readarray -t extends <<< "$(echo "$EXTENDS_JSON" | jq -cr '.[]')"
           optional_args=()
           if [[ -z "$MESSAGE" ]]; then
-            optional_args+=(--last)
+            if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+              optional_args+=(--from "$BASE_SHA" --to "$HEAD_SHA")
+            else
+              optional_args+=(--last)
+            fi
           fi
           npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" "${optional_args[@]}" --verbose <<< "$MESSAGE"
