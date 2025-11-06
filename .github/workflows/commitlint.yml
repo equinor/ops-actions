@@ -53,7 +53,7 @@ jobs:
     env:
       COMMITLINT_VERSION: ${{ inputs.commitlint_version }}
       EXTENDS_JSON: ${{ inputs.extends }}
-      COMMIT_MESSAGE: ${{ inputs.message }}
+      MESSAGE: ${{ inputs.message }}
       BASE_SHA: ${{ github.event.pull_request.base.sha }}
       HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       HELP_URL: ${{ inputs.help_url }}
@@ -81,7 +81,7 @@ jobs:
 
           optional_args=()
 
-          if [[ -n "$COMMIT_MESSAGE" ]]; then
+          if [[ -n "$MESSAGE" ]]; then
             echo "Linting commit message from stdin" >&2
           elif [[ -n "$BASE_SHA" && -n "$HEAD_SHA" ]]; then
             echo "Linting commit range" >&2
@@ -91,4 +91,4 @@ jobs:
             optional_args+=(--last)
           fi
 
-          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" --verbose "${optional_args[@]}" <<< "$COMMIT_MESSAGE"
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" --verbose "${optional_args[@]}" <<< "$MESSAGE"
