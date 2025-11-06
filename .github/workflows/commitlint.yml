@@ -91,4 +91,4 @@ jobs:
             optional_args+=(--last)
           fi
 
-          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" --verbose "${optional_args[@]}" <<< "$MESSAGE"
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" --verbose "${optional_args[@]}" <<< "$COMMIT_MESSAGE"
