@@ -53,14 +53,16 @@ jobs:
     env:
       COMMITLINT_VERSION: ${{ inputs.commitlint_version }}
       EXTENDS_JSON: ${{ inputs.extends }}
-      MESSAGE: ${{ inputs.message }}
+      COMMIT_MESSAGE: ${{ inputs.message }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       HELP_URL: ${{ inputs.help_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           persist-credentials: false
-          # TODO: clarify why this is required
+          # Required to lint a commit range using the --from and --to parameters
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -74,17 +76,19 @@ jobs:
           npm install "${extends[@]}"
 
       - name: Run commitlint
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           readarray -t extends <<< "$(echo "$EXTENDS_JSON" | jq -cr '.[]')"
+
           optional_args=()
-          if [[ -z "$MESSAGE" ]]; then
-            if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-              optional_args+=(--from "$BASE_SHA" --to "$HEAD_SHA")
-            else
-              optional_args+=(--last)
-            fi
+
+          if [[ -n "$COMMIT_MESSAGE" ]]; then
+            echo "Linting commit message from stdin" >&2
+          elif [[ -n "$BASE_SHA" && -n "$HEAD_SHA" ]]; then
+            echo "Linting commit range" >&2
+            optional_args+=(--from "$BASE_SHA" --to "$HEAD_SHA")
+          else
+            echo "Linting last commit" >&2
+            optional_args+=(--last)
           fi
-          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" "${optional_args[@]}" --verbose <<< "$MESSAGE"
+
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" --verbose "${optional_args[@]}" <<< "$MESSAGE"
