@@ -41,14 +41,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
           FILTER_REGEX_INCLUDE: ${{ inputs.filter_regex_include }}
-
+          # If triggered by PR, only validate changed files.
+          VALIDATE_ALL_CODEBASE: ${{ github.event_name != 'pull_request' }}
           # Don't create status checks per linter.
           # Create GitHub Actions job summary instead.
           MULTI_STATUS: false
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: true
-
-          # If triggered by PR, only validate changed files.
-          VALIDATE_ALL_CODEBASE: ${{ github.event_name != 'pull_request' }}
 
           # Common in both Node.js and ASP.NET projects
           VALIDATE_EDITORCONFIG: true
