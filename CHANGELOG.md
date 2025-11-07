@@ -1,5 +1,60 @@
 # Changelog
 
+## [9.29.0](https://github.com/equinor/ops-actions/compare/v9.28.0...v9.29.0) (2025-10-27)
+
+
+### Features
+
+* add severity input to trivy workflow and rename workflow ([#841](https://github.com/equinor/ops-actions/issues/841)) ([89c3e02](https://github.com/equinor/ops-actions/commit/89c3e02cc1bf23654057eaaa081ffeacfc452f20))
+* add trivy reusable workflow ([#832](https://github.com/equinor/ops-actions/issues/832)) ([14e795d](https://github.com/equinor/ops-actions/commit/14e795dacee614fbd65db85b9860256b6f17969e))
+* add zizmor reusable workflow ([#826](https://github.com/equinor/ops-actions/issues/826)) ([98550ee](https://github.com/equinor/ops-actions/commit/98550eee60c0f246e28f528436b8ed6611654ecd))
+* rename zizmor workflow ([#838](https://github.com/equinor/ops-actions/issues/838)) ([ebec794](https://github.com/equinor/ops-actions/commit/ebec794e0f8a41f8169903bc80aa809f4246d138))
+
+
+### Bug Fixes
+
+* **docker-acr:** login to Azure fails with data plane-only access ([#842](https://github.com/equinor/ops-actions/issues/842)) ([f5c5cd7](https://github.com/equinor/ops-actions/commit/f5c5cd76cd73a6c05af2694db873e494354de854))
+* remove output_file parameter and change config_file parameter ([#836](https://github.com/equinor/ops-actions/issues/836)) ([dd822d6](https://github.com/equinor/ops-actions/commit/dd822d65d8106f32316acb1a23d67d7959fa2f89))
+
+## [9.28.0](https://github.com/equinor/ops-actions/compare/v9.27.0...v9.28.0) (2025-10-21)
+
+
+### Features
+
+* **python-package:** toggle whether build artifact should be uploaded ([#819](https://github.com/equinor/ops-actions/issues/819)) ([3e6aa76](https://github.com/equinor/ops-actions/commit/3e6aa7652940db0420cfe0ed1e39136b5dcb12ed))
+
+
+### Bug Fixes
+
+* **deps:** bump actions/setup-node from 5.0.0 to 6.0.0 ([#830](https://github.com/equinor/ops-actions/issues/830)) ([17b6824](https://github.com/equinor/ops-actions/commit/17b68249826f6298bf9bbde1cfca9eeb85528049))
+* **deps:** bump databricks/setup-cli from 0.272.0 to 0.273.0 ([#827](https://github.com/equinor/ops-actions/issues/827)) ([8fd7f2a](https://github.com/equinor/ops-actions/commit/8fd7f2ab3ef929ced00d7fd67e15a47958f3370a))
+* **deps:** bump github/codeql-action from 4.30.8 to 4.30.9 ([#829](https://github.com/equinor/ops-actions/issues/829)) ([b2c15da](https://github.com/equinor/ops-actions/commit/b2c15da5f253c56714d2f31ab91858be106169f6))
+* **deps:** bump super-linter/super-linter from 8.2.0 to 8.2.1 ([#828](https://github.com/equinor/ops-actions/issues/828)) ([c54b836](https://github.com/equinor/ops-actions/commit/c54b8368c0e4e36ca7eb57084467a5dcea5c1572))
+
+## [9.27.0](https://github.com/equinor/ops-actions/compare/v9.26.1...v9.27.0) (2025-10-15)
+
+
+### Features
+
+* add workflow `release-please-manifest.yml` ([#814](https://github.com/equinor/ops-actions/issues/814)) ([6f234d7](https://github.com/equinor/ops-actions/commit/6f234d71d5d842b5c0f1ab40b91a9fe0112dd1a4))
+* **python-package:** add output `artifact_name` ([#818](https://github.com/equinor/ops-actions/issues/818)) ([5be59af](https://github.com/equinor/ops-actions/commit/5be59af74dd895e735bf372346411bbf924e96f4))
+
+
+### Bug Fixes
+
+* **deps:** bump github/codeql-action from 4.30.7 to 4.30.8 ([#812](https://github.com/equinor/ops-actions/issues/812)) ([0254ecc](https://github.com/equinor/ops-actions/commit/0254eccdc3a46e2649fba2f5c177c49a767ed7a7))
+* **release-please:** add missing permission `issues: write` ([#815](https://github.com/equinor/ops-actions/issues/815)) ([ff41fd3](https://github.com/equinor/ops-actions/commit/ff41fd31d389a6fdd785484e755838497eafb74b))
+
+## [9.26.1](https://github.com/equinor/ops-actions/compare/v9.26.0...v9.26.1) (2025-10-10)
+
+
+### Bug Fixes
+
+* **deps:** bump astral-sh/setup-uv from 6.8.0 to 7.0.0 ([#807](https://github.com/equinor/ops-actions/issues/807)) ([90a0433](https://github.com/equinor/ops-actions/commit/90a043361f744d62a0968d79d192cc3e96ac9955))
+* **deps:** bump databricks/setup-cli from 0.271.0 to 0.272.0 ([#806](https://github.com/equinor/ops-actions/issues/806)) ([93f0c9d](https://github.com/equinor/ops-actions/commit/93f0c9da5a17ce94191cac9da852e134e6bbe463))
+* **deps:** bump github/codeql-action from 3.30.6 to 4.30.7 ([#808](https://github.com/equinor/ops-actions/issues/808)) ([07f737d](https://github.com/equinor/ops-actions/commit/07f737d6f0b5e59ca38967db331dba80284444ae))
+* **super-linter:** disable Biome linter ([#804](https://github.com/equinor/ops-actions/issues/804)) ([cc53259](https://github.com/equinor/ops-actions/commit/cc53259f13569a639b9d0b7f71c1e06cb7720ca1))
+
 ## [9.26.0](https://github.com/equinor/ops-actions/compare/v9.25.0...v9.26.0) (2025-10-09)
 
 

@@ -16,7 +16,7 @@ This document provides guidelines for contributing to the ops-actions project.
 
 1. Commit your changes.
 
-    Use the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification for semantic commit messages, where scope is the name of the updated workflow file.
+    Use the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification for semantic commit messages, where scope is the name of the updated reusable workflow file.
 
     For example, if you've updated the `terraform.yml` workflow file:
 
@@ -72,25 +72,6 @@ This document provides guidelines for contributing to the ops-actions project.
 ## 🤝 Roles and responsibilities
 
 This section describes the various roles and responsibilities in the ops-actions project.
-
-### 🦸‍♀️ External contributors
-
-An external contributor should:
-
-- Create forks of this repository.
-- Create issues and pull requests in this repository.
-
-### 👨‍🎓 Contributors
-
-A contributor must:
-
-- Be a member of the [@equinor/ops-actions](https://github.com/orgs/equinor/teams/ops-actions) team.
-- Actively contribute to this repository.
-
-A contributor should:
-
-- Have basic understanding of GitHub Actions.
-- Have basic understanding of our best practices.
 
 ### 👷‍♀️ Maintainers
 

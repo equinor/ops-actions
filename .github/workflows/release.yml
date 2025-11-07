@@ -5,7 +5,13 @@ on:
     branches:
       - main
 
+permissions: {}
+
 jobs:
   release:
     name: Release
+    permissions:
+      contents: write # Required to update changelog file
+      issues: write # Required to label issues
+      pull-requests: write # Required to create release PRs
     uses: ./.github/workflows/release-please.yml

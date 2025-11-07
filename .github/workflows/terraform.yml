@@ -76,6 +76,10 @@ on:
         description: A password used to encrypt the archive containing the Terraform configuration and plan file.
         required: true
 
+      SSH_PRIVATE_KEY:
+        description: An SSH private key used to download Terraform modules from a private GitHub repository.
+        required: false
+
 # Queue jobs that target the same state file, i.e. the same working directory and backend configuration.
 concurrency:
   group: terraform-${{ inputs.working_directory }}-${{ inputs.backend_config }}
@@ -178,12 +182,17 @@ jobs:
         id: init
         env:
           BACKEND_CONFIG: ${{ inputs.backend_config }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           optional_args=()
           if [[ "$GITHUB_ACTOR" == "dependabot[bot]" ]]; then
             optional_args+=(-backend=false)
           elif [[ -n "$BACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$BACKEND_CONFIG")
+          fi
+          if [[ -n "$SSH_PRIVATE_KEY" ]]; then
+            eval "$(ssh-agent -s)"
+            ssh-add - <<< "$SSH_PRIVATE_KEY"
           fi
           terraform init -input=false "${optional_args[@]}"
 
@@ -222,13 +231,13 @@ jobs:
         if: steps.plan.outputs.exitcode == 2
         run: |
           tarball_path="$RUNNER_TEMP/$TARBALL"
-          tar --create . | gpg --symmetric --batch --passphrase "$ENCRYPTION_PASSWORD" --output "$tarball_path"
+          tar -c . | gpg -c --batch --passphrase "$ENCRYPTION_PASSWORD" -o "$tarball_path"
           echo "tarball_path=$tarball_path" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
         id: upload
         if: steps.tar.outcome == 'success'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ steps.tar.outputs.tarball_path }}
@@ -306,7 +315,7 @@ jobs:
           persist-credentials: false
 
       - name: Download artifact
-        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working_directory }}
@@ -327,7 +336,7 @@ jobs:
 
       - name: Extract tarball
         run: |
-          gpg --decrypt --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar --extract
+          gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar -x
           rm "$TARBALL"
 
       - name: Terraform Apply

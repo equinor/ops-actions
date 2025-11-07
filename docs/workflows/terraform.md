@@ -6,6 +6,7 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 
 - **Plan and apply queueing**: Queue concurrent jobs that target the same Terraform state file.
 - **Plugin chaching**: Cache Terraform provider plugins.
+- **Private modules support**: Download Terraform modules from a private GitHub repository.
 - **Job summary**: Create job summary containing Terraform command outcomes and plan.
 - **Secretless authentication to Azure**: Authenticate to Azure using a service principal with OpenID Connect (OIDC).
 
@@ -14,6 +15,13 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 - [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
 - [Configure Terraform backend](https://github.com/equinor/azure-terraform-backend-template)
 - Create GitHub secret `ENCRYPTION_PASSWORD` and set the value to a randomly generated password (used to encrypt the uploaded artifact, as it may contain sensitive infrastructure configuration)
+
+### (*Optional*) Add deploy key to private GitHub repository
+
+Terraform requires a deploy key to download modules from private GitHub repositories:
+
+1. [Add a deploy key to the private GitHub repository](https://github.com/equinor/ops-actions/blob/main/scripts/add_deploy_key.sh)
+1. [Configure Terraform to clone module sources from GitHub over SSH](https://developer.hashicorp.com/terraform/language/block/module#github-repository)
 
 ## Usage
 
@@ -84,6 +92,10 @@ Run `terraform apply` for the saved plan file? Defaults to `true`.
 ### `ENCRYPTION_PASSWORD`
 
 A password used to encrypt the archive containing the Terraform configuration and plan file.
+
+### (*Optional*) `SSH_PRIVATE_KEY`
+
+An SSH private key used to download Terraform modules from a private GitHub repository (see [prerequisites](#optional-add-deploy-key-to-private-github-repository)).
 
 ### (*Optional*) `AZURE_CLIENT_ID`
 

@@ -25,6 +25,12 @@ on:
         type: string
         required: false
 
+      strict_mode:
+        description: Should strict mode be enabled? This will cause MkDocs to abort the build on any warnings.
+        type: boolean
+        required: false
+        default: false 
+
       upload_artifact:
         description: Should the MkDocs build artifact be uploaded? Defaults to `true`.
         type: boolean
@@ -38,10 +44,7 @@ on:
         default: mkdocs
 
       git_fetch_depth:
-        description: |
-          The number of commits that Git should fetch. Defaults to `1` (to decrease build time).
-
-          Fetch depth `0` required by some MkDocs plugins (e.g., [mkdocs-git-revision-date-localized-plugin](https://pypi.org/project/mkdocs-git-revision-date-localized-plugin/)).
+        description: The number of commits that Git should fetch. Defaults to `1` (to decrease build time). Fetch depth `0` required by some MkDocs plugins.
         type: number
         required: false
         default: 1
@@ -85,14 +88,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install "mkdocs$MKDOCS_VERSION"
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         if: inputs.requirements != ''
         env:
           REQUIREMENTS: ${{ inputs.requirements }}
-        run: pip install --requirement "$REQUIREMENTS"
+        run: pip install -r "$REQUIREMENTS"
 
       - name: MkDocs Build
-        run: mkdocs build --site-dir "$SITE_DIR"
+        env:
+          STRICT_MODE: ${{ inputs.strict_mode }}
+        run: |
+          optional_args=()
+          if [[ "$STRICT_MODE" == "true" ]]; then
+            optional_args+=(--strict)
+          fi
+          mkdocs build --site-dir "$SITE_DIR" "${optional_args[@]}"
 
       - name: Create tarball
         id: tar
@@ -100,12 +110,12 @@ jobs:
         working-directory: ${{ env.SITE_DIR }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar --create --file "$tarball" .
+          tar -cf "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
         if: inputs.upload_artifact
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ steps.tar.outputs.tarball }}

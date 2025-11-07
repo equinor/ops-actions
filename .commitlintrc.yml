@@ -1,0 +1,25 @@
+extends: ["@commitlint/config-conventional"]
+rules:
+  scope-enum:
+    - 2
+    - always
+    - - azure-function
+      - azure-webapp
+      - commitlint
+      - databricks-bundle
+      - databricks-repos
+      - docker-acr
+      - docker
+      - dotnet
+      - github-pages
+      - mkdocs-gh-pages
+      - mkdocs
+      - python-package
+      - python
+      - release-please-manifest
+      - release-please
+      - semantic-release
+      - super-linter
+      - terraform
+      - trivy-config-codeql
+      - zizmor-codeql

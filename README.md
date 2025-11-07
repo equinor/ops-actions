@@ -1,20 +1,14 @@
 # ops-actions
 
-[![CI](https://github.com/equinor/ops-actions/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/equinor/ops-actions/actions/workflows/ci.yml)
-[![GitHub Release](https://img.shields.io/github/v/release/equinor/ops-actions)](https://github.com/equinor/ops-actions/releases/latest)
-[![GitHub contributors](https://img.shields.io/github/contributors/equinor/ops-actions)](https://github.com/equinor/ops-actions/graphs/contributors)
-[![GitHub Issues](https://img.shields.io/github/issues/equinor/ops-actions)](https://github.com/equinor/ops-actions/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/equinor/ops-actions)](https://github.com/equinor/ops-actions/pulls)
-[![GitHub License](https://img.shields.io/github/license/equinor/ops-actions)](LICENSE)
-
 [Reusable GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) for common operational tasks.
 
 ## Features
 
 - ♻ **Reusable workflows** for common operational tasks, simplifying CI/CD pipeline setup.
-- 📦 **Build multiple languages and frameworks** including Docker, .NET and Python.
+- 📦 **Build support for multiple languages and frameworks** including Docker, .NET and Python.
 - 🚀 **Deploy to multiple cloud platforms and services** including Azure Web App, Azure Functions and GitHub Pages.
 - 🔑 **Secretless authentication** where supported.
+- 🛡️ **Security scanning** using static analysis tools, including CodeQL, Trivy and zizmor.
 - 📝 **Comprehensive documentation** for each workflow, with usage examples.
 - 🤖 **Easy workflow updates** using [Dependabot version updates](#version-updates).
 
@@ -29,10 +23,9 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/{filename}@{ref}
     with: {}
     secrets: {}
-    permissions: {}
 ```
 
-`{filename}` is the name of a workflow file in the [workflows directory](.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
+`{filename}` is the name of a workflow file in the [workflows directory](https://github.com/equinor/ops-actions/tree/main/.github/workflows), and `{ref}` is (in order of preference) a commit SHA, release tag or branch name.
 
 To pass inputs and secrets to the reusable workflow, use the `with` and `secrets` keywords respectively.
 
@@ -53,16 +46,41 @@ updates:
 
 ## Development
 
+Clone this repository:
+
+```console
+git clone https://github.com/equinor/ops-actions.git && cd ops-actions
+```
+
+Install dependencies:
+
+```console
+python -m pip install --upgrade pip
+pip install -r requirements-docs.txt
+```
+
+Run a development server:
+
+```console
+mkdocs serve
+```
+
+Alternatively, a [Visual Studio Code debug configuration](https://code.visualstudio.com/docs/debugtest/debugging-configuration) is provided (see [debug code with Visual Studio Code](https://code.visualstudio.com/docs/debugtest/debugging)).
+
 The [GitHub Actions extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions) is highly recommended for syntax highlighting, validation and code completion for GitHub Actions workflows.
 
 ## Testing
 
 We perform [user acceptance tests](https://en.wikipedia.org/wiki/Acceptance_testing#User_acceptance_testing) for reusable workflows.
 
+## Versioning
+
+This project follows [Semantic Versioning](https://semver.org/).
+
 ## Contributing
 
-See [contributing guidelines](CONTRIBUTING.md).
+See [contributing guidelines](https://github.com/equinor/ops-actions/blob/main/CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under the terms of the [MIT license](LICENSE).
+This project is licensed under the terms of the [MIT license](https://github.com/equinor/ops-actions/blob/main/LICENSE).

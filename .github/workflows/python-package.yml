@@ -1,0 +1,104 @@
+name: ♻ python-package
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
+      # environment:
+      #   description: The name of the GitHub environment that this workflow should use for publishing. Defaults to `pypi`.
+      #   type: string
+      #   required: false
+      #   default: pypi
+
+      working_directory:
+        description: The path of the directory containing the Python project to build. Defaults to `.`.
+        type: string
+        required: false
+        default: "."
+
+      artifact_name:
+        description: The name of the build artifact. Defaults to `python-package-dist`.
+        type: string
+        required: false
+        default: python-package-dist
+
+      upload_artifact:
+        description: Should the build artifact be uploaded? Defaults to `true`.
+        type: boolean
+        required: false
+        default: true
+
+    outputs:
+      artifact_name:
+        description: The name of the build artifact.
+        value: ${{ inputs.artifact_name }}
+
+      artifact_uploaded:
+        description: Was the build artifact uploaded? Value is `"true"` if the build artifact was uploaded, else `"false"`.
+        value: ${{ jobs.python-build.outputs.artifact-uploaded }}
+
+permissions: {}
+
+jobs:
+  python-build:
+    name: Python Build
+    runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read # Required to checkout the repository.
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
+        with:
+          python-version-file: .python-version
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip build
+
+      - name: Generate distributions
+        run: python -m build
+
+      - name: Upload artifact
+        id: upload-artifact
+        if: ${{ inputs.upload_artifact }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.working_directory }}/dist
+
+    outputs:
+      artifact-uploaded: ${{ steps.upload-artifact.outcome == 'success' }}
+
+  # Reusable workflows are currently not supported for PyPI Trusted Publishing.
+  # Ref: https://docs.pypi.org/trusted-publishers/troubleshooting/#reusable-workflows-on-github
+
+  # pypi-publish:
+  #   name: PyPI Publish
+  #   needs: python-build
+  #   if: needs.python-build.outputs.artifact-uploaded
+  #   runs-on: ${{ inputs.runs_on }}
+  #   environment: ${{ inputs.environment }}
+  #   permissions:
+  #     id-token: write # Required for PyPI Trusted Publishing.
+  #   steps:
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+  #       with:
+  #         name: ${{ inputs.artifact_name }}
+  #         path: dist
+
+  #     - name: Publish to PyPI
+  #       uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e
