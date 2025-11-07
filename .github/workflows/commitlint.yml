@@ -33,10 +33,9 @@ on:
         default: '["@commitlint/config-conventional"]'
 
       message:
-        description: Commit message to lint. Default is latest commit message.
+        description: A commit message to lint. Defaults to last commit message.
         type: string
         required: false
-        default: ${{ github.event.head_commit.message }}
 
       help_url:
         description: Custom help URL for error messages.
@@ -55,12 +54,15 @@ jobs:
       COMMITLINT_VERSION: ${{ inputs.commitlint_version }}
       EXTENDS_JSON: ${{ inputs.extends }}
       MESSAGE: ${{ inputs.message }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       HELP_URL: ${{ inputs.help_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
           persist-credentials: false
+          # Required to lint a commit range using the --from and --to parameters
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -76,4 +78,17 @@ jobs:
       - name: Run commitlint
         run: |
           readarray -t extends <<< "$(echo "$EXTENDS_JSON" | jq -cr '.[]')"
-          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" <<< "$MESSAGE"
+
+          optional_args=()
+
+          if [[ -n "$MESSAGE" ]]; then
+            echo "Linting commit message from stdin" >&2
+          elif [[ -n "$BASE_SHA" && -n "$HEAD_SHA" ]]; then
+            echo "Linting commit range" >&2
+            optional_args+=(--from "$BASE_SHA" --to "$HEAD_SHA")
+          else
+            echo "Linting last commit" >&2
+            optional_args+=(--last)
+          fi
+
+          npx "commitlint@$COMMITLINT_VERSION" --extends "${extends[@]}" --help-url "$HELP_URL" --verbose "${optional_args[@]}" <<< "$MESSAGE"
