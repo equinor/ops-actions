@@ -5,6 +5,8 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 7
     # Prefix commit messages with "fix(deps)" to include dependency updates in patch releases
     commit-message:
       prefix: fix(deps)
