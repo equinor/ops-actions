@@ -1,5 +1,29 @@
 # Changelog
 
+## [9.30.0](https://github.com/equinor/ops-actions/compare/v9.29.0...v9.30.0) (2025-11-07)
+
+
+### Features
+
+* **mkdocs:** enable optional strict mode ([#844](https://github.com/equinor/ops-actions/issues/844)) ([1adb234](https://github.com/equinor/ops-actions/commit/1adb23494349a621efcaed691b05f4e7007ab03c))
+* **terraform:** download modules from private GitHub repository ([#861](https://github.com/equinor/ops-actions/issues/861)) ([206634c](https://github.com/equinor/ops-actions/commit/206634c625f8dbec77108cda72118072afc1cf0f))
+
+
+### Bug Fixes
+
+* **commitlint:** workflow fails if triggered by non-push event ([#870](https://github.com/equinor/ops-actions/issues/870)) ([938b212](https://github.com/equinor/ops-actions/commit/938b212a8af108119ba543ca93f4deaad3fc18ab))
+* **deps:** bump actions/download-artifact from 5.0.0 to 6.0.0 ([#852](https://github.com/equinor/ops-actions/issues/852)) ([262e1ed](https://github.com/equinor/ops-actions/commit/262e1ed0623eb30be23eba339a48845f6cbfc685))
+* **deps:** bump actions/upload-artifact from 4.6.2 to 5.0.0 ([#862](https://github.com/equinor/ops-actions/issues/862)) ([bf6eb13](https://github.com/equinor/ops-actions/commit/bf6eb13b1c265f7e55380074e77a87aa9f363bd1))
+* **deps:** bump astral-sh/setup-uv from 6.7.0 to 7.1.2 ([#849](https://github.com/equinor/ops-actions/issues/849)) ([073a5fb](https://github.com/equinor/ops-actions/commit/073a5fb33c3274890283d3f156c7b7e775030dc3))
+* **deps:** bump databricks/setup-cli from 0.273.0 to 0.274.0 ([#848](https://github.com/equinor/ops-actions/issues/848)) ([01f5184](https://github.com/equinor/ops-actions/commit/01f51843137346d71130ba754bdc6d80403a1087))
+* **deps:** bump databricks/setup-cli from 0.274.0 to 0.275.0 ([#863](https://github.com/equinor/ops-actions/issues/863)) ([38d64e7](https://github.com/equinor/ops-actions/commit/38d64e7f9b5363d1075f6abf921f1709bed06537))
+* **deps:** bump github/codeql-action from 3.30.3 to 4.31.0 ([#851](https://github.com/equinor/ops-actions/issues/851)) ([36d17c6](https://github.com/equinor/ops-actions/commit/36d17c667893d35238466231c4979bd5b9ca7499))
+* **deps:** bump github/codeql-action from 4.31.0 to 4.31.2 ([#864](https://github.com/equinor/ops-actions/issues/864)) ([ee2fb2a](https://github.com/equinor/ops-actions/commit/ee2fb2a12cde980000a42ea2a5f5b851cfca780c))
+* **deps:** bump googleapis/release-please-action from 4.3.0 to 4.4.0 ([11f4a8e](https://github.com/equinor/ops-actions/commit/11f4a8ea3d263d98d9509298340e9a6cc3b43fc1))
+* **deps:** bump googleapis/release-please-action from 4.3.0 to 4.4.0 ([#850](https://github.com/equinor/ops-actions/issues/850)) ([11f4a8e](https://github.com/equinor/ops-actions/commit/11f4a8ea3d263d98d9509298340e9a6cc3b43fc1))
+* **zizmor-codeql:** allow empty config file path ([#857](https://github.com/equinor/ops-actions/issues/857)) ([69206c3](https://github.com/equinor/ops-actions/commit/69206c3e7e2eaa64bae42544111f795603c0fcff)), closes [#855](https://github.com/equinor/ops-actions/issues/855)
+* **zizmor-codeql:** exit with error if config file not found ([#860](https://github.com/equinor/ops-actions/issues/860)) ([8665466](https://github.com/equinor/ops-actions/commit/866546648bee6bcd35960d546dd113f2cc59d440))
+
 ## [9.29.0](https://github.com/equinor/ops-actions/compare/v9.28.0...v9.29.0) (2025-10-27)
 
 
