@@ -50,26 +50,11 @@ jobs:
           # If triggered by PR, only validate changed files.
           VALIDATE_ALL_CODEBASE: ${{ github.event_name != 'pull_request' }}
 
-          VALIDATE_CSHARP: true
-          VALIDATE_DOTNET_SLN_FORMAT_ANALYZERS: true
-          VALIDATE_DOTNET_SLN_FORMAT_STYLE: true
-          VALIDATE_DOTNET_SLN_FORMAT_WHITESPACE: true
-
-          VALIDATE_HTML: true
-
-          VALIDATE_CSS: true
-
-          VALIDATE_JAVASCRIPT_ES: true
-          VALIDATE_JAVASCRIPT_PRETTIER: true
-          VALIDATE_TYPESCRIPT_ES: true
-          VALIDATE_TYPESCRIPT_PRETTIER: true
-
           # Common in both Node.js and ASP.NET projects
           VALIDATE_EDITORCONFIG: true
 
-          # For Python, prefer the Ruff linter over Flake8 and isort.
-          # The Ruff linter is faster than, has feature parity with, and serves as a drop-in replacement for both Flake8 and isort.
-          # The Ruff formatter also has feature parity with Black, however Super-linter does not yet support the Ruff formatter.
+          # For Python, prefer the Ruff linter and code formatter over Flake8, isort and Black.
+          # The Ruff linter and code formatter is faster than, has feature parity with, and serves as a drop-in replacement for Flake8, isort and Black.
           # Ref: https://docs.astral.sh/ruff/
           VALIDATE_PYTHON_RUFF: true
           VALIDATE_PYTHON_RUFF_FORMAT: true
@@ -79,13 +64,9 @@ jobs:
 
           VALIDATE_POWERSHELL: true
 
-          VALIDATE_GITHUB_ACTIONS: true
-          VALIDATE_GITHUB_ACTIONS_ZIZMOR: true
-
-          VALIDATE_TERRAFORM_FMT: true
-          VALIDATE_TERRAFORM_TFLINT: true
-
           VALIDATE_JSON: true
           VALIDATE_YAML: true
 
           VALIDATE_MARKDOWN: true
+
+          VALIDATE_GITHUB_ACTIONS: true
