@@ -46,6 +46,27 @@ updates:
 
 ## Development
 
+Clone this repository:
+
+```console
+git clone https://github.com/equinor/ops-actions.git && cd ops-actions
+```
+
+Install dependencies:
+
+```console
+python -m pip install --upgrade pip
+pip install -r requirements-docs.txt
+```
+
+Run a development server:
+
+```console
+mkdocs serve
+```
+
+Alternatively, a [Visual Studio Code debug configuration](https://code.visualstudio.com/docs/debugtest/debugging-configuration) is provided (see [debug code with Visual Studio Code](https://code.visualstudio.com/docs/debugtest/debugging)).
+
 The [GitHub Actions extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions) is highly recommended for syntax highlighting, validation and code completion for GitHub Actions workflows.
 
 ## Testing
