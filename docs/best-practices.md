@@ -24,6 +24,8 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 
   This reduces the flexibility of the reusable workflow.
 
+- Consistency within a workflow > consistency across workflows.
+
 ## Security
 
 - Disable top level GitHub token permissions, then enable required permissions at the job level instead:
