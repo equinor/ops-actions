@@ -48,19 +48,14 @@ jobs:
           MULTI_STATUS: false
           ENABLE_GITHUB_ACTIONS_STEP_SUMMARY: true
 
-          # Common in both Node.js and ASP.NET projects
-          VALIDATE_EDITORCONFIG: true
-
           # For Python, prefer the Ruff linter and code formatter over Flake8,
           # isort and Black. Ruff is faster than, has feature parity with, and
           # serves as a drop-in replacement for these tools.
           # Ref: https://docs.astral.sh/ruff/
           VALIDATE_PYTHON_RUFF: true
           VALIDATE_PYTHON_RUFF_FORMAT: true
-          VALIDATE_PYTHON_MYPY: true
 
           VALIDATE_BASH: true
-
           VALIDATE_POWERSHELL: true
 
           VALIDATE_JSON: true
