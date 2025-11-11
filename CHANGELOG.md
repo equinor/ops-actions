@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.31.0](https://github.com/equinor/ops-actions/compare/v9.30.0...v9.31.0) (2025-11-11)
+
+
+### Features
+
+* **mkdocs:** install dependencies using requirement specifier ([#878](https://github.com/equinor/ops-actions/issues/878)) ([bd371e3](https://github.com/equinor/ops-actions/commit/bd371e321d64b952ee377b72e9be2dc14b0cdfee))
+
 ## [9.30.0](https://github.com/equinor/ops-actions/compare/v9.29.0...v9.30.0) (2025-11-07)
 
 
