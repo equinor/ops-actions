@@ -21,7 +21,7 @@ on:
         default: ">=1.0.0"
 
       requirements:
-        description: The path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
+        description: A requirement specifier or the path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
         type: string
         required: false
 
@@ -92,7 +92,12 @@ jobs:
         if: inputs.requirements != ''
         env:
           REQUIREMENTS: ${{ inputs.requirements }}
-        run: pip install -r "$REQUIREMENTS"
+        run: |
+          if [[ -f "$REQUIREMENTS" ]]; then
+            pip install -r "$REQUIREMENTS"
+          else
+            pip install "$REQUIREMENTS"
+          fi
 
       - name: MkDocs Build
         env:
