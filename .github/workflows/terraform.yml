@@ -184,10 +184,8 @@ jobs:
       - name: Start SSH agent
         if: env.SSH_PRIVATE_KEY != ''
         run: |
-          if [[ -n "$SSH_PRIVATE_KEY" ]]; then
-            eval "$(ssh-agent -s)"
-            ssh-add - <<< "$SSH_PRIVATE_KEY"
-          fi
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "$SSH_PRIVATE_KEY"
 
       - name: Terraform Init
         id: init
