@@ -43,8 +43,8 @@ on:
 permissions: {}
 
 jobs:
-  analyze-iac:
-    name: Analyze IaC
+  analyze-config:
+    name: Analyze config
     permissions:
       security-events: write
       contents: read
