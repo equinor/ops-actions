@@ -11,7 +11,7 @@ A reusable GitHub Actions workflow for running the Zizmor linter, and uploading 
 
 ### Configure GitHub repository
 
--  [Allowing select actions and reusable workflows to run](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-select-actions-and-reusable-workflows-to-run)
+- [Allowing select actions and reusable workflows to run](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-select-actions-and-reusable-workflows-to-run)
 - Whitelisted actions:
   - `actions/Checkout`
   - `astral-sh/setup-uv`
@@ -27,10 +27,11 @@ A reusable GitHub Actions workflow for running the Zizmor linter, and uploading 
 
 ## Usage
 
-Add a GitHub Actions workflow file `.github/workflows/zizmor.yml` in your repository, and add the following recommended configuration:
+Add a GitHub Actions workflow file `.github/workflows/code-scanning.yml` in your repository, and add the following recommended configuration:
 
 ```yaml
-name: CodeQL scanning with Zizmor
+name: Code scanning
+
 on:
   push:
     branches: [main]
@@ -43,8 +44,8 @@ on:
 permissions: {}
 
 jobs:
-  zizmor:
-    name: CodeQL Analysis with Zizmor
+  github-actions:
+    name: GitHub Actions
     permissions:
       actions: read
       contents: read

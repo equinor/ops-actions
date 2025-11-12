@@ -41,7 +41,7 @@ nav:
       - Release Please (Manifest): workflows/release-please-manifest.md
       - Terraform: workflows/terraform.md
       - Trivy: workflows/trivy-config-codeql.md
-      - Zizmor: workflows/zizmor-codeql.md
+      - zizmor: workflows/zizmor-codeql.md
   - Development:
       - Best Practices: best-practices.md
       - Changelog: changelog.md

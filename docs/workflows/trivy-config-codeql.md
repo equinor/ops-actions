@@ -12,9 +12,9 @@ A reusable GitHub Actions workflow for running Trivy in IaC mode, container mode
 
 - [Allowing select actions and reusable workflows to run](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-select-actions-and-reusable-workflows-to-run)
 - Whitelisted actions:
-    - `actions/Checkout`
-    - `aquasecurity/trivy-action`
-    - `github/codeql-action/*`
+  - `actions/Checkout`
+  - `aquasecurity/trivy-action`
+  - `github/codeql-action/*`
 - Required permissions for `GITHUB_TOKEN`:
 
   ```yaml
@@ -26,10 +26,10 @@ A reusable GitHub Actions workflow for running Trivy in IaC mode, container mode
 
 ## Usage
 
-Add a GitHub Actions workflow file `.github/workflows/trivy.yml` in your repository, and add the following recommended configuration:
+Add a GitHub Actions workflow file `.github/workflows/code-scanning.yml` in your repository, and add the following recommended configuration:
 
 ```yaml
-name: trivy
+name: Code scanning
 
 on:
   push:
@@ -43,17 +43,13 @@ on:
 permissions: {}
 
 jobs:
-  trivy:
-    name: Run Trivy IaC Scan and upload results to GitHub Security
+  config:
+    name: IaC
     permissions:
       security-events: write
       contents: read
       actions: read
     uses: equinor/ops-actions/.github/workflows/trivy-config-codeql.yml@main
-    with:
-      scan_iac: true
-
-
 ```
 
 ## Inputs
