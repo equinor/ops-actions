@@ -44,7 +44,7 @@ on:
 permissions: {}
 
 jobs:
-  analyze-gh-actions:
+  analyze-actions:
     name: Analyze GitHub Actions
     permissions:
       actions: read
