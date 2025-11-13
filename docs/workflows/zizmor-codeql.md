@@ -20,9 +20,9 @@ A reusable GitHub Actions workflow for running the Zizmor linter, and uploading 
 
   ```yaml
     permissions:
-      contents: read
       security-events: write
       actions: read
+      contents: read
   ```
 
 ## Usage
@@ -48,9 +48,9 @@ jobs:
   analyze-actions:
     name: Analyze GitHub Actions
     permissions:
+      security-events: write
       actions: read
       contents: read
-      security-events: write
     uses: equinor/ops-actions/.github/workflows/zizmor-codeql.yml@main
 ```
 
