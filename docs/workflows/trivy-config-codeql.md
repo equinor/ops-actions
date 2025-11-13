@@ -19,8 +19,9 @@ A reusable GitHub Actions workflow for running Trivy in IaC mode, container mode
 
   ```yaml
     permissions:
-      contents: read
       security-events: write
+      actions: read
+      contents: read
   ```
 
 ## Usage

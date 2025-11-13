@@ -20,9 +20,9 @@ A reusable GitHub Actions workflow for running the Zizmor linter, and uploading 
 
   ```yaml
     permissions:
+      security-events: write
       actions: read
       contents: read
-      security-events: write
   ```
 
 ## Usage
