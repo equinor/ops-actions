@@ -40,7 +40,7 @@ on:
         # TODO: add description
         type: string
         required: false
-        default: tests
+        default: tests # TODO: remove default?
 
       artifact_name:
         description: The name of the build artifact to upload.
@@ -66,6 +66,7 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
     env:
+      PYTEST_DIR: ${{ inputs.test_dir }}
       JUNIT_XML_FILE: junit/test-results.xml
     steps:
       - name: Checkout
@@ -100,27 +101,19 @@ jobs:
           fi
 
       - name: Run pytest
-        env:
-          TEST_DIR: ${{ inputs.test_dir }}
-        run: pytest "$TEST_DIR" --doctest-modules --junitxml="$JUNIT_XML_FILE"
+        run: pytest "$PYTEST_DIR" --doctest-modules --junitxml="$JUNIT_XML_FILE"
 
       - name: Create tarball
         id: tar
+        env:
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
           tar -cf "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
-      - name: Upload build artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ steps.tar.outputs.tarball }}
-
-      - name: Upload test results
-        # Always run this step to upload test results when there are test failures
-        if: always()
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
-        with:
-          name: pytest-results-${{ inputs.python_version }}
-          path: ${{ env.JUNIT_XML_FILE }}
