@@ -94,7 +94,7 @@ jobs:
           fi
 
       - name: Run pytest
-        run: pytest . --doctest-modules --junitxml="$JUNIT_XML_FILE"
+        run: python -m pytest . --doctest-modules --junitxml="$JUNIT_XML_FILE"
 
       - name: Create tarball
         id: tar
