@@ -37,7 +37,7 @@ on:
         required: false
 
       test_dir:
-        # TODO: add description
+        description: The path, relative to the working directory, of a directory or Python file containing tests to be run using pytest.
         type: string
         required: false
         default: tests # TODO: remove default?
@@ -65,9 +65,6 @@ jobs:
       run:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
-    env:
-      PYTEST_DIR: ${{ inputs.test_dir }}
-      JUNIT_XML_FILE: junit/test-results.xml
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
@@ -101,7 +98,9 @@ jobs:
           fi
 
       - name: Run pytest
-        run: pytest "$PYTEST_DIR" --doctest-modules --junitxml="$JUNIT_XML_FILE"
+        env:
+          PYTEST_DIR: ${{ inputs.test_dir }}
+        run: pytest "$PYTEST_DIR" --doctest-modules
 
       - name: Create tarball
         id: tar
