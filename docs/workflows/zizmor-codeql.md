@@ -11,7 +11,7 @@ A reusable GitHub Actions workflow for running the Zizmor linter, and uploading 
 
 ### Configure GitHub repository
 
--  [Allowing select actions and reusable workflows to run](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-select-actions-and-reusable-workflows-to-run)
+- [Allowing select actions and reusable workflows to run](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-select-actions-and-reusable-workflows-to-run)
 - Whitelisted actions:
   - `actions/Checkout`
   - `astral-sh/setup-uv`
@@ -39,7 +39,8 @@ on:
     # The branches below must be a subset of the branches above
     branches: [main]
   schedule:
-    - cron: "0 0 * * 4" # Weekly scan every Thursday at midnight
+    # Run every Thursday at midnight
+    - cron: "0 0 * * 4"
 
 permissions: {}
 

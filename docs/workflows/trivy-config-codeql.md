@@ -12,9 +12,9 @@ A reusable GitHub Actions workflow for running Trivy in IaC mode, container mode
 
 - [Allowing select actions and reusable workflows to run](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-select-actions-and-reusable-workflows-to-run)
 - Whitelisted actions:
-    - `actions/Checkout`
-    - `aquasecurity/trivy-action`
-    - `github/codeql-action/*`
+  - `actions/Checkout`
+  - `aquasecurity/trivy-action`
+  - `github/codeql-action/*`
 - Required permissions for `GITHUB_TOKEN`:
 
   ```yaml
@@ -37,8 +37,8 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: ["main"]
-  schedule:
-    - cron: "23 3 * * 6"
+    # Run every Thursday at midnight
+    - cron: "0 0 * * 4"
 
 permissions: {}
 
