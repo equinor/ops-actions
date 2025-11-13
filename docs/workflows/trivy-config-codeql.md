@@ -19,9 +19,9 @@ A reusable GitHub Actions workflow for running Trivy in IaC mode, container mode
 
   ```yaml
     permissions:
-      contents: read
       security-events: write
       actions: read
+      contents: read
   ```
 
 ## Usage
@@ -48,8 +48,8 @@ jobs:
     name: Analyze config
     permissions:
       security-events: write
-      contents: read
       actions: read
+      contents: read
     uses: equinor/ops-actions/.github/workflows/trivy-config-codeql.yml@main
 ```
 
