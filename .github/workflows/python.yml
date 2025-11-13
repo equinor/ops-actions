@@ -36,11 +36,11 @@ on:
         type: string
         required: false
 
-      test_dir:
+      tests:
         description: The path, relative to the working directory, of a directory or Python file containing tests to be run using pytest.
         type: string
         required: false
-        default: tests # TODO: remove default?
+        default: tests
 
       artifact_name:
         description: The name of the build artifact to upload.
@@ -99,7 +99,7 @@ jobs:
 
       - name: Run pytest
         env:
-          PYTEST_DIR: ${{ inputs.test_dir }}
+          PYTEST_DIR: ${{ inputs.tests }}
         run: pytest "$PYTEST_DIR" --doctest-modules
 
       - name: Create tarball
