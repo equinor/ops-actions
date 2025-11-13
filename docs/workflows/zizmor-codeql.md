@@ -46,9 +46,9 @@ jobs:
   zizmor:
     name: CodeQL Analysis with Zizmor
     permissions:
+      security-events: write
       actions: read
       contents: read
-      security-events: write
     uses: equinor/ops-actions/.github/workflows/zizmor-codeql.yml@main
     with:
       config_file: .github/zizmor.yml

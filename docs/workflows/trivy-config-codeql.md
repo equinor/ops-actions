@@ -45,8 +45,9 @@ jobs:
   trivy:
     name: Run Trivy IaC Scan and upload results to GitHub Security
     permissions:
-      contents: read
       security-events: write
+      actions: read
+      contents: read
     uses: equinor/ops-actions/.github/workflows/trivy-config-codeql.yml@main
     with:
       scan_iac: true
