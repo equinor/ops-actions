@@ -27,7 +27,7 @@ on:
         required: false
 
       requirements:
-        description: The path, relative to the working directory, of a pip requirements file.
+        description: A requirement specifier or the path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
         type: string
         required: false
 
@@ -89,6 +89,8 @@ jobs:
           pip install pytest pytest-cov
           if [[ -f "$REQUIREMENTS" ]]; then
             pip install -r "$REQUIREMENTS" --target "$PIP_TARGET_DIR"
+          elif [[ -n "$REQUIREMENTS" ]]; then
+            pip install "$REQUIREMENTS" --target "$PIP_TARGET_DIR"
           fi
 
       - name: Run pytest
