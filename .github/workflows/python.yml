@@ -36,6 +36,12 @@ on:
         type: string
         required: false
 
+      test_dir:
+        # TODO: add description
+        type: string
+        required: false
+        default: tests
+
       artifact_name:
         description: The name of the build artifact to upload.
         type: string
@@ -94,7 +100,9 @@ jobs:
           fi
 
       - name: Run pytest
-        run: python -m pytest . --doctest-modules --junitxml="$JUNIT_XML_FILE"
+        env:
+          TEST_DIR: ${{ inputs.test_dir }}
+        run: pytest "$TEST_DIR" --doctest-modules --junitxml="$JUNIT_XML_FILE"
 
       - name: Create tarball
         id: tar
