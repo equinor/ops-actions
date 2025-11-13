@@ -11,7 +11,7 @@ A reusable GitHub Actions workflow for running the Zizmor linter, and uploading 
 
 ### Configure GitHub repository
 
--  [Allowing select actions and reusable workflows to run](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-select-actions-and-reusable-workflows-to-run)
+- [Allowing select actions and reusable workflows to run](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#allowing-select-actions-and-reusable-workflows-to-run)
 - Whitelisted actions:
   - `actions/Checkout`
   - `astral-sh/setup-uv`
@@ -20,9 +20,9 @@ A reusable GitHub Actions workflow for running the Zizmor linter, and uploading 
 
   ```yaml
     permissions:
+      actions: read
       contents: read
       security-events: write
-      actions: read
   ```
 
 ## Usage
