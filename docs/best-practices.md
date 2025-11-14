@@ -239,6 +239,24 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
           names: '["Kari Nordmann", "Ola Nordmann"]'
     ```
 
+### When you should add an input to a reusable workflow
+
+It can be tempting to add inputs for every conceivable customisation, however this only contributes to diffusing the workflow and making it more, maybe unnecessarily, complex.
+
+Generally, you should add new inputs only when:
+
+- A value can vary from repo to repo and the variance makes sense.
+- It adds something of value to the workflow.
+- The input allows the workflow to be reused across different contexts without duplicating the workflow file.
+- The customization is required by multiple caller workflows, not just a single use case.
+
+You should NOT add new inputs when:
+
+- The value is only used internally in the workflow, for example when a file is generated from a job step and is only used internally in the workflow.
+- The input would override a security best practice or default that should be enforced consistently.
+- A sensible default can be provided that works in most cases, and there's no clear benefit to making it configurable.
+- The input would create breaking changes for existing caller workflows without significant value.
+
 ## Actions vs. command-line programs
 
 A step can run an [action](https://docs.github.com/en/actions/concepts/workflows-and-actions/custom-actions) (a reusable unit of code) or command-line program:
