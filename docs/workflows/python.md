@@ -1,10 +1,6 @@
 # `python.yml`
 
-A reusable CI workflow for Python applications.
-
-## Key Features
-
-- Prepares Python application for deployment.
+A reusable workflow that tests and prepares a Python application for deployment.
 
 ## Usage
 
@@ -111,7 +107,7 @@ The path, relative to the working directory, to create a virtual Python environm
 
 ### (*Optional*) `requirements`
 
-The path, relative to the working directory, of a pip requirements file.
+A [requirement specifier](https://pip.pypa.io/en/stable/reference/requirement-specifiers/) or the path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
 
 ### (*Optional*) `pip_target_dir`
 
