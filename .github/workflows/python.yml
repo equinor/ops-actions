@@ -27,7 +27,7 @@ on:
         required: false
 
       requirements:
-        description: The path, relative to the working directory, of a pip requirements file.
+        description: A requirement specifier or the path, relative to the working directory, of a requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
         type: string
         required: false
 
@@ -79,13 +79,16 @@ jobs:
           source "$VENV_PATH/bin/activate"
 
       - name: Install dependencies
-        if: inputs.requirements != ''
         env:
           REQUIREMENTS: ${{ inputs.requirements }}
           PIP_TARGET_DIR: ${{ inputs.pip_target_dir }}
         run: |
           python -m pip install --upgrade pip
-          pip install -r "$REQUIREMENTS" --target "$PIP_TARGET_DIR"
+          if [[ -f "$REQUIREMENTS" ]]; then
+            pip install -r "$REQUIREMENTS" --target "$PIP_TARGET_DIR"
+          elif [[ -n "$REQUIREMENTS" ]]; then
+            pip install "$REQUIREMENTS" --target "$PIP_TARGET_DIR"
+          fi
 
       - name: Create tarball
         id: tar
