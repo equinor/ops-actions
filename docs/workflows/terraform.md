@@ -32,14 +32,17 @@ name: Terraform
 
 on:
   pull_request:
-    branches:
-      - main
-    paths:
-      - terraform/**
+    branches: [main]
+    paths: [terraform/**]
+
+permissions: {}
 
 jobs:
   deploy:
     name: Deploy
+    permissions:
+      contents: read
+      id-token: write
     uses: equinor/ops-actions/.github/workflows/terraform.yml@main
     with:
       environment: development
