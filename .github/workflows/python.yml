@@ -37,10 +37,10 @@ on:
         required: false
 
       tests:
-        description: The path, relative to the working directory, of a directory or Python file containing tests to be run using pytest.
+        description: The path, relative to the working directory, of a directory (usually `tests/`) containing tests to be run by pytest.
         type: string
         required: false
-        default: tests
+        default: tests/
 
       artifact_name:
         description: The name of the build artifact to upload.
@@ -91,6 +91,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pytest pytest-cov
+
           if [[ -f "$REQUIREMENTS" ]]; then
             pip install -r "$REQUIREMENTS" --target "$PIP_TARGET_DIR"
           elif [[ -n "$REQUIREMENTS" ]]; then
