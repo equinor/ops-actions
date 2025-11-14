@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.32.0](https://github.com/equinor/ops-actions/compare/v9.31.0...v9.32.0) (2025-11-14)
+
+
+### Features
+
+* **python:** install dependencies using requirement specifier ([#885](https://github.com/equinor/ops-actions/issues/885)) ([f3ba065](https://github.com/equinor/ops-actions/commit/f3ba0654c69afcfe237f64068265e04c2730b7bd))
+
+
+### Bug Fixes
+
+* **terraform:** reduce and document required permissions ([#887](https://github.com/equinor/ops-actions/issues/887)) ([c0b1958](https://github.com/equinor/ops-actions/commit/c0b1958a3dfe8c3c4d6831f791f2bb86bfcd9694))
+
 ## [9.31.0](https://github.com/equinor/ops-actions/compare/v9.30.0...v9.31.0) (2025-11-11)
 
 
