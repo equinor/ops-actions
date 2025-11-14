@@ -84,7 +84,7 @@ The path, relative to the working directory, of a variable definitions file (`.t
 
 ### (*Optional*) `artifact_name`
 
-The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name. Defaults to `terraform-<environment>`
+The name of the artifact to upload. If not specified, a unique artifact name will be generated.
 
 ### (*Optional*) `run_terraform_apply`
 
