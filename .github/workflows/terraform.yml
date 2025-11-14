@@ -107,7 +107,7 @@ env:
   LOCK_FILE: .terraform.lock.hcl
   PLAN_FILE: tfplan
   TARBALL: terraform.tar.gpg
-  ARTIFACT_NAME: ${{ inputs.artifact_name || format('tfplan-{0}-{1}', github.job, github.run_id) }}
+  ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}-{1}', github.job, github.run_id) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
