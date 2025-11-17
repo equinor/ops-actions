@@ -42,6 +42,12 @@ on:
         required: false
         default: python-app
 
+      upload_artifact:
+        description: Should the build artifact be uploaded?
+        type: boolean
+        required: false
+        default: true
+
     outputs:
       artifact_name:
         description: The name of the uploaded artifact containing the application.
@@ -92,12 +98,14 @@ jobs:
 
       - name: Create tarball
         id: tar
+        if: inputs.upload_artifact
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
           tar -cf "$tarball" .
           echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
+        if: inputs.upload_artifact
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
           name: ${{ inputs.artifact_name }}

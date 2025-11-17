@@ -123,6 +123,10 @@ The path, relative to the working directory, of a target directory that pip shou
 
 The name of the build artifact. Defaults to `python-app`.
 
+### (*Optional*) `upload_artifact`
+
+Should the build artifact be uploaded? Defaults to `true`.
+
 ## Outputs
 
 ### `artifact_name`
