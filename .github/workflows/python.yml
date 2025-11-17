@@ -27,7 +27,7 @@ on:
         required: false
 
       requirements:
-        description: A requirement specifier or the path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
+        description: A requirement specifier or the path, relative to the working directory, of a requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
         type: string
         required: false
 

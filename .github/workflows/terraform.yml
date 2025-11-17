@@ -288,7 +288,6 @@ jobs:
 
     outputs:
       upload-outcome: ${{ steps.upload.outcome }}
-      artifact-id: ${{ steps.upload.outputs.artifact-id }}
       plugin-cache-dir: ${{ steps.mkdir.outputs.plugin-cache-dir }}
       cache-primary-key: ${{ steps.cache-restore.outputs.cache-primary-key }}
       cache-restore-hit: ${{ steps.cache-restore.outputs.cache-hit }}
@@ -303,7 +302,6 @@ jobs:
     permissions:
       contents: read # Required to checkout the repository
       id-token: write # Required to authenticate to Azure with OIDC
-      actions: write # Required to delete the artifact
     defaults:
       run:
         shell: bash
@@ -341,14 +339,3 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -input=false "$PLAN_FILE"
-
-      # Once the Terraform plan file has been applied, the artifact is no longer needed.
-      # Delete it to save storage space.
-      # There is currently no official action to do this, so we use the GitHub CLI instead.
-      - name: Delete artifact
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACT_ID: ${{ needs.terraform-plan.outputs.artifact-id }}
-        run: |
-          gh api --method DELETE "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID" 1>/dev/null
-          echo "Deleted artifact $ARTIFACT_NAME ($ARTIFACT_ID)"

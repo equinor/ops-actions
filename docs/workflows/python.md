@@ -107,7 +107,9 @@ The path, relative to the working directory, to create a virtual Python environm
 
 ### (*Optional*) `requirements`
 
-A [requirement specifier](https://pip.pypa.io/en/stable/reference/requirement-specifiers/) or the path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
+A [requirement specifier](https://pip.pypa.io/en/stable/reference/requirement-specifiers/) or the path, relative to the working directory, of a requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
+
+For example, set the value to `"."` to install dependencies from a `pyproject.toml` file in the working directory.
 
 ### (*Optional*) `pip_target_dir`
 
