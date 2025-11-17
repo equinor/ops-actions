@@ -1,10 +1,6 @@
 # `python.yml`
 
-A reusable CI workflow for Python applications.
-
-## Key Features
-
-- Prepares Python application for deployment.
+A reusable workflow that tests and prepares a Python application for deployment.
 
 ## Usage
 

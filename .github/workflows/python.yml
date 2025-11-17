@@ -36,6 +36,12 @@ on:
         type: string
         required: false
 
+      tests:
+        description: The path, relative to the working directory, of a directory (usually `tests/`) containing tests to be run by pytest.
+        type: string
+        required: false
+        default: tests/
+
       artifact_name:
         description: The name of the build artifact to upload.
         type: string
@@ -84,14 +90,23 @@ jobs:
           PIP_TARGET_DIR: ${{ inputs.pip_target_dir }}
         run: |
           python -m pip install --upgrade pip
+          pip install pytest pytest-cov
+
           if [[ -f "$REQUIREMENTS" ]]; then
             pip install -r "$REQUIREMENTS" --target "$PIP_TARGET_DIR"
           elif [[ -n "$REQUIREMENTS" ]]; then
             pip install "$REQUIREMENTS" --target "$PIP_TARGET_DIR"
           fi
 
+      - name: Run pytest
+        env:
+          PYTEST_DIR: ${{ inputs.tests }}
+        run: pytest "$PYTEST_DIR" --doctest-modules
+
       - name: Create tarball
         id: tar
+        env:
+          ARTIFACT_NAME: ${{ inputs.artifact_name }}
         run: |
           tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
           tar -cf "$tarball" .
