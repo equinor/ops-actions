@@ -204,7 +204,7 @@ jobs:
       # This file contains the full configuration, including sensitive data.
       # As a result, it should be treated as a potentially-sensitive artifact.
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
-      - name: Terraform Plan
+      - name: Generate Terraform Plan
         id: plan
         if: github.actor != 'dependabot[bot]'
         # Start Bash without fail-fast behavior.
