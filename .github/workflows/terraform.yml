@@ -225,6 +225,17 @@ jobs:
           fi
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
 
+
+      - name: Display Terraform Plan
+        id: display-plan
+        if: github.actor != 'dependabot[bot]'
+        # Start Bash without fail-fast behavior.
+        # Required in order to check exitcode.
+        # Ref: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
+        shell: bash {0}
+        run: |
+          terraform show $PLAN_FILE
+
       - name: Create tarball
         id: tar
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
