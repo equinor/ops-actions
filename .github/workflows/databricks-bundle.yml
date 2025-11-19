@@ -41,8 +41,8 @@ on:
         required: true
 
       AZURE_SUBSCRIPTION_ID:
-        description: The ID of the Azure subscription to authenticate to.
-        required: true
+        description: (Deprecated) The ID of the Azure subscription to authenticate to.
+        required: false
 
       AZURE_TENANT_ID:
         description: The ID of the Microsoft Entra tenant to authenticate to.
@@ -81,8 +81,8 @@ jobs:
         uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
 
       - name: Validate Databricks bundle
         run: databricks bundle validate
