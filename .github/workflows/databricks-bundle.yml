@@ -72,7 +72,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install uv
+      # By default, Python for Databricks Asset Bundles uses uv to create a
+      # virtual environment and install the required dependencies.
+      # Ref: https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/python/
+      - name: Setup uv
         uses: astral-sh/setup-uv@5a7eac68fb9809dea845d802897dc5c723910fa3
 
       - name: Setup Databricks CLI
