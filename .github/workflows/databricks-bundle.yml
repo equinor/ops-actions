@@ -72,6 +72,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@5a7eac68fb9809dea845d802897dc5c723910fa3
+
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@9925cdb329614cccdba6f9a847ae9c095db12b13
         with:
