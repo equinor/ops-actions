@@ -25,6 +25,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
   This reduces the flexibility of the reusable workflow.
 
 - Consistency within a workflow > consistency across workflows.
+- Add comments to clarify _why_ something is needed, not what it does.
 
 ## Security
 
