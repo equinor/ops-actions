@@ -1,8 +1,3 @@
-# Reusable GitHub Actions workflow for Databricks Asset Bundles.
-# Refs:
-# - https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/
-# - https://learn.microsoft.com/nb-no/azure/databricks/dev-tools/bundles/ci-cd-bundles
-
 name: ♻ databricks-bundle
 
 on:
@@ -15,7 +10,7 @@ on:
         default: ubuntu-24.04
 
       environment:
-        description: The target GitHub environment that the jobs in this workflow should reference.
+        description: The name of the GitHub environment that this workflow should use for deployments.
         required: true
         type: string
 
@@ -31,7 +26,7 @@ on:
         default: "."
 
       target:
-        description: The bundle target to use. Must be a deployment target defined in the `databricks.yml` file.
+        description: The Databricks bundle target to use. Must be a deployment target defined in the `databricks.yml` file.
         type: string
         required: false
 
