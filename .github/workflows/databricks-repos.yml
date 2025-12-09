@@ -69,6 +69,7 @@ jobs:
       contents: read # Required for the service principal to pull from GitHub repositories into Databricks Git folders.
     env:
       DATABRICKS_HOST: ${{ inputs.databricks_host }}
+      GIT_PROVIDER: gitHub
     steps:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@a9304a5220bd6c59eadfd229a7c485dc352a5f98
@@ -87,7 +88,6 @@ jobs:
       - name: Create Databricks Git credential
         id: git-credentials-create
         env:
-          GIT_PROVIDER: gitHub
           GIT_USERNAME: github-actions
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -103,9 +103,18 @@ jobs:
 
       - name: Update Databricks repo
         env:
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
           REPO_PATH: ${{ inputs.repo_path }}
           BRANCH: ${{ inputs.branch }}
-        run: databricks repos update "$REPO_PATH" --branch "$BRANCH"
+        run: |
+          repo_id=$(databricks repos list --output json | jq --arg path "$REPO_PATH" --raw-output '.[] | select(.path == $path) | .id')
+          if [[ -z "$repo_id" ]]; then
+            echo "Creating repo at path '$REPO_PATH'..."
+            databricks repos create "$REPO_URL" "$GIT_PROVIDER" --path "$REPO_PATH"
+          else
+            echo "Updating repo at path '$REPO_PATH' to latest commit on branch '$BRANCH'..."
+            databricks repos update "$REPO_PATH" --branch "$BRANCH"
+          fi
 
       # The GITHUB_TOKEN expires when the job finishes.
       - name: Delete Databricks Git credential
