@@ -36,7 +36,7 @@ jobs:
           persist-credentials: false
 
       - name: Lint Codebase
-        uses: super-linter/super-linter@2bdd90ed3262e023ac84bf8fe35dc480721fc1f2
+        uses: super-linter/super-linter@502f4fe48a81a392756e173e39a861f8c8efe056
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
