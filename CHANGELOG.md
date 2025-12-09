@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.32.2](https://github.com/equinor/ops-actions/compare/v9.32.1...v9.32.2) (2025-12-09)
+
+
+### Bug Fixes
+
+* **deps:** bump super-linter/super-linter from 8.2.1 to 8.3.0 ([#904](https://github.com/equinor/ops-actions/issues/904)) ([0ca94d7](https://github.com/equinor/ops-actions/commit/0ca94d7598ff88a2391e5bf210f90c4b2e2128e2))
+
 ## [9.32.1](https://github.com/equinor/ops-actions/compare/v9.32.0...v9.32.1) (2025-12-02)
 
 
