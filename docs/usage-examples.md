@@ -73,7 +73,7 @@ jobs:
 Prerequisites:
 
 - [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
-- Create Git folder `/Repos/<GITHUB_REPOSITORY>` in the target Databricks workspace and add the service principal with access `Can Manage`
+- Create a folder `/Repos/<GITHUB_ORG>` in the target Databricks workspace and add the service principal with access `Can Manage`
 
 ```yaml
 on:
