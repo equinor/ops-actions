@@ -85,3 +85,7 @@ The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaul
 ### `paths_released`
 
 A JSON array of paths that had releases created, `[]` if nothing was released. Use the `fromJSON` function to convert this value to an array that can be used to define a matrix strategy job
+
+### `path_tag_names`
+
+A JSON object of key-value pairs, where the key is a path that had a release created, and the value is the tag name that was created for that release.
