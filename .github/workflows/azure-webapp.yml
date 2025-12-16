@@ -97,7 +97,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 
-      - name: Deploy Web App
+      - name: Deploy Azure Web App
         id: deploy
         uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d
         env:
@@ -108,7 +108,7 @@ jobs:
           slot-name: ${{ inputs.slot_name }}
           images: ${{ inputs.image }}
 
-      - name: Configure Web App
+      - name: Configure app settings
         if: inputs.app_settings != '' || inputs.slot_settings != ''
         env:
           APP_NAME: ${{ inputs.app_name }}
