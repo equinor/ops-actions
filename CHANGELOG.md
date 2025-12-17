@@ -1,5 +1,20 @@
 # Changelog
 
+## [9.33.0](https://github.com/equinor/ops-actions/compare/v9.32.1...v9.33.0) (2025-12-17)
+
+
+### Features
+
+* **databricks-repos:** create repo if doesn't exist ([#906](https://github.com/equinor/ops-actions/issues/906)) ([42869cb](https://github.com/equinor/ops-actions/commit/42869cbd64ae7ec7f7b3f511332af00f1bde923b))
+* **release-please-manifest:** add output `path_tag_names` ([#910](https://github.com/equinor/ops-actions/issues/910)) ([575e66d](https://github.com/equinor/ops-actions/commit/575e66d14a12df7ebab89cee8bc426945c704ffc))
+
+
+### Bug Fixes
+
+* **deps:** bump actions/checkout from 6.0.0 to 6.0.1 ([#908](https://github.com/equinor/ops-actions/issues/908)) ([545188a](https://github.com/equinor/ops-actions/commit/545188a2e1be38255dd346115aa661c730135889))
+* **deps:** bump actions/setup-node from 6.0.0 to 6.1.0 ([#907](https://github.com/equinor/ops-actions/issues/907)) ([8e59a24](https://github.com/equinor/ops-actions/commit/8e59a242bf43837c7c2fa0dddb438c23b9a036de))
+* **deps:** bump super-linter/super-linter from 8.2.1 to 8.3.0 ([#904](https://github.com/equinor/ops-actions/issues/904)) ([0ca94d7](https://github.com/equinor/ops-actions/commit/0ca94d7598ff88a2391e5bf210f90c4b2e2128e2))
+
 ## [9.32.1](https://github.com/equinor/ops-actions/compare/v9.32.0...v9.32.1) (2025-12-02)
 
 
