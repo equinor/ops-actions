@@ -65,7 +65,7 @@ The version of MkDocs to install using pip. Defaults to `>=1.0.0`.
 
 ### (*Optional*) `requirements`
 
-The path of a pip requirements file (usually `requirements.txt`) that specifies dependencies to install.
+A [requirement specifier](https://pip.pypa.io/en/stable/reference/requirement-specifiers/) or the path of a pip requirements file (usually `requirements.txt`) that specifies dependencies to install.
 
 ### (*Optional*) `strict_mode`
 

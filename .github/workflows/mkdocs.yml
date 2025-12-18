@@ -21,7 +21,7 @@ on:
         default: ">=1.0.0"
 
       requirements:
-        description: The path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
+        description: A requirement specifier or the path of a pip requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
         type: string
         required: false
 
@@ -71,13 +71,13 @@ jobs:
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
         with:
           persist-credentials: false
           fetch-depth: ${{ inputs.git_fetch_depth }}
 
       - name: Setup Python
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
         with:
           python-version: ${{ inputs.python_version }}
 
@@ -92,7 +92,12 @@ jobs:
         if: inputs.requirements != ''
         env:
           REQUIREMENTS: ${{ inputs.requirements }}
-        run: pip install -r "$REQUIREMENTS"
+        run: |
+          if [[ -f "$REQUIREMENTS" ]]; then
+            pip install -r "$REQUIREMENTS"
+          else
+            pip install "$REQUIREMENTS"
+          fi
 
       - name: MkDocs Build
         env:

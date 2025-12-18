@@ -20,17 +20,18 @@ A reusable GitHub Actions workflow for running the Zizmor linter, and uploading 
 
   ```yaml
     permissions:
-      contents: read
       security-events: write
       actions: read
+      contents: read
   ```
 
 ## Usage
 
-Add a GitHub Actions workflow file `.github/workflows/zizmor.yml` in your repository, and add the following recommended configuration:
+Add a GitHub Actions workflow file `.github/workflows/code-scanning.yml` in your repository, and add the following recommended configuration:
 
 ```yaml
-name: CodeQL scanning with Zizmor
+name: Code scanning
+
 on:
   push:
     branches: [main]
@@ -38,20 +39,19 @@ on:
     # The branches below must be a subset of the branches above
     branches: [main]
   schedule:
-    - cron: "0 0 * * 4" # Weekly scan every Thursday at midnight
+    # Run every Thursday at midnight
+    - cron: "0 0 * * 4"
 
 permissions: {}
 
 jobs:
-  zizmor:
-    name: CodeQL Analysis with Zizmor
+  analyze-actions:
+    name: Analyze GitHub Actions
     permissions:
+      security-events: write
       actions: read
       contents: read
-      security-events: write
     uses: equinor/ops-actions/.github/workflows/zizmor-codeql.yml@main
-    with:
-      config_file: .github/zizmor.yml
 ```
 
 ## Inputs

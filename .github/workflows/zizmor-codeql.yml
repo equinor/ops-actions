@@ -1,4 +1,4 @@
-name: ♻ GitHub Actions Security Analysis with zizmor with upload to CodeQL
+name: ♻ zizmor-codeql
 
 on:
   workflow_call:
@@ -12,21 +12,21 @@ permissions: {}
 
 jobs:
   zizmor:
-    name: zizmor latest via PyPI
+    name: zizmor
     runs-on: ubuntu-24.04
     permissions:
-      security-events: write # needed for SARIF uploads
-      contents: read # only needed for private repos
-      actions: read # only needed for private repos
+      security-events: write # Required to upload code scanning results
+      actions: read # Required to upload code scanning results in private repositories
+      contents: read # Required to checkout private repositories
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
+      - name: Setup uv
+        uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7.1.4
 
       - name: Run zizmor 🌈
         run: |
@@ -44,7 +44,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CONFIG_FILE: ${{ inputs.config_file }}
 
-      - name: Upload SARIF file
+      - name: Upload code scanning results
         uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         with:
           sarif_file: results.sarif

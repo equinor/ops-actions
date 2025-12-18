@@ -111,7 +111,9 @@ The path, relative to the working directory, to create a virtual Python environm
 
 ### (*Optional*) `requirements`
 
-The path, relative to the working directory, of a pip requirements file.
+A [requirement specifier](https://pip.pypa.io/en/stable/reference/requirement-specifiers/) or the path, relative to the working directory, of a requirements file (usually `requirements.txt`) that specifies Python dependencies to install.
+
+For example, set the value to `"."` to install dependencies from a `pyproject.toml` file in the working directory.
 
 ### (*Optional*) `pip_target_dir`
 
@@ -120,6 +122,10 @@ The path, relative to the working directory, of a target directory that pip shou
 ### (*Optional*) `artifact_name`
 
 The name of the build artifact. Defaults to `python-app`.
+
+### (*Optional*) `upload_artifact`
+
+Should the build artifact be uploaded? Defaults to `true`.
 
 ## Outputs
 

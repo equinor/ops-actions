@@ -12,9 +12,26 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 
 ## Prerequisites
 
-- [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
-- [Configure Terraform backend](https://github.com/equinor/azure-terraform-backend-template)
-- Create GitHub secret `ENCRYPTION_PASSWORD` and set the value to a randomly generated password (used to encrypt the uploaded artifact, as it may contain sensitive infrastructure configuration)
+### Generate encryption password
+
+Create a GitHub secret `ENCRYPTION_PASSWORD` in your repository and set the value to a randomly generated password.
+
+This password will be used to encrypt the artifact uploaded by this workflow, as it may contain sensitive infrastructure configuration.
+
+### Configure OIDC authentication
+
+Use the [Azure GitHub OIDC Template](https://github.com/equinor/azure-github-oidc-template) to configure OIDC authentication to Azure.
+
+This workflow supports OIDC authentication for the following Terraform providers:
+
+| Name  | Source              | Version      |
+| ----- | ------------------- | ------------ |
+| Azure | `hashicorp/azurerm` | `>= v3.20.0` |
+| AzAPI | `azure/azapi`       | `>= v1.3.0`  |
+
+### Configure Terraform backend
+
+Use the [Azure Terraform Backend Template](https://github.com/equinor/azure-terraform-backend-template) to create an Azure Storage account to store Terraform state files.
 
 ### (*Optional*) Add deploy key to private GitHub repository
 
@@ -32,14 +49,17 @@ name: Terraform
 
 on:
   pull_request:
-    branches:
-      - main
-    paths:
-      - terraform/**
+    branches: [main]
+    paths: [terraform/**]
+
+permissions: {}
 
 jobs:
   deploy:
     name: Deploy
+    permissions:
+      contents: read
+      id-token: write
     uses: equinor/ops-actions/.github/workflows/terraform.yml@main
     with:
       environment: development

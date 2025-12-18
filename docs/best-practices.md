@@ -25,6 +25,7 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
   This reduces the flexibility of the reusable workflow.
 
 - Consistency within a workflow > consistency across workflows.
+- Add comments to clarify _why_ something is needed, not what it does.
 
 ## Security
 
@@ -120,6 +121,11 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
   - If a caller workflow has a job `provision` that calls the reusable workflow `terraform`, the final job will be named `provision / terraform`.
   - If a caller workflow has a job `build` that calls the reusable workflow `docker`, the final job will be named `build / docker`.
   - If a caller workflow has a job `deploy` that calls the reusable workflow `azure-webapp`, the final job will be named `deploy / azure-webapp`.
+
+- A step should follow the naming convention `<verb> <noun>` (i.e., "do something"), for example:
+    - `Download artifact`
+    - `Deploy Azure Web App`
+    - `Configure app settings`
 
 - An input that is passed to a workflow property should inherit the name of that property.
 
@@ -238,6 +244,24 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
         with:
           names: '["Kari Nordmann", "Ola Nordmann"]'
     ```
+
+### When you should add an input to a reusable workflow
+
+It can be tempting to add inputs for every conceivable customisation, however this only contributes to diffusing the workflow and making it more, maybe unnecessarily, complex.
+
+Generally, you should add new inputs only when:
+
+- A value can vary from repo to repo and the variance makes sense.
+- It adds something of value to the workflow.
+- The input allows the workflow to be reused across different contexts without duplicating the workflow file.
+- The customization is required by multiple caller workflows, not just a single use case.
+
+You should NOT add new inputs when:
+
+- The value is only used internally in the workflow, for example when a file is generated from a job step and is only used internally in the workflow.
+- The input would override a security best practice or default that should be enforced consistently.
+- A sensible default can be provided that works in most cases, and there's no clear benefit to making it configurable.
+- The input would create breaking changes for existing caller workflows without significant value.
 
 ## Actions vs. command-line programs
 
