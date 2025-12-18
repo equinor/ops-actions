@@ -122,6 +122,8 @@ jobs:
       run:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
@@ -178,21 +180,23 @@ jobs:
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
           exit "$exitcode"
 
+      # Required to download modules from a private GitHub repository.
+      - name: Start SSH agent
+        if: env.SSH_PRIVATE_KEY != ''
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "$SSH_PRIVATE_KEY"
+
       - name: Terraform Init
         id: init
         env:
           BACKEND_CONFIG: ${{ inputs.backend_config }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           optional_args=()
           if [[ "$GITHUB_ACTOR" == "dependabot[bot]" ]]; then
             optional_args+=(-backend=false)
           elif [[ -n "$BACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$BACKEND_CONFIG")
-          fi
-          if [[ -n "$SSH_PRIVATE_KEY" ]]; then
-            eval "$(ssh-agent -s)"
-            ssh-add - <<< "$SSH_PRIVATE_KEY"
           fi
           terraform init -input=false "${optional_args[@]}"
 
