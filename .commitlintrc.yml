@@ -1,5 +1,16 @@
 extends: ["@commitlint/config-conventional"]
 rules:
+  type-enum:
+    - 2
+    - always
+    - - feat
+      - fix
+      - deps
+      - revert
+      - docs
+      - style
+      - refactor
+      - ci
   scope-enum:
     - 2
     - always
