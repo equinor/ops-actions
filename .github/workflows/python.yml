@@ -96,17 +96,9 @@ jobs:
             pip install "$REQUIREMENTS" --target "$PIP_TARGET_DIR"
           fi
 
-      - name: Create tarball
-        id: tar
-        if: inputs.upload_artifact
-        run: |
-          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar -cf "$tarball" .
-          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
-
       - name: Upload artifact
         if: inputs.upload_artifact
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ steps.tar.outputs.tarball }}
+          path: ${{ inputs.working_directory }}

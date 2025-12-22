@@ -109,18 +109,9 @@ jobs:
           fi
           mkdocs build --site-dir "$SITE_DIR" "${optional_args[@]}"
 
-      - name: Create tarball
-        id: tar
-        if: inputs.upload_artifact
-        working-directory: ${{ env.SITE_DIR }}
-        run: |
-          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar -cf "$tarball" .
-          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
-
       - name: Upload artifact
         if: inputs.upload_artifact
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ steps.tar.outputs.tarball }}
+          path: ${{ env.SITE_DIR }}

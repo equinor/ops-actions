@@ -81,15 +81,6 @@ jobs:
         with:
           name: ${{ inputs.artifact_name }}
 
-      - name: Extract tarball
-        if: inputs.artifact_name != ''
-        env:
-          ARTIFACT_NAME: ${{ inputs.artifact_name }}
-        run: |
-          tarball="$ARTIFACT_NAME.tar"
-          tar -xf "$tarball"
-          rm "$tarball"
-
       - name: Login to Azure
         uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
         with:

@@ -120,18 +120,8 @@ jobs:
           dotnet publish "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --output "$OUTPUT_PATH" --no-build
           echo "publish_path=$OUTPUT_PATH" >> "$GITHUB_OUTPUT"
 
-      - name: Create tarball
-        id: tar
-        working-directory: ${{ steps.publish.outputs.publish_path }}
-        env:
-          ARTIFACT_NAME: ${{ inputs.artifact_name }}
-        run: |
-          tarball="$RUNNER_TEMP/$ARTIFACT_NAME.tar"
-          tar -cf "$tarball" .
-          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
-
       - name: Upload artifact
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
           name: ${{ inputs.artifact_name }}
-          path: ${{ steps.tar.outputs.tarball }}
+          path: ${{ steps.publish.outputs.publish_path }}
