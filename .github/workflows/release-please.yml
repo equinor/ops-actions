@@ -28,7 +28,7 @@ permissions: {}
 
 jobs:
   release-please:
-    name: Release Please
+    name: Run Release Please
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: write # Required to update changelog file

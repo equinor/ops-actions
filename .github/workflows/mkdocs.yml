@@ -99,7 +99,7 @@ jobs:
             pip install "$REQUIREMENTS"
           fi
 
-      - name: MkDocs Build
+      - name: Run MkDocs Build
         env:
           STRICT_MODE: ${{ inputs.strict_mode }}
         run: |

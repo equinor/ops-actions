@@ -91,7 +91,7 @@ jobs:
           username: ${{ inputs.username }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Docker Build
+      - name: Run Docker Build
         run: docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" --push .
 
     outputs:

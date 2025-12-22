@@ -99,20 +99,20 @@ jobs:
           NPM_VERSION: ${{ inputs.npm_version }}
         run: npm install -g "npm@$NPM_VERSION"
 
-      - name: .NET Restore
+      - name: Run .NET Restore
         run: dotnet restore "$PROJECT" --runtime "$RUNTIME"
 
-      - name: .NET Build
+      - name: Run .NET Build
         run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-restore
 
-      - name: .NET Test
+      - name: Run .NET Test
         if: inputs.test_project != ''
         env:
           TEST_PROJECT: ${{ inputs.test_project }}
           TEST_COLLECT: ${{ inputs.test_collect }}
         run: dotnet test "$TEST_PROJECT" --configuration "$CONFIGURATION" --collect "$TEST_COLLECT"
 
-      - name: .NET Publish
+      - name: Run .NET Publish
         id: publish
         env:
           OUTPUT_PATH: ${{ runner.temp }}/${{ inputs.artifact_name }}
