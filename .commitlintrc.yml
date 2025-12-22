@@ -11,6 +11,7 @@ rules:
       - style
       - refactor
       - ci
+      - chore
   scope-enum:
     - 2
     - always
