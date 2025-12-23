@@ -2,13 +2,14 @@
 
 A reusable workflow for validating and deploying a [Databricks Asset Bundle](https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/) to Azure Databricks.
 
-## Features
+## Key Features
 
-TODO
+- **Secretless authentication**: authenticate to Azure Databricks using a service principal with OpenID Connect (OIDC).
 
 ## Prerequisites
 
-- Configure OIDC authentication to Azure.
+1. Create a Microsoft Entra service principal and configure OIDC authentication from GitHub Actions to Azure, for example, using the [Azure GitHub OIDC template](https://github.com/equinor/azure-github-oidc-template).
+1. Add the service principal to the target Azure Databricks workspace. Refer to [official documentation](https://learn.microsoft.com/en-us/azure/databricks/admin/users-groups/manage-service-principals) for instructions.
 
 ## Usage
 
@@ -25,14 +26,14 @@ permissions: {}
 
 jobs:
   deploy-dev:
-    name: Deploy to dev
+    name: Deploy dev
     permissions:
       contents: read
       id-token: write
     uses: equinor/ops-actions/.github/workflows/databricks-bundle.yml@main
     with:
       environment: dev
-      working_directory: "."
+      working_directory: bundles/example-bundle
       target: dev
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
