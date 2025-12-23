@@ -124,7 +124,7 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
         with:
           persist-credentials: false
 
@@ -157,7 +157,7 @@ jobs:
       - name: Restore cache
         id: cache-restore
         if: steps.mkdir.outputs.plugin-cache-dir != ''
-        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/{1}', inputs.working_directory, env.LOCK_FILE)) }}
@@ -237,7 +237,7 @@ jobs:
       - name: Upload artifact
         id: upload
         if: steps.tar.outcome == 'success'
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ steps.tar.outputs.tarball_path }}
@@ -250,7 +250,7 @@ jobs:
       - name: Save cache
         id: cache-save
         if: steps.cache-restore.outcome == 'success' && steps.cache-restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
@@ -308,19 +308,19 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
         with:
           persist-credentials: false
 
       - name: Download artifact
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working_directory }}
 
       - name: Restore cache
         if: needs.terraform-plan.outputs.cache-restore-hit == 'true' || needs.terraform-plan.outputs.cache-save-outcome == 'success'
-        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb
         with:
           path: ${{ needs.terraform-plan.outputs.plugin-cache-dir }}
           key: ${{ needs.terraform-plan.outputs.cache-primary-key }}

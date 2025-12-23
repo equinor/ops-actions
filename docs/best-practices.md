@@ -122,6 +122,11 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
   - If a caller workflow has a job `build` that calls the reusable workflow `docker`, the final job will be named `build / docker`.
   - If a caller workflow has a job `deploy` that calls the reusable workflow `azure-webapp`, the final job will be named `deploy / azure-webapp`.
 
+- A step should follow the naming convention `<verb> <noun>` (i.e., "do something"), for example:
+    - `Download artifact`
+    - `Deploy Azure Web App`
+    - `Configure app settings`
+
 - An input that is passed to a workflow property should inherit the name of that property.
 
   An input that is passed to an action input should follow the common naming convention `[<action>]_<input>`, where `<action>` can be omitted if the name of the action is similar to the name of the workflow.

@@ -63,7 +63,7 @@ jobs:
       DATABRICKS_BUNDLE_ENV: ${{ inputs.target }}
     steps:
       - name: Checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
         with:
           persist-credentials: false
 
@@ -71,10 +71,10 @@ jobs:
       # virtual environment and install the required dependencies.
       # Ref: https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/python/
       - name: Setup uv
-        uses: astral-sh/setup-uv@5a7eac68fb9809dea845d802897dc5c723910fa3
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867
 
       - name: Setup Databricks CLI
-        uses: databricks/setup-cli@9925cdb329614cccdba6f9a847ae9c095db12b13
+        uses: databricks/setup-cli@a9304a5220bd6c59eadfd229a7c485dc352a5f98
         with:
           version: ${{ inputs.cli_version }}
 

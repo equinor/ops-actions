@@ -1,5 +1,32 @@
 # Changelog
 
+## [9.32.1](https://github.com/equinor/ops-actions/compare/v9.32.0...v9.32.1) (2025-12-02)
+
+
+### Bug Fixes
+
+* **deps:** bump actions/checkout from 5.0.0 to 6.0.0 ([#900](https://github.com/equinor/ops-actions/issues/900)) ([f367aaa](https://github.com/equinor/ops-actions/commit/f367aaa9d89cce62d57d72606b89e4118f181648))
+* **deps:** bump actions/setup-dotnet from 5.0.0 to 5.0.1 ([#901](https://github.com/equinor/ops-actions/issues/901)) ([fb0abb4](https://github.com/equinor/ops-actions/commit/fb0abb430c63b9a222c2d70028ceb0886bc5de1c))
+* **deps:** bump actions/setup-python from 6.0.0 to 6.1.0 ([#902](https://github.com/equinor/ops-actions/issues/902)) ([ba3640e](https://github.com/equinor/ops-actions/commit/ba3640e2989fcbfc942f949434d3561da3410d66))
+* **deps:** bump astral-sh/setup-uv from 7.1.3 to 7.1.4 ([#899](https://github.com/equinor/ops-actions/issues/899)) ([3272f54](https://github.com/equinor/ops-actions/commit/3272f543113a5959e091e12272c993b8384c566a))
+* **deps:** bump databricks/setup-cli from 0.275.0 to 0.278.0 ([#898](https://github.com/equinor/ops-actions/issues/898)) ([051d69a](https://github.com/equinor/ops-actions/commit/051d69aa1d3bb7c696c624ac24a2bd2f98af365d))
+
+## [9.32.0](https://github.com/equinor/ops-actions/compare/v9.31.0...v9.32.0) (2025-11-20)
+
+
+### Features
+
+* **databricks-bundle:** install uv ([#896](https://github.com/equinor/ops-actions/issues/896)) ([a5d061d](https://github.com/equinor/ops-actions/commit/a5d061da0aedce1ab782ad9e63b35bb3e21e2a2f))
+* **python:** add input `upload_artifact` ([#893](https://github.com/equinor/ops-actions/issues/893)) ([100bca3](https://github.com/equinor/ops-actions/commit/100bca3df01f8d4a65867e90542eee135dd51680))
+* **python:** install dependencies using requirement specifier ([#885](https://github.com/equinor/ops-actions/issues/885)) ([f3ba065](https://github.com/equinor/ops-actions/commit/f3ba0654c69afcfe237f64068265e04c2730b7bd))
+
+
+### Bug Fixes
+
+* **databricks-bundle:** login to Azure fails with data plane only access ([#895](https://github.com/equinor/ops-actions/issues/895)) ([f458e67](https://github.com/equinor/ops-actions/commit/f458e676057b768b97b357e3e62d74897edd624f))
+* **deps:** bump astral-sh/setup-uv from 7.1.2 to 7.1.3 ([#894](https://github.com/equinor/ops-actions/issues/894)) ([663e68e](https://github.com/equinor/ops-actions/commit/663e68eeab87441a069b14cd6dfca5b2d74f9cfe))
+* **terraform:** reduce and document required permissions ([#887](https://github.com/equinor/ops-actions/issues/887)) ([c0b1958](https://github.com/equinor/ops-actions/commit/c0b1958a3dfe8c3c4d6831f791f2bb86bfcd9694))
+
 ## [9.31.0](https://github.com/equinor/ops-actions/compare/v9.30.0...v9.31.0) (2025-11-11)
 
 

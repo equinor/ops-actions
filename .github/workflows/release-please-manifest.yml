@@ -18,6 +18,10 @@ on:
         description: A JSON array of paths that had releases created, `[]` if nothing was released. Use the `fromJSON` function to convert this value to an array that can be used to define a matrix strategy job.
         value: ${{ jobs.release-please.outputs.paths_released }}
 
+      path_tag_names:
+        description: A JSON object of key-value pairs, where the key is a path that had a release created, and the value is the tag name that was created for that release.
+        value: ${{ jobs.release-please.outputs.path_tag_names }}
+
 permissions: {}
 
 jobs:
@@ -35,6 +39,21 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
+      - name: Set path outputs
+        id: set-path-outputs
+        env:
+          # The Release Please action dynamically defines outputs for each path
+          # that had a release created. Dynamically defining outputs for a job
+          # is not supported, so we have to convert the entire Release Please
+          # action outputs object to a JSON string, then use jq to construct
+          # static JSON objects containing the specific outputs that we need.
+          # Ref: https://github.com/googleapis/release-please-action/blob/c2a5a2bd6a758a0937f1ddb1e8950609867ed15c/README.md#path-outputs
+          OUTPUTS_JSON: ${{ toJSON(steps.release-please.outputs) }}
+        run: |
+          path_tag_names=$(echo "$OUTPUTS_JSON" | jq 'with_entries(select(.key | endswith("--tag_name")) | .key |= rtrimstr("--tag_name"))')
+          echo "path_tag_names=$path_tag_names" >> "$GITHUB_OUTPUT"
+
     outputs:
       releases_created: ${{ steps.release-please.outputs.releases_created }}
       paths_released: ${{ steps.release-please.outputs.paths_released }}
+      path_tag_names: ${{ steps.set-path-outputs.outputs.path_tag_names }}
