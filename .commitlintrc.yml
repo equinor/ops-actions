@@ -9,6 +9,7 @@ rules:
       - revert
       - docs
       - style
+      - chore
       - refactor
       - ci
   scope-enum:
