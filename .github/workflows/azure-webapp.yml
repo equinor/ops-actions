@@ -77,7 +77,7 @@ jobs:
     steps:
       - name: Download artifact
         if: inputs.artifact_name != ''
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: ${{ inputs.artifact_name }}
 
@@ -91,7 +91,7 @@ jobs:
           rm "$tarball"
 
       - name: Login to Azure
-        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5 # v2.3.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -99,7 +99,7 @@ jobs:
 
       - name: Deploy Azure Web App
         id: deploy
-        uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d
+        uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d # v3.0.6
         env:
           # Required for this action to get access token from Azure CLI.
           AZURE_CORE_OUTPUT: json
