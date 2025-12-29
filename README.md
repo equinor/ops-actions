@@ -69,13 +69,15 @@ Alternatively, a [Visual Studio Code debug configuration](https://code.visualstu
 
 The [GitHub Actions extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions) is highly recommended for syntax highlighting, validation and code completion for GitHub Actions workflows.
 
+## Versioning
+
+This project follows the [Semantic Versioning specification](https://semver.org/) for release tags.
+
+We have enabled [immutable releases](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases) to prevent release tags from being changed after a release has been published.
+
 ## Testing
 
 We perform [user acceptance tests](https://en.wikipedia.org/wiki/Acceptance_testing#User_acceptance_testing) for reusable workflows.
-
-## Versioning
-
-This project follows [Semantic Versioning](https://semver.org/).
 
 ## Contributing
 
