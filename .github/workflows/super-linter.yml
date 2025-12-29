@@ -35,7 +35,7 @@ jobs:
           fetch-depth: 0 # Required to get the list of files that changed across commits
           persist-credentials: false
 
-      - name: Lint Codebase
+      - name: Run Super-linter
         uses: super-linter/super-linter@502f4fe48a81a392756e173e39a861f8c8efe056 # v8.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
