@@ -35,6 +35,7 @@ nav:
   - Workflows:
       - commitlint: workflows/commitlint.md
       - Databricks Bundle: workflows/databricks-bundle.md 
+      - Databricks Repos: workflows/databricks-repos.md
       - MkDocs: workflows/mkdocs.md
       - Python: workflows/python.md
       - Python Package: workflows/python-package.md

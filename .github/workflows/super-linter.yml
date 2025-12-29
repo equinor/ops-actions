@@ -30,13 +30,13 @@ jobs:
       contents: read # Required to checkout the repository
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0 # Required to get the list of files that changed across commits
           persist-credentials: false
 
       - name: Lint Codebase
-        uses: super-linter/super-linter@502f4fe48a81a392756e173e39a861f8c8efe056
+        uses: super-linter/super-linter@502f4fe48a81a392756e173e39a861f8c8efe056 # v8.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FILTER_REGEX_EXCLUDE: ${{ inputs.filter_regex_exclude }}
