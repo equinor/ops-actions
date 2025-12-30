@@ -30,20 +30,23 @@ markdown_extensions:
   # Ref: https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/#snippets
   - pymdownx.snippets
 
+plugins:
+  - typeset
+
 nav:
   - Home: index.md
   - Workflows:
-      - commitlint: workflows/commitlint.md
-      - Databricks Bundle: workflows/databricks-bundle.md 
-      - Databricks Repos: workflows/databricks-repos.md
-      - MkDocs: workflows/mkdocs.md
-      - Python: workflows/python.md
-      - Python Package: workflows/python-package.md
-      - Release Please: workflows/release-please.md
-      - Release Please (Manifest): workflows/release-please-manifest.md
-      - Terraform: workflows/terraform.md
-      - Trivy: workflows/trivy-config-codeql.md
-      - zizmor: workflows/zizmor-codeql.md
+      - workflows/commitlint.md
+      - workflows/databricks-bundle.md 
+      - workflows/databricks-repos.md
+      - workflows/mkdocs.md
+      - workflows/python.md
+      - workflows/python-package.md
+      - workflows/release-please.md
+      - workflows/release-please-manifest.md
+      - workflows/terraform.md
+      - workflows/trivy-config-codeql.md
+      - workflows/zizmor-codeql.md
   - Development:
       - Best Practices: best-practices.md
       - Changelog: changelog.md
