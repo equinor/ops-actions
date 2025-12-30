@@ -68,12 +68,12 @@ jobs:
       id-token: write # Required to login to Azure using OIDC
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: ${{ inputs.artifact_name }}
 
       - name: Login to Azure
-        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5 # v2.3.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -81,7 +81,7 @@ jobs:
 
       - name: Deploy Azure Function
         id: deploy
-        uses: azure/functions-action@0bd707f87c0b6385742bab336c74e1afc61f6369
+        uses: azure/functions-action@0bd707f87c0b6385742bab336c74e1afc61f6369 # v1.5.3
         env:
           # Required for this action to get access token from Azure CLI.
           AZURE_CORE_OUTPUT: json

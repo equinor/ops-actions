@@ -56,12 +56,12 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
 
       - name: Setup Python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
           python-version-file: .python-version
 
@@ -74,7 +74,7 @@ jobs:
       - name: Upload artifact
         id: upload-artifact
         if: ${{ inputs.upload_artifact }}
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ inputs.working_directory }}/dist
@@ -95,10 +95,10 @@ jobs:
   #     id-token: write # Required for PyPI Trusted Publishing.
   #   steps:
   #     - name: Download artifact
-  #       uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+  #       uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
   #       with:
   #         name: ${{ inputs.artifact_name }}
   #         path: dist
 
   #     - name: Publish to PyPI
-  #       uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e
+  #       uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0

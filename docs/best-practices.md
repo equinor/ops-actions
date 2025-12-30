@@ -51,8 +51,10 @@ Written as an extension of [Security hardening for GitHub Actions](https://docs.
 - When using a third-party action, pin it to a specific commit SHA, for example:
 
   ```yaml
-  - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
+  - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
   ```
+
+  Add a comment to clarify which release tag the commit SHA corresponds to.
 
 - Jobs that access secrets that grant privileged access (for example `Contributor` access in an Azure subscription) should be skipped if the workflow was triggered by Dependabot:
 

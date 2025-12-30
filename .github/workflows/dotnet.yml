@@ -78,18 +78,18 @@ jobs:
       SELF_CONTAINED: ${{ inputs.self_contained }}
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@2016bd2012dba4e32de620c46fe006a3ac9f0602
+        uses: actions/setup-dotnet@2016bd2012dba4e32de620c46fe006a3ac9f0602 # v5.0.1
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: Setup Node.js
         if: inputs.node_version != ''
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: ${{ inputs.node_version }}
 
@@ -99,20 +99,20 @@ jobs:
           NPM_VERSION: ${{ inputs.npm_version }}
         run: npm install -g "npm@$NPM_VERSION"
 
-      - name: .NET Restore
+      - name: Run .NET Restore
         run: dotnet restore "$PROJECT" --runtime "$RUNTIME"
 
-      - name: .NET Build
+      - name: Run .NET Build
         run: dotnet build "$PROJECT" --configuration "$CONFIGURATION" --runtime "$RUNTIME" --self-contained "$SELF_CONTAINED" --no-restore
 
-      - name: .NET Test
+      - name: Run .NET Test
         if: inputs.test_project != ''
         env:
           TEST_PROJECT: ${{ inputs.test_project }}
           TEST_COLLECT: ${{ inputs.test_collect }}
         run: dotnet test "$TEST_PROJECT" --configuration "$CONFIGURATION" --collect "$TEST_COLLECT"
 
-      - name: .NET Publish
+      - name: Run .NET Publish
         id: publish
         env:
           OUTPUT_PATH: ${{ runner.temp }}/${{ inputs.artifact_name }}
@@ -121,7 +121,7 @@ jobs:
           echo "publish_path=$OUTPUT_PATH" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifact
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ steps.publish.outputs.publish_path }}

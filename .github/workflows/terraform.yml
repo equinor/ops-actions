@@ -124,12 +124,12 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
           terraform_version: ${{ inputs.terraform_version }}
           terraform_wrapper: false
@@ -157,7 +157,7 @@ jobs:
       - name: Restore cache
         id: cache-restore
         if: steps.mkdir.outputs.plugin-cache-dir != ''
-        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/{1}', inputs.working_directory, env.LOCK_FILE)) }}
@@ -165,7 +165,7 @@ jobs:
           # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
           # Ref: https://developer.hashicorp.com/terraform/language/files/dependency-lock
 
-      - name: Terraform Format
+      - name: Run Terraform Format
         id: fmt
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
@@ -178,7 +178,7 @@ jobs:
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
           exit "$exitcode"
 
-      - name: Terraform Init
+      - name: Run Terraform Init
         id: init
         env:
           BACKEND_CONFIG: ${{ inputs.backend_config }}
@@ -196,7 +196,7 @@ jobs:
           fi
           terraform init -input=false "${optional_args[@]}"
 
-      - name: Terraform Validate
+      - name: Run Terraform Validate
         id: validate
         run: terraform validate
 
@@ -204,7 +204,7 @@ jobs:
       # This file contains the full configuration, including sensitive data.
       # As a result, it should be treated as a potentially-sensitive artifact.
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
-      - name: Terraform Plan
+      - name: Run Terraform Plan
         id: plan
         if: github.actor != 'dependabot[bot]'
         # Start Bash without fail-fast behavior.
@@ -237,7 +237,7 @@ jobs:
       - name: Upload artifact
         id: upload
         if: steps.tar.outcome == 'success'
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ steps.tar.outputs.tarball_path }}
@@ -250,7 +250,7 @@ jobs:
       - name: Save cache
         id: cache-save
         if: steps.cache-restore.outcome == 'success' && steps.cache-restore.outputs.cache-hit != 'true'
-        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ steps.cache-restore.outputs.cache-primary-key }}
@@ -308,26 +308,26 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
 
       - name: Download artifact
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ inputs.working_directory }}
 
       - name: Restore cache
         if: needs.terraform-plan.outputs.cache-restore-hit == 'true' || needs.terraform-plan.outputs.cache-save-outcome == 'success'
-        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           path: ${{ needs.terraform-plan.outputs.plugin-cache-dir }}
           key: ${{ needs.terraform-plan.outputs.cache-primary-key }}
           fail-on-cache-miss: true
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
           terraform_version: ${{ inputs.terraform_version }}
           terraform_wrapper: false
@@ -337,5 +337,5 @@ jobs:
           gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar -x
           rm "$TARBALL"
 
-      - name: Terraform Apply
+      - name: Run Terraform Apply
         run: terraform apply -input=false "$PLAN_FILE"
