@@ -37,6 +37,8 @@ nav:
   - Home: index.md
   - Workflows:
       - workflows/commitlint.md
+      - workflows/databricks-bundle.md 
+      - workflows/databricks-repos.md
       - workflows/mkdocs.md
       - workflows/python.md
       - workflows/python-package.md

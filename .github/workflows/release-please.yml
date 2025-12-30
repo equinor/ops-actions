@@ -28,7 +28,7 @@ permissions: {}
 
 jobs:
   release-please:
-    name: Release Please
+    name: Run Release Please
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: write # Required to update changelog file
@@ -37,7 +37,7 @@ jobs:
     steps:
       - name: Release Please
         id: release-please
-        uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38
+        uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4.4.0
         with:
           release-type: ${{ inputs.release_type }}
 

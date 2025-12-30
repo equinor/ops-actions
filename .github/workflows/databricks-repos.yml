@@ -72,12 +72,12 @@ jobs:
       GIT_PROVIDER: gitHub
     steps:
       - name: Setup Databricks CLI
-        uses: databricks/setup-cli@a9304a5220bd6c59eadfd229a7c485dc352a5f98
+        uses: databricks/setup-cli@c840b7ffb1cf9a1bf5cbd20352252c07a80e52e2 # v0.281.0
         with:
           version: ${{ inputs.cli_version }}
 
       - name: Login to Azure
-        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5 # v2.3.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
