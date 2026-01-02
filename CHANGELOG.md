@@ -1,5 +1,30 @@
 # Changelog
 
+## [9.33.0](https://github.com/equinor/ops-actions/compare/v9.32.1...v9.33.0) (2025-12-30)
+
+
+### Features
+
+* **databricks-repos:** create repo if doesn't exist ([#906](https://github.com/equinor/ops-actions/issues/906)) ([42869cb](https://github.com/equinor/ops-actions/commit/42869cbd64ae7ec7f7b3f511332af00f1bde923b))
+* **release-please-manifest:** add output `path_tag_names` ([#910](https://github.com/equinor/ops-actions/issues/910)) ([575e66d](https://github.com/equinor/ops-actions/commit/575e66d14a12df7ebab89cee8bc426945c704ffc))
+
+
+### Bug Fixes
+
+* **deps:** bump actions/checkout from 6.0.0 to 6.0.1 ([#908](https://github.com/equinor/ops-actions/issues/908)) ([545188a](https://github.com/equinor/ops-actions/commit/545188a2e1be38255dd346115aa661c730135889))
+* **deps:** bump actions/setup-node from 6.0.0 to 6.1.0 ([#907](https://github.com/equinor/ops-actions/issues/907)) ([8e59a24](https://github.com/equinor/ops-actions/commit/8e59a242bf43837c7c2fa0dddb438c23b9a036de))
+* **deps:** bump super-linter/super-linter from 8.2.1 to 8.3.0 ([#904](https://github.com/equinor/ops-actions/issues/904)) ([0ca94d7](https://github.com/equinor/ops-actions/commit/0ca94d7598ff88a2391e5bf210f90c4b2e2128e2))
+
+
+### Dependencies
+
+* bump actions/cache from 4.3.0 to 5.0.1 ([#918](https://github.com/equinor/ops-actions/issues/918)) ([c0ac390](https://github.com/equinor/ops-actions/commit/c0ac390ef61a26b99bba8f634b491d90f4092945))
+* bump actions/download-artifact from 6.0.0 to 7.0.0 ([#917](https://github.com/equinor/ops-actions/issues/917)) ([4292f93](https://github.com/equinor/ops-actions/commit/4292f932dfe95fe9bcbc01a09992fee393d052e5))
+* bump actions/upload-artifact from 5.0.0 to 6.0.0 ([#916](https://github.com/equinor/ops-actions/issues/916)) ([31ee6a0](https://github.com/equinor/ops-actions/commit/31ee6a07b5cb9ca12e04101ae73ece33a2867220))
+* bump astral-sh/setup-uv from 7.1.4 to 7.1.6 ([#915](https://github.com/equinor/ops-actions/issues/915)) ([e2c3361](https://github.com/equinor/ops-actions/commit/e2c3361c6cf258d85794c6705aede00ea37bee0c))
+* bump databricks/setup-cli from 0.278.0 to 0.281.0 ([#928](https://github.com/equinor/ops-actions/issues/928)) ([6a87dbb](https://github.com/equinor/ops-actions/commit/6a87dbb82fe9f6e0099a478ff602cbfad4de608a))
+* bump github/codeql-action from 4.31.2 to 4.31.9 ([#927](https://github.com/equinor/ops-actions/issues/927)) ([1d63cca](https://github.com/equinor/ops-actions/commit/1d63ccab8535f9a8b9ff5cd25530310807038823))
+
 ## [9.32.1](https://github.com/equinor/ops-actions/compare/v9.32.0...v9.32.1) (2025-12-02)
 
 
