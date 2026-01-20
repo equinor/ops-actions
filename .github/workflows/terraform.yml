@@ -107,7 +107,6 @@ env:
   LOCK_FILE: .terraform.lock.hcl
   PLAN_FILE: tfplan
   TARBALL: terraform.tar.gpg
-  ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}-{1}', github.job, github.run_id) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
@@ -239,7 +238,7 @@ jobs:
         if: steps.tar.outcome == 'success'
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          name: ${{ inputs.artifact_name || format('terraform-{0}', hashFiles(inputs.working_directory, inputs.backend_config)) }}
           path: ${{ steps.tar.outputs.tarball_path }}
           if-no-files-found: error
           # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
@@ -292,6 +291,7 @@ jobs:
       cache-primary-key: ${{ steps.cache-restore.outputs.cache-primary-key }}
       cache-restore-hit: ${{ steps.cache-restore.outputs.cache-hit }}
       cache-save-outcome: ${{ steps.cache-save.outcome }}
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
 
   terraform-apply:
     name: Terraform Apply
@@ -315,7 +315,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          artifact-ids: ${{ needs.terraform-plan.outputs.artifact-id }}
           path: ${{ inputs.working_directory }}
 
       - name: Restore cache
