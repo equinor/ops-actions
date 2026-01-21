@@ -238,7 +238,7 @@ jobs:
         if: steps.tar.outcome == 'success'
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
-          name: ${{ inputs.artifact_name || format('terraform-{0}', hashFiles(inputs.working_directory, inputs.backend_config)) }}
+          name: ${{ inputs.artifact_name || format('{0}-terraform-{1}', runner.os, hashFiles(inputs.working_directory, inputs.backend_config)) }}
           path: ${{ steps.tar.outputs.tarball_path }}
           if-no-files-found: error
           # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
