@@ -45,7 +45,7 @@ on:
         required: false
 
       artifact_name:
-        description: The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name.
+        description: The name of the artifact to upload. If not specified, a unique artifact name will be generated.
         type: string
         required: false
 
@@ -107,7 +107,6 @@ env:
   LOCK_FILE: .terraform.lock.hcl
   PLAN_FILE: tfplan
   TARBALL: terraform.tar.gpg
-  ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
   ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
@@ -239,7 +238,7 @@ jobs:
         if: steps.tar.outcome == 'success'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          name: ${{ inputs.artifact_name || format('{0}-terraform-{1}', runner.os, hashFiles(inputs.working_directory, inputs.backend_config)) }}
           path: ${{ steps.tar.outputs.tarball_path }}
           if-no-files-found: error
           # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
@@ -292,6 +291,7 @@ jobs:
       cache-primary-key: ${{ steps.cache-restore.outputs.cache-primary-key }}
       cache-restore-hit: ${{ steps.cache-restore.outputs.cache-hit }}
       cache-save-outcome: ${{ steps.cache-save.outcome }}
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
 
   terraform-apply:
     name: Terraform Apply
@@ -315,7 +315,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
-          name: ${{ env.ARTIFACT_NAME }}
+          artifact-ids: ${{ needs.terraform-plan.outputs.artifact-id }}
           path: ${{ inputs.working_directory }}
 
       - name: Restore cache
