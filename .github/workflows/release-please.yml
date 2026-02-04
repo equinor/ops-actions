@@ -28,14 +28,14 @@ permissions: {}
 
 jobs:
   release-please:
-    name: Run Release Please
+    name: Release Please
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: write # Required to update changelog file
       issues: write # Required to label issues
       pull-requests: write # Required to create release PRs
     steps:
-      - name: Release Please
+      - name: Run Release Please
         id: release-please
         uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4.4.0
         with:
