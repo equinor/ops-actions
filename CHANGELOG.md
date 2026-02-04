@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.33.1](https://github.com/equinor/ops-actions/compare/v9.33.0...v9.33.1) (2026-02-04)
+
+
+### Dependencies
+
+* bump actions/setup-python from 6.1.0 to 6.2.0 ([#938](https://github.com/equinor/ops-actions/issues/938)) ([73f88da](https://github.com/equinor/ops-actions/commit/73f88da561a1519857860694d12f63e5c37f5eba))
+
 ## [9.33.0](https://github.com/equinor/ops-actions/compare/v9.32.1...v9.33.0) (2026-01-27)
 
 
