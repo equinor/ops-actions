@@ -1,5 +1,14 @@
 # Changelog
 
+## [9.33.1](https://github.com/equinor/ops-actions/compare/v9.33.0...v9.33.1) (2026-02-10)
+
+
+### Dependencies
+
+* bump actions/cache from 5.0.2 to 5.0.3 ([#943](https://github.com/equinor/ops-actions/issues/943)) ([4f9863b](https://github.com/equinor/ops-actions/commit/4f9863b5ca25d932ea865b9e49a83358ebdea778))
+* bump actions/setup-python from 6.1.0 to 6.2.0 ([#938](https://github.com/equinor/ops-actions/issues/938)) ([73f88da](https://github.com/equinor/ops-actions/commit/73f88da561a1519857860694d12f63e5c37f5eba))
+* bump docker/login-action from 3.6.0 to 3.7.0 ([#942](https://github.com/equinor/ops-actions/issues/942)) ([bcbc1b8](https://github.com/equinor/ops-actions/commit/bcbc1b80ea03c9b5c8390e58b1177606e77d2ece))
+
 ## [9.33.0](https://github.com/equinor/ops-actions/compare/v9.32.1...v9.33.0) (2026-01-27)
 
 
