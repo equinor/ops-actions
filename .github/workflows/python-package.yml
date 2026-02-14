@@ -21,6 +21,11 @@ on:
         required: false
         default: "."
 
+      uv_version:
+        description: The version of uv to install. Defaults to the version in `pyproject.toml` or `latest`.
+        type: string
+        required: false
+
       artifact_name:
         description: The name of the build artifact. Defaults to `python-package-dist`.
         type: string
@@ -40,13 +45,13 @@ on:
 
       artifact_uploaded:
         description: Was the build artifact uploaded? Value is `"true"` if the build artifact was uploaded, else `"false"`.
-        value: ${{ jobs.python-build.outputs.artifact-uploaded }}
+        value: ${{ jobs.python-package.outputs.artifact-uploaded }}
 
 permissions: {}
 
 jobs:
-  python-build:
-    name: Python Build
+  python-package:
+    name: Python Package
     runs-on: ${{ inputs.runs_on }}
     permissions:
       contents: read # Required to checkout the repository.
@@ -65,11 +70,13 @@ jobs:
         with:
           python-version-file: .python-version
 
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip build
+      - name: Setup uv
+        uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41
+        with:
+          version: ${{ inputs.uv_version }}
 
       - name: Generate distributions
-        run: python -m build
+        run: uv build
 
       - name: Upload artifact
         id: upload-artifact
@@ -87,8 +94,8 @@ jobs:
 
   # pypi-publish:
   #   name: PyPI Publish
-  #   needs: python-build
-  #   if: needs.python-build.outputs.artifact-uploaded
+  #   needs: python-package
+  #   if: needs.python-package.outputs.artifact-uploaded
   #   runs-on: ${{ inputs.runs_on }}
   #   environment: ${{ inputs.environment }}
   #   permissions:

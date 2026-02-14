@@ -137,6 +137,10 @@ The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaul
 
 The path of the directory containing the Python project to build. Defaults to `.`.
 
+### (*Optional*) `uv_version`
+
+The version of uv to install. Defaults to the version in `pyproject.toml` or `latest`.
+
 ### (*Optional*) `artifact_name`
 
 The name of the build artifact. Defaults to `python-package-dist`.
@@ -159,3 +163,4 @@ Was the build artifact uploaded? Value is `"true"` if the build artifact was upl
 
 - <https://packaging.python.org/en/latest/tutorials/packaging-projects/>
 - <https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/>
+- <https://docs.astral.sh/uv/guides/integration/github/>
