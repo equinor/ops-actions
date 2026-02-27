@@ -25,11 +25,16 @@ on:
         type: string
         required: false
 
+      dependency_group:
+        description: A named dependency-group from a `pyproject.toml` file. Defaults to using the `pyproject.toml` file in the current directory.
+        type: string
+        required: false
+
       strict_mode:
         description: Should strict mode be enabled? This will cause MkDocs to abort the build on any warnings.
         type: boolean
         required: false
-        default: false 
+        default: false
 
       upload_artifact:
         description: Should the MkDocs build artifact be uploaded? Defaults to `true`.
@@ -98,6 +103,12 @@ jobs:
           else
             pip install "$REQUIREMENTS"
           fi
+
+      - name: Install dependency-group
+        if: inputs.dependency_group != ''
+        env:
+          PIP_GROUP: ${{ inputs.dependency_group }}
+        run: pip install
 
       - name: Run MkDocs Build
         env:
