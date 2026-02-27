@@ -67,6 +67,10 @@ The version of MkDocs to install using pip. Defaults to `>=1.0.0`.
 
 A [requirement specifier](https://pip.pypa.io/en/stable/reference/requirement-specifiers/) or the path of a pip requirements file (usually `requirements.txt`) that specifies dependencies to install.
 
+### (*Optional*) `dependency_group`
+
+A named [dependency-group](https://packaging.python.org/en/latest/specifications/dependency-groups/) from a `pyproject.toml` file. Defaults to using the `pyproject.toml` file in the current directory.
+
 ### (*Optional*) `strict_mode`
 
 Should strict mode be enabled? This will cause MkDocs to abort the build on any warnings. Defaults to `false`.
