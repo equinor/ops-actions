@@ -1,5 +1,21 @@
 # Changelog
 
+## [9.34.0](https://github.com/equinor/ops-actions/compare/v9.33.0...v9.34.0) (2026-02-27)
+
+
+### Features
+
+* **mkdocs:** install dependency-group ([#948](https://github.com/equinor/ops-actions/issues/948)) ([0b1362f](https://github.com/equinor/ops-actions/commit/0b1362f20f6339e47d179ba2e4cc8133e83fe14c))
+
+
+### Dependencies
+
+* bump actions/cache from 5.0.2 to 5.0.3 ([#943](https://github.com/equinor/ops-actions/issues/943)) ([4f9863b](https://github.com/equinor/ops-actions/commit/4f9863b5ca25d932ea865b9e49a83358ebdea778))
+* bump actions/setup-python from 6.1.0 to 6.2.0 ([#938](https://github.com/equinor/ops-actions/issues/938)) ([73f88da](https://github.com/equinor/ops-actions/commit/73f88da561a1519857860694d12f63e5c37f5eba))
+* bump astral-sh/setup-uv from 7.2.0 to 7.3.0 ([#945](https://github.com/equinor/ops-actions/issues/945)) ([4dce9d0](https://github.com/equinor/ops-actions/commit/4dce9d0690ce9261eb01eddc2b1e010319e7e921))
+* bump docker/login-action from 3.6.0 to 3.7.0 ([#942](https://github.com/equinor/ops-actions/issues/942)) ([bcbc1b8](https://github.com/equinor/ops-actions/commit/bcbc1b80ea03c9b5c8390e58b1177606e77d2ece))
+* bump super-linter/super-linter from 8.3.2 to 8.5.0 ([#944](https://github.com/equinor/ops-actions/issues/944)) ([078a083](https://github.com/equinor/ops-actions/commit/078a083ccb69ee0cc7a94fe75881a5968a9f47ca))
+
 ## [9.33.0](https://github.com/equinor/ops-actions/compare/v9.32.1...v9.33.0) (2026-01-27)
 
 
