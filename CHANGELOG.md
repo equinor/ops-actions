@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.34.1](https://github.com/equinor/ops-actions/compare/v9.34.0...v9.34.1) (2026-03-03)
+
+
+### Bug Fixes
+
+* **trivy-config-codeql:** failing to install Trivy v0.69.1 ([#952](https://github.com/equinor/ops-actions/issues/952)) ([efe4e54](https://github.com/equinor/ops-actions/commit/efe4e5488b8e57e9929148fb2d4f0e4a3d4a30bb))
+
+
+### Dependencies
+
+* bump actions/download-artifact from 7.0.0 to 8.0.0 ([#951](https://github.com/equinor/ops-actions/issues/951)) ([015ed2c](https://github.com/equinor/ops-actions/commit/015ed2cfdc36fe515f705a99e0d1d5edefeeef9b))
+* bump azure/functions-action from 1.5.3 to 1.5.4 ([#946](https://github.com/equinor/ops-actions/issues/946)) ([4e3905e](https://github.com/equinor/ops-actions/commit/4e3905e78be087856b414b58db129915ec3bbaa1))
+* bump azure/webapps-deploy from 3.0.6 to 3.0.7 ([#950](https://github.com/equinor/ops-actions/issues/950)) ([cb0cf7b](https://github.com/equinor/ops-actions/commit/cb0cf7b6f1aa1073d214da551f8f167c54125fc4))
+
 ## [9.34.0](https://github.com/equinor/ops-actions/compare/v9.33.0...v9.34.0) (2026-02-27)
 
 
