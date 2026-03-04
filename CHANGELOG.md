@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.35.0](https://github.com/equinor/ops-actions/compare/v9.34.1...v9.35.0) (2026-03-04)
+
+
+### Features
+
+* **python-package:** specify version of Python to install ([#953](https://github.com/equinor/ops-actions/issues/953)) ([f3cd9d9](https://github.com/equinor/ops-actions/commit/f3cd9d9193fdbef4338088db7bfb6d67af6d8be8))
+
 ## [9.34.1](https://github.com/equinor/ops-actions/compare/v9.34.0...v9.34.1) (2026-03-03)
 
 
