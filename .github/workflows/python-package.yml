@@ -15,6 +15,11 @@ on:
       #   required: false
       #   default: pypi
 
+      python_version:
+        description: The version of Python to install. Defaults to the version specified in the `.python-version` file.
+        type: string
+        required: false
+
       working_directory:
         description: The path of the directory containing the Python project to build. Defaults to `.`.
         type: string
@@ -63,7 +68,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
-          python-version-file: .python-version
+          python-version: ${{ inputs.python_version }}
 
       - name: Install dependencies
         run: python -m pip install --upgrade pip build
