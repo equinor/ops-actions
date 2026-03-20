@@ -1,5 +1,24 @@
 # Changelog
 
+## [9.35.1](https://github.com/equinor/ops-actions/compare/v9.35.0...v9.35.1) (2026-03-20)
+
+
+### Bug Fixes
+
+* non-deployment jobs create deployments ([#964](https://github.com/equinor/ops-actions/issues/964)) ([0d61fd4](https://github.com/equinor/ops-actions/commit/0d61fd4a8fbf29185943d1f7426932eb3a368725)), closes [#231](https://github.com/equinor/ops-actions/issues/231)
+
+
+### Dependencies
+
+* bump actions/setup-dotnet from 5.1.0 to 5.2.0 ([#957](https://github.com/equinor/ops-actions/issues/957)) ([0229b43](https://github.com/equinor/ops-actions/commit/0229b43898948e7c2c87d5fa572f148e99583b96))
+* bump actions/setup-node from 6.2.0 to 6.3.0 ([#959](https://github.com/equinor/ops-actions/issues/959)) ([ca34be2](https://github.com/equinor/ops-actions/commit/ca34be28e073da4495e3c33012c4c3d5a17ac7e3))
+* bump actions/upload-artifact from 6.0.0 to 7.0.0 ([#956](https://github.com/equinor/ops-actions/issues/956)) ([8907807](https://github.com/equinor/ops-actions/commit/89078072abcdb89efee66c65d652d0e85452f0d3))
+* bump aquasecurity/trivy-action from 0.34.2 to 0.35.0 ([#961](https://github.com/equinor/ops-actions/issues/961)) ([a953cb7](https://github.com/equinor/ops-actions/commit/a953cb783f8dc931d87577cfeaf607f4511d6bab))
+* bump astral-sh/setup-uv from 7.3.0 to 7.3.1 ([#958](https://github.com/equinor/ops-actions/issues/958)) ([6ba7429](https://github.com/equinor/ops-actions/commit/6ba7429e776c728651d9ae5f1a68ff339f228e47))
+* bump docker/login-action from 3.7.0 to 4.0.0 ([#963](https://github.com/equinor/ops-actions/issues/963)) ([10c07f4](https://github.com/equinor/ops-actions/commit/10c07f48ce0873dd7aa706ad89f604e264ab1fb3))
+* bump docker/setup-buildx-action from 3.12.0 to 4.0.0 ([#962](https://github.com/equinor/ops-actions/issues/962)) ([ca891a3](https://github.com/equinor/ops-actions/commit/ca891a3d15cb7dd6a215e3be1eabfbaceac89f6d))
+* bump hashicorp/setup-terraform from 3.1.2 to 4.0.0 ([#955](https://github.com/equinor/ops-actions/issues/955)) ([f339fa8](https://github.com/equinor/ops-actions/commit/f339fa8ec7d31b65d26f142c06cbba068c38616c))
+
 ## [9.35.0](https://github.com/equinor/ops-actions/compare/v9.34.1...v9.35.0) (2026-03-04)
 
 
