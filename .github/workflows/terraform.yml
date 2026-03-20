@@ -114,7 +114,9 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ${{ inputs.runs_on }}
-    environment: ${{ inputs.environment }}
+    environment:
+      name: ${{ inputs.environment }}
+      deployment: false
     permissions:
       contents: read # Required to checkout the repository
       id-token: write # Required to authenticate to Azure with OIDC
