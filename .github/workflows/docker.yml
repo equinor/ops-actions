@@ -66,7 +66,9 @@ jobs:
     name: Docker
     runs-on: ${{ inputs.runs_on }}
     if: github.actor != 'dependabot[bot]'
-    environment: ${{ inputs.environment }}
+    environment:
+      name: ${{ inputs.environment }}
+      deployment: false
     permissions:
       contents: read # Required to checkout the repository
     env:
