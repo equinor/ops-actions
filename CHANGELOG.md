@@ -1,5 +1,13 @@
 # Changelog
 
+## [9.35.2](https://github.com/equinor/ops-actions/compare/v9.35.1...v9.35.2) (2026-03-24)
+
+
+### Dependencies
+
+* bump actions/download-artifact from 8.0.0 to 8.0.1 ([#965](https://github.com/equinor/ops-actions/issues/965)) ([47712b9](https://github.com/equinor/ops-actions/commit/47712b9576c3304911777cc794e5fbd13863babb))
+* bump astral-sh/setup-uv from 7.3.1 to 7.6.0 ([#966](https://github.com/equinor/ops-actions/issues/966)) ([444b3e2](https://github.com/equinor/ops-actions/commit/444b3e2cffb3b0e4d015c7fe55616495cf6ec29d))
+
 ## [9.35.1](https://github.com/equinor/ops-actions/compare/v9.35.0...v9.35.1) (2026-03-20)
 
 
