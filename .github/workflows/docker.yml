@@ -44,10 +44,10 @@ on:
         default: ${{ github.run_number }}
 
       build_args:
-        description: Build arguments as a space-separated string (e.g., "--build-arg KEY1=VALUE1 --build-arg KEY2=VALUE2").
+        description: Build arguments as a JSON object (e.g., '{"KEY1":"VALUE1","KEY2":"VALUE2"}').
         type: string
         required: false
-        default: ""
+        default: "{}"
 
     secrets:
       DOCKER_PASSWORD:
@@ -93,15 +93,13 @@ jobs:
           username: ${{ inputs.username }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Prepare build arguments
-        if: inputs.build_args != ''
-        id: build-args
-        run: echo "args=${{ inputs.build_args }}" >> $GITHUB_OUTPUT
-
       - name: Run Docker Build
-        run: docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" $BUILD_ARGS --push .
         env:
-          BUILD_ARGS: ${{ steps.build-args.outputs.args }}
+          BUILD_ARGS_INPUT: ${{ inputs.build_args }}
+        run: |
+          BUILD_ARGS="$(jq -r '[to_entries[] | "--build-arg \(.key)=\(.value)"] | join(" ")' <<< "$BUILD_ARGS_INPUT")"
+
+          docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" $BUILD_ARGS --push .
 
     outputs:
       image: ${{ env.IMAGE }}
