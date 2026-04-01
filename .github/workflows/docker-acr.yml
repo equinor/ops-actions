@@ -38,6 +38,12 @@ on:
         required: false
         default: ${{ github.run_number }}
 
+      build_args:
+        description: Build arguments as a JSON object (e.g., '{"KEY1":"VALUE1","KEY2":"VALUE2"}').
+        type: string
+        required: false
+        default: '{}'
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -103,7 +109,12 @@ jobs:
         run: az acr login --name "$REGISTRY_NAME"
 
       - name: Run Docker Build
-        run: docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" --push .
+        env:
+          BUILD_ARGS_INPUT: ${{ inputs.build_args }}
+        run: |
+          BUILD_ARGS="$(jq -r '[to_entries[] | "--build-arg \(.key)=\(.value)"] | join(" ")' <<< "$BUILD_ARGS_INPUT")"
+
+          docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" $BUILD_ARGS --push .
 
     outputs:
       image: ${{ env.IMAGE }}
