@@ -71,7 +71,7 @@ jobs:
       # virtual environment and install the required dependencies.
       # Ref: https://learn.microsoft.com/en-us/azure/databricks/dev-tools/bundles/python/
       - name: Setup uv
-        uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@2260866f83a41a2df55e1cfe7ffe038b78325bf6 # v0.295.0
