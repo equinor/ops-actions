@@ -1,5 +1,24 @@
 # Changelog
 
+## [9.36.0](https://github.com/equinor/ops-actions/compare/v9.35.1...v9.36.0) (2026-04-07)
+
+
+### Features
+
+* add input `build_args` to docker workflows ([#971](https://github.com/equinor/ops-actions/issues/971)) ([55d7c20](https://github.com/equinor/ops-actions/commit/55d7c204eda7dba15a69d412cacece6849bf9d90))
+* add input `tag_latest` to docker workflows  ([#972](https://github.com/equinor/ops-actions/issues/972)) ([8df41e1](https://github.com/equinor/ops-actions/commit/8df41e1a8970c22a47edf471eb317a970de2c1f5))
+
+
+### Dependencies
+
+* bump `actions/cache` from 5.0.3 to 5.0.4 ([#969](https://github.com/equinor/ops-actions/issues/969)) ([62a7977](https://github.com/equinor/ops-actions/commit/62a7977afd6362dde3b421eb45b1d485ff271d92))
+* bump `actions/deploy-pages` from 4.0.5 to 5.0.0 ([#974](https://github.com/equinor/ops-actions/issues/974)) ([81022b1](https://github.com/equinor/ops-actions/commit/81022b1155ecba8b23637edd1b394699f5102749))
+* bump `astral-sh/setup-uv` from 7.6.0 to 8.0.0 ([#973](https://github.com/equinor/ops-actions/issues/973)) ([8233c4d](https://github.com/equinor/ops-actions/commit/8233c4ded8d600a388950cbb15bc14272317a75e))
+* bump `azure/login` from 2.3.0 to 3.0.0 ([#970](https://github.com/equinor/ops-actions/issues/970)) ([233aaa5](https://github.com/equinor/ops-actions/commit/233aaa5a2d9af54e173f6c5b0fe8afd35d3734e5))
+* bump `databricks/setup-cli` from 0.281.0 to 0.295.0 ([#968](https://github.com/equinor/ops-actions/issues/968)) ([916c0d9](https://github.com/equinor/ops-actions/commit/916c0d9fc415395d505f6194ce37bec39fedfb78))
+* bump actions/download-artifact from 8.0.0 to 8.0.1 ([#965](https://github.com/equinor/ops-actions/issues/965)) ([47712b9](https://github.com/equinor/ops-actions/commit/47712b9576c3304911777cc794e5fbd13863babb))
+* bump astral-sh/setup-uv from 7.3.1 to 7.6.0 ([#966](https://github.com/equinor/ops-actions/issues/966)) ([444b3e2](https://github.com/equinor/ops-actions/commit/444b3e2cffb3b0e4d015c7fe55616495cf6ec29d))
+
 ## [9.35.1](https://github.com/equinor/ops-actions/compare/v9.35.0...v9.35.1) (2026-03-20)
 
 
