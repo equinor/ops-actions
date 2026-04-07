@@ -43,6 +43,12 @@ on:
         required: false
         default: ${{ github.run_number }}
 
+      tag_latest:
+        description: Push latest tag.
+        type: boolean
+        required: false
+        default: true
+
       build_args:
         description: Build arguments as a JSON object (e.g., '{"KEY1":"VALUE1","KEY2":"VALUE2"}').
         type: string
@@ -96,10 +102,15 @@ jobs:
       - name: Run Docker Build
         env:
           BUILD_ARGS_INPUT: ${{ inputs.build_args }}
+          TAG_LATEST: ${{ inputs.tag_latest }}
         run: |
           BUILD_ARGS="$(jq -r '[to_entries[] | "--build-arg \(.key)=\(.value)"] | join(" ")' <<< "$BUILD_ARGS_INPUT")"
 
-          docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" $BUILD_ARGS --push .
+          if [ "$TAG_LATEST" = "true" ]; then
+            docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" $BUILD_ARGS --push .
+          else
+            docker buildx build --tag "$IMAGE" $BUILD_ARGS --push .
+          fi
 
     outputs:
       image: ${{ env.IMAGE }}
