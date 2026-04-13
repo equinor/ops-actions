@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.37.0](https://github.com/equinor/ops-actions/compare/v9.36.0...v9.37.0) (2026-04-13)
+
+
+### Features
+
+* **terraform:** skip environment reference if triggered by Dependabot ([#975](https://github.com/equinor/ops-actions/issues/975)) ([7fb51e9](https://github.com/equinor/ops-actions/commit/7fb51e900bff18cb38596580b2ff2cf5ae47b1f2))
+
 ## [9.36.0](https://github.com/equinor/ops-actions/compare/v9.35.1...v9.36.0) (2026-04-07)
 
 
