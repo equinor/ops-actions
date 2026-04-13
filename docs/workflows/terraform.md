@@ -103,6 +103,10 @@ The path, relative to the working directory, of a variable definitions file (`.t
 
 The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name. Defaults to `terraform-<environment>`
 
+### (*Optional*) `run_terraform_plan`
+
+Run `terraform plan`? Defaults to `false` if the workflow was triggered by Dependabot, else `true`.
+
 ### (*Optional*) `run_terraform_apply`
 
 Run `terraform apply` for the saved plan file? Defaults to `true`.
