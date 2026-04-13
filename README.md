@@ -44,6 +44,67 @@ updates:
       interval: weekly
 ```
 
+### Security scanning
+
+We recommend the use of [zizmor](https://zizmor.sh), which scans your workflows for [many](https://docs.zizmor.sh/audits/) security issues, both common and less common. Use the `Remediation` section under each rule in the previous link as guidance to fix, or create workarounds for, found issues.
+
+We've created a [reusable workflow](https://github.com/equinor/ops-actions/.github/workflows/zizmor-codeql.yml) for use with GitHub Security Scanning.
+Usage:
+
+```yaml
+name: Lint Codebase
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  lint-actions:
+    name: Lint Actions
+    permissions:
+      contents: read                          # Only needed for private repos. Used to clone repo.
+      security-events: write                  # Required for `upload-sarif` (used by `zizmor-action`) to upload SARIF files.
+      actions: read                           # Only needed for private repos. Required for `upload-sarif` (used by `zizmor-action`) to upload SARIF files.
+    uses: equinor/ops-actions/.github/workflows/zizmor-codeql.yml@{ref}
+    with:
+      config_file: ./.github/zizmor.yml         # Optional, but recommended to tailor to your needs
+```
+
+You can also use zizmor standalone:
+
+```yaml
+name: Lint Codebase
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  lint-actions:
+    name: Lint Actions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@71321a20a9ded102f6e9ce5718a2fcec2c4f70d8 # v0.5.2
+```
+
 ## Development
 
 Clone this repository:
