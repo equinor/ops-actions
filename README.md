@@ -48,7 +48,7 @@ updates:
 
 We recommend the use of [zizmor](https://zizmor.sh), which scans your workflows for [many](https://docs.zizmor.sh/audits/) security issues, both common and less common. Use the `Remediation` section under each rule in the previous link as guidance to fix, or create workarounds for, found issues.
 
-We've created a [reusable workflow](.github/workflows/zizmor-codeql.yml) for use with GitHub Security Scanning.
+We've created a [reusable workflow](https://github.com/equinor/ops-actions/.github/workflows/zizmor-codeql.yml) for use with GitHub Security Scanning.
 Usage:
 
 ```yaml
