@@ -49,6 +49,12 @@ on:
         type: string
         required: false
 
+      run_terraform_plan:
+        description: Run `terraform plan`? Defaults to `false` if the workflow was triggered by Dependabot, else `true`.
+        type: boolean
+        required: false
+        default: ${{ github.actor != 'dependabot[bot]' }}
+
       run_terraform_apply:
         description: Run `terraform apply` for the saved plan file?
         type: boolean
@@ -115,7 +121,7 @@ jobs:
     name: Terraform Plan
     runs-on: ${{ inputs.runs_on }}
     environment:
-      name: ${{ inputs.environment }}
+      name: ${{ case(inputs.run_terraform_plan, inputs.environment, '') }}
       deployment: false
     permissions:
       contents: read # Required to checkout the repository
@@ -183,11 +189,12 @@ jobs:
       - name: Run Terraform Init
         id: init
         env:
+          RUN_TERRAFORM_PLAN: ${{ inputs.run_terraform_plan }}
           BACKEND_CONFIG: ${{ inputs.backend_config }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           optional_args=()
-          if [[ "$GITHUB_ACTOR" == "dependabot[bot]" ]]; then
+          if [[ "$RUN_TERRAFORM_PLAN" == "false" ]]; then
             optional_args+=(-backend=false)
           elif [[ -n "$BACKEND_CONFIG" ]]; then
             optional_args+=(-backend-config="$BACKEND_CONFIG")
@@ -208,7 +215,7 @@ jobs:
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
       - name: Run Terraform Plan
         id: plan
-        if: github.actor != 'dependabot[bot]'
+        if: inputs.run_terraform_plan
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
         # Ref: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#exit-codes-and-error-action-preference
