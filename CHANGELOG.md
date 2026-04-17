@@ -1,5 +1,21 @@
 # Changelog
 
+## [9.37.1](https://github.com/equinor/ops-actions/compare/v9.37.0...v9.37.1) (2026-04-16)
+
+
+### Bug Fixes
+
+* **release-please-manifest:** multiline value for output `path_tag_names` throws error ([#984](https://github.com/equinor/ops-actions/issues/984)) ([fcdb1d9](https://github.com/equinor/ops-actions/commit/fcdb1d98d33848d6697e12263fb334ef14377ded))
+
+
+### Dependencies
+
+* bump `azure/functions-action` from 1.5.4 to 1.5.5 ([#982](https://github.com/equinor/ops-actions/issues/982)) ([479a817](https://github.com/equinor/ops-actions/commit/479a81716f043f9d8c371ac8522ac26294fb2692))
+* bump `azure/webapps-deploy` from 3.0.7 to 3.0.8 ([#979](https://github.com/equinor/ops-actions/issues/979)) ([2b175d6](https://github.com/equinor/ops-actions/commit/2b175d6c0704a6570792c38f3ed195b853e3ee3a))
+* bump `github/codeql-action` from 4.31.10 to 4.35.1 ([#981](https://github.com/equinor/ops-actions/issues/981)) ([5b367c3](https://github.com/equinor/ops-actions/commit/5b367c334e17aaf832c666ab6ec1811ca63b3314))
+* bump `googleapis/release-please-action` from 4.4.0 to 4.4.1 ([#978](https://github.com/equinor/ops-actions/issues/978)) ([225a9e1](https://github.com/equinor/ops-actions/commit/225a9e1e9c768063637edb1c1d3c71a2610f6124))
+* bump `super-linter/super-linter` from 8.5.0 to 8.6.0 ([#980](https://github.com/equinor/ops-actions/issues/980)) ([c6b9223](https://github.com/equinor/ops-actions/commit/c6b9223b34c6a3e5129bd58f39ed54ef0fc5b53d))
+
 ## [9.37.0](https://github.com/equinor/ops-actions/compare/v9.36.0...v9.37.0) (2026-04-13)
 
 
