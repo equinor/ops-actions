@@ -89,7 +89,7 @@ jobs:
 
       - name: Deploy Azure Function
         id: deploy
-        uses: azure/functions-action@ac2abfb0e49d12ed5d273a3cb39f01bdd1654c43 # v1.5.5
+        uses: azure/functions-action@bc63708cc6539760eea18d8a7de4ce8ef5fdf593 # v1.5.6
         env:
           # Required for this action to get access token from Azure CLI.
           AZURE_CORE_OUTPUT: json
