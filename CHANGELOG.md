@@ -1,5 +1,17 @@
 # Changelog
 
+## [9.37.2](https://github.com/equinor/ops-actions/compare/v9.37.1...v9.37.2) (2026-04-21)
+
+
+### Dependencies
+
+* bump `actions/cache` from 5.0.4 to 5.0.5 ([#985](https://github.com/equinor/ops-actions/issues/985)) ([a93d046](https://github.com/equinor/ops-actions/commit/a93d0468b3c0e15ac8e43ef617a2c6455930ae24))
+* bump `actions/upload-artifact` from 7.0.0 to 7.0.1 ([#987](https://github.com/equinor/ops-actions/issues/987)) ([57973ab](https://github.com/equinor/ops-actions/commit/57973abc1e888ef2d1a05cc106731969a676c4d2))
+* bump `azure/functions-action` from 1.5.5 to 1.5.6 ([#988](https://github.com/equinor/ops-actions/issues/988)) ([f2f0a7e](https://github.com/equinor/ops-actions/commit/f2f0a7e9198e290c6ef55bc6f4c4bc1f4c8719aa))
+* bump `databricks/setup-cli` from 0.295.0 to 0.296.0 ([#986](https://github.com/equinor/ops-actions/issues/986)) ([f0167fa](https://github.com/equinor/ops-actions/commit/f0167fad683fd570f16f6726a91945b9489bc85a))
+* bump `databricks/setup-cli` from 0.296.0 to 0.296.1 ([#991](https://github.com/equinor/ops-actions/issues/991)) ([f95554b](https://github.com/equinor/ops-actions/commit/f95554b0a646fd3828dfaa33bc6acf5eb45f3487))
+* bump `docker/login-action` from 4.0.0 to 4.1.0 ([#989](https://github.com/equinor/ops-actions/issues/989)) ([ef8680c](https://github.com/equinor/ops-actions/commit/ef8680c52702033dc93ad0ce8cab32d6d7e43c91))
+
 ## [9.37.1](https://github.com/equinor/ops-actions/compare/v9.37.0...v9.37.1) (2026-04-16)
 
 
