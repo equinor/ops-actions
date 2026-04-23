@@ -79,7 +79,7 @@ on:
         required: false
 
       ENCRYPTION_PASSWORD:
-        description: A password used to encrypt the archive containing the Terraform configuration and plan file.
+        description: A password used to encrypt the archive containing the Terraform configuration and plan file. Passed via `secrets:` so GitHub auto-masks it in all logs.
         required: true
 
       SSH_PRIVATE_KEY:
@@ -114,7 +114,6 @@ env:
   PLAN_FILE: tfplan
   TARBALL: terraform.tar.gpg
   ARTIFACT_NAME: ${{ inputs.artifact_name || format('terraform-{0}', inputs.environment) }}
-  ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
 
 jobs:
   terraform-plan:
@@ -227,7 +226,7 @@ jobs:
           if [[ -n "$VAR_FILE" ]]; then
             optional_args+=(-var-file="$VAR_FILE")
           fi
-          terraform plan -out="$PLAN_FILE" -input=false -detailed-exitcode "${optional_args[@]}"
+          terraform plan -out="$PLAN_FILE" -input=false -detailed-exitcode -lock=false "${optional_args[@]}"
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
@@ -238,6 +237,8 @@ jobs:
         id: tar
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
         if: steps.plan.outputs.exitcode == 2
+        env:
+          ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
         run: |
           tarball_path="$RUNNER_TEMP/$TARBALL"
           tar -c . | gpg -c --batch --passphrase "$ENCRYPTION_PASSWORD" -o "$tarball_path"
@@ -251,10 +252,9 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ steps.tar.outputs.tarball_path }}
           if-no-files-found: error
-          # Automatically delete artifact after the workflow run time limit (35 days) to save storage space.
-          # If a workflow reaches this limit, it will be cancelled and the artifact will no longer be needed.
-          # Ref: https://docs.github.com/en/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits
-          retention-days: 35
+          # The tarball contains the full Terraform configuration and plan (encrypted) and is only consumed by the Apply job in the same workflow run.
+          # Keep retention minimal to limit the exposure window if `ENCRYPTION_PASSWORD` ever leaks.
+          retention-days: 1
 
       - name: Save cache
         id: cache-save
@@ -342,9 +342,11 @@ jobs:
           terraform_wrapper: false
 
       - name: Extract tarball
+        env:
+          ENCRYPTION_PASSWORD: ${{ secrets.ENCRYPTION_PASSWORD }}
         run: |
           gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar -x
           rm "$TARBALL"
 
       - name: Run Terraform Apply
-        run: terraform apply -input=false "$PLAN_FILE"
+        run: terraform apply -input=false -lock-timeout=20m "$PLAN_FILE"
