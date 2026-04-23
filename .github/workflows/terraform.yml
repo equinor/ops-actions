@@ -118,7 +118,7 @@ env:
 
 jobs:
   terraform-plan:
-    name: Terraform Plan
+    name: Plan
     runs-on: ${{ inputs.runs_on }}
     environment:
       name: ${{ case(inputs.run_terraform_plan, inputs.environment, '') }}
@@ -173,7 +173,7 @@ jobs:
           # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
           # Ref: https://developer.hashicorp.com/terraform/language/files/dependency-lock
 
-      - name: Run Terraform Format
+      - name: Terraform Format
         id: fmt
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
@@ -186,7 +186,7 @@ jobs:
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
           exit "$exitcode"
 
-      - name: Run Terraform Init
+      - name: Terraform Init
         id: init
         env:
           RUN_TERRAFORM_PLAN: ${{ inputs.run_terraform_plan }}
@@ -205,7 +205,7 @@ jobs:
           fi
           terraform init -input=false "${optional_args[@]}"
 
-      - name: Run Terraform Validate
+      - name: Terraform Validate
         id: validate
         run: terraform validate
 
@@ -213,7 +213,7 @@ jobs:
       # This file contains the full configuration, including sensitive data.
       # As a result, it should be treated as a potentially-sensitive artifact.
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
-      - name: Run Terraform Plan
+      - name: Terraform Plan
         id: plan
         if: inputs.run_terraform_plan
         # Start Bash without fail-fast behavior.
@@ -233,6 +233,14 @@ jobs:
             exit "$exitcode"
           fi
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
+
+      - name: Show Plan
+        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
+        if: steps.plan.outputs.exitcode == 2
+        shell: bash {0}
+        run: |
+          terraform show "$PLAN_FILE"
 
       - name: Create tarball
         id: tar
@@ -270,30 +278,36 @@ jobs:
         if: steps.fmt.outputs.exitcode != 0 || steps.plan.outputs.exitcode == 2
         shell: bash {0}
         env:
-          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
-          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
-          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
-          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
         # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
         run: |
           tfplan=$(terraform show "$PLAN_FILE" -no-color)
 
-          echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
-          #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
-          #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
-          #### Terraform Plan 📖\`$TF_PLAN_OUTCOME\`
+          plan_add=$(echo "$tfplan" | grep -oP '\d+(?= to add)' || echo "0")
+          plan_change=$(echo "$tfplan" | grep -oP '\d+(?= to change)' || echo "0")
+          plan_destroy=$(echo "$tfplan" | grep -oP '\d+(?= to destroy)' || echo "0")
 
-          <details><summary>Show Plan</summary>
-
-          \`\`\`terraform
-          $tfplan
-          \`\`\`
-
-          </details>
-
-          *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "| Add ➕ | Change 🔄 | Destroy 🗑️ |"
+            echo "|---|---|---|"
+            echo "| $plan_add | $plan_change | $plan_destroy |"
+            echo ""
+            total_changes=$((plan_add + plan_change + plan_destroy))
+            if [[ "$total_changes" -gt 2 ]]; then
+              echo "<details><summary>Show Plan</summary>"
+              echo ""
+            fi
+            echo '```terraform'
+            echo "$tfplan"
+            echo '```'
+            if [[ "$total_changes" -gt 2 ]]; then
+              echo ""
+              echo "</details>"
+            fi
+            echo ""
+            echo "*Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*"
+          } >> "$GITHUB_STEP_SUMMARY"
 
     outputs:
       upload-outcome: ${{ steps.upload.outcome }}
@@ -303,7 +317,7 @@ jobs:
       cache-save-outcome: ${{ steps.cache-save.outcome }}
 
   terraform-apply:
-    name: Terraform Apply
+    name: Apply
     needs: terraform-plan
     if: needs.terraform-plan.outputs.upload-outcome == 'success' && inputs.run_terraform_apply
     runs-on: ${{ inputs.runs_on }}
@@ -346,5 +360,5 @@ jobs:
           gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar -x
           rm "$TARBALL"
 
-      - name: Run Terraform Apply
+      - name: Terraform Apply
         run: terraform apply -input=false "$PLAN_FILE"
