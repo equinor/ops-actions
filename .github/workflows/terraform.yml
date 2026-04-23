@@ -284,9 +284,10 @@ jobs:
         run: |
           tfplan=$(terraform show "$PLAN_FILE" -no-color)
 
-          plan_add=$(echo "$tfplan" | grep -oP '\d+(?= to add)' || echo "0")
-          plan_change=$(echo "$tfplan" | grep -oP '\d+(?= to change)' || echo "0")
-          plan_destroy=$(echo "$tfplan" | grep -oP '\d+(?= to destroy)' || echo "0")
+          plan_summary=$(echo "$tfplan" | tail -2)
+          plan_add=$(echo "$plan_summary" | grep -oE '[0-9]+ to add' | grep -oE '[0-9]+' || echo "Count Failed")
+          plan_change=$(echo "$plan_summary" | grep -oE '[0-9]+ to change' | grep -oE '[0-9]+' || echo "Count Failed")
+          plan_destroy=$(echo "$plan_summary" | grep -oE '[0-9]+ to destroy' | grep -oE '[0-9]+' || echo "Count Failed")
 
           {
             echo "| Add ➕ | Change 🔄 | Destroy 🗑️ |"
@@ -295,7 +296,7 @@ jobs:
             echo ""
             total_changes=$((plan_add + plan_change + plan_destroy))
             if [[ "$total_changes" -gt 2 ]]; then
-              echo "<details><summary>Show Plan</summary>"
+              echo "<details><summary>Show Plan </summary>"
               echo ""
             fi
             echo '```terraform'
