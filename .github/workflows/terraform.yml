@@ -227,7 +227,7 @@ jobs:
           if [[ -n "$VAR_FILE" ]]; then
             optional_args+=(-var-file="$VAR_FILE")
           fi
-          terraform plan -out="$PLAN_FILE" -input=false -detailed-exitcode "${optional_args[@]}"
+          terraform plan -out="$PLAN_FILE" -input=false -detailed-exitcode -lock=false "${optional_args[@]}"
           exitcode=$?
           if [[ "$exitcode" == 1 ]]; then
             exit "$exitcode"
@@ -347,4 +347,4 @@ jobs:
           rm "$TARBALL"
 
       - name: Run Terraform Apply
-        run: terraform apply -input=false "$PLAN_FILE"
+        run: terraform apply -input=false -lock-timeout=20m "$PLAN_FILE"
