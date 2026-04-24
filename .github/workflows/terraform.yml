@@ -49,6 +49,12 @@ on:
         type: string
         required: false
 
+      artifact_retention_days:
+        description: Number of days to retain the uploaded plan artifact. The artifact contains the encrypted Terraform configuration and plan, and is only consumed by the Apply job in the same workflow run. Keep this low to limit the exposure window if `ENCRYPTION_PASSWORD` ever leaks.
+        type: number
+        required: false
+        default: 5
+
       run_terraform_plan:
         description: Run `terraform plan`? Defaults to `false` if the workflow was triggered by Dependabot, else `true`.
         type: boolean
@@ -252,9 +258,7 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: ${{ steps.tar.outputs.tarball_path }}
           if-no-files-found: error
-          # The tarball contains the full Terraform configuration and plan (encrypted) and is only consumed by the Apply job in the same workflow run.
-          # Keep retention minimal to limit the exposure window if `ENCRYPTION_PASSWORD` ever leaks.
-          retention-days: 1
+          retention-days: ${{ inputs.artifact_retention_days }}
 
       - name: Save cache
         id: cache-save
