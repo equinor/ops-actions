@@ -118,7 +118,7 @@ env:
 
 jobs:
   terraform-plan:
-    name: Plan
+    name: Terraform Plan
     runs-on: ${{ inputs.runs_on }}
     environment:
       name: ${{ case(inputs.run_terraform_plan, inputs.environment, '') }}
@@ -173,7 +173,7 @@ jobs:
           # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
           # Ref: https://developer.hashicorp.com/terraform/language/files/dependency-lock
 
-      - name: Terraform Format
+      - name: Run Terraform Format
         id: fmt
         # Start Bash without fail-fast behavior.
         # Required in order to check exitcode.
@@ -186,7 +186,7 @@ jobs:
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
           exit "$exitcode"
 
-      - name: Terraform Init
+      - name: Run Terraform Init
         id: init
         env:
           RUN_TERRAFORM_PLAN: ${{ inputs.run_terraform_plan }}
@@ -205,7 +205,7 @@ jobs:
           fi
           terraform init -input=false "${optional_args[@]}"
 
-      - name: Terraform Validate
+      - name: Run Terraform Validate
         id: validate
         run: terraform validate
 
@@ -213,7 +213,7 @@ jobs:
       # This file contains the full configuration, including sensitive data.
       # As a result, it should be treated as a potentially-sensitive artifact.
       # Ref: https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#plan-and-apply-on-different-machines
-      - name: Terraform Plan
+      - name: Run Terraform Plan
         id: plan
         if: inputs.run_terraform_plan
         # Start Bash without fail-fast behavior.
@@ -318,7 +318,7 @@ jobs:
       cache-save-outcome: ${{ steps.cache-save.outcome }}
 
   terraform-apply:
-    name: Apply
+    name: Terraform Apply
     needs: terraform-plan
     if: needs.terraform-plan.outputs.upload-outcome == 'success' && inputs.run_terraform_apply
     runs-on: ${{ inputs.runs_on }}
@@ -361,5 +361,5 @@ jobs:
           gpg -d --batch --passphrase "$ENCRYPTION_PASSWORD" "$TARBALL" | tar -x
           rm "$TARBALL"
 
-      - name: Terraform Apply
+      - name: Run Terraform Apply
         run: terraform apply -input=false "$PLAN_FILE"
