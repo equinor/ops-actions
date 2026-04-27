@@ -141,12 +141,23 @@ jobs:
 
           # Convert JSON secrets to repeated --secret flags.
           if [ -n "${BUILD_SECRETS_INPUT:-}" ]; then
+            if ! jq -e 'type == "object"' <<< "$BUILD_SECRETS_INPUT" > /dev/null; then
+              echo "BUILD_SECRETS must be a valid JSON object." >&2
+              exit 1
+            fi
+
             SECRETS_DIR="$(mktemp -d)"
             trap 'rm -rf "$SECRETS_DIR"' EXIT
 
             mapfile -t BUILD_SECRET_KEYS < <(jq -r 'keys[]' <<< "$BUILD_SECRETS_INPUT")
             for key in "${BUILD_SECRET_KEYS[@]}"; do
               value="$(jq -r --arg key "$key" '.[$key]' <<< "$BUILD_SECRETS_INPUT")"
+
+              if [ -z "$value" ] || [ "$value" = "null" ]; then
+                echo "BUILD_SECRETS contains empty value for key '$key'." >&2
+                exit 1
+              fi
+
               secret_file="$(mktemp "$SECRETS_DIR/secret.XXXXXX")"
 
               printf '%s' "$value" > "$secret_file"
