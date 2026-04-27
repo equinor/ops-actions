@@ -125,21 +125,19 @@ jobs:
           done
 
           # Convert JSON secrets to repeated --secret flags.
-          mapfile -t BUILD_SECRETS < <(jq -r 'to_entries[] | "\(.key)=\(.value)"' <<< "$BUILD_SECRETS_INPUT")
-          for secret_line in "${BUILD_SECRETS[@]}"; do
-            # Split key=value using parameter expansion:
-            # ${var%%pattern} removes longest match from end (greedy, from right)
-            # %%=* means: remove = and everything after it, leaving only key
-            key="${secret_line%%=*}"
-            
-            # ${var#pattern} removes shortest match from start (greedy, from left)
-            # #*= means: remove everything up to and including =, leaving only value
-            value="${secret_line#*=}"
+          if [ -n "${BUILD_SECRETS_INPUT:-}" ]; then
+            SECRETS_DIR="$(mktemp -d)"
+            trap 'rm -rf "$SECRETS_DIR"' EXIT
 
-            printf -v "$key" '%s' "$value"
-            export "$key"
-            BUILDX_ARGS+=(--secret "id=$key,env=$key")
-          done
+            mapfile -t BUILD_SECRET_KEYS < <(jq -r 'keys[]' <<< "$BUILD_SECRETS_INPUT")
+            for key in "${BUILD_SECRET_KEYS[@]}"; do
+              value="$(jq -r --arg key "$key" '.[$key]' <<< "$BUILD_SECRETS_INPUT")"
+              secret_file="$(mktemp "$SECRETS_DIR/secret.XXXXXX")"
+
+              printf '%s' "$value" > "$secret_file"
+              BUILDX_ARGS+=(--secret "id=$key,src=$secret_file")
+            done
+          fi
 
           docker buildx build --push . --tag "$IMAGE" "${BUILDX_ARGS[@]}"
 
