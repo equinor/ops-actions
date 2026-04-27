@@ -60,6 +60,10 @@ on:
         description: The password used to login to the Docker registry.
         required: true
 
+      BUILD_SECRETS:
+        description: Build secrets as a JSON object (e.g., '{"NPM_TOKEN":"token","PIP_URL":"url"}').
+        required: false
+
     outputs:
       image:
         description: The Docker image that was built.
@@ -102,15 +106,42 @@ jobs:
       - name: Run Docker Build
         env:
           BUILD_ARGS_INPUT: ${{ inputs.build_args }}
+          BUILD_SECRETS_INPUT: ${{ secrets.BUILD_SECRETS }}
           TAG_LATEST: ${{ inputs.tag_latest }}
         run: |
-          BUILD_ARGS="$(jq -r '[to_entries[] | "--build-arg \(.key)=\(.value)"] | join(" ")' <<< "$BUILD_ARGS_INPUT")"
+          set -euo pipefail
 
+          BUILDX_ARGS=()
+
+          # Tag image with "latest" if `tag_latest` is true.
           if [ "$TAG_LATEST" = "true" ]; then
-            docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" $BUILD_ARGS --push .
-          else
-            docker buildx build --tag "$IMAGE" $BUILD_ARGS --push .
+            BUILDX_ARGS+=(--tag "$IMAGE_LATEST")
           fi
+
+          # Convert JSON build args to repeated --build-arg flags.
+          mapfile -t BUILD_ARGS < <(jq -r 'to_entries[] | "\(.key)=\(.value)"' <<< "$BUILD_ARGS_INPUT")
+          for build_arg in "${BUILD_ARGS[@]}"; do
+            BUILDX_ARGS+=(--build-arg "$build_arg")
+          done
+
+          # Convert JSON secrets to repeated --secret flags.
+          mapfile -t BUILD_SECRETS < <(jq -r 'to_entries[] | "\(.key)=\(.value)"' <<< "$BUILD_SECRETS_INPUT")
+          for secret_line in "${BUILD_SECRETS[@]}"; do
+            # Split key=value using parameter expansion:
+            # ${var%%pattern} removes longest match from end (greedy, from right)
+            # %%=* means: remove = and everything after it, leaving only key
+            key="${secret_line%%=*}"
+            
+            # ${var#pattern} removes shortest match from start (greedy, from left)
+            # #*= means: remove everything up to and including =, leaving only value
+            value="${secret_line#*=}"
+
+            printf -v "$key" '%s' "$value"
+            export "$key"
+            BUILDX_ARGS+=(--secret "id=$key,env=$key")
+          done
+
+          docker buildx build --push . --tag "$IMAGE" "${BUILDX_ARGS[@]}"
 
     outputs:
       image: ${{ env.IMAGE }}
