@@ -19,10 +19,14 @@ jobs:
     with:
       working_directory: "."
       registry_name: crexampledev
+      # Optional: build args as JSON object.
+      build_args: '{"APP_ENV":"prod"}'
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      # Optional: build secrets as JSON object (e.g., from a stored secret or constructed locally).
+      BUILD_SECRETS: ${{ secrets.DOCKER_BUILD_SECRETS }}
 
   deploy:
     needs: build
