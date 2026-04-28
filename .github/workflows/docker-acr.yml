@@ -88,6 +88,7 @@ jobs:
     permissions:
       contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
+      packages: read # Required to pull packages from GitHub Packages registry
     env:
       IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
       IMAGE_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
