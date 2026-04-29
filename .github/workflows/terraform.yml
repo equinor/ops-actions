@@ -234,6 +234,14 @@ jobs:
           fi
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
 
+      - name: Show Plan
+        # Only run if Terraform Plan succeeded with non-empty diff (changes present).
+        # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
+        if: steps.plan.outputs.exitcode == 2
+        shell: bash {0}
+        run: |
+          terraform show "$PLAN_FILE"
+
       - name: Create tarball
         id: tar
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
@@ -270,30 +278,38 @@ jobs:
         if: steps.fmt.outputs.exitcode != 0 || steps.plan.outputs.exitcode == 2
         shell: bash {0}
         env:
-          TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
-          TF_INIT_OUTCOME: ${{ steps.init.outcome }}
-          TF_VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
-          TF_PLAN_OUTCOME: ${{ steps.plan.outcome }}
           WORKING_DIRECTORY: ${{ inputs.working_directory }}
         # Some plans are too large to be stored in environment variables or step outputs, resulting in an error.
         # To bypass this, the plan must be explicitly read during this step using the "terraform show" command.
         run: |
           tfplan=$(terraform show "$PLAN_FILE" -no-color)
 
-          echo "#### Terraform Format and Style 🖌\`$TF_FMT_OUTCOME\`
-          #### Terraform Initialization ⚙\`$TF_INIT_OUTCOME\`
-          #### Terraform Validation 🤖\`$TF_VALIDATE_OUTCOME\`
-          #### Terraform Plan 📖\`$TF_PLAN_OUTCOME\`
+          plan_summary=$(echo "$tfplan" | tail -2)
+          plan_import=$(echo "$plan_summary" | grep -oE '[0-9]+ to import' | grep -oE '[0-9]+' || echo "0")
+          plan_add=$(echo "$plan_summary" | grep -oE '[0-9]+ to add' | grep -oE '[0-9]+' || echo "Failed")
+          plan_change=$(echo "$plan_summary" | grep -oE '[0-9]+ to change' | grep -oE '[0-9]+' || echo "Failed")
+          plan_destroy=$(echo "$plan_summary" | grep -oE '[0-9]+ to destroy' | grep -oE '[0-9]+' || echo "Failed")
 
-          <details><summary>Show Plan</summary>
-
-          \`\`\`terraform
-          $tfplan
-          \`\`\`
-
-          </details>
-
-          *Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*" >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "| Add ➕ | Change 🔄 | Destroy 🗑️ | Import 📥 |"
+            echo "|---|---|---|---|"
+            echo "| $plan_add | $plan_change | $plan_destroy | $plan_import |"
+            echo ""
+            total_changes=$((plan_import + plan_add + plan_change + plan_destroy))
+            if [[ "$total_changes" -gt 2 ]]; then
+              echo "<details><summary>Show Plan ($line_count lines)</summary>"
+              echo ""
+            fi
+            echo '```terraform'
+            echo "$tfplan"
+            echo '```'
+            if [[ "$total_changes" -gt 2 ]]; then
+              echo ""
+              echo "</details>"
+            fi
+            echo ""
+            echo "*Pusher: @$GITHUB_ACTOR, Action: \`$GITHUB_EVENT_NAME\`, Working Directory: \`$WORKING_DIRECTORY\`, Workflow: \`$GITHUB_WORKFLOW\`*"
+          } >> "$GITHUB_STEP_SUMMARY"
 
     outputs:
       upload-outcome: ${{ steps.upload.outcome }}
