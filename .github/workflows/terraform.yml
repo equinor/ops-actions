@@ -285,18 +285,19 @@ jobs:
           tfplan=$(terraform show "$PLAN_FILE" -no-color)
 
           plan_summary=$(echo "$tfplan" | tail -2)
-          plan_add=$(echo "$plan_summary" | grep -oE '[0-9]+ to add' | grep -oE '[0-9]+' || echo "Count Failed")
-          plan_change=$(echo "$plan_summary" | grep -oE '[0-9]+ to change' | grep -oE '[0-9]+' || echo "Count Failed")
-          plan_destroy=$(echo "$plan_summary" | grep -oE '[0-9]+ to destroy' | grep -oE '[0-9]+' || echo "Count Failed")
+          plan_import=$(echo "$plan_summary" | grep -oE '[0-9]+ to import' | grep -oE '[0-9]+' || echo "0")
+          plan_add=$(echo "$plan_summary" | grep -oE '[0-9]+ to add' | grep -oE '[0-9]+' || echo "Failed")
+          plan_change=$(echo "$plan_summary" | grep -oE '[0-9]+ to change' | grep -oE '[0-9]+' || echo "Failed")
+          plan_destroy=$(echo "$plan_summary" | grep -oE '[0-9]+ to destroy' | grep -oE '[0-9]+' || echo "Failed")
 
           {
-            echo "| Add ➕ | Change 🔄 | Destroy 🗑️ |"
-            echo "|---|---|---|"
-            echo "| $plan_add | $plan_change | $plan_destroy |"
+            echo "| Add ➕ | Change 🔄 | Destroy 🗑️ | Import 📥 |"
+            echo "|---|---|---|---|"
+            echo "| $plan_add | $plan_change | $plan_destroy | $plan_import |"
             echo ""
-            total_changes=$((plan_add + plan_change + plan_destroy))
+            total_changes=$((plan_import + plan_add + plan_change + plan_destroy))
             if [[ "$total_changes" -gt 2 ]]; then
-              echo "<details><summary>Show Plan </summary>"
+              echo "<details><summary>Show Plan ($line_count lines)</summary>"
               echo ""
             fi
             echo '```terraform'
