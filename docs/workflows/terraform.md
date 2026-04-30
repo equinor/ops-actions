@@ -115,6 +115,10 @@ Run `terraform plan`? Defaults to `false` if the workflow was triggered by Depen
 
 Run `terraform apply` for the saved plan file? Defaults to `true`.
 
+### (*Optional*) `lock_timeout_minutes`
+
+Number of minutes `terraform apply` will wait to acquire the state lock if it is held. Set to `0` to fail immediately on contention (Terraform's default). Defaults to `0`.
+
 ## Secrets
 
 ### `ENCRYPTION_PASSWORD`
