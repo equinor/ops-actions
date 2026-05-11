@@ -135,21 +135,21 @@ jobs:
           fi
 
           # Convert JSON build args to repeated --build-arg flags.
-          mapfile -t build_args < <(jq -r 'to_entries[] | "\(.key)=\(.value)"' <<< "$BUILD_ARGS_INPUT")
+          mapfile -t build_args < <(jq -r 'to_entries[] | "\(.key)=\(.value)"' <<<"$BUILD_ARGS_INPUT")
           for build_arg in "${build_args[@]}"; do
             optional_args+=(--build-arg "$build_arg")
           done
 
           # Convert JSON secrets to repeated --secret flags.
           if [ -n "${BUILD_SECRETS_INPUT:-}" ]; then
-            if ! jq -e 'type == "object"' <<< "$BUILD_SECRETS_INPUT" > /dev/null; then
+            if ! jq -e 'type == "object"' <<<"$BUILD_SECRETS_INPUT" >/dev/null; then
               echo "BUILD_SECRETS must be a valid JSON object." >&2
               exit 1
             fi
 
-            mapfile -t build_secret_keys < <(jq -r 'keys[]' <<< "$BUILD_SECRETS_INPUT")
+            mapfile -t build_secret_keys < <(jq -r 'keys[]' <<<"$BUILD_SECRETS_INPUT")
             for key in "${build_secret_keys[@]}"; do
-              value="$(jq -r --arg key "$key" '.[$key]' <<< "$BUILD_SECRETS_INPUT")"
+              value="$(jq -r --arg key "$key" '.[$key]' <<<"$BUILD_SECRETS_INPUT")"
 
               if [ -z "$value" ] || [ "$value" = "null" ]; then
                 echo "BUILD_SECRETS contains empty value for key '$key'." >&2
