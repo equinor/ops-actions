@@ -81,6 +81,7 @@ jobs:
       deployment: false
     permissions:
       contents: read # Required to checkout the repository
+      packages: read # Required to pull packages from GitHub Packages registry
     env:
       IMAGE: ${{ inputs.registry }}/${{ inputs.repository }}:${{ inputs.tag }}
       IMAGE_LATEST: ${{ inputs.registry }}/${{ inputs.repository }}:latest
@@ -111,17 +112,17 @@ jobs:
         run: |
           set -euo pipefail
 
-          BUILDX_ARGS=()
+          optional_args=()
 
           # Tag image with "latest" if `tag_latest` is true.
           if [ "$TAG_LATEST" = "true" ]; then
-            BUILDX_ARGS+=(--tag "$IMAGE_LATEST")
+            optional_args+=(--tag "$IMAGE_LATEST")
           fi
 
           # Convert JSON build args to repeated --build-arg flags.
-          mapfile -t BUILD_ARGS < <(jq -r 'to_entries[] | "\(.key)=\(.value)"' <<< "$BUILD_ARGS_INPUT")
-          for build_arg in "${BUILD_ARGS[@]}"; do
-            BUILDX_ARGS+=(--build-arg "$build_arg")
+          mapfile -t build_args < <(jq -r 'to_entries[] | "\(.key)=\(.value)"' <<< "$BUILD_ARGS_INPUT")
+          for build_arg in "${build_args[@]}"; do
+            optional_args+=(--build-arg "$build_arg")
           done
 
           # Convert JSON secrets to repeated --secret flags.
@@ -131,11 +132,8 @@ jobs:
               exit 1
             fi
 
-            SECRETS_DIR="$(mktemp -d)"
-            trap 'rm -rf "$SECRETS_DIR"' EXIT
-
-            mapfile -t BUILD_SECRET_KEYS < <(jq -r 'keys[]' <<< "$BUILD_SECRETS_INPUT")
-            for key in "${BUILD_SECRET_KEYS[@]}"; do
+            mapfile -t build_secret_keys < <(jq -r 'keys[]' <<< "$BUILD_SECRETS_INPUT")
+            for key in "${build_secret_keys[@]}"; do
               value="$(jq -r --arg key "$key" '.[$key]' <<< "$BUILD_SECRETS_INPUT")"
 
               if [ -z "$value" ] || [ "$value" = "null" ]; then
@@ -143,14 +141,13 @@ jobs:
                 exit 1
               fi
 
-              secret_file="$(mktemp "$SECRETS_DIR/secret.XXXXXX")"
-
-              printf '%s' "$value" > "$secret_file"
-              BUILDX_ARGS+=(--secret "id=$key,src=$secret_file")
+              # Export each secret as an env var so Docker Buildx can source it via env=.
+              export "$key=$value"
+              optional_args+=(--secret "id=$key,env=$key")
             done
           fi
 
-          docker buildx build --push . --tag "$IMAGE" "${BUILDX_ARGS[@]}"
+          docker buildx build --push . --tag "$IMAGE" "${optional_args[@]}"
 
     outputs:
       image: ${{ env.IMAGE }}
