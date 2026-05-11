@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.38.0](https://github.com/equinor/ops-actions/compare/v9.37.3...v9.38.0) (2026-05-11)
+
+
+### Features
+
+* add support for docker build secrets ([#998](https://github.com/equinor/ops-actions/issues/998)) ([f34a4ec](https://github.com/equinor/ops-actions/commit/f34a4ecb4a48dbcce49462ce4ebec9c7887445d3))
+
+
+### Dependencies
+
+* bump `aquasecurity/trivy-action` from 0.35.0 to 0.36.0 ([#1006](https://github.com/equinor/ops-actions/issues/1006)) ([1fb5ef0](https://github.com/equinor/ops-actions/commit/1fb5ef0bdabd845b155896c3e009e6733cb29d85))
+* bump `databricks/setup-cli` from 0.297.2 to 0.298.0 ([#1007](https://github.com/equinor/ops-actions/issues/1007)) ([b6c49c2](https://github.com/equinor/ops-actions/commit/b6c49c2abbca649063eb694fc6d34addf7f4455b))
+* bump `googleapis/release-please-action` from 4.4.1 to 5.0.0 ([#1005](https://github.com/equinor/ops-actions/issues/1005)) ([a3b883e](https://github.com/equinor/ops-actions/commit/a3b883e684e1d15ab340dc2ce5fc320a2fd39f69))
+
 ## [9.37.3](https://github.com/equinor/ops-actions/compare/v9.37.2...v9.37.3) (2026-04-28)
 
 
