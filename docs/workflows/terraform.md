@@ -103,6 +103,10 @@ The path, relative to the working directory, of a variable definitions file (`.t
 
 The name of the artifact to upload. If not specified, an artifact name will be generated based on the environment name. Defaults to `terraform-<environment>`
 
+### (*Optional*) `artifact_retention_days`
+
+Number of days to retain the uploaded plan artifact. The artifact contains the encrypted Terraform configuration and plan, and is only consumed by the Apply job in the same workflow run. Keep this low to limit the exposure window if `ENCRYPTION_PASSWORD` ever leaks. Defaults to `5`.
+
 ### (*Optional*) `run_terraform_plan`
 
 Run `terraform plan`? Defaults to `false` if the workflow was triggered by Dependabot, else `true`.
@@ -115,7 +119,7 @@ Run `terraform apply` for the saved plan file? Defaults to `true`.
 
 ### `ENCRYPTION_PASSWORD`
 
-A password used to encrypt the archive containing the Terraform configuration and plan file.
+A password used to encrypt the archive containing the Terraform configuration and plan file. Passed via `secrets:` so GitHub auto-masks it in all logs.
 
 ### (*Optional*) `SSH_PRIVATE_KEY`
 
