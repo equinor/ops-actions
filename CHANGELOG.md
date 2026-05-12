@@ -1,5 +1,13 @@
 # Changelog
 
+## [9.38.1](https://github.com/equinor/ops-actions/compare/v9.38.0...v9.38.1) (2026-05-12)
+
+
+### Dependencies
+
+* bump databricks/setup-cli from 0.298.0 to 0.299.0 ([#1010](https://github.com/equinor/ops-actions/issues/1010)) ([6ca54ec](https://github.com/equinor/ops-actions/commit/6ca54ecbc7305568aef537992e5e34848b3f566b))
+* bump github/codeql-action from 4.35.2 to 4.35.3 ([#1009](https://github.com/equinor/ops-actions/issues/1009)) ([9d128ed](https://github.com/equinor/ops-actions/commit/9d128ed7fd5c6f7c81550965d32ae60fdccdd8f0))
+
 ## [9.38.0](https://github.com/equinor/ops-actions/compare/v9.37.3...v9.38.0) (2026-05-11)
 
 
