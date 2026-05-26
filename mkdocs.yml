@@ -39,6 +39,7 @@ nav:
       - workflows/commitlint.md
       - workflows/databricks-bundle.md 
       - workflows/databricks-repos.md
+      - workflows/dependabot-pr-title-formatter.md
       - workflows/mkdocs.md
       - workflows/python.md
       - workflows/python-package.md

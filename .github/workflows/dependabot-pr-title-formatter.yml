@@ -3,12 +3,14 @@ name: ♻ dependabot-pr-title-formatter
 on:
   workflow_call:
 
+permissions: {}
+
 jobs:
   dependabot-pr-title-formatter:
     name: Dependabot PR Title Formatter
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
-      pull-requests: write
+      pull-requests: write # Required to edit pull request titles
     steps:
       - name: Add backticks around package name
         env:
