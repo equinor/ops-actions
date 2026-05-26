@@ -165,6 +165,15 @@ jobs:
           # Calculate a hash for the dependency lock file and use this hash to identify the plugin cache for the Terraform configuration.
           # Ref: https://developer.hashicorp.com/terraform/language/files/dependency-lock
 
+      # Required to download modules from a private GitHub repository.
+      - name: Start SSH agent
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        if: env.SSH_PRIVATE_KEY != ''
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "$SSH_PRIVATE_KEY"
+
       - name: Terraform Format
         id: fmt
         # Start Bash without fail-fast behavior.
@@ -177,15 +186,6 @@ jobs:
           exitcode=$?
           echo "exitcode=$exitcode" >> "$GITHUB_OUTPUT"
           exit "$exitcode"
-
-      # Required to download modules from a private GitHub repository.
-      - name: Start SSH agent
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        if: env.SSH_PRIVATE_KEY != ''
-        run: |
-          eval "$(ssh-agent -s)"
-          ssh-add - <<< "$SSH_PRIVATE_KEY"
 
       - name: Terraform Init
         id: init
