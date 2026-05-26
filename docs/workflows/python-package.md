@@ -133,6 +133,10 @@ On push to branch `main`, this workflow will automatically release, build and pu
 
 The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
 
+### (*Optional*) `python_version`
+
+The version of Python to install. Defaults to the version specified in a `.python-version` file.
+
 ### (*Optional*) `working_directory`
 
 The path of the directory containing the Python project to build. Defaults to `.`.

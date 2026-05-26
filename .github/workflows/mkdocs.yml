@@ -25,11 +25,16 @@ on:
         type: string
         required: false
 
+      dependency_group:
+        description: A named dependency-group from a `pyproject.toml` file. Defaults to using the `pyproject.toml` file in the current directory.
+        type: string
+        required: false
+
       strict_mode:
         description: Should strict mode be enabled? This will cause MkDocs to abort the build on any warnings.
         type: boolean
         required: false
-        default: false 
+        default: false
 
       upload_artifact:
         description: Should the MkDocs build artifact be uploaded? Defaults to `true`.
@@ -71,13 +76,13 @@ jobs:
       ARTIFACT_NAME: ${{ inputs.artifact_name }}
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
           fetch-depth: ${{ inputs.git_fetch_depth }}
 
       - name: Setup Python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: ${{ inputs.python_version }}
 
@@ -99,7 +104,13 @@ jobs:
             pip install "$REQUIREMENTS"
           fi
 
-      - name: MkDocs Build
+      - name: Install dependency-group
+        if: inputs.dependency_group != ''
+        env:
+          PIP_GROUP: ${{ inputs.dependency_group }}
+        run: pip install
+
+      - name: Run MkDocs Build
         env:
           STRICT_MODE: ${{ inputs.strict_mode }}
         run: |
@@ -120,7 +131,7 @@ jobs:
 
       - name: Upload artifact
         if: inputs.upload_artifact
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ inputs.artifact_name }}
           path: ${{ steps.tar.outputs.tarball }}

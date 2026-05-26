@@ -1,5 +1,167 @@
 # Changelog
 
+## [9.38.0](https://github.com/equinor/ops-actions/compare/v9.37.3...v9.38.0) (2026-05-11)
+
+
+### Features
+
+* add support for docker build secrets ([#998](https://github.com/equinor/ops-actions/issues/998)) ([f34a4ec](https://github.com/equinor/ops-actions/commit/f34a4ecb4a48dbcce49462ce4ebec9c7887445d3))
+
+
+### Dependencies
+
+* bump `aquasecurity/trivy-action` from 0.35.0 to 0.36.0 ([#1006](https://github.com/equinor/ops-actions/issues/1006)) ([1fb5ef0](https://github.com/equinor/ops-actions/commit/1fb5ef0bdabd845b155896c3e009e6733cb29d85))
+* bump `databricks/setup-cli` from 0.297.2 to 0.298.0 ([#1007](https://github.com/equinor/ops-actions/issues/1007)) ([b6c49c2](https://github.com/equinor/ops-actions/commit/b6c49c2abbca649063eb694fc6d34addf7f4455b))
+* bump `googleapis/release-please-action` from 4.4.1 to 5.0.0 ([#1005](https://github.com/equinor/ops-actions/issues/1005)) ([a3b883e](https://github.com/equinor/ops-actions/commit/a3b883e684e1d15ab340dc2ce5fc320a2fd39f69))
+
+## [9.37.3](https://github.com/equinor/ops-actions/compare/v9.37.2...v9.37.3) (2026-04-28)
+
+
+### Dependencies
+
+* bump `actions/setup-node` from 6.3.0 to 6.4.0 ([#1000](https://github.com/equinor/ops-actions/issues/1000)) ([177a937](https://github.com/equinor/ops-actions/commit/177a937fcb2edc3b8cd9bf464cee12d30451681a))
+* bump `astral-sh/setup-uv` from 8.0.0 to 8.1.0 ([#1002](https://github.com/equinor/ops-actions/issues/1002)) ([bfad583](https://github.com/equinor/ops-actions/commit/bfad583b812656e70a93f677b7cd4cf693b8d746))
+* bump `databricks/setup-cli` from 0.296.1 to 0.297.2 ([#999](https://github.com/equinor/ops-actions/issues/999)) ([49477f5](https://github.com/equinor/ops-actions/commit/49477f579b1cb0c2557eaf877130a32fb0c49944))
+* bump `github/codeql-action` from 4.35.1 to 4.35.2 ([#1001](https://github.com/equinor/ops-actions/issues/1001)) ([fadea48](https://github.com/equinor/ops-actions/commit/fadea48561e63f58c26375549887c552966b6eab))
+
+## [9.37.2](https://github.com/equinor/ops-actions/compare/v9.37.1...v9.37.2) (2026-04-21)
+
+
+### Dependencies
+
+* bump `actions/cache` from 5.0.4 to 5.0.5 ([#985](https://github.com/equinor/ops-actions/issues/985)) ([a93d046](https://github.com/equinor/ops-actions/commit/a93d0468b3c0e15ac8e43ef617a2c6455930ae24))
+* bump `actions/upload-artifact` from 7.0.0 to 7.0.1 ([#987](https://github.com/equinor/ops-actions/issues/987)) ([57973ab](https://github.com/equinor/ops-actions/commit/57973abc1e888ef2d1a05cc106731969a676c4d2))
+* bump `azure/functions-action` from 1.5.5 to 1.5.6 ([#988](https://github.com/equinor/ops-actions/issues/988)) ([f2f0a7e](https://github.com/equinor/ops-actions/commit/f2f0a7e9198e290c6ef55bc6f4c4bc1f4c8719aa))
+* bump `databricks/setup-cli` from 0.295.0 to 0.296.0 ([#986](https://github.com/equinor/ops-actions/issues/986)) ([f0167fa](https://github.com/equinor/ops-actions/commit/f0167fad683fd570f16f6726a91945b9489bc85a))
+* bump `databricks/setup-cli` from 0.296.0 to 0.296.1 ([#991](https://github.com/equinor/ops-actions/issues/991)) ([f95554b](https://github.com/equinor/ops-actions/commit/f95554b0a646fd3828dfaa33bc6acf5eb45f3487))
+* bump `docker/login-action` from 4.0.0 to 4.1.0 ([#989](https://github.com/equinor/ops-actions/issues/989)) ([ef8680c](https://github.com/equinor/ops-actions/commit/ef8680c52702033dc93ad0ce8cab32d6d7e43c91))
+
+## [9.37.1](https://github.com/equinor/ops-actions/compare/v9.37.0...v9.37.1) (2026-04-16)
+
+
+### Bug Fixes
+
+* **release-please-manifest:** multiline value for output `path_tag_names` throws error ([#984](https://github.com/equinor/ops-actions/issues/984)) ([fcdb1d9](https://github.com/equinor/ops-actions/commit/fcdb1d98d33848d6697e12263fb334ef14377ded))
+
+
+### Dependencies
+
+* bump `azure/functions-action` from 1.5.4 to 1.5.5 ([#982](https://github.com/equinor/ops-actions/issues/982)) ([479a817](https://github.com/equinor/ops-actions/commit/479a81716f043f9d8c371ac8522ac26294fb2692))
+* bump `azure/webapps-deploy` from 3.0.7 to 3.0.8 ([#979](https://github.com/equinor/ops-actions/issues/979)) ([2b175d6](https://github.com/equinor/ops-actions/commit/2b175d6c0704a6570792c38f3ed195b853e3ee3a))
+* bump `github/codeql-action` from 4.31.10 to 4.35.1 ([#981](https://github.com/equinor/ops-actions/issues/981)) ([5b367c3](https://github.com/equinor/ops-actions/commit/5b367c334e17aaf832c666ab6ec1811ca63b3314))
+* bump `googleapis/release-please-action` from 4.4.0 to 4.4.1 ([#978](https://github.com/equinor/ops-actions/issues/978)) ([225a9e1](https://github.com/equinor/ops-actions/commit/225a9e1e9c768063637edb1c1d3c71a2610f6124))
+* bump `super-linter/super-linter` from 8.5.0 to 8.6.0 ([#980](https://github.com/equinor/ops-actions/issues/980)) ([c6b9223](https://github.com/equinor/ops-actions/commit/c6b9223b34c6a3e5129bd58f39ed54ef0fc5b53d))
+
+## [9.37.0](https://github.com/equinor/ops-actions/compare/v9.36.0...v9.37.0) (2026-04-13)
+
+
+### Features
+
+* **terraform:** skip environment reference if triggered by Dependabot ([#975](https://github.com/equinor/ops-actions/issues/975)) ([7fb51e9](https://github.com/equinor/ops-actions/commit/7fb51e900bff18cb38596580b2ff2cf5ae47b1f2))
+
+## [9.36.0](https://github.com/equinor/ops-actions/compare/v9.35.1...v9.36.0) (2026-04-07)
+
+
+### Features
+
+* add input `build_args` to docker workflows ([#971](https://github.com/equinor/ops-actions/issues/971)) ([55d7c20](https://github.com/equinor/ops-actions/commit/55d7c204eda7dba15a69d412cacece6849bf9d90))
+* add input `tag_latest` to docker workflows  ([#972](https://github.com/equinor/ops-actions/issues/972)) ([8df41e1](https://github.com/equinor/ops-actions/commit/8df41e1a8970c22a47edf471eb317a970de2c1f5))
+
+
+### Dependencies
+
+* bump `actions/cache` from 5.0.3 to 5.0.4 ([#969](https://github.com/equinor/ops-actions/issues/969)) ([62a7977](https://github.com/equinor/ops-actions/commit/62a7977afd6362dde3b421eb45b1d485ff271d92))
+* bump `actions/deploy-pages` from 4.0.5 to 5.0.0 ([#974](https://github.com/equinor/ops-actions/issues/974)) ([81022b1](https://github.com/equinor/ops-actions/commit/81022b1155ecba8b23637edd1b394699f5102749))
+* bump `astral-sh/setup-uv` from 7.6.0 to 8.0.0 ([#973](https://github.com/equinor/ops-actions/issues/973)) ([8233c4d](https://github.com/equinor/ops-actions/commit/8233c4ded8d600a388950cbb15bc14272317a75e))
+* bump `azure/login` from 2.3.0 to 3.0.0 ([#970](https://github.com/equinor/ops-actions/issues/970)) ([233aaa5](https://github.com/equinor/ops-actions/commit/233aaa5a2d9af54e173f6c5b0fe8afd35d3734e5))
+* bump `databricks/setup-cli` from 0.281.0 to 0.295.0 ([#968](https://github.com/equinor/ops-actions/issues/968)) ([916c0d9](https://github.com/equinor/ops-actions/commit/916c0d9fc415395d505f6194ce37bec39fedfb78))
+* bump actions/download-artifact from 8.0.0 to 8.0.1 ([#965](https://github.com/equinor/ops-actions/issues/965)) ([47712b9](https://github.com/equinor/ops-actions/commit/47712b9576c3304911777cc794e5fbd13863babb))
+* bump astral-sh/setup-uv from 7.3.1 to 7.6.0 ([#966](https://github.com/equinor/ops-actions/issues/966)) ([444b3e2](https://github.com/equinor/ops-actions/commit/444b3e2cffb3b0e4d015c7fe55616495cf6ec29d))
+
+## [9.35.1](https://github.com/equinor/ops-actions/compare/v9.35.0...v9.35.1) (2026-03-20)
+
+
+### Bug Fixes
+
+* non-deployment jobs create deployments ([#964](https://github.com/equinor/ops-actions/issues/964)) ([0d61fd4](https://github.com/equinor/ops-actions/commit/0d61fd4a8fbf29185943d1f7426932eb3a368725)), closes [#231](https://github.com/equinor/ops-actions/issues/231)
+
+
+### Dependencies
+
+* bump actions/setup-dotnet from 5.1.0 to 5.2.0 ([#957](https://github.com/equinor/ops-actions/issues/957)) ([0229b43](https://github.com/equinor/ops-actions/commit/0229b43898948e7c2c87d5fa572f148e99583b96))
+* bump actions/setup-node from 6.2.0 to 6.3.0 ([#959](https://github.com/equinor/ops-actions/issues/959)) ([ca34be2](https://github.com/equinor/ops-actions/commit/ca34be28e073da4495e3c33012c4c3d5a17ac7e3))
+* bump actions/upload-artifact from 6.0.0 to 7.0.0 ([#956](https://github.com/equinor/ops-actions/issues/956)) ([8907807](https://github.com/equinor/ops-actions/commit/89078072abcdb89efee66c65d652d0e85452f0d3))
+* bump aquasecurity/trivy-action from 0.34.2 to 0.35.0 ([#961](https://github.com/equinor/ops-actions/issues/961)) ([a953cb7](https://github.com/equinor/ops-actions/commit/a953cb783f8dc931d87577cfeaf607f4511d6bab))
+* bump astral-sh/setup-uv from 7.3.0 to 7.3.1 ([#958](https://github.com/equinor/ops-actions/issues/958)) ([6ba7429](https://github.com/equinor/ops-actions/commit/6ba7429e776c728651d9ae5f1a68ff339f228e47))
+* bump docker/login-action from 3.7.0 to 4.0.0 ([#963](https://github.com/equinor/ops-actions/issues/963)) ([10c07f4](https://github.com/equinor/ops-actions/commit/10c07f48ce0873dd7aa706ad89f604e264ab1fb3))
+* bump docker/setup-buildx-action from 3.12.0 to 4.0.0 ([#962](https://github.com/equinor/ops-actions/issues/962)) ([ca891a3](https://github.com/equinor/ops-actions/commit/ca891a3d15cb7dd6a215e3be1eabfbaceac89f6d))
+* bump hashicorp/setup-terraform from 3.1.2 to 4.0.0 ([#955](https://github.com/equinor/ops-actions/issues/955)) ([f339fa8](https://github.com/equinor/ops-actions/commit/f339fa8ec7d31b65d26f142c06cbba068c38616c))
+
+## [9.35.0](https://github.com/equinor/ops-actions/compare/v9.34.1...v9.35.0) (2026-03-04)
+
+
+### Features
+
+* **python-package:** specify version of Python to install ([#953](https://github.com/equinor/ops-actions/issues/953)) ([f3cd9d9](https://github.com/equinor/ops-actions/commit/f3cd9d9193fdbef4338088db7bfb6d67af6d8be8))
+
+## [9.34.1](https://github.com/equinor/ops-actions/compare/v9.34.0...v9.34.1) (2026-03-03)
+
+
+### Bug Fixes
+
+* **trivy-config-codeql:** failing to install Trivy v0.69.1 ([#952](https://github.com/equinor/ops-actions/issues/952)) ([efe4e54](https://github.com/equinor/ops-actions/commit/efe4e5488b8e57e9929148fb2d4f0e4a3d4a30bb))
+
+
+### Dependencies
+
+* bump actions/download-artifact from 7.0.0 to 8.0.0 ([#951](https://github.com/equinor/ops-actions/issues/951)) ([015ed2c](https://github.com/equinor/ops-actions/commit/015ed2cfdc36fe515f705a99e0d1d5edefeeef9b))
+* bump azure/functions-action from 1.5.3 to 1.5.4 ([#946](https://github.com/equinor/ops-actions/issues/946)) ([4e3905e](https://github.com/equinor/ops-actions/commit/4e3905e78be087856b414b58db129915ec3bbaa1))
+* bump azure/webapps-deploy from 3.0.6 to 3.0.7 ([#950](https://github.com/equinor/ops-actions/issues/950)) ([cb0cf7b](https://github.com/equinor/ops-actions/commit/cb0cf7b6f1aa1073d214da551f8f167c54125fc4))
+
+## [9.34.0](https://github.com/equinor/ops-actions/compare/v9.33.0...v9.34.0) (2026-02-27)
+
+
+### Features
+
+* **mkdocs:** install dependency-group ([#948](https://github.com/equinor/ops-actions/issues/948)) ([0b1362f](https://github.com/equinor/ops-actions/commit/0b1362f20f6339e47d179ba2e4cc8133e83fe14c))
+
+
+### Dependencies
+
+* bump actions/cache from 5.0.2 to 5.0.3 ([#943](https://github.com/equinor/ops-actions/issues/943)) ([4f9863b](https://github.com/equinor/ops-actions/commit/4f9863b5ca25d932ea865b9e49a83358ebdea778))
+* bump actions/setup-python from 6.1.0 to 6.2.0 ([#938](https://github.com/equinor/ops-actions/issues/938)) ([73f88da](https://github.com/equinor/ops-actions/commit/73f88da561a1519857860694d12f63e5c37f5eba))
+* bump astral-sh/setup-uv from 7.2.0 to 7.3.0 ([#945](https://github.com/equinor/ops-actions/issues/945)) ([4dce9d0](https://github.com/equinor/ops-actions/commit/4dce9d0690ce9261eb01eddc2b1e010319e7e921))
+* bump docker/login-action from 3.6.0 to 3.7.0 ([#942](https://github.com/equinor/ops-actions/issues/942)) ([bcbc1b8](https://github.com/equinor/ops-actions/commit/bcbc1b80ea03c9b5c8390e58b1177606e77d2ece))
+* bump super-linter/super-linter from 8.3.2 to 8.5.0 ([#944](https://github.com/equinor/ops-actions/issues/944)) ([078a083](https://github.com/equinor/ops-actions/commit/078a083ccb69ee0cc7a94fe75881a5968a9f47ca))
+
+## [9.33.0](https://github.com/equinor/ops-actions/compare/v9.32.1...v9.33.0) (2026-01-27)
+
+
+### Features
+
+* **databricks-repos:** create repo if doesn't exist ([#906](https://github.com/equinor/ops-actions/issues/906)) ([42869cb](https://github.com/equinor/ops-actions/commit/42869cbd64ae7ec7f7b3f511332af00f1bde923b))
+* **release-please-manifest:** add output `path_tag_names` ([#910](https://github.com/equinor/ops-actions/issues/910)) ([575e66d](https://github.com/equinor/ops-actions/commit/575e66d14a12df7ebab89cee8bc426945c704ffc))
+
+
+### Dependencies
+
+* bump actions/cache from 4.3.0 to 5.0.1 ([#918](https://github.com/equinor/ops-actions/issues/918)) ([c0ac390](https://github.com/equinor/ops-actions/commit/c0ac390ef61a26b99bba8f634b491d90f4092945))
+* bump actions/cache from 5.0.1 to 5.0.2 ([#936](https://github.com/equinor/ops-actions/issues/936)) ([9a785a9](https://github.com/equinor/ops-actions/commit/9a785a9ef7d23c5e4cc6617851d69047c3a6fbe1))
+* bump actions/checkout from 6.0.0 to 6.0.1 ([#908](https://github.com/equinor/ops-actions/issues/908)) ([545188a](https://github.com/equinor/ops-actions/commit/545188a2e1be38255dd346115aa661c730135889))
+* bump actions/checkout from 6.0.1 to 6.0.2 ([#935](https://github.com/equinor/ops-actions/issues/935)) ([f819055](https://github.com/equinor/ops-actions/commit/f8190551c1f80671a42dc5a26585ba5fb8c359cf))
+* bump actions/download-artifact from 6.0.0 to 7.0.0 ([#917](https://github.com/equinor/ops-actions/issues/917)) ([4292f93](https://github.com/equinor/ops-actions/commit/4292f932dfe95fe9bcbc01a09992fee393d052e5))
+* bump actions/setup-dotnet from 5.0.1 to 5.1.0 ([#934](https://github.com/equinor/ops-actions/issues/934)) ([74a7506](https://github.com/equinor/ops-actions/commit/74a7506aa6193b29e6f06daebe7662318525d4df))
+* bump actions/setup-node from 6.0.0 to 6.1.0 ([#907](https://github.com/equinor/ops-actions/issues/907)) ([8e59a24](https://github.com/equinor/ops-actions/commit/8e59a242bf43837c7c2fa0dddb438c23b9a036de))
+* bump actions/setup-node from 6.1.0 to 6.2.0 ([#933](https://github.com/equinor/ops-actions/issues/933)) ([0e7a24b](https://github.com/equinor/ops-actions/commit/0e7a24b47de64d7f02b4be70b9c88a17e5e12519))
+* bump actions/upload-artifact from 5.0.0 to 6.0.0 ([#916](https://github.com/equinor/ops-actions/issues/916)) ([31ee6a0](https://github.com/equinor/ops-actions/commit/31ee6a07b5cb9ca12e04101ae73ece33a2867220))
+* bump astral-sh/setup-uv from 7.1.4 to 7.1.6 ([#915](https://github.com/equinor/ops-actions/issues/915)) ([e2c3361](https://github.com/equinor/ops-actions/commit/e2c3361c6cf258d85794c6705aede00ea37bee0c))
+* bump astral-sh/setup-uv from 7.1.6 to 7.2.0 ([#932](https://github.com/equinor/ops-actions/issues/932)) ([0246f60](https://github.com/equinor/ops-actions/commit/0246f60a9e74c2c42784a69ffb96ed1d907b4a94))
+* bump databricks/setup-cli from 0.278.0 to 0.281.0 ([#928](https://github.com/equinor/ops-actions/issues/928)) ([6a87dbb](https://github.com/equinor/ops-actions/commit/6a87dbb82fe9f6e0099a478ff602cbfad4de608a))
+* bump github/codeql-action from 4.31.2 to 4.31.9 ([#927](https://github.com/equinor/ops-actions/issues/927)) ([1d63cca](https://github.com/equinor/ops-actions/commit/1d63ccab8535f9a8b9ff5cd25530310807038823))
+* bump github/codeql-action from 4.31.9 to 4.31.10 ([#931](https://github.com/equinor/ops-actions/issues/931)) ([767ff26](https://github.com/equinor/ops-actions/commit/767ff2626da62bed6452713d839bd10e7a9c1439))
+* bump super-linter/super-linter from 8.2.1 to 8.3.0 ([#904](https://github.com/equinor/ops-actions/issues/904)) ([0ca94d7](https://github.com/equinor/ops-actions/commit/0ca94d7598ff88a2391e5bf210f90c4b2e2128e2))
+* bump super-linter/super-linter from 8.3.0 to 8.3.2 ([#929](https://github.com/equinor/ops-actions/issues/929)) ([e3de139](https://github.com/equinor/ops-actions/commit/e3de139e43aaf137f1d76376c756e8983d6544d0))
+
 ## [9.32.1](https://github.com/equinor/ops-actions/compare/v9.32.0...v9.32.1) (2025-12-02)
 
 

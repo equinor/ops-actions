@@ -65,6 +65,7 @@ jobs:
     uses: equinor/ops-actions/.github/workflows/release-please-manifest.yml@main
     permissions:
       contents: write
+      issues: write
       pull-requests: write
 ```
 

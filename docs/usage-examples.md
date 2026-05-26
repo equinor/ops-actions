@@ -19,10 +19,14 @@ jobs:
     with:
       working_directory: "."
       registry_name: crexampledev
+      # Optional: Build arguments as a JSON object (e.g., '{"KEY1":"VALUE1","KEY2":"VALUE2"}').
+      build_args: '{"APP_ENV":"prod"}'
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      # Optional: build secrets as a JSON object (e.g., '{"NPM_TOKEN":"token","PIP_URL":"url"}').
+      BUILD_SECRETS: ${{ secrets.DOCKER_BUILD_SECRETS }}
 
   deploy:
     needs: build
@@ -62,31 +66,6 @@ jobs:
       environment: development
       artifact_name: ${{ needs.build.outputs.artifact_name }}
       app_name: app-example-dev
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-```
-
-## Update Databricks Git folder
-
-Prerequisites:
-
-- [Configure OIDC authentication from GitHub Actions to Azure](https://github.com/equinor/azure-github-oidc-template)
-- Create a folder `/Repos/<GITHUB_ORG>` in the target Databricks workspace and add the service principal with access `Can Manage`
-
-```yaml
-on:
-  push:
-    branches: [main]
-
-jobs:
-  update:
-    uses: equinor/ops-actions/.github/workflows/databricks-repos.yml@main
-    with:
-      environment: development
-      cli_version: "" # empty == latest
-      databricks_host: https://adb-709200391298940.4.azuredatabricks.net
     secrets:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

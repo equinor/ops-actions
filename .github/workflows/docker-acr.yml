@@ -38,6 +38,18 @@ on:
         required: false
         default: ${{ github.run_number }}
 
+      tag_latest:
+        description: Push latest tag.
+        type: boolean
+        required: false
+        default: true
+
+      build_args:
+        description: Build arguments as a JSON object (e.g., '{"KEY1":"VALUE1","KEY2":"VALUE2"}').
+        type: string
+        required: false
+        default: "{}"
+
     secrets:
       AZURE_CLIENT_ID:
         description: The client ID of the service principal to use for authenticating to Azure.
@@ -50,6 +62,10 @@ on:
       AZURE_TENANT_ID:
         description: The ID of the Microsoft Entra tenant to authenticate to.
         required: true
+
+      BUILD_SECRETS:
+        description: Build secrets as a JSON object (e.g., '{"NPM_TOKEN":"token","PIP_URL":"url"}').
+        required: false
 
     outputs:
       image:
@@ -66,10 +82,13 @@ jobs:
     name: Docker
     runs-on: ${{ inputs.runs_on }}
     if: github.actor != 'dependabot[bot]'
-    environment: ${{ inputs.environment }}
+    environment:
+      name: ${{ inputs.environment }}
+      deployment: false
     permissions:
       contents: read # Required to checkout the repository
       id-token: write # Required to login to Azure using OIDC
+      packages: read # Required to pull packages from GitHub Packages registry
     env:
       IMAGE: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:${{ inputs.tag }}
       IMAGE_LATEST: ${{ inputs.registry_name }}.azurecr.io/${{ inputs.repository }}:latest
@@ -78,15 +97,15 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
 
       - name: Login to Azure
-        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+        uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 # v3.0.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -100,8 +119,50 @@ jobs:
           REGISTRY_NAME: ${{ inputs.registry_name }}
         run: az acr login --name "$REGISTRY_NAME"
 
-      - name: Docker Build
-        run: docker buildx build --tag "$IMAGE" --tag "$IMAGE_LATEST" --push .
+      - name: Run Docker Build
+        env:
+          BUILD_ARGS_INPUT: ${{ inputs.build_args }}
+          BUILD_SECRETS_INPUT: ${{ secrets.BUILD_SECRETS }}
+          TAG_LATEST: ${{ inputs.tag_latest }}
+        run: |
+          set -euo pipefail
+
+          optional_args=()
+
+          # Tag image with "latest" if `tag_latest` is true.
+          if [ "$TAG_LATEST" = "true" ]; then
+            optional_args+=(--tag "$IMAGE_LATEST")
+          fi
+
+          # Convert JSON build args to repeated --build-arg flags.
+          mapfile -t build_args < <(jq -r 'to_entries[] | "\(.key)=\(.value)"' <<<"$BUILD_ARGS_INPUT")
+          for build_arg in "${build_args[@]}"; do
+            optional_args+=(--build-arg "$build_arg")
+          done
+
+          # Convert JSON secrets to repeated --secret flags.
+          if [ -n "${BUILD_SECRETS_INPUT:-}" ]; then
+            if ! jq -e 'type == "object"' <<<"$BUILD_SECRETS_INPUT" >/dev/null; then
+              echo "BUILD_SECRETS must be a valid JSON object." >&2
+              exit 1
+            fi
+
+            mapfile -t build_secret_keys < <(jq -r 'keys[]' <<<"$BUILD_SECRETS_INPUT")
+            for key in "${build_secret_keys[@]}"; do
+              value="$(jq -r --arg key "$key" '.[$key]' <<<"$BUILD_SECRETS_INPUT")"
+
+              if [ -z "$value" ] || [ "$value" = "null" ]; then
+                echo "BUILD_SECRETS contains empty value for key '$key'." >&2
+                exit 1
+              fi
+
+              # Export each secret as an env var so Docker Buildx can source it via env=.
+              export "$key=$value"
+              optional_args+=(--secret "id=$key,env=$key")
+            done
+          fi
+
+          docker buildx build --push . --tag "$IMAGE" "${optional_args[@]}"
 
     outputs:
       image: ${{ env.IMAGE }}
