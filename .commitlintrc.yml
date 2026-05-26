@@ -20,6 +20,7 @@ rules:
       - commitlint
       - databricks-bundle
       - databricks-repos
+      - dependabot-pr-title-formatter
       - docker-acr
       - docker
       - dotnet
