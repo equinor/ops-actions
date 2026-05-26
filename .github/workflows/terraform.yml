@@ -122,8 +122,6 @@ jobs:
       run:
         shell: bash
         working-directory: ${{ inputs.working_directory }}
-    env:
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
@@ -182,6 +180,8 @@ jobs:
 
       # Required to download modules from a private GitHub repository.
       - name: Start SSH agent
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         if: env.SSH_PRIVATE_KEY != ''
         run: |
           eval "$(ssh-agent -s)"
