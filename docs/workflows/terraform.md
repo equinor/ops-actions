@@ -24,10 +24,12 @@ Use the [Azure GitHub OIDC Template](https://github.com/equinor/azure-github-oid
 
 This workflow supports OIDC authentication for the following Terraform providers:
 
-| Name  | Source              | Version      |
-| ----- | ------------------- | ------------ |
-| Azure | `hashicorp/azurerm` | `>= v3.20.0` |
-| AzAPI | `azure/azapi`       | `>= v1.3.0`  |
+| Name             | Source                  | Version      |
+| ---------------- | ----------------------- | ------------ |
+| Azure            | `hashicorp/azurerm`     | `>= v3.20.0` |
+| AzAPI            | `azure/azapi`           | `>= v1.3.0`  |
+| Databricks       | `databricks/databricks` | `>= v1.49.0` |
+| Microsoft Fabric | `microsoft/fabric`      | `>= v1.0.0`  |
 
 ### Configure Terraform backend
 
