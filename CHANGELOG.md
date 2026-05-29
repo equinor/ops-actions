@@ -1,5 +1,18 @@
 # Changelog
 
+## [9.38.1](https://github.com/equinor/ops-actions/compare/v9.38.0...v9.38.1) (2026-05-28)
+
+
+### Dependencies
+
+* bump `databricks/setup-cli` from 0.299.0 to 0.299.1 ([#1014](https://github.com/equinor/ops-actions/issues/1014)) ([f03d999](https://github.com/equinor/ops-actions/commit/f03d999bb35c22da14f9a1fa00f3adf5db9197f0))
+* bump `databricks/setup-cli` from 0.299.1 to 0.299.2 ([#1017](https://github.com/equinor/ops-actions/issues/1017)) ([4935b59](https://github.com/equinor/ops-actions/commit/4935b593f2556e7a14875db3b49a8d033b643a20))
+* bump `github/codeql-action` from 4.35.3 to 4.35.4 ([#1013](https://github.com/equinor/ops-actions/issues/1013)) ([d9a40b2](https://github.com/equinor/ops-actions/commit/d9a40b2ade3c7cbb27d6b566cf6ec043d46a2c1f))
+* bump `github/codeql-action` from 4.35.4 to 4.35.5 ([#1016](https://github.com/equinor/ops-actions/issues/1016)) ([99cf5d4](https://github.com/equinor/ops-actions/commit/99cf5d4b17c7e38d0100f22786e23fe2036cad49))
+* bump `hashicorp/setup-terraform` from 4.0.0 to 4.0.1 ([#1012](https://github.com/equinor/ops-actions/issues/1012)) ([6f1b108](https://github.com/equinor/ops-actions/commit/6f1b1080932d8fa15e1c16ba90f14090739cc56a))
+* bump databricks/setup-cli from 0.298.0 to 0.299.0 ([#1010](https://github.com/equinor/ops-actions/issues/1010)) ([6ca54ec](https://github.com/equinor/ops-actions/commit/6ca54ecbc7305568aef537992e5e34848b3f566b))
+* bump github/codeql-action from 4.35.2 to 4.35.3 ([#1009](https://github.com/equinor/ops-actions/issues/1009)) ([9d128ed](https://github.com/equinor/ops-actions/commit/9d128ed7fd5c6f7c81550965d32ae60fdccdd8f0))
+
 ## [9.38.0](https://github.com/equinor/ops-actions/compare/v9.37.3...v9.38.0) (2026-05-11)
 
 
