@@ -1,5 +1,16 @@
 # Changelog
 
+## [9.38.2](https://github.com/equinor/ops-actions/compare/v9.38.1...v9.38.2) (2026-06-04)
+
+
+### Dependencies
+
+* bump `actions/setup-dotnet` from 5.2.0 to 5.3.0 ([#1021](https://github.com/equinor/ops-actions/issues/1021)) ([d1c8ac3](https://github.com/equinor/ops-actions/commit/d1c8ac3fac0a27dc1a3a4c2702543f107baef043))
+* bump `docker/login-action` from 4.1.0 to 4.2.0 ([#1024](https://github.com/equinor/ops-actions/issues/1024)) ([f216ad4](https://github.com/equinor/ops-actions/commit/f216ad4c56ce73db538b53c4f671507758490c97))
+* bump `docker/setup-buildx-action` from 4.0.0 to 4.1.0 ([#1022](https://github.com/equinor/ops-actions/issues/1022)) ([58b5b31](https://github.com/equinor/ops-actions/commit/58b5b31dccf1f4ca4265b79ed3f37740e5c4be46))
+* bump databricks/setup-cli from 0.299.2 to 1.1.0 ([#1023](https://github.com/equinor/ops-actions/issues/1023)) ([bf7e220](https://github.com/equinor/ops-actions/commit/bf7e220b3a37be4a6e7cefd28036d50b77b3954a))
+* bump github/codeql-action from 4.35.5 to 4.36.0 ([#1020](https://github.com/equinor/ops-actions/issues/1020)) ([0da49df](https://github.com/equinor/ops-actions/commit/0da49df082de6dbbd7a27f03cf960b60fd8b9b77))
+
 ## [9.38.1](https://github.com/equinor/ops-actions/compare/v9.38.0...v9.38.1) (2026-05-28)
 
 
