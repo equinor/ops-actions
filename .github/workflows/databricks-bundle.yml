@@ -74,7 +74,7 @@ jobs:
         uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
 
       - name: Setup Databricks CLI
-        uses: databricks/setup-cli@772863b94473abd8b0cacbec8b6f80fa0cbe1136 # v1.2.1
+        uses: databricks/setup-cli@91c0e1288666157b6b95ae3bb2b8742dd55eb985 # v1.3.0
         with:
           version: ${{ inputs.cli_version }}
 
