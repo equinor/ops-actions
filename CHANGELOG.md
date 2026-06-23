@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.38.4](https://github.com/equinor/ops-actions/compare/v9.38.3...v9.38.4) (2026-06-23)
+
+
+### Dependencies
+
+* bump databricks/setup-cli from 1.2.1 to 1.3.0 ([#1032](https://github.com/equinor/ops-actions/issues/1032)) ([dccdbd0](https://github.com/equinor/ops-actions/commit/dccdbd05f994f955d6f754ee0cc0bf27e63e4293))
+
 ## [9.38.3](https://github.com/equinor/ops-actions/compare/v9.38.2...v9.38.3) (2026-06-16)
 
 
