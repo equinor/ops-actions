@@ -16,6 +16,10 @@ on:
         default: simple
 
     outputs:
+      pr_created:
+        description: "`true` if a release PR was created, else `false`."
+        value: ${{ jobs.release-please.outputs.pr_created }}
+
       release_created:
         description: "`true` if a release was created, else `false`."
         value: ${{ jobs.release-please.outputs.release_created }}
@@ -23,10 +27,6 @@ on:
       tag_name:
         description: The tag name that was created for the release, empty if a release was not created.
         value: ${{ jobs.release-please.outputs.tag_name }}
-
-      pr_branch_name:
-        description: The branch name for the release PR that was created, empty if a release PR was not created.
-        value: ${{ jobs.release-please.outputs.pr_branch_name }}
 
 permissions: {}
 
@@ -46,14 +46,18 @@ jobs:
           release-type: ${{ inputs.release_type }}
 
       - name: Print outputs
+        env:
+          PR_CREATED: ${{ steps.release-please.outputs.prs_created }}
+          PR: ${{ steps.release-please.outputs.pr }}
+          PRS: ${{ steps.release-please.outputs.prs }}
         run:
-          echo "${{ steps.release-please.outputs.prs_created }}"
+          echo "$PR_CREATED"
           echo "---"
-          echo "${{ steps.release-please.outputs.pr }}"
+          echo "$PR"
           echo "---"
-          echo "${{ steps.release-please.outputs.prs }}"
+          echo "$PRS"
 
     outputs:
+      pr_created: ${{ steps.release-please.outputs.prs_created }}
       release_created: ${{ steps.release-please.outputs.release_created }}
       tag_name: ${{ steps.release-please.outputs.tag_name }}
-      pr_branch_name: ${{ fromJSON(steps.release-please.outputs.pr || '{}').headBranchName }}
