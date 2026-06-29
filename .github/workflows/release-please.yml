@@ -16,6 +16,14 @@ on:
         default: simple
 
     outputs:
+      pr_created:
+        description: "`true` if a release PR was created or updated, else `false`."
+        value: ${{ jobs.release-please.outputs.pr_created }}
+
+      pr_branch_name:
+        description: The branch name for the release PR that was created or updated, empty if a release PR was not created or updated.
+        value: ${{ jobs.release-please.outputs.pr_branch_name }}
+
       release_created:
         description: "`true` if a release was created, else `false`."
         value: ${{ jobs.release-please.outputs.release_created }}
@@ -42,5 +50,7 @@ jobs:
           release-type: ${{ inputs.release_type }}
 
     outputs:
+      pr_created: ${{ steps.release-please.outputs.prs_created }}
+      pr_branch_name: ${{ fromJSON(steps.release-please.outputs.pr || '{}').headBranchName }}
       release_created: ${{ steps.release-please.outputs.release_created }}
       tag_name: ${{ steps.release-please.outputs.tag_name }}
