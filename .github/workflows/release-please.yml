@@ -17,7 +17,7 @@ on:
 
     outputs:
       pr_created:
-        description: "`true` if a release PR was created or updated, else `false`."
+        description: '`"true"` if a release PR was created or updated, else `"false"`.'
         value: ${{ jobs.release-please.outputs.pr_created }}
 
       pr_branch_name:
@@ -25,7 +25,7 @@ on:
         value: ${{ jobs.release-please.outputs.pr_branch_name }}
 
       release_created:
-        description: "`true` if a release was created, else `false`."
+        description: '`"true"` if a release was created, else `"false"`.'
         value: ${{ jobs.release-please.outputs.release_created }}
 
       tag_name:
