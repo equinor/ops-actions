@@ -20,6 +20,10 @@ on:
         description: "`true` if a release PR was created, else `false`."
         value: ${{ jobs.release-please.outputs.pr_created }}
 
+      pr_branch_name:
+        description: The branch name for the release PR that was created, empty if a release PR was not created.
+        value: ${{ jobs.release-please.outputs.pr_branch_name }}
+
       release_created:
         description: "`true` if a release was created, else `false`."
         value: ${{ jobs.release-please.outputs.release_created }}
@@ -48,16 +52,11 @@ jobs:
       - name: Print outputs
         env:
           PR_CREATED: ${{ steps.release-please.outputs.prs_created }}
-          PR: ${{ steps.release-please.outputs.pr }}
-          PRS: ${{ steps.release-please.outputs.prs }}
-        run:
-          echo "$PR_CREATED"
-          echo "---"
-          echo "$PR"
-          echo "---"
-          echo "$PRS"
+          PR_BRANCH_NAME: ${{ fromJSON(steps.release-please.outputs.pr || '{}').headBranchName }}
+        run: Hello World!
 
     outputs:
       pr_created: ${{ steps.release-please.outputs.prs_created }}
+      pr_branch_name: ${{ fromJSON(steps.release-please.outputs.pr || '{}').headBranchName }}
       release_created: ${{ steps.release-please.outputs.release_created }}
       tag_name: ${{ steps.release-please.outputs.tag_name }}
