@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.39.0](https://github.com/equinor/ops-actions/compare/v9.38.4...v9.39.0) (2026-06-29)
+
+
+### Features
+
+* **release-please:** add release PR outputs ([#1035](https://github.com/equinor/ops-actions/issues/1035)) ([44e3f03](https://github.com/equinor/ops-actions/commit/44e3f03ed745201217044e7caa6ce8b9c0d5000b))
+
 ## [9.38.4](https://github.com/equinor/ops-actions/compare/v9.38.3...v9.38.4) (2026-06-23)
 
 
