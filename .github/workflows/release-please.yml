@@ -17,11 +17,11 @@ on:
 
     outputs:
       pr_created:
-        description: "`true` if a release PR was created, else `false`."
+        description: "`true` if a release PR was created or updated, else `false`."
         value: ${{ jobs.release-please.outputs.pr_created }}
 
       pr_branch_name:
-        description: The branch name for the release PR that was created, empty if a release PR was not created.
+        description: The name of the release PR branch that was created or updated, empty if a release PR was not created or updated.
         value: ${{ jobs.release-please.outputs.pr_branch_name }}
 
       release_created:
