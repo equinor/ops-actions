@@ -53,7 +53,7 @@ jobs:
         env:
           PR_CREATED: ${{ steps.release-please.outputs.prs_created }}
           PR_BRANCH_NAME: ${{ fromJSON(steps.release-please.outputs.pr || '{}').headBranchName }}
-        run: Hello World!
+        run: echo "Hello World!"
 
     outputs:
       pr_created: ${{ steps.release-please.outputs.prs_created }}
