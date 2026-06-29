@@ -51,6 +51,6 @@ jobs:
 
     outputs:
       pr_created: ${{ steps.release-please.outputs.prs_created }}
-      pr_branch_name: ${{ case(steps.release-please.outputs.prs_created, fromJSON(steps.release-please.outputs.pr).headBranchName, '') }}
+      pr_branch_name: ${{ case(steps.release-please.outputs.prs_created == 'true', fromJSON(steps.release-please.outputs.pr).headBranchName, '') }}
       release_created: ${{ steps.release-please.outputs.release_created }}
       tag_name: ${{ steps.release-please.outputs.tag_name }}
