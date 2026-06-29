@@ -49,12 +49,6 @@ jobs:
         with:
           release-type: ${{ inputs.release_type }}
 
-      - name: Print outputs
-        env:
-          PR_CREATED: ${{ steps.release-please.outputs.prs_created }}
-          PR_BRANCH_NAME: ${{ fromJSON(steps.release-please.outputs.pr || '{}').headBranchName }}
-        run: echo "Hello World!"
-
     outputs:
       pr_created: ${{ steps.release-please.outputs.prs_created }}
       pr_branch_name: ${{ fromJSON(steps.release-please.outputs.pr || '{}').headBranchName }}
