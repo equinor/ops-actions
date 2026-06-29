@@ -45,6 +45,14 @@ jobs:
         with:
           release-type: ${{ inputs.release_type }}
 
+      - name: Print outputs
+        run:
+          echo "${{ steps.release-please.outputs.prs_created }}"
+          echo "---"
+          echo "${{ steps.release-please.outputs.pr }}"
+          echo "---"
+          echo "${{ steps.release-please.outputs.prs }}"
+
     outputs:
       release_created: ${{ steps.release-please.outputs.release_created }}
       tag_name: ${{ steps.release-please.outputs.tag_name }}
