@@ -21,7 +21,7 @@ on:
         value: ${{ jobs.release-please.outputs.pr_created }}
 
       pr_branch_name:
-        description: The name of the release PR branch that was created or updated, empty if a release PR was not created or updated.
+        description: The branch name for the release PR that was created or updated, empty if a release PR was not created or updated.
         value: ${{ jobs.release-please.outputs.pr_branch_name }}
 
       release_created:
