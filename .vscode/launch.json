@@ -11,7 +11,8 @@
         "pattern": "Serving on http://(\\S+)",
         "uriFormat": "http://%s",
         "action": "openExternally"
-      }
+      },
+      "preLaunchTask": "uv sync"
     }
   ]
 }
