@@ -77,23 +77,24 @@ jobs:
 
 ## Development
 
-Clone this repository:
+We use [uv](https://docs.astral.sh/uv/) to have one synchronous development environment. See [installing uv](https://docs.astral.sh/uv/getting-started/installation/).
+
+Once uv is installed, clone the repository:
 
 ```console
 git clone https://github.com/equinor/ops-actions.git && cd ops-actions
 ```
 
-Install dependencies:
+Sync development dependencies:
 
 ```console
-python -m pip install --upgrade pip
-pip install -r requirements-docs.txt
+uv sync
 ```
 
 Run a development server:
 
 ```console
-mkdocs serve
+uv run mkdocs serve
 ```
 
 Alternatively, a [Visual Studio Code debug configuration](https://code.visualstudio.com/docs/debugtest/debugging-configuration) is provided (see [debug code with Visual Studio Code](https://code.visualstudio.com/docs/debugtest/debugging)).

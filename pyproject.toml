@@ -1,0 +1,13 @@
+[project]
+name = "ops-actions"
+version = "9.39.0"
+description = "Reusable GitHub Actions workflows for common operational tasks"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "click==8.2.1", # click 8.3.0 breaks mkdocs serve live reload
+    "mkdocs-material>=9.7.1",
+]
