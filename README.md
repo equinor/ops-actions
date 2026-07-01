@@ -46,9 +46,9 @@ updates:
 
 ### Code scanning
 
-We recommend the use of [zizmor](https://zizmor.sh), which scans your workflows for [many](https://docs.zizmor.sh/audits/) security issues, both common and less common. Use the **Remediation** section under each rule in the previous link as guidance to fix, or create workarounds for, found issues.
+Use [zizmor](https://zizmor.sh) to find common security issues in your workflows.
 
-A reusable workflow is provided for integration with GitHub Advanced Security:
+Create a GitHub Actions workflow file `.github/workflows/code-scanning.yml` in your repository containing the following confiuration to integrate zizmor with GitHub Advanced Security:
 
 ```yaml
 name: Code scanning
@@ -57,11 +57,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [main]
-  schedule:
-    # Run every Thursday at 00:00
-    - cron: "0 0 * * 4"
+    branches: ["**"]
 
 permissions: {}
 
