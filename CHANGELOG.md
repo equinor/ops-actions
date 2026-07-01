@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.39.1](https://github.com/equinor/ops-actions/compare/v9.39.0...v9.39.1) (2026-07-01)
+
+
+### Bug Fixes
+
+* **terraform:** remove duplicate `terraform show` command ([#1015](https://github.com/equinor/ops-actions/issues/1015)) ([cca4ce7](https://github.com/equinor/ops-actions/commit/cca4ce7bdb899429aa08e30103d5af25015af5d7))
+
+
+### Dependencies
+
+* bump `databricks/setup-cli` from 1.3.0 to 1.4.0 ([#1040](https://github.com/equinor/ops-actions/issues/1040)) ([7330bce](https://github.com/equinor/ops-actions/commit/7330bce510c6a6936e70e117d394b79808307c86))
+* bump `super-linter/super-linter` from 8.6.0 to 8.7.0 ([#1041](https://github.com/equinor/ops-actions/issues/1041)) ([0b7f753](https://github.com/equinor/ops-actions/commit/0b7f753f1869d3cfb07bf375a7f01ff7595724cc))
+* bump actions/checkout from 6.0.3 to 7.0.0 ([#1039](https://github.com/equinor/ops-actions/issues/1039)) ([5c85b63](https://github.com/equinor/ops-actions/commit/5c85b63bcda91d6f963824ef95933a716f62bcec))
+
 ## [9.39.0](https://github.com/equinor/ops-actions/compare/v9.38.4...v9.39.0) (2026-06-29)
 
 
