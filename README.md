@@ -73,29 +73,28 @@ jobs:
 
 ## Development
 
-We use [uv](https://docs.astral.sh/uv/) to have one synchronous development environment. See [installing uv](https://docs.astral.sh/uv/getting-started/installation/).
+1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
+1. Clone the repository:
 
-Once uv is installed, clone the repository:
+    ```console
+    git clone https://github.com/equinor/ops-actions.git && cd ops-actions
+    ```
 
-```console
-git clone https://github.com/equinor/ops-actions.git && cd ops-actions
-```
+1. Sync development dependencies:
 
-Sync development dependencies:
+    ```console
+    uv sync
+    ```
 
-```console
-uv sync
-```
+1. Run a development server:
 
-Run a development server:
+    ```console
+    uv run mkdocs serve
+    ```
 
-```console
-uv run mkdocs serve
-```
+    Alternatively, a Visual Studio Code debug configuration is provided (see [debug code with Visual Studio Code](https://code.visualstudio.com/docs/debugtest/debugging)).
 
-Alternatively, a [Visual Studio Code debug configuration](https://code.visualstudio.com/docs/debugtest/debugging-configuration) is provided (see [debug code with Visual Studio Code](https://code.visualstudio.com/docs/debugtest/debugging)).
-
-The [GitHub Actions extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions) is highly recommended for syntax highlighting, validation and code completion for GitHub Actions workflows.
+> The [GitHub Actions extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions) is highly recommended for syntax highlighting, validation and code completion for GitHub Actions workflows.
 
 ## Versioning
 
