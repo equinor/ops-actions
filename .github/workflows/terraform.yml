@@ -174,7 +174,7 @@ jobs:
       - name: Restore cache
         id: cache-restore
         if: steps.mkdir.outputs.plugin-cache-dir != ''
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ steps.mkdir.outputs.plugin-cache-dir }}
           key: ${{ runner.os }}-terraform-${{ hashFiles(format('{0}/{1}', inputs.working_directory, env.LOCK_FILE)) }}
@@ -349,7 +349,7 @@ jobs:
 
       - name: Restore cache
         if: needs.terraform-plan.outputs.cache-restore-hit == 'true' || needs.terraform-plan.outputs.cache-save-outcome == 'success'
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ needs.terraform-plan.outputs.plugin-cache-dir }}
           key: ${{ needs.terraform-plan.outputs.cache-primary-key }}
