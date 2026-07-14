@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.39.2](https://github.com/equinor/ops-actions/compare/v9.39.1...v9.39.2) (2026-07-14)
+
+
+### Dependencies
+
+* bump `actions/cache/restore` from 5.0.5 to 6.1.0 ([#1050](https://github.com/equinor/ops-actions/issues/1050)) ([fa656b1](https://github.com/equinor/ops-actions/commit/fa656b14a2eff62f6d7f245927f3175ea75dbd39))
+* bump `actions/cache/save` from 5.0.5 to 6.1.0 ([#1049](https://github.com/equinor/ops-actions/issues/1049)) ([49e6ee9](https://github.com/equinor/ops-actions/commit/49e6ee9f1e94a4dac229de4a9619857369c8d7f3))
+* bump `actions/setup-dotnet` from 5.3.0 to 5.4.0 ([#1048](https://github.com/equinor/ops-actions/issues/1048)) ([dec86e7](https://github.com/equinor/ops-actions/commit/dec86e71e4c75edf8ce1d063d90ab6b6426378a3))
+* bump `actions/setup-python` from 6.2.0 to 6.3.0 ([#1047](https://github.com/equinor/ops-actions/issues/1047)) ([026bebe](https://github.com/equinor/ops-actions/commit/026bebebe9a163e866b8f70fe3e9c348fdab8409))
+* bump `databricks/setup-cli` from 1.4.0 to 1.5.0 ([#1046](https://github.com/equinor/ops-actions/issues/1046)) ([6ed8cd7](https://github.com/equinor/ops-actions/commit/6ed8cd7c1ead449e58c3a59573e079e1bd0fc80d))
+* bump `docker/login-action` from 4.2.0 to 4.4.0 ([#1052](https://github.com/equinor/ops-actions/issues/1052)) ([5f067dc](https://github.com/equinor/ops-actions/commit/5f067dca809a636a563cc5a87bcfb148f4f560b7))
+* bump `docker/setup-buildx-action` from 4.1.0 to 4.2.0 ([#1054](https://github.com/equinor/ops-actions/issues/1054)) ([e90d1d4](https://github.com/equinor/ops-actions/commit/e90d1d449191f7374058cd89f3bdc556dd3bdd89))
+* bump `github/codeql-action/upload-sarif` from 4.36.2 to 4.36.3 ([#1053](https://github.com/equinor/ops-actions/issues/1053)) ([a48d939](https://github.com/equinor/ops-actions/commit/a48d93919dfb1a1d17545dae16b213ef67ee4799))
+
 ## [9.39.1](https://github.com/equinor/ops-actions/compare/v9.39.0...v9.39.1) (2026-07-01)
 
 
