@@ -1,5 +1,16 @@
 # Changelog
 
+## [9.39.3](https://github.com/equinor/ops-actions/compare/v9.39.2...v9.39.3) (2026-07-21)
+
+
+### Dependencies
+
+* bump `actions/setup-node` from 6.4.0 to 7.0.0 ([#1056](https://github.com/equinor/ops-actions/issues/1056)) ([27dd6d0](https://github.com/equinor/ops-actions/commit/27dd6d039a6e73ae77fc55b16f04d41859b3aec8))
+* bump `databricks/setup-cli` from 1.5.0 to 1.7.0 ([#1059](https://github.com/equinor/ops-actions/issues/1059)) ([b24e370](https://github.com/equinor/ops-actions/commit/b24e370934b9cbfa68c0181e18c2f7e2ca9028ae))
+* bump `github/codeql-action/analyze` from 4.36.2 to 4.37.0 ([#1057](https://github.com/equinor/ops-actions/issues/1057)) ([71c642b](https://github.com/equinor/ops-actions/commit/71c642b4e0e2770b93af6c8558ea666532ee999f))
+* bump `github/codeql-action/init` from 4.36.2 to 4.37.0 ([#1058](https://github.com/equinor/ops-actions/issues/1058)) ([58b403d](https://github.com/equinor/ops-actions/commit/58b403d27cf037104b7d983517f41a74bf2fe99c))
+* bump `github/codeql-action/upload-sarif` from 4.36.3 to 4.37.0 ([#1055](https://github.com/equinor/ops-actions/issues/1055)) ([9d44359](https://github.com/equinor/ops-actions/commit/9d44359c714d0ffef13e4ec3f89e75c521b1dad7))
+
 ## [9.39.2](https://github.com/equinor/ops-actions/compare/v9.39.1...v9.39.2) (2026-07-14)
 
 
