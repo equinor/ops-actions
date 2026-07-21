@@ -72,7 +72,7 @@ jobs:
       GIT_PROVIDER: gitHub
     steps:
       - name: Setup Databricks CLI
-        uses: databricks/setup-cli@f01853f8d6b12678ab0fab76ffad726c460be1a5 # v1.5.0
+        uses: databricks/setup-cli@bc7e6aabb6006d8d1758bd25ee1a100935c9cb7c # v1.7.0
         with:
           version: ${{ inputs.cli_version }}
 
