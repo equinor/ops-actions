@@ -1,5 +1,16 @@
 # Changelog
 
+## [9.39.4](https://github.com/equinor/ops-actions/compare/v9.39.3...v9.39.4) (2026-07-28)
+
+
+### Dependencies
+
+* bump actions/checkout from 7.0.0 to 7.0.1 ([#1063](https://github.com/equinor/ops-actions/issues/1063)) ([178e787](https://github.com/equinor/ops-actions/commit/178e7875f178c40f55d3c6970413f74ed9c449ab))
+* bump astral-sh/setup-uv from 8.2.0 to 8.3.2 ([#1061](https://github.com/equinor/ops-actions/issues/1061)) ([208312e](https://github.com/equinor/ops-actions/commit/208312ef3ac87df5f07485d3fd3c66e3888b75d0))
+* bump databricks/setup-cli from 1.7.0 to 1.8.0 ([#1062](https://github.com/equinor/ops-actions/issues/1062)) ([ce32856](https://github.com/equinor/ops-actions/commit/ce32856c4020f6854c0841954f8e7a875861f0d9))
+* bump github/codeql-action/analyze from 4.37.0 to 4.37.1 ([#1064](https://github.com/equinor/ops-actions/issues/1064)) ([50ca21a](https://github.com/equinor/ops-actions/commit/50ca21ae939e9f455172ebee11e9eb325f36f2ee))
+* bump github/codeql-action/init from 4.37.0 to 4.37.1 ([#1065](https://github.com/equinor/ops-actions/issues/1065)) ([3e62c7b](https://github.com/equinor/ops-actions/commit/3e62c7be5aa11f85240962bb90695fec145a7ec7))
+
 ## [9.39.3](https://github.com/equinor/ops-actions/compare/v9.39.2...v9.39.3) (2026-07-21)
 
 
