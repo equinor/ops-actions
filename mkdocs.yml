@@ -42,6 +42,7 @@ nav:
       - workflows/mkdocs.md
       - workflows/python.md
       - workflows/python-package.md
+      - workflows/powershell-codeql.md
       - workflows/release-please.md
       - workflows/release-please-manifest.md
       - workflows/terraform.md
