@@ -278,6 +278,8 @@ jobs:
         # Only run if Terraform Plan succeeded with non-empty diff (changes present).
         # Ref: https://developer.hashicorp.com/terraform/cli/commands/plan#detailed-exitcode
         if: steps.fmt.outputs.exitcode != 0 || steps.plan.outputs.exitcode == 2
+        # Failure to create a job summary should not stall the workflow.
+        continue-on-error: true
         shell: bash {0}
         env:
           TF_FMT_OUTCOME: ${{ steps.fmt.outcome }}
