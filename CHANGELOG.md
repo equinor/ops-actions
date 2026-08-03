@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.39.5](https://github.com/equinor/ops-actions/compare/v9.39.4...v9.39.5) (2026-08-03)
+
+
+### Bug Fixes
+
+* **terraform:** failure to create job summary stalls workflow ([#1068](https://github.com/equinor/ops-actions/issues/1068)) ([8ed94aa](https://github.com/equinor/ops-actions/commit/8ed94aabbd5bea051a8524516911a68a668324b4))
+
 ## [9.39.4](https://github.com/equinor/ops-actions/compare/v9.39.3...v9.39.4) (2026-07-28)
 
 
