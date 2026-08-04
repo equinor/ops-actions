@@ -1,5 +1,16 @@
 # Changelog
 
+## [9.39.6](https://github.com/equinor/ops-actions/compare/v9.39.5...v9.39.6) (2026-08-04)
+
+
+### Dependencies
+
+* bump actions/setup-dotnet from 5.4.0 to 6.0.0 ([#1071](https://github.com/equinor/ops-actions/issues/1071)) ([895db26](https://github.com/equinor/ops-actions/commit/895db26000af5f3435f43d68350f2a3104a0f009))
+* bump databricks/setup-cli from 1.8.0 to 1.9.0 ([#1072](https://github.com/equinor/ops-actions/issues/1072)) ([fbd5c46](https://github.com/equinor/ops-actions/commit/fbd5c460a8b8e245f7aa7de1beed55282d9f1f47))
+* bump docker/login-action from 4.4.0 to 4.5.2 ([#1073](https://github.com/equinor/ops-actions/issues/1073)) ([318f160](https://github.com/equinor/ops-actions/commit/318f160af8bbfcc287c67a7534debd4bc385a939))
+* bump github/codeql-action/analyze from 4.37.1 to 4.37.3 ([#1074](https://github.com/equinor/ops-actions/issues/1074)) ([733ac63](https://github.com/equinor/ops-actions/commit/733ac63ea4cd2239816f24c385921a4d04975ed6))
+* bump github/codeql-action/upload-sarif from 4.37.0 to 4.37.3 ([#1070](https://github.com/equinor/ops-actions/issues/1070)) ([10d3d95](https://github.com/equinor/ops-actions/commit/10d3d95114c8eebf3c8823034153477179776b2f))
+
 ## [9.39.5](https://github.com/equinor/ops-actions/compare/v9.39.4...v9.39.5) (2026-08-03)
 
 
