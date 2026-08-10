@@ -12,6 +12,7 @@ rules:
       - chore
       - refactor
       - ci
+      - build
   scope-enum:
     - 2
     - always
