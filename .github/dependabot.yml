@@ -20,3 +20,6 @@ updates:
       default-days: 7
     commit-message:
       prefix: build
+    groups:
+      uv:
+        patterns: ["*"]
