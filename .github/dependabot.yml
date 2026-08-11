@@ -10,6 +10,12 @@ updates:
     # Prefix commit messages with "deps" to include dependency updates in patch releases
     commit-message:
       prefix: deps
+    # Group codeql-action updates together to avoid multiple pull requests for the same update. Important that all CodeQL updates are taken simultaneously to avoid version mismatches between the init and analyze actions.
+    # Different versions of the init and analyze actions can cause errors in the CodeQL analysis.
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
 
   - package-ecosystem: uv
     directory: /
