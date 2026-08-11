@@ -8,6 +8,6 @@ dependencies = []
 
 [dependency-groups]
 dev = [
-    "click==8.4.2", # click 8.3.0 breaks mkdocs serve live reload
+    "click==8.4.2",
     "mkdocs-material>=9.7.7",
 ]
