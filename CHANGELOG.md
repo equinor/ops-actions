@@ -1,5 +1,31 @@
 # Changelog
 
+## [9.40.0](https://github.com/equinor/ops-actions/compare/v9.39.6...v9.40.0) (2026-08-12)
+
+
+### Features
+
+* add codeql workflow for powershell ([#1067](https://github.com/equinor/ops-actions/issues/1067)) ([d390960](https://github.com/equinor/ops-actions/commit/d390960b09693fcef807809cc57023b9780e32c6))
+
+
+### Bug Fixes
+
+* `azure/login` action fails to parse Azure CLI version ([#1096](https://github.com/equinor/ops-actions/issues/1096)) ([313ce46](https://github.com/equinor/ops-actions/commit/313ce469eb3c6a927dd11487f9bde246d9f85e65)), closes [#930](https://github.com/equinor/ops-actions/issues/930)
+* fix codeql workflow ([#1076](https://github.com/equinor/ops-actions/issues/1076)) ([9f0f718](https://github.com/equinor/ops-actions/commit/9f0f71867e9b301573a0c5f187f1308e0e85592c))
+* upgrade codeql to matching versions ([#1087](https://github.com/equinor/ops-actions/issues/1087)) ([f83bcd2](https://github.com/equinor/ops-actions/commit/f83bcd271b8ad38c0aff7686a8cb8faf59039fff))
+
+
+### Dependencies
+
+* bump actions/setup-python from 6.3.0 to 7.0.0 ([#1085](https://github.com/equinor/ops-actions/issues/1085)) ([2ce0d6f](https://github.com/equinor/ops-actions/commit/2ce0d6f2790c5d6da6645d121602c5be3a05d07f))
+* bump astral-sh/setup-uv from 8.3.2 to 9.0.0 ([#1082](https://github.com/equinor/ops-actions/issues/1082)) ([3eec052](https://github.com/equinor/ops-actions/commit/3eec052a6de8a13b91be084029fa72498d2b2fc4))
+* bump azure/login from 3.0.0 to 3.0.1 ([#1091](https://github.com/equinor/ops-actions/issues/1091)) ([d0a5ad0](https://github.com/equinor/ops-actions/commit/d0a5ad071c87a5106f1a281409cf57e6a61bb12e))
+* bump databricks/setup-cli from 1.9.0 to 1.10.0 ([#1088](https://github.com/equinor/ops-actions/issues/1088)) ([0a28eac](https://github.com/equinor/ops-actions/commit/0a28eac14fb1397235dd387cbcc186893fbb782a))
+* bump docker/login-action from 4.5.2 to 4.6.0 ([#1083](https://github.com/equinor/ops-actions/issues/1083)) ([feb11ba](https://github.com/equinor/ops-actions/commit/feb11ba92c4ac73b112d62300f710856c223628f))
+* bump github/codeql-action/init from 4.37.3 to 4.37.5 ([#1084](https://github.com/equinor/ops-actions/issues/1084)) ([5054c59](https://github.com/equinor/ops-actions/commit/5054c59e4d7a693fcd29cfcc2663834eeb6b78c2))
+* bump github/codeql-action/upload-sarif from 4.37.3 to 4.37.5 ([#1086](https://github.com/equinor/ops-actions/issues/1086)) ([b298aac](https://github.com/equinor/ops-actions/commit/b298aac2913c3a5f3eab083a922b4e49d462ae73))
+* bump the codeql group with 3 updates ([#1095](https://github.com/equinor/ops-actions/issues/1095)) ([9fef328](https://github.com/equinor/ops-actions/commit/9fef328a7886f2d2a9ff9ecd525c4a877a94fe07))
+
 ## [9.39.6](https://github.com/equinor/ops-actions/compare/v9.39.5...v9.39.6) (2026-08-04)
 
 
