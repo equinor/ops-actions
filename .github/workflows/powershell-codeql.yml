@@ -1,0 +1,61 @@
+name: ♻ powershell-codeql
+
+on:
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  powershell:
+    name: PowerShell
+    runs-on: ubuntu-24.04
+    permissions:
+      security-events: write # Required to upload code scanning results
+      actions: read # Required to upload code scanning results in private repositories
+      contents: read # Required to checkout private repositories
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+
+      - name: Find PowerShell files
+        id: find-powershell-files
+        shell: bash
+        run: |
+          if find . -type f \( -name '*.ps1' -o -name '*.psm1' -o -name '*.psd1' \) -print -quit | grep -q .; then
+            echo "has_files=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_files=false" >> "$GITHUB_OUTPUT"
+            echo "No PowerShell files found"
+          fi
+
+      - name: Run PowerShell analyzer
+        if: steps.find-powershell-files.outputs.has_files == 'true'
+        shell: bash
+        run: |
+          mapfile -d '' powershell_files < <(find . -type f \( -name '*.ps1' -o -name '*.psm1' -o -name '*.psd1' \) -print0)
+
+          analyzer_exit_code=0
+
+          uvx --from 'py-psscriptanalyzer==0.3.1' py-psscriptanalyzer \
+            --security-only \
+            --severity Warning \
+            --output-format sarif \
+            --output-file results.sarif \
+            "${powershell_files[@]}" || analyzer_exit_code=$?
+
+          if [[ ! -f results.sarif ]]; then
+            exit "$analyzer_exit_code"
+          fi
+
+      - name: Upload code scanning results
+        if: steps.find-powershell-files.outputs.has_files == 'true'
+        uses: github/codeql-action/upload-sarif@99df26d4f13ea111d4ec1a7dddef6063f76b97e9 # v4.37.0
+        with:
+          sarif_file: results.sarif
+          category: powershell
