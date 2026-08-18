@@ -1,5 +1,15 @@
 # Changelog
 
+## [9.40.1](https://github.com/equinor/ops-actions/compare/v9.40.0...v9.40.1) (2026-08-18)
+
+
+### Dependencies
+
+* bump astral-sh/setup-uv from 8.3.2 to 9.0.0 ([#1100](https://github.com/equinor/ops-actions/issues/1100)) ([435e44a](https://github.com/equinor/ops-actions/commit/435e44ac0014a7dc0b61c130f0856522fe7d5590))
+* bump azure/functions-action from 1.5.6 to 1.5.7 ([#1099](https://github.com/equinor/ops-actions/issues/1099)) ([54f6d72](https://github.com/equinor/ops-actions/commit/54f6d7222261a301b4d1c687f49b6c7d51bc78d5))
+* bump databricks/setup-cli from 1.10.0 to 1.11.0 ([#1098](https://github.com/equinor/ops-actions/issues/1098)) ([e3a5b55](https://github.com/equinor/ops-actions/commit/e3a5b552b0985d148e0e8e6a4c12935a96de2581))
+* bump github/codeql-action/upload-sarif from 4.37.0 to 4.37.6 in the codeql group ([#1097](https://github.com/equinor/ops-actions/issues/1097)) ([f5b5677](https://github.com/equinor/ops-actions/commit/f5b56778f57e23f07e4c2a28e939ee68fabfdca1))
+
 ## [9.40.0](https://github.com/equinor/ops-actions/compare/v9.39.6...v9.40.0) (2026-08-12)
 
 
