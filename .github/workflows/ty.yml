@@ -68,4 +68,4 @@ jobs:
             exit 1
           fi
 
-          uv run ty check "${optional_args[@]}" .
+          uv run --with ty ty check "${optional_args[@]}" .
