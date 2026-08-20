@@ -1,0 +1,46 @@
+# `ty.yml`
+
+A reusable workflow that type-checks a Python project using [ty](https://docs.astral.sh/ty/).
+
+Unlike Ruff, `ty` needs the project's real environment to resolve imports and types accurately, so this workflow installs the project's dependencies with `uv sync` before running `ty check`.
+
+## Usage
+
+Add a GitHub Actions workflow file `.github/workflows/lint.yml` in your repository, and add the following recommended configuration:
+
+```yaml
+name: Lint Codebase
+
+on: [push, pull_request]
+
+permissions: {}
+
+jobs:
+  type-check:
+    name: Type check
+    permissions:
+      contents: read
+    uses: equinor/ops-actions/.github/workflows/ty.yml@main
+```
+
+## Inputs
+
+### (*Optional*) `runs_on`
+
+The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+
+### (*Optional*) `working_directory`
+
+The path of the directory containing the Python project to type-check. Defaults to `.`.
+
+### (*Optional*) `python_version`
+
+The version of Python to install. Defaults to the version specified in the `.python-version` file.
+
+### (*Optional*) `config_file`
+
+The path, relative to the working directory, of a [ty configuration file](https://docs.astral.sh/ty/configuration/).
+
+## References
+
+- <https://docs.astral.sh/ty/>
