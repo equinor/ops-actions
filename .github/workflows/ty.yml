@@ -1,0 +1,110 @@
+# Use ty to type-check a Python project.
+#
+# References:
+# - ty: https://docs.astral.sh/ty/
+name: ♻ ty
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
+      working_directory:
+        description: The path of the directory containing the Python project to type-check.
+        type: string
+        required: false
+        default: "."
+
+      python_version:
+        description: The version of Python to install. Defaults to the version specified in the `.python-version` file.
+        type: string
+        required: false
+
+      config_file:
+        description: The path, relative to the working directory, of a ty configuration file.
+        type: string
+        required: false
+
+      ty_version:
+        description: The version of ty to install.
+        type: string
+        required: false
+        default: latest
+
+      requirements:
+        description: A requirement specifier or the path, relative to the working directory, of a requirements file (usually `requirements.txt`) that specifies Python dependencies to install. Only used if the project does not have a `pyproject.toml` file.
+        type: string
+        required: false
+
+permissions: {}
+
+jobs:
+  ty:
+    name: ty
+    runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read # Required to checkout the repository
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: ${{ inputs.python_version }}
+
+      - name: Install dependencies
+        env:
+          REQUIREMENTS: ${{ inputs.requirements }}
+        run: |
+          if [[ -f pyproject.toml ]]; then
+            uv sync
+          elif [[ -n "$REQUIREMENTS" ]]; then
+            uv venv
+            if [[ -f "$REQUIREMENTS" ]]; then
+              uv pip install -r "$REQUIREMENTS"
+            else
+              uv pip install "$REQUIREMENTS"
+            fi
+          fi
+
+      - name: Install ty
+        env:
+          TY_VERSION: ${{ inputs.ty_version }}
+        run: |
+          # Skip if the project already declares its own ty dependency, to avoid overriding its pinned version.
+          if [[ ! -x .venv/bin/ty ]]; then
+            uv tool install "ty@$TY_VERSION"
+            echo "$(uv tool dir --bin)" >> "$GITHUB_PATH"
+          fi
+
+      - name: Run ty
+        env:
+          CONFIG_FILE: ${{ inputs.config_file }}
+        run: |
+          optional_args=()
+
+          if [[ -f "$CONFIG_FILE" ]]; then
+            optional_args+=(--config-file "$CONFIG_FILE")
+          elif [[ -n "$CONFIG_FILE" ]]; then
+            echo "Config file '$CONFIG_FILE' not found" >&2
+            exit 1
+          fi
+
+          if [[ -x .venv/bin/ty ]]; then
+            uv run ty check "${optional_args[@]}" .
+          elif [[ -f pyproject.toml ]]; then
+            ty check "${optional_args[@]}" .
+          else
+            ty check --python .venv "${optional_args[@]}" .
+          fi

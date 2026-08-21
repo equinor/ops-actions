@@ -1,0 +1,84 @@
+# Use Ruff to lint and format-check a Python project.
+#
+# References:
+# - Ruff: https://docs.astral.sh/ruff/
+name: ♻ ruff
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        description: The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
+        type: string
+        required: false
+        default: ubuntu-24.04
+
+      working_directory:
+        description: The path of the directory containing the Python project to lint.
+        type: string
+        required: false
+        default: "."
+
+      ruff_version:
+        description: The version of Ruff to run.
+        type: string
+        required: false
+        default: latest
+
+      config_file:
+        description: The path, relative to the working directory, of a Ruff configuration file.
+        type: string
+        required: false
+
+permissions: {}
+
+jobs:
+  ruff:
+    name: ruff
+    runs-on: ${{ inputs.runs_on }}
+    permissions:
+      contents: read # Required to checkout the repository
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+
+      - name: Lint
+        env:
+          RUFF_VERSION: ${{ inputs.ruff_version }}
+          CONFIG_FILE: ${{ inputs.config_file }}
+        run: |
+          optional_args=()
+
+          if [[ -f "$CONFIG_FILE" ]]; then
+            optional_args+=(--config "$CONFIG_FILE")
+          elif [[ -n "$CONFIG_FILE" ]]; then
+            echo "Config file '$CONFIG_FILE' not found" >&2
+            exit 1
+          fi
+
+          uvx "ruff@$RUFF_VERSION" check "${optional_args[@]}" .
+
+      - name: Check formatting
+        env:
+          RUFF_VERSION: ${{ inputs.ruff_version }}
+          CONFIG_FILE: ${{ inputs.config_file }}
+        run: |
+          optional_args=()
+
+          if [[ -f "$CONFIG_FILE" ]]; then
+            optional_args+=(--config "$CONFIG_FILE")
+          elif [[ -n "$CONFIG_FILE" ]]; then
+            echo "Config file '$CONFIG_FILE' not found" >&2
+            exit 1
+          fi
+
+          uvx "ruff@$RUFF_VERSION" format --check --diff "${optional_args[@]}" .
