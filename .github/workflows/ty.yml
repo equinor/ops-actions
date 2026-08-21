@@ -63,13 +63,6 @@ jobs:
         with:
           python-version: ${{ inputs.python_version }}
 
-      - name: Install ty
-        env:
-          TY_VERSION: ${{ inputs.ty_version }}
-        run: |
-          uv tool install "ty@$TY_VERSION"
-          echo "$(uv tool dir --bin)" >> "$GITHUB_PATH"
-
       - name: Install dependencies
         env:
           REQUIREMENTS: ${{ inputs.requirements }}
@@ -85,6 +78,16 @@ jobs:
             fi
           fi
 
+      - name: Install ty
+        env:
+          TY_VERSION: ${{ inputs.ty_version }}
+        run: |
+          # Skip if the project already declares its own ty dependency, to avoid overriding its pinned version.
+          if [[ ! -x .venv/bin/ty ]]; then
+            uv tool install "ty@$TY_VERSION"
+            echo "$(uv tool dir --bin)" >> "$GITHUB_PATH"
+          fi
+
       - name: Run ty
         env:
           CONFIG_FILE: ${{ inputs.config_file }}
@@ -98,7 +101,9 @@ jobs:
             exit 1
           fi
 
-          if [[ -f pyproject.toml ]]; then
+          if [[ -x .venv/bin/ty ]]; then
+            uv run ty check "${optional_args[@]}" .
+          elif [[ -f pyproject.toml ]]; then
             ty check "${optional_args[@]}" .
           else
             ty check --python .venv "${optional_args[@]}" .

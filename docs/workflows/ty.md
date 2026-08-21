@@ -4,6 +4,8 @@ A reusable workflow that type-checks a Python project using [ty](https://docs.as
 
 `ty` is installed globally via `uv tool install`, decoupled from the project's own dependencies. Unlike Ruff, `ty` needs the project's real environment to resolve imports and types accurately, so this workflow installs the project's dependencies with `uv sync` before running `ty check`. Projects without a `pyproject.toml` should set `requirements` to install dependencies via pip instead, so `ty` can resolve third-party imports.
 
+If the project already declares its own `ty` dependency (e.g. via `uv add --dev ty`, [Astral's recommended approach](https://docs.astral.sh/ty/installation/#adding-ty-to-your-project)), this workflow detects it and runs `uv run ty check` instead, so the project's pinned version is used rather than the `ty_version` input.
+
 ## Usage
 
 Add a GitHub Actions workflow file `.github/workflows/lint.yml` in your repository, and add the following recommended configuration:
