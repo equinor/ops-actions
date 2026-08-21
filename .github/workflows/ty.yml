@@ -29,6 +29,12 @@ on:
         type: string
         required: false
 
+      ty_version:
+        description: The version of ty to install.
+        type: string
+        required: false
+        default: latest
+
       requirements:
         description: A requirement specifier or the path, relative to the working directory, of a requirements file (usually `requirements.txt`) that specifies Python dependencies to install. Only used if the project does not have a `pyproject.toml` file.
         type: string
@@ -56,6 +62,13 @@ jobs:
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
           python-version: ${{ inputs.python_version }}
+
+      - name: Install ty
+        env:
+          TY_VERSION: ${{ inputs.ty_version }}
+        run: |
+          uv tool install "ty@$TY_VERSION"
+          echo "$(uv tool dir --bin)" >> "$GITHUB_PATH"
 
       - name: Install dependencies
         env:
@@ -86,7 +99,7 @@ jobs:
           fi
 
           if [[ -f pyproject.toml ]]; then
-            uv run --with ty ty check "${optional_args[@]}" .
+            ty check "${optional_args[@]}" .
           else
-            uvx ty check --python .venv "${optional_args[@]}" .
+            ty check --python .venv "${optional_args[@]}" .
           fi

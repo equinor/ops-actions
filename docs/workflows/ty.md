@@ -2,7 +2,7 @@
 
 A reusable workflow that type-checks a Python project using [ty](https://docs.astral.sh/ty/).
 
-Unlike Ruff, `ty` needs the project's real environment to resolve imports and types accurately, so this workflow installs the project's dependencies with `uv sync` before running `ty check`. Projects without a `pyproject.toml` should set `requirements` to install dependencies via pip instead, so `ty` can resolve third-party imports.
+`ty` is installed globally via `uv tool install`, decoupled from the project's own dependencies. Unlike Ruff, `ty` needs the project's real environment to resolve imports and types accurately, so this workflow installs the project's dependencies with `uv sync` before running `ty check`. Projects without a `pyproject.toml` should set `requirements` to install dependencies via pip instead, so `ty` can resolve third-party imports.
 
 ## Usage
 
@@ -40,6 +40,10 @@ The version of Python to install. Defaults to the version specified in the `.pyt
 ### (*Optional*) `config_file`
 
 The path, relative to the working directory, of a [ty configuration file](https://docs.astral.sh/ty/configuration/).
+
+### (*Optional*) `ty_version`
+
+The version of ty to install. Defaults to `latest`.
 
 ### (*Optional*) `requirements`
 
