@@ -1,5 +1,5 @@
 # Use ty to type-check a Python project.
-
+#
 # References:
 # - ty: https://docs.astral.sh/ty/
 name: ♻ ty
@@ -29,6 +29,11 @@ on:
         type: string
         required: false
 
+      requirements:
+        description: A requirement specifier or the path, relative to the working directory, of a requirements file (usually `requirements.txt`) that specifies Python dependencies to install. Only used if the project does not have a `pyproject.toml` file.
+        type: string
+        required: false
+
 permissions: {}
 
 jobs:
@@ -53,7 +58,19 @@ jobs:
           python-version: ${{ inputs.python_version }}
 
       - name: Install dependencies
-        run: uv sync
+        env:
+          REQUIREMENTS: ${{ inputs.requirements }}
+        run: |
+          if [[ -f pyproject.toml ]]; then
+            uv sync
+          elif [[ -n "$REQUIREMENTS" ]]; then
+            uv venv
+            if [[ -f "$REQUIREMENTS" ]]; then
+              uv pip install -r "$REQUIREMENTS"
+            else
+              uv pip install "$REQUIREMENTS"
+            fi
+          fi
 
       - name: Run ty
         env:
@@ -68,4 +85,8 @@ jobs:
             exit 1
           fi
 
-          uv run --with ty ty check "${optional_args[@]}" .
+          if [[ -f pyproject.toml ]]; then
+            uv run --with ty ty check "${optional_args[@]}" .
+          else
+            uvx ty check --python .venv "${optional_args[@]}" .
+          fi
