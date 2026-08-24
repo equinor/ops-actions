@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.40.2](https://github.com/equinor/ops-actions/compare/v9.40.1...v9.40.2) (2026-08-24)
+
+
+### Bug Fixes
+
+* **super-linter:** missing permissions `packages: write`, `issues: write` and `pull-requests: write` ([#1103](https://github.com/equinor/ops-actions/issues/1103)) ([c3d7612](https://github.com/equinor/ops-actions/commit/c3d76128312dd9ba6859f5113c95b2b4b2952c51))
+
 ## [9.40.1](https://github.com/equinor/ops-actions/compare/v9.40.0...v9.40.1) (2026-08-18)
 
 
