@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.41.1](https://github.com/equinor/ops-actions/compare/v9.41.0...v9.41.1) (2026-08-24)
+
+
+### Bug Fixes
+
+* fix python path check ([#1106](https://github.com/equinor/ops-actions/issues/1106)) ([b5cdc85](https://github.com/equinor/ops-actions/commit/b5cdc8563c14bcade7900c2788d586916037269d))
+
 ## [9.41.0](https://github.com/equinor/ops-actions/compare/v9.40.2...v9.41.0) (2026-08-24)
 
 
