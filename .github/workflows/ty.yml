@@ -103,8 +103,8 @@ jobs:
 
           if [[ -x .venv/bin/ty ]]; then
             uv run ty check "${optional_args[@]}" .
-          elif [[ -f pyproject.toml ]]; then
-            ty check "${optional_args[@]}" .
-          else
+          elif [[ -d .venv ]]; then
             ty check --python .venv "${optional_args[@]}" .
+          else
+            ty check "${optional_args[@]}" .
           fi
