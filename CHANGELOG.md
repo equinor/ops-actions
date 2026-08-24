@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.41.0](https://github.com/equinor/ops-actions/compare/v9.40.2...v9.41.0) (2026-08-24)
+
+
+### Features
+
+* add reusable workflows for ty and ruff ([#1102](https://github.com/equinor/ops-actions/issues/1102)) ([d3fd339](https://github.com/equinor/ops-actions/commit/d3fd3396a9c5ea17366057f28181fc74342d01b9))
+
 ## [9.40.2](https://github.com/equinor/ops-actions/compare/v9.40.1...v9.40.2) (2026-08-24)
 
 
