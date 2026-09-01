@@ -11,7 +11,7 @@ on:
 
     outputs:
       prs_created:
-        description: '`"true"` if any release PR was created or updated, else `"false"`.'
+        description: '`true` if any release PR was created or updated, else `false`.'
         value: ${{ jobs.release-please.outputs.prs_created }}
 
       pr_branch_names:
