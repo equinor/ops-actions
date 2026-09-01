@@ -81,7 +81,7 @@ The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaul
 
 ### `prs_created`
 
-`"true"` if any release PR was created or updated, else `"false"`.
+`true` if any release PR was created or updated, else `false`.
 
 ### `pr_branch_names`
 
@@ -89,7 +89,7 @@ A JSON array of branch names for the release PRs that were created or updated, `
 
 ### `release_created`
 
-`"true"` if any release was created, else `"false"`.
+`true` if any release was created, else `false`.
 
 ### `paths_released`
 
