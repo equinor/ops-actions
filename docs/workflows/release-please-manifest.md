@@ -79,9 +79,13 @@ The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaul
 
 ## Outputs
 
+### `prs_created`
+
+`"true"` if any release PR was created or updated, else `"false"`.
+
 ### `release_created`
 
-`true` if any release was created, else `false`.
+`"true"` if any release was created, else `"false"`.
 
 ### `paths_released`
 

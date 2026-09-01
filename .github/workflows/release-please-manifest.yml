@@ -10,6 +10,10 @@ on:
         default: ubuntu-24.04
 
     outputs:
+      prs_created:
+        description: '`"true"` if any release PR was created or updated, else `"false"`.'
+        value: ${{ jobs.release-please.outputs.prs_created }}
+
       releases_created:
         description: "`true` if any release was created, else `false`."
         value: ${{ jobs.release-please.outputs.releases_created }}
@@ -54,6 +58,7 @@ jobs:
           echo "path_tag_names=$path_tag_names" >> "$GITHUB_OUTPUT"
 
     outputs:
+      prs_created: ${{ steps.release-please.outputs.prs_created }}
       releases_created: ${{ steps.release-please.outputs.releases_created }}
       paths_released: ${{ steps.release-please.outputs.paths_released }}
       path_tag_names: ${{ steps.set-path-outputs.outputs.path_tag_names }}
