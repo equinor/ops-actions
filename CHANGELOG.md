@@ -1,5 +1,22 @@
 # Changelog
 
+## [9.42.0](https://github.com/equinor/ops-actions/compare/v9.41.1...v9.42.0) (2026-09-01)
+
+
+### Features
+
+* **release-please-manifest:** add outputs `prs_created` and `pr_branch_names` ([#1115](https://github.com/equinor/ops-actions/issues/1115)) ([1e5ba0e](https://github.com/equinor/ops-actions/commit/1e5ba0e3674b70f1087421f118fcc0d5c68dd582))
+
+
+### Dependencies
+
+* bump astral-sh/setup-uv from 9.0.0 to 10.0.1 ([#1111](https://github.com/equinor/ops-actions/issues/1111)) ([9c1020d](https://github.com/equinor/ops-actions/commit/9c1020d1c1df7d91642cd20370432edb8e18e53f))
+* bump databricks/setup-cli from 1.11.0 to 1.12.1 ([#1109](https://github.com/equinor/ops-actions/issues/1109)) ([8cdec05](https://github.com/equinor/ops-actions/commit/8cdec05a4f83d41f26c44addab1535b1820146d3))
+* bump databricks/setup-cli from 1.12.1 to 1.13.0 ([#1114](https://github.com/equinor/ops-actions/issues/1114)) ([8bd1b85](https://github.com/equinor/ops-actions/commit/8bd1b85dacc233e113620f99f422facaf0df2764))
+* bump docker/setup-buildx-action from 4.2.0 to 4.3.0 ([#1110](https://github.com/equinor/ops-actions/issues/1110)) ([8f77ef8](https://github.com/equinor/ops-actions/commit/8f77ef8d442c3ecb3e6b7de0ede786d84921e8aa))
+* bump the codeql group with 3 updates ([#1108](https://github.com/equinor/ops-actions/issues/1108)) ([4355c91](https://github.com/equinor/ops-actions/commit/4355c916798dda0884775cd6e24f37ff60d927ad))
+* bump the codeql group with 3 updates ([#1113](https://github.com/equinor/ops-actions/issues/1113)) ([ab38eb0](https://github.com/equinor/ops-actions/commit/ab38eb0080f866725b70e00c094028d4ffdd872f))
+
 ## [9.41.1](https://github.com/equinor/ops-actions/compare/v9.41.0...v9.41.1) (2026-08-24)
 
 
