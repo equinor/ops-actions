@@ -79,6 +79,14 @@ The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaul
 
 ## Outputs
 
+### `prs_created`
+
+`true` if any release PR was created or updated, else `false`.
+
+### `pr_branch_names`
+
+A JSON array of branch names for the release PRs that were created or updated, `[]` if no release PRs were created or updated. Use the `fromJSON` function to convert this value to an array that can be used to define a matrix strategy job.
+
 ### `release_created`
 
 `true` if any release was created, else `false`.
