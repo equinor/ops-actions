@@ -1,5 +1,14 @@
 # Changelog
 
+## [9.42.1](https://github.com/equinor/ops-actions/compare/v9.42.0...v9.42.1) (2026-09-08)
+
+
+### Dependencies
+
+* bump azure/login from 3.0.1 to 3.0.2 ([#1117](https://github.com/equinor/ops-actions/issues/1117)) ([2742916](https://github.com/equinor/ops-actions/commit/274291600d31d502004776aae08fbcec8aa5535c))
+* bump databricks/setup-cli from 1.13.0 to 1.14.1 ([#1118](https://github.com/equinor/ops-actions/issues/1118)) ([d4b4f10](https://github.com/equinor/ops-actions/commit/d4b4f104c48407c401c031687e6d36c52ca7a2ac))
+* bump the codeql group with 3 updates ([#1116](https://github.com/equinor/ops-actions/issues/1116)) ([419bb1a](https://github.com/equinor/ops-actions/commit/419bb1a1ce24d11f4b4bf63cda2101a1072d1786))
+
 ## [9.42.0](https://github.com/equinor/ops-actions/compare/v9.41.1...v9.42.0) (2026-09-01)
 
 
