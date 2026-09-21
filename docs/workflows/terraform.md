@@ -9,6 +9,7 @@ A reusable GitHub Actions workflow for automatically running Terraform.
 - **Private modules support**: Download Terraform modules from a private GitHub repository.
 - **Job summary**: Create job summary containing Terraform command outcomes and plan.
 - **Secretless authentication to Azure**: Authenticate to Azure using a service principal with OpenID Connect (OIDC).
+- **Dependabot support**: Validates Terraform configuration files if triggered by Debendabot.
 
 ## Prerequisites
 
