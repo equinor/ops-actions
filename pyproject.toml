@@ -8,6 +8,6 @@ dependencies = []
 
 [dependency-groups]
 dev = [
-    "click==8.4.2",
+    "click==8.5.0",
     "mkdocs-material>=9.7.7",
 ]
