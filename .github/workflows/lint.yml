@@ -15,4 +15,4 @@ jobs:
       contents: read
       security-events: write
       actions: read
-    uses: ./.github/workflows/zizmor-codeql.yml
+    uses: $/.github/workflows/zizmor-codeql.yml
