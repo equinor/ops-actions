@@ -14,7 +14,7 @@ jobs:
       contents: write # Required to update changelog file
       issues: write # Required to label issues
       pull-requests: write # Required to create release PRs
-    uses: ./.github/workflows/release-please-manifest.yml
+    uses: $/.github/workflows/release-please-manifest.yml
 
   lock:
     name: Update lockfile

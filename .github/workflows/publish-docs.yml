@@ -12,7 +12,7 @@ permissions: {}
 jobs:
   build:
     name: Build
-    uses: ./.github/workflows/mkdocs.yml
+    uses: $/.github/workflows/mkdocs.yml
     with:
       dependency_group: dev
       strict_mode: true
@@ -24,7 +24,7 @@ jobs:
     name: Deploy
     needs: build
     if: needs.build.outputs.artifact_uploaded == 'true'
-    uses: ./.github/workflows/github-pages.yml
+    uses: $/.github/workflows/github-pages.yml
     with:
       artifact_name: ${{ needs.build.outputs.artifact_name }}
     permissions:

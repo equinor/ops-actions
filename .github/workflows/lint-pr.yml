@@ -15,6 +15,6 @@ jobs:
     name: Lint PR Title
     permissions:
       contents: read
-    uses: ./.github/workflows/commitlint.yml
+    uses: $/.github/workflows/commitlint.yml
     with:
       message: ${{ github.event.pull_request.title }}
