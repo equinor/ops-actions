@@ -1,5 +1,25 @@
 # Changelog
 
+## [9.43.0](https://github.com/equinor/ops-actions/compare/v9.42.0...v9.43.0) (2026-09-23)
+
+
+### Features
+
+* add zensical reusable workflow ([#1130](https://github.com/equinor/ops-actions/issues/1130)) ([4516f11](https://github.com/equinor/ops-actions/commit/4516f11cfa120d85e839637d2ce6438fe47117e0))
+
+
+### Dependencies
+
+* bump actions/deploy-pages from 5.0.0 to 5.0.1 ([#1122](https://github.com/equinor/ops-actions/issues/1122)) ([74848bd](https://github.com/equinor/ops-actions/commit/74848bd7641091632d7f0540f6c24c098f132dc3))
+* bump astral-sh/setup-uv from 10.0.1 to 10.1.0 ([#1127](https://github.com/equinor/ops-actions/issues/1127)) ([a0a3325](https://github.com/equinor/ops-actions/commit/a0a332546eaa928462e55ebc714818b521ce5e5f))
+* bump azure/login from 3.0.1 to 3.0.2 ([#1117](https://github.com/equinor/ops-actions/issues/1117)) ([2742916](https://github.com/equinor/ops-actions/commit/274291600d31d502004776aae08fbcec8aa5535c))
+* bump azure/login from 3.0.2 to 3.1.0 ([#1128](https://github.com/equinor/ops-actions/issues/1128)) ([f56c58c](https://github.com/equinor/ops-actions/commit/f56c58c52d18e7d28e23aa44e86f147ea33e1cf2))
+* bump databricks/setup-cli from 1.13.0 to 1.14.1 ([#1118](https://github.com/equinor/ops-actions/issues/1118)) ([d4b4f10](https://github.com/equinor/ops-actions/commit/d4b4f104c48407c401c031687e6d36c52ca7a2ac))
+* bump databricks/setup-cli from 1.14.1 to 1.15.0 ([#1121](https://github.com/equinor/ops-actions/issues/1121)) ([e15a379](https://github.com/equinor/ops-actions/commit/e15a379d2635a62b1378ba2a73e378fef6263cbb))
+* bump databricks/setup-cli from 1.15.0 to 1.16.1 ([#1129](https://github.com/equinor/ops-actions/issues/1129)) ([70b2364](https://github.com/equinor/ops-actions/commit/70b2364382dff1da60de1bc4cab11fa9024154bc))
+* bump the codeql group with 3 updates ([#1116](https://github.com/equinor/ops-actions/issues/1116)) ([419bb1a](https://github.com/equinor/ops-actions/commit/419bb1a1ce24d11f4b4bf63cda2101a1072d1786))
+* bump the codeql group with 3 updates ([#1126](https://github.com/equinor/ops-actions/issues/1126)) ([c6d8e2a](https://github.com/equinor/ops-actions/commit/c6d8e2adda1dd54b413fb6f1270ab6b11cebad44))
+
 ## [9.42.0](https://github.com/equinor/ops-actions/compare/v9.41.1...v9.42.0) (2026-09-01)
 
 

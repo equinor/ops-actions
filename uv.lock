@@ -244,7 +244,7 @@ wheels = [
 
 [[package]]
 name = "ops-actions"
-version = "9.42.0"
+version = "9.43.0"
 source = { virtual = "." }
 
 [package.dev-dependencies]
