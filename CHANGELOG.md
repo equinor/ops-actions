@@ -1,5 +1,15 @@
 # Changelog
 
+## [9.43.1](https://github.com/equinor/ops-actions/compare/v9.43.0...v9.43.1) (2026-09-29)
+
+
+### Dependencies
+
+* bump astral-sh/setup-uv from 10.1.0 to 10.2.0 ([#1133](https://github.com/equinor/ops-actions/issues/1133)) ([1a9054a](https://github.com/equinor/ops-actions/commit/1a9054a0a65347dc885e6f19cb7ade8af989485a))
+* bump databricks/setup-cli from 1.16.1 to 1.17.0 ([#1132](https://github.com/equinor/ops-actions/issues/1132)) ([a97f9d0](https://github.com/equinor/ops-actions/commit/a97f9d07d8d585eecbc5aa2682de405ed1f34d49))
+* bump docker/setup-buildx-action from 4.3.0 to 4.4.1 ([#1134](https://github.com/equinor/ops-actions/issues/1134)) ([a7709bc](https://github.com/equinor/ops-actions/commit/a7709bc6beed5f9f7f67fc2466cc7ad8b18db0d3))
+* bump the codeql group with 3 updates ([#1131](https://github.com/equinor/ops-actions/issues/1131)) ([ef52802](https://github.com/equinor/ops-actions/commit/ef5280299564e0b4137ac19732d4202795443c81))
+
 ## [9.43.0](https://github.com/equinor/ops-actions/compare/v9.42.0...v9.43.0) (2026-09-23)
 
 
