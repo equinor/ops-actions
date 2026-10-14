@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.43.2](https://github.com/equinor/ops-actions/compare/v9.43.1...v9.43.2) (2026-10-14)
+
+
+### Dependencies
+
+* bump super-linter/super-linter from 8.7.0 to 9.0.0 ([#1139](https://github.com/equinor/ops-actions/issues/1139)) ([8f8a9bb](https://github.com/equinor/ops-actions/commit/8f8a9bb57520ab118d338bc0c16a33bacd203dcc))
+
 ## [9.43.1](https://github.com/equinor/ops-actions/compare/v9.43.0...v9.43.1) (2026-10-14)
 
 
