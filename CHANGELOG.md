@@ -1,5 +1,21 @@
 # Changelog
 
+## [9.43.1](https://github.com/equinor/ops-actions/compare/v9.43.0...v9.43.1) (2026-10-14)
+
+
+### Dependencies
+
+* bump actions/download-artifact from 8.0.1 to 8.0.2 ([#1141](https://github.com/equinor/ops-actions/issues/1141)) ([d316523](https://github.com/equinor/ops-actions/commit/d316523880fda35ac000447513bd12fef90bf2a1))
+* bump actions/setup-node from 7.0.0 to 7.1.0 ([#1140](https://github.com/equinor/ops-actions/issues/1140)) ([801cba4](https://github.com/equinor/ops-actions/commit/801cba441e601a0587dfdcd874b7a71d45215b95))
+* bump actions/upload-artifact from 7.0.1 to 7.0.2 ([#1143](https://github.com/equinor/ops-actions/issues/1143)) ([2ad3177](https://github.com/equinor/ops-actions/commit/2ad31778818fc443f33f35fbf2457e2f2371abde))
+* bump astral-sh/setup-uv from 10.1.0 to 10.2.0 ([#1133](https://github.com/equinor/ops-actions/issues/1133)) ([1a9054a](https://github.com/equinor/ops-actions/commit/1a9054a0a65347dc885e6f19cb7ade8af989485a))
+* bump databricks/setup-cli from 1.16.1 to 1.17.0 ([#1132](https://github.com/equinor/ops-actions/issues/1132)) ([a97f9d0](https://github.com/equinor/ops-actions/commit/a97f9d07d8d585eecbc5aa2682de405ed1f34d49))
+* bump databricks/setup-cli from 1.17.0 to 1.18.0 ([#1137](https://github.com/equinor/ops-actions/issues/1137)) ([80ef1b8](https://github.com/equinor/ops-actions/commit/80ef1b86e2ce96981b7f90621b4b8602a756ec1a))
+* bump databricks/setup-cli from 1.18.0 to 1.20.0 ([#1142](https://github.com/equinor/ops-actions/issues/1142)) ([5910f81](https://github.com/equinor/ops-actions/commit/5910f815acb7fb5a5014c86e3b1af604b4711c55))
+* bump docker/setup-buildx-action from 4.3.0 to 4.4.1 ([#1134](https://github.com/equinor/ops-actions/issues/1134)) ([a7709bc](https://github.com/equinor/ops-actions/commit/a7709bc6beed5f9f7f67fc2466cc7ad8b18db0d3))
+* bump the codeql group with 3 updates ([#1131](https://github.com/equinor/ops-actions/issues/1131)) ([ef52802](https://github.com/equinor/ops-actions/commit/ef5280299564e0b4137ac19732d4202795443c81))
+* bump the codeql group with 3 updates ([#1136](https://github.com/equinor/ops-actions/issues/1136)) ([9db2b03](https://github.com/equinor/ops-actions/commit/9db2b035d7e044a9cd364984363d99c64d3e2bbb))
+
 ## [9.43.0](https://github.com/equinor/ops-actions/compare/v9.42.0...v9.43.0) (2026-09-23)
 
 
