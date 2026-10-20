@@ -1,5 +1,13 @@
 # Changelog
 
+## [9.43.3](https://github.com/equinor/ops-actions/compare/v9.43.2...v9.43.3) (2026-10-20)
+
+
+### Dependencies
+
+* bump astral-sh/setup-uv from 10.2.0 to 10.3.0 ([#1146](https://github.com/equinor/ops-actions/issues/1146)) ([4342f29](https://github.com/equinor/ops-actions/commit/4342f2971c15de73b3aa77a9ab6df57870c5cb24))
+* bump the codeql group with 3 updates ([#1145](https://github.com/equinor/ops-actions/issues/1145)) ([9f473bb](https://github.com/equinor/ops-actions/commit/9f473bb8984a5fb561b8e6c90952567c70fdf449))
+
 ## [9.43.2](https://github.com/equinor/ops-actions/compare/v9.43.1...v9.43.2) (2026-10-14)
 
 
