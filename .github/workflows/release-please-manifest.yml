@@ -9,9 +9,14 @@ on:
         required: false
         default: ubuntu-24.04
 
+      target_branch:
+        description: Branch to create release PRs against. Defaults to the repository default branch.
+        type: string
+        required: false
+
     outputs:
       prs_created:
-        description: '`true` if any release PR was created or updated, else `false`.'
+        description: "`true` if any release PR was created or updated, else `false`."
         value: ${{ jobs.release-please.outputs.prs_created }}
 
       pr_branch_names:
@@ -46,6 +51,7 @@ jobs:
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          target-branch: ${{ inputs.target_branch }}
 
       - name: Set path outputs
         id: set-path-outputs
