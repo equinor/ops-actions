@@ -77,6 +77,10 @@ On push to branch `main`, this workflow will automatically create release PRs ba
 
 The label of the runner (GitHub- or self-hosted) to run this workflow on. Defaults to `ubuntu-24.04`.
 
+### (*Optional*) `target_branch`
+
+Branch to create release PRs against. Defaults to the repository default branch.
+
 ## Outputs
 
 ### `prs_created`
