@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.44.0](https://github.com/equinor/ops-actions/compare/v9.43.3...v9.44.0) (2026-10-28)
+
+
+### Features
+
+* **release-please-manifest:** allow targeting non-default branch ([#1151](https://github.com/equinor/ops-actions/issues/1151)) ([bdf1b84](https://github.com/equinor/ops-actions/commit/bdf1b846d2c72f3e3df1f3b809576beecfee2933))
+
 ## [9.43.3](https://github.com/equinor/ops-actions/compare/v9.43.2...v9.43.3) (2026-10-27)
 
 
