@@ -1,5 +1,19 @@
 # Changelog
 
+## [9.44.1](https://github.com/equinor/ops-actions/compare/v9.44.0...v9.44.1) (2026-11-10)
+
+
+### Dependencies
+
+* bump actions/setup-dotnet from 6.0.0 to 6.1.0 ([#1161](https://github.com/equinor/ops-actions/issues/1161)) ([5ede428](https://github.com/equinor/ops-actions/commit/5ede428c51deb66a9edde701c222304e7b20ac2a))
+* bump actions/setup-python from 7.0.0 to 7.1.0 ([#1157](https://github.com/equinor/ops-actions/issues/1157)) ([22519fa](https://github.com/equinor/ops-actions/commit/22519fae67a70112ed63f8d188192b86e381e9cd))
+* bump astral-sh/setup-uv from 10.3.0 to 10.3.2 ([#1156](https://github.com/equinor/ops-actions/issues/1156)) ([8e4c7f0](https://github.com/equinor/ops-actions/commit/8e4c7f0558f035d8c1a8ab79fa9a8f95236e5b53))
+* bump astral-sh/setup-uv from 10.3.2 to 10.3.3 ([#1160](https://github.com/equinor/ops-actions/issues/1160)) ([f79c202](https://github.com/equinor/ops-actions/commit/f79c20221aaae01772e8a74988ff362bce1092f6))
+* bump databricks/setup-cli from 1.21.0 to 1.22.1 ([#1155](https://github.com/equinor/ops-actions/issues/1155)) ([d3f0b74](https://github.com/equinor/ops-actions/commit/d3f0b7467dcf7592a44a71376b236bcf5abcf47d))
+* bump databricks/setup-cli from 1.22.1 to 1.23.0 ([#1162](https://github.com/equinor/ops-actions/issues/1162)) ([b1e76e0](https://github.com/equinor/ops-actions/commit/b1e76e0a1d12ae9d3e32c898a30bbd75649ea2b3))
+* bump docker/login-action from 4.6.0 to 4.7.0 ([#1158](https://github.com/equinor/ops-actions/issues/1158)) ([b5db0ea](https://github.com/equinor/ops-actions/commit/b5db0ea9fe1dcc57a32b4fad7ce4085d52d8e8e1))
+* bump the codeql group with 3 updates ([#1154](https://github.com/equinor/ops-actions/issues/1154)) ([9390211](https://github.com/equinor/ops-actions/commit/9390211f098980c7e51fc45fcc55963b343c19ae))
+
 ## [9.44.0](https://github.com/equinor/ops-actions/compare/v9.43.3...v9.44.0) (2026-10-28)
 
 
