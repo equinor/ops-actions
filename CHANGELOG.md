@@ -1,5 +1,15 @@
 # Changelog
 
+## [9.44.2](https://github.com/equinor/ops-actions/compare/v9.44.1...v9.44.2) (2026-11-24)
+
+
+### Dependencies
+
+* bump databricks/setup-cli from 1.23.0 to 1.25.0 ([#1165](https://github.com/equinor/ops-actions/issues/1165)) ([eb53844](https://github.com/equinor/ops-actions/commit/eb5384493b5f61b37addc8e2593a36ae0d74da7f))
+* bump databricks/setup-cli from 1.25.0 to 1.26.0 ([#1168](https://github.com/equinor/ops-actions/issues/1168)) ([5c2f1aa](https://github.com/equinor/ops-actions/commit/5c2f1aa5c4bdfc921d9f92535099f1ac9f0351a7))
+* bump docker/login-action from 4.7.0 to 4.8.0 ([#1164](https://github.com/equinor/ops-actions/issues/1164)) ([cbeae88](https://github.com/equinor/ops-actions/commit/cbeae88238ceb6f4c584fb8a43ae2c1ab3dc2781))
+* bump the codeql group with 3 updates ([#1163](https://github.com/equinor/ops-actions/issues/1163)) ([5d4a52b](https://github.com/equinor/ops-actions/commit/5d4a52bf26978443d5a372d2d70aef54c9d9e5e2))
+
 ## [9.44.1](https://github.com/equinor/ops-actions/compare/v9.44.0...v9.44.1) (2026-11-10)
 
 
